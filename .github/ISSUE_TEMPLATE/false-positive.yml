@@ -1,0 +1,30 @@
+name: False positive or false negative
+about: Improve an audit detector with a bounded public fixture
+body:
+  - type: dropdown
+    id: direction
+    attributes:
+      label: Direction
+      options: [False positive, False negative]
+    validations:
+      required: true
+  - type: input
+    id: code
+    attributes:
+      label: Finding code or missing finding
+    validations:
+      required: true
+  - type: textarea
+    id: fixture
+    attributes:
+      label: Minimal public fixture
+      description: Explain why this text/data should or should not trigger. Remove private data.
+    validations:
+      required: true
+  - type: textarea
+    id: claim_ceiling
+    attributes:
+      label: Proposed claim ceiling
+      description: What can the improved detector establish, and what must remain human judgment?
+    validations:
+      required: true

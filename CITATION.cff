@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If Uriel contributes to your research workflow, cite the software release and archive the exact Blessing or audit identifier used."
+title: "Uriel: Offline-first research integrity harness and provenance ledger"
+type: software
+version: 1.0.0
+date-released: 2026-08-06
+license: MIT
+keywords:
+  - reproducible research
+  - provenance
+  - scientific integrity
+  - schema validation
+  - open science

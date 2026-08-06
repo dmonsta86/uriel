@@ -1,0 +1,597 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uriel.dev/schemas/uriel.project.v1.schema.json",
+  "title": "Uriel Project Manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "project_id",
+    "title",
+    "kind",
+    "question",
+    "hypothesis",
+    "framing_review",
+    "novelty_review",
+    "claims",
+    "evidence",
+    "methods",
+    "assumptions",
+    "alternative_explanations",
+    "contradictions",
+    "adversarial_tests",
+    "reviewer_objections",
+    "limitations",
+    "ethics",
+    "disclosures",
+    "submission",
+    "privacy",
+    "workloads",
+    "external_reviews",
+    "waivers"
+  ],
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "strings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "idObject": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "properties": {
+    "schema": {
+      "const": "uriel.project.v1"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "project_id": {
+      "type": "string",
+      "minLength": 8
+    },
+    "title": {
+      "type": "string",
+      "minLength": 2
+    },
+    "kind": {
+      "enum": [
+        "research",
+        "software",
+        "hybrid"
+      ]
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "hypothesis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "statement",
+        "falsifier",
+        "operational_definitions",
+        "success_criteria"
+      ],
+      "properties": {
+        "statement": {
+          "type": "string"
+        },
+        "falsifier": {
+          "type": "string"
+        },
+        "operational_definitions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "success_criteria": {
+          "$ref": "#/$defs/strings"
+        }
+      }
+    },
+    "framing_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "neutral_restatement",
+        "competing_frames",
+        "loaded_terms_reviewed",
+        "scope_boundaries"
+      ],
+      "properties": {
+        "neutral_restatement": {
+          "type": "string"
+        },
+        "competing_frames": {
+          "$ref": "#/$defs/strings"
+        },
+        "loaded_terms_reviewed": {
+          "$ref": "#/$defs/strings"
+        },
+        "scope_boundaries": {
+          "$ref": "#/$defs/strings"
+        }
+      }
+    },
+    "novelty_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "search_date",
+        "databases",
+        "queries",
+        "nearest_prior_work",
+        "differentiators",
+        "negative_searches",
+        "scope_limitations"
+      ],
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "search_date": {
+          "type": "string"
+        },
+        "databases": {
+          "$ref": "#/$defs/strings"
+        },
+        "queries": {
+          "$ref": "#/$defs/strings"
+        },
+        "nearest_prior_work": {
+          "$ref": "#/$defs/strings"
+        },
+        "differentiators": {
+          "$ref": "#/$defs/strings"
+        },
+        "negative_searches": {
+          "$ref": "#/$defs/strings"
+        },
+        "scope_limitations": {
+          "$ref": "#/$defs/strings"
+        }
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "statement",
+          "type",
+          "importance",
+          "scope",
+          "falsifier",
+          "reasoning",
+          "evidence_ids",
+          "counterevidence_ids",
+          "assumption_ids",
+          "adversarial_test_ids",
+          "reconciliation"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "statement": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "importance": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "population",
+              "setting",
+              "timeframe"
+            ],
+            "properties": {
+              "population": {
+                "type": "string"
+              },
+              "setting": {
+                "type": "string"
+              },
+              "timeframe": {
+                "type": "string"
+              }
+            }
+          },
+          "falsifier": {
+            "type": "string"
+          },
+          "reasoning": {
+            "type": "string"
+          },
+          "evidence_ids": {
+            "$ref": "#/$defs/strings"
+          },
+          "counterevidence_ids": {
+            "$ref": "#/$defs/strings"
+          },
+          "assumption_ids": {
+            "$ref": "#/$defs/strings"
+          },
+          "adversarial_test_ids": {
+            "$ref": "#/$defs/strings"
+          },
+          "reconciliation": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "description",
+          "artifact_path",
+          "sha256",
+          "source_locator",
+          "source_type",
+          "directness",
+          "extraction",
+          "data_location",
+          "interpretation",
+          "limitations",
+          "primary",
+          "supports_claims",
+          "counterevidence_for_claims"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "artifact_path": {
+            "type": "string",
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*:).+$"
+          },
+          "sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "source_locator": {
+            "type": "string"
+          },
+          "source_type": {
+            "type": "string"
+          },
+          "directness": {
+            "type": "string"
+          },
+          "extraction": {
+            "type": "string"
+          },
+          "data_location": {
+            "type": "string"
+          },
+          "interpretation": {
+            "type": "string"
+          },
+          "limitations": {
+            "type": "string"
+          },
+          "primary": {
+            "type": "boolean"
+          },
+          "supports_claims": {
+            "$ref": "#/$defs/strings"
+          },
+          "counterevidence_for_claims": {
+            "$ref": "#/$defs/strings"
+          },
+          "primary_artifact_ids": {
+            "$ref": "#/$defs/strings"
+          },
+          "scope": {
+            "type": "object"
+          },
+          "scope_mismatch_explanation": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "methods": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "design",
+        "population",
+        "sampling",
+        "sample_size",
+        "analysis_plan",
+        "effect_size_metric",
+        "uncertainty_method",
+        "causal_identification",
+        "controls",
+        "exclusions",
+        "missing_data_plan",
+        "preregistration",
+        "reproducibility_command"
+      ],
+      "properties": {
+        "design": {
+          "type": "string"
+        },
+        "population": {
+          "type": "string"
+        },
+        "sampling": {
+          "type": "string"
+        },
+        "sample_size": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "analysis_plan": {
+          "type": "string"
+        },
+        "effect_size_metric": {
+          "type": "string"
+        },
+        "uncertainty_method": {
+          "type": "string"
+        },
+        "causal_identification": {
+          "type": "string"
+        },
+        "controls": {
+          "$ref": "#/$defs/strings"
+        },
+        "exclusions": {
+          "$ref": "#/$defs/strings"
+        },
+        "missing_data_plan": {
+          "type": "string"
+        },
+        "preregistration": {
+          "type": "string"
+        },
+        "reproducibility_command": {
+          "type": "string"
+        }
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/idObject"
+      }
+    },
+    "alternative_explanations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/idObject"
+      }
+    },
+    "contradictions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/idObject"
+      }
+    },
+    "adversarial_tests": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/idObject"
+      }
+    },
+    "reviewer_objections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/idObject"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/idObject"
+      }
+    },
+    "ethics": {
+      "type": "object",
+      "required": [
+        "review_status",
+        "risks",
+        "mitigations"
+      ],
+      "properties": {
+        "review_status": {
+          "type": "string"
+        },
+        "risks": {
+          "$ref": "#/$defs/strings"
+        },
+        "mitigations": {
+          "$ref": "#/$defs/strings"
+        }
+      },
+      "additionalProperties": false
+    },
+    "disclosures": {
+      "type": "object",
+      "required": [
+        "funding",
+        "conflicts",
+        "known_counterevidence",
+        "omitted_data",
+        "negative_results",
+        "attestations"
+      ],
+      "properties": {
+        "funding": {
+          "$ref": "#/$defs/strings"
+        },
+        "conflicts": {
+          "$ref": "#/$defs/strings"
+        },
+        "known_counterevidence": {
+          "$ref": "#/$defs/strings"
+        },
+        "omitted_data": {
+          "$ref": "#/$defs/strings"
+        },
+        "negative_results": {
+          "$ref": "#/$defs/strings"
+        },
+        "attestations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "boolean"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "submission": {
+      "type": "object",
+      "required": [
+        "field",
+        "article_type",
+        "target_venues",
+        "author_names",
+        "corresponding_author",
+        "data_availability",
+        "code_availability"
+      ],
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "article_type": {
+          "type": "string"
+        },
+        "target_venues": {
+          "$ref": "#/$defs/strings"
+        },
+        "author_names": {
+          "$ref": "#/$defs/strings"
+        },
+        "corresponding_author": {
+          "type": "string"
+        },
+        "data_availability": {
+          "type": "string"
+        },
+        "code_availability": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "privacy": {
+      "type": "object",
+      "required": [
+        "classification",
+        "external_ai",
+        "redaction_notes"
+      ],
+      "properties": {
+        "classification": {
+          "enum": [
+            "public",
+            "internal",
+            "confidential",
+            "restricted"
+          ]
+        },
+        "external_ai": {
+          "enum": [
+            "allow",
+            "ask",
+            "deny"
+          ]
+        },
+        "redaction_notes": {
+          "$ref": "#/$defs/strings"
+        }
+      },
+      "additionalProperties": false
+    },
+    "workloads": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "command"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "command": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "timeout_seconds": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 86400
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "external_reviews": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/idObject"
+      }
+    },
+    "waivers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/idObject"
+      }
+    }
+  }
+}

@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ['3.9', '3.10', '3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install Uriel
+        run: python -m pip install .
+      - name: Compile
+        run: python -m compileall -q src tests
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Privacy sweep
+        run: python scripts/privacy_sweep.py
+      - name: Build portable archive
+        run: python scripts/build_portable.py
+      - name: Portable smoke test
+        run: python dist/uriel.pyz --version
+      - name: Installed CLI smoke test
+        run: uriel --version
+      - name: PowerShell wrapper smoke test
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          . .\scripts\Uriel.ps1
+          Invoke-Uriel --version
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+  package:
+    name: Build distributions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - run: python -m pip install build
+      - run: python -m build
+      - run: python scripts/build_portable.py
+      - uses: actions/upload-artifact@v7
+        with:
+          name: uriel-distributions
+          path: |
+            dist/*.whl
+            dist/*.tar.gz
+            dist/*.pyz

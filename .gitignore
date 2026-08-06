@@ -1,0 +1,24 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+build/
+dist/
+*.egg-info/
+.DS_Store
+Thumbs.db
+.env
+.env.*
+!.env.example
+
+# Local Uriel state in research projects
+.uriel/
+# Local release-check recovery state
+release-check.txt
+.uriel-release-check.lock

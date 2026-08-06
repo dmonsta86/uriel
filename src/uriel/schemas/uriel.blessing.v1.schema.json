@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uriel.dev/schemas/uriel.blessing.v1.schema.json",
+  "title": "URIEL-BLESSING-v1 content-addressed attestation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "proof_type",
+    "project_id",
+    "project_title",
+    "project_kind",
+    "issued_at_utc",
+    "policy_version",
+    "audit_id",
+    "audit_sha256",
+    "source_manifest_sha256",
+    "source_records_sha256",
+    "project_manifest_sha256",
+    "receipt_sha256s",
+    "review_sha256s",
+    "audit_ledger_event_sha256",
+    "verification_payload",
+    "scope",
+    "non_claims",
+    "blessing_id",
+    "files",
+    "package_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "URIEL-BLESSING-v1"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "proof_type": {
+      "const": "sha256-content-addressed-attestation"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "project_title": {
+      "type": "string"
+    },
+    "project_kind": {
+      "enum": [
+        "research",
+        "software",
+        "hybrid"
+      ]
+    },
+    "issued_at_utc": {
+      "type": "string"
+    },
+    "policy_version": {
+      "type": "string"
+    },
+    "audit_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "audit_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_records_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "project_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "receipt_sha256s": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "review_sha256s": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "audit_ledger_event_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "verification_payload": {
+      "type": "string",
+      "pattern": "^URIEL-BLESSING-v1:"
+    },
+    "scope": {
+      "type": "string"
+    },
+    "non_claims": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "blessing_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "files": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "package_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}
