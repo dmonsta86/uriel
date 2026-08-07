@@ -12,9 +12,8 @@ class PublicContractTests(unittest.TestCase):
     def test_readme_explains_name_blessing_and_three_gates(self) -> None:
         text = (ROOT / "README.md").read_text(encoding="utf-8")
         required = (
-            "# Uriel",
-            "## Project status",
-            "## What Uriel is for",
+            "# Uriel Forge",
+            "## Current capability status",
             "## The Blessing of Uriel",
             "## The Three Gates",
             "Gate 1 — Novelty and Clarity",
@@ -28,11 +27,12 @@ class PublicContractTests(unittest.TestCase):
     def test_readme_describes_lifecycle_flow(self) -> None:
         text = (ROOT / "README.md").read_text(encoding="utf-8")
         for token in (
-            "## The Uriel research lifecycle",
-            "Seed / Lens",
-            "Workbench",
-            "Three-Gate audit",
-            "Submission Guide",
+            "## The research path",
+            "Question or existing project",
+            "Gate 0",
+            "Gate 1",
+            "Gate 2",
+            "Gate 3",
         ):
             self.assertIn(token, text, token)
 
@@ -44,8 +44,8 @@ class PublicContractTests(unittest.TestCase):
 
     def test_readme_packet_and_budget_sections(self) -> None:
         text = (ROOT / "README.md").read_text(encoding="utf-8")
-        self.assertIn("Use Uriel with or without AI", text)
-        self.assertIn("Local model", text)
+        self.assertIn("## Use Uriel with or without AI", text)
+        self.assertIn("Compatible local model", text)
         self.assertIn("Compatible web AI", text)
 
     def test_lifecycle_doc_covers_all_planned_surfaces(self) -> None:

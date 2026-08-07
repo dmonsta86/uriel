@@ -127,7 +127,7 @@ def generate_capability_inventory(repo_root: Path) -> Dict[str, Any]:
 
 
 def render_capability_markdown_table() -> str:
-    """Render Markdown table for README.md and CAPABILITY_INVENTORY.md."""
+    """Render Markdown table for README.md and CAPABILITY_STATUS.md."""
     lines = [
         "| Capability | Status | Verified entry point | Platforms | Notes |",
         "|---|---|---|---|---|",
@@ -138,3 +138,22 @@ def render_capability_markdown_table() -> str:
         platforms_str = ", ".join(c["platforms"])
         lines.append(f"| {c['name']} | {status_str} | {entry_str} | {platforms_str} | {c['notes']} |")
     return "\n".join(lines)
+
+
+def write_capability_status_files(repo_root: Path) -> None:
+    """Generate and write docs/CAPABILITY_STATUS.json and docs/CAPABILITY_STATUS.md."""
+    inventory = generate_capability_inventory(repo_root)
+    json_content = json.dumps(inventory, indent=2, ensure_ascii=False) + "\n"
+    
+    md_content = f"# Uriel Forge Capability Status\n\nCommit: `{inventory['commit']}`\n\n" + render_capability_markdown_table() + "\n"
+    
+    docs_dir = repo_root / "docs"
+    docs_dir.mkdir(parents=True, exist_ok=True)
+    (docs_dir / "CAPABILITY_STATUS.json").write_text(json_content, encoding="utf-8")
+    (docs_dir / "CAPABILITY_STATUS.md").write_text(md_content, encoding="utf-8")
+    
+    manifest_dir = repo_root / "manifest"
+    manifest_dir.mkdir(parents=True, exist_ok=True)
+    (manifest_dir / "capability_inventory.json").write_text(json_content, encoding="utf-8")
+    (docs_dir / "CAPABILITY_INVENTORY.md").write_text(md_content, encoding="utf-8")
+

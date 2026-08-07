@@ -31,9 +31,13 @@ class ProviderNeutralityTests(unittest.TestCase):
         allowlisted_files = {
             "08_GEMINI_MASTER_ADDENDUM.md",
             "09_ONE_MESSAGE_TO_GEMINI.txt",
+            "10_GEMINI_APPLY_REPOSITORY_PASS.md",
+            "12_ONE_MESSAGE_TO_GEMINI.txt",
             "URIEL_PROVIDER_NEUTRAL_DOCS_FINAL_REPORT.md",
+            "URIEL_FORGE_PUBLIC_IDENTITY_FINAL_REPORT.md",
             "UNIFIED_WORKLOG.md",
             "test_provider_neutrality.py",
+            "check_public_identity.py",
             "release-check.txt",
         }
 
@@ -63,7 +67,7 @@ class ProviderNeutralityTests(unittest.TestCase):
         readme_path = self.repo_root / "README.md"
         readme_text = readme_path.read_text(encoding="utf-8")
         self.assertIn("GPT-5.6 Sol with ultra mode", readme_text)
-        self.assertIn("optional tested recommendation", readme_text)
+        self.assertIn("This is optional", readme_text)
         self.assertNotIn("pricing", readme_text.lower())
         self.assertNotIn("free tier", readme_text.lower())
 
@@ -90,7 +94,7 @@ class ProviderNeutralityTests(unittest.TestCase):
         self.assertTrue(qrd_path.is_file(), "docs/PROJECT_QRD.md is missing.")
         text = qrd_path.read_text(encoding="utf-8")
         self.assertIn("Quality Requirements Document", text)
-        self.assertIn("Interpret generously.", text)
+        self.assertIn("Data before conclusions.", text)
 
     # 6. No Provider Credential Test
     def test_no_provider_credentials_in_repo(self) -> None:
