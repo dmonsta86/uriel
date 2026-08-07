@@ -1,0 +1,62 @@
+Create one complete, standalone 16:9 Uriel Forge research poster in cinematic
+painterly realism.
+
+REFERENCE AND BRAND:
+Use the approved English Uriel Forge hero as the composition reference. Preserve
+the same serious dark graphite, iron, copper and amber palette, controlled
+sparks, forge/anvil, research workshop and evidence-focused atmosphere.
+
+CENTRAL FIGURE:
+Uriel is an original fictional adult man, wingless and armored but not
+militaristic. He is a mature scholar-smith and careful investigator. He is
+striking the anvil with one measured, controlled hammer blow while examining a
+research manuscript or evidence record.
+
+EXPRESSION — CRITICAL:
+One eyebrow is subtly raised. His eyes are warm, vigilant and intellectually
+alert, focused on the evidence rather than judging the viewer. His mouth is
+relaxed with a restrained hint of encouragement. He has noticed a possible
+problem and genuinely wants to help the researcher make the work stronger.
+Wise, reserved, interested and supportive; never smug, arrogant, angry,
+condescending, comic, melodramatic or sales-like.
+
+COMPLETE STANDALONE INFORMATION STORY:
+This must be a full research-system poster, not merely a portrait and product
+name. Include visually meaningful zones for:
+- question intake and preservation of the original idea;
+- read-only project review;
+- Data Readiness / Gate 0;
+- deterministic sorting, record identity and database structure;
+- claim-to-evidence tracing;
+- the Three Gates audit;
+- repair packets and a forward path;
+- manuscript and submission support;
+- provenance, manifests, hashes and verification receipts.
+
+Show abstract data tables, stable sort keys, database cells, a claim-to-source
+chain, three gate seals, a repair roadmap, a manuscript/submission packet, and a
+tamper-evident receipt. Use invented neutral symbols only; no real research data
+or fake scientific conclusion.
+
+CULTURAL ADAPTATION:
+Use restrained East Asian scholar-craft cues: subtle bronze and lacquer geometry, manuscript and mechanical-diagram motifs. Avoid dragons, pagodas, imperial costume, sacred calligraphy and generic fantasy stereotypes.
+
+TEXT-SAFE LAYOUT:
+Reserve clean, high-contrast text panels:
+- top: product name, subtitle, challenge and supporting line;
+- left rail: four module labels;
+- right rail: five module labels;
+- bottom strip: four principles.
+
+DO NOT render words, letters, numbers, pseudo-writing, logos, URLs, sacred text,
+or watermarks. All exact typography will be added deterministically from the
+locale JSON.
+
+NEGATIVE CONSTRAINTS:
+No wings, halo, deity, prophet, saint, national flag, provider brand, gore,
+battle, weapon pose, cartoon style, generic superhero pose, steampunk clutter,
+visual stereotype, sacred architecture, unreadable microtext or fake UI.
+
+OUTPUT:
+16:9, high resolution, entire poster composition, generous safe margins,
+accessible contrast, serious open-source research product quality.

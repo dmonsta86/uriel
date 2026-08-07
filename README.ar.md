@@ -37,10 +37,12 @@
 ### Forge rough questions into research that can show its work.
 
 > **Every idea deserves its strongest fair hearing.**  
-> **Every claim must survive its strongest fair challenge.**
+> **Every claim must survive its strongest fair challenge.**  
+> **Is your IDEA strong enough to survive the forge?**
 
-Uriel Forge is an offline-first research development and assurance toolkit for
-people starting with either a rough question or an existing project.
+Uriel Forge is an offline-first, truth-oriented research development and assurance toolkit built to challenge ideas, trace claims back to verifiable evidence, expose framing and omissions, and help researchers strengthen work before publication.
+
+No good idea should fail just because it is poorly articulated, and no bad idea should survive a proper adversarial review simply because it is well packaged.
 
 It helps clarify what is actually being claimed, preserves the original idea,
 checks whether data are ready before analysis, binds important claims to
