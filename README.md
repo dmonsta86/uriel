@@ -1,4 +1,4 @@
-# Uriel
+# <p align="center">The Blessing of Uriel</p>
 <p align="center">
   <img
     src="docs/assets/uriel-banner.png"
