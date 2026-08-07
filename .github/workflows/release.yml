@@ -44,7 +44,7 @@ jobs:
           grep -q '^RESULT: PASS$' dist/release-check.txt
           python scripts/make_checksums.py --directory dist
 
-      - name: Create GitHub release
+      - name: Create or update GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
@@ -53,13 +53,26 @@ jobs:
           if [[ "${GITHUB_REF_NAME}" == *-* ]]; then
             extra+=(--prerelease)
           fi
-          gh release create "${GITHUB_REF_NAME}" \
-            dist/*.whl \
-            dist/*.tar.gz \
-            dist/*.pyz \
-            dist/SHA256SUMS.txt \
-            dist/release-check.txt \
-            --verify-tag \
-            --generate-notes \
-            --title "Uriel ${GITHUB_REF_NAME}" \
-            "${extra[@]}"
+          if gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1; then
+            echo "Release ${GITHUB_REF_NAME} already exists. Updating release assets..."
+            gh release upload "${GITHUB_REF_NAME}" \
+              dist/*.whl \
+              dist/*.tar.gz \
+              dist/*.pyz \
+              dist/SHA256SUMS.txt \
+              dist/release-check.txt \
+              --clobber
+          else
+            echo "Creating new release ${GITHUB_REF_NAME}..."
+            gh release create "${GITHUB_REF_NAME}" \
+              dist/*.whl \
+              dist/*.tar.gz \
+              dist/*.pyz \
+              dist/SHA256SUMS.txt \
+              dist/release-check.txt \
+              --verify-tag \
+              --generate-notes \
+              --title "Uriel ${GITHUB_REF_NAME}" \
+              "${extra[@]}"
+          fi
+
