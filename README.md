@@ -56,8 +56,6 @@ python -m pip install .
 uriel --version
 ```
 
-Maintainers preparing the first public copy should begin with [START_HERE.md](START_HERE.md). The detailed [GitHub publishing guide](docs/PUBLISH_TO_GITHUB.md) includes a GitHub Desktop route and browser-authenticated one-command scripts.
-
 For development:
 
 ```console

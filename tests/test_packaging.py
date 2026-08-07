@@ -18,17 +18,11 @@ class PackagingTests(unittest.TestCase):
             "README.md",
             "LICENSE",
             "pyproject.toml",
-            "START_HERE.md",
             "scripts/Uriel.ps1",
             ".github/workflows/ci.yml",
             ".github/workflows/release.yml",
-            "docs/PUBLISH_TO_GITHUB.md",
             "docs/MAINTAINER_HANDOFF.md",
-            "scripts/publish_github.ps1",
-            "scripts/publish_github.sh",
-            "PUBLISH_TO_GITHUB.cmd",
             "scripts/build_distributions.py",
-            "scripts/configure_repository.py",
             "scripts/make_checksums.py",
             "src/uriel/core.py",
             "src/uriel/demo.py",
@@ -38,18 +32,16 @@ class PackagingTests(unittest.TestCase):
         ]
         self.assertEqual([], [item for item in required if not (root / item).is_file()])
 
-    def test_publishers_bind_metadata_and_verify_before_push(self) -> None:
+    def test_public_repository_metadata_is_bound(self) -> None:
         root = Path(__file__).resolve().parents[1]
-        for name in ("scripts/publish_github.ps1", "scripts/publish_github.sh"):
-            text = (root / name).read_text(encoding="utf-8")
-            configure_at = text.find("configure_repository.py")
-            check_at = text.find("release_check.py")
-            push_at = text.find("git push")
-            self.assertGreaterEqual(configure_at, 0, name)
-            self.assertGreater(check_at, configure_at, name)
-            self.assertGreater(push_at, check_at, name)
-            self.assertIn("Uriel Bootstrap", text, name)
-            self.assertIn("uriel-bootstrap@example.invalid", text, name)
+        expected = "https://github.com/dmonsta86/uriel"
+        pyproject = (root / "pyproject.toml").read_text(encoding="utf-8")
+        citation = (root / "CITATION.cff").read_text(encoding="utf-8")
+        self.assertIn(f'Homepage = "{expected}"', pyproject)
+        self.assertIn(f'Repository = "{expected}"', pyproject)
+        self.assertIn(f'Issues = "{expected}/issues"', pyproject)
+        self.assertIn(f'repository-code: "{expected}"', citation)
+        self.assertIn(f'url: "{expected}"', citation)
 
     def test_public_passing_example_runs_without_test_package_imports(self) -> None:
         root = Path(__file__).resolve().parents[1]
@@ -69,35 +61,13 @@ class PackagingTests(unittest.TestCase):
             self.assertIn("audit: PASS", completed.stdout)
             self.assertIn("blessing:", completed.stdout)
 
-    def test_repository_configurator_is_idempotent(self) -> None:
+    def test_readme_local_assets_resolve(self) -> None:
         root = Path(__file__).resolve().parents[1]
-        with tempfile.TemporaryDirectory() as temporary:
-            target = Path(temporary)
-            (target / "pyproject.toml").write_text(
-                "[project]\nname = \"uriel-research\"\n\n[project.scripts]\nuriel = \"uriel.cli:main\"\n",
-                encoding="utf-8",
-            )
-            (target / "CITATION.cff").write_text(
-                "cff-version: 1.2.0\ntitle: \"Uriel\"\ndate-released: 2026-08-06\n",
-                encoding="utf-8",
-            )
-            command = [
-                sys.executable,
-                str(root / "scripts" / "configure_repository.py"),
-                "--repository",
-                str(target),
-                "--slug",
-                "example/uriel",
-            ]
-            subprocess.run(command, check=True, capture_output=True, text=True)
-            first_pyproject = (target / "pyproject.toml").read_text(encoding="utf-8")
-            first_citation = (target / "CITATION.cff").read_text(encoding="utf-8")
-            subprocess.run(command, check=True, capture_output=True, text=True)
-            self.assertEqual(first_pyproject, (target / "pyproject.toml").read_text(encoding="utf-8"))
-            self.assertEqual(first_citation, (target / "CITATION.cff").read_text(encoding="utf-8"))
-            self.assertIn('Repository = "https://github.com/example/uriel"', first_pyproject)
-            self.assertIn('repository-code: "https://github.com/example/uriel"', first_citation)
-
+        readme = (root / "README.md").read_text(encoding="utf-8")
+        for fragment in readme.split('src="')[1:]:
+            source = fragment.split('"', 1)[0]
+            if "://" not in source:
+                self.assertTrue((root / source).is_file(), source)
 
     def test_release_checker_exposes_safe_interruption_resume(self) -> None:
         root = Path(__file__).resolve().parents[1]

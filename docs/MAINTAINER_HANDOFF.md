@@ -17,7 +17,7 @@ Uriel 1.0.0 is an initial release candidate with:
 - persistent repair reminders with exactly three options for blockers;
 - hash-bound optional review imports and privacy-aware prompt export;
 - content-addressed Blessing packages, printable SVG/text certificates, QR payloads, and a standalone verifier;
-- PowerShell, POSIX shell, one-click Windows publishing, repository-metadata binding, OpenCode, CI, release, issue, security, and contribution assets.
+- PowerShell and POSIX launchers, OpenCode integration, CI, release, issue, security, and contribution assets.
 
 ## Latest verified local checks
 
@@ -41,17 +41,16 @@ Rough-question reminder persistence: PASS
 `pip check`: PASS
 ```
 
-These checks were performed on Linux with Python 3.13. Public GitHub CI must still establish the advertised Python 3.9–3.12 matrix on Linux, Windows, and macOS.
+Local checks do not establish the public multi-platform support matrix. GitHub CI must establish the advertised Python 3.9-3.12 matrix on Linux, Windows, and macOS.
 
 ## Exact next actions
 
-1. Publish the source using `docs/PUBLISH_TO_GITHUB.md`.
-2. Confirm every GitHub Actions job is green.
-3. Confirm the publishing script bound the real repository URL in `pyproject.toml` and `CITATION.cff`.
-4. Enable Private vulnerability reporting.
-5. Create `v1.0.0-rc1`; the tag workflow will attach wheel, sdist, portable archive, checksums, and the release-check transcript.
-6. Open public issues for an independent threat-model review, a research-domain pilot, and false-positive/false-negative fixtures.
-7. Keep grant, funding, and account-specific application drafts outside the public repository; publish only accurate acknowledgments or disclosures after an award.
+1. Confirm every GitHub Actions job is green on Linux, Windows, and macOS for each advertised Python version.
+2. Run the privacy sweep and full release check against the exact public `main` tree.
+3. Enable private vulnerability reporting in the repository security settings.
+4. Create `v1.0.0-rc1`; the tag workflow should attach the wheel, source distribution, portable archive, checksums, and release-check transcript.
+5. Open public issues for an independent threat-model review, a research-domain pilot, and false-positive/false-negative fixtures.
+6. Keep grant, funding, and account-specific application drafts outside the public repository; publish only accurate acknowledgments or disclosures after an award.
 
 ## Rules a continuation agent must not violate
 

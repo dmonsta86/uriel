@@ -4,6 +4,8 @@ title: "Uriel: Offline-first research integrity harness and provenance ledger"
 type: software
 version: 1.0.0
 date-released: 2026-08-06
+url: "https://github.com/dmonsta86/uriel"
+repository-code: "https://github.com/dmonsta86/uriel"
 license: MIT
 keywords:
   - reproducible research

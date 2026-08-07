@@ -26,22 +26,16 @@ python -m venv .release-venv
 
 PowerShell uses `.release-venv\Scripts\python.exe` instead.
 
-## First public push
+## Publish a release candidate
 
-Use [Publish to GitHub](PUBLISH_TO_GITHUB.md). The recommended Windows route is:
+Before tagging a release candidate:
 
-```powershell
-winget install --id GitHub.cli
-.\scripts\publish_github.ps1 -Repository uriel -Visibility public -OpenInBrowser
-```
+1. confirm the working tree is clean and `main` matches `origin/main`;
+2. run `python scripts/release_check.py --full`;
+3. confirm the public GitHub Actions matrix is green;
+4. run the privacy sweep again on the exact public tree.
 
-The script uses GitHub's official browser sign-in, binds repository metadata, runs local checks, creates or attaches the repository, commits any uncommitted files under a GitHub noreply identity, and pushes `main`. It never asks for a password, token, cookie, or recovery code.
-
-After the push:
-
-1. confirm the public CI matrix is green;
-2. run the privacy sweep again on the public tree;
-3. create an annotated release-candidate tag:
+Then create and push the annotated tag:
 
 ```console
 git tag -a v1.0.0-rc1 -m "Uriel 1.0.0 release candidate 1"

@@ -39,6 +39,12 @@ classifiers = [
 ]
 dependencies = []
 
+[project.urls]
+Homepage = "https://github.com/dmonsta86/uriel"
+Repository = "https://github.com/dmonsta86/uriel"
+Issues = "https://github.com/dmonsta86/uriel/issues"
+Documentation = "https://github.com/dmonsta86/uriel#readme"
+
 [project.scripts]
 uriel = "uriel.cli:main"
 
