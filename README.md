@@ -256,6 +256,40 @@ uriel reminders resolve REMINDER_ID --root . --note "Added the missing control a
 uriel reminders reopen REMINDER_ID --root . --note "New evidence changed the interpretation."
 ```
 
+## From a question to a submission
+
+Uriel does more than point out weaknesses. It can help recover the strongest viable version of an idea, turn it into a research plan, organize evidence and data, prepare a manuscript packet, and guide revisions or submission one field at a time.
+
+```text
+Rough question
+    ↓
+Uriel Seed
+    ↓
+Research plan and evidence map
+    ↓
+Uriel Workbench + Data Desk
+    ↓
+Paper Builder
+    ↓
+Three-Gate audit
+    ↓
+Submission or revision packet
+```
+
+### No installation: Uriel Lens
+
+Attach or paste a question, proposal, paper, or codebase into an AI chat and use the Uriel Lens prompt. It will identify the intended contribution, trace visible evidence, find gaps and contradictions, and propose the strongest honest path forward. Lens is advisory: it cannot inspect files it was not given, bind a review to artifact hashes, preserve an audit ledger, or issue The Blessing of Uriel.
+
+### Guided submission and revision
+
+Full Uriel can prepare a standalone packet containing the project summary, required actions, evidence map, manuscript checklist, response-to-reviewers draft, form entries, character counts, attachments, and one instruction file. Users can review the complete packet or ask Uriel to walk through the submission one field at a time.
+
+A positive editorial decision does not end the workflow. Uriel records the decision, identifies every remaining obligation, prepares the response or production packet, and preserves the accepted or revised project generation.
+
+### Designed for limited budgets
+
+The deterministic core works offline. Optional AI use is provider-neutral and advisory. Uriel can create small, resumable context packets for free or rate-limited models and clearly warns users to consider privacy before uploading unpublished or sensitive work.
+
 ## Offline first; AI optional
 
 The trusted core does not need AI. Uriel identifies tasks that genuinely require semantic judgment, literature search, or domain expertise and can export a bounded prompt for a human reviewer, a local model, OpenCode, ChatGPT Web, DeepSeek Web, or another service.
@@ -293,7 +327,7 @@ flowchart LR
 
 The AI boundary remains outside the trust core. Imported reviews must match the current project and source hashes. Their existence cannot pass a Gate; every proposed locator and interpretation still has to be inspected and registered.
 
-Read [Why Uriel?](docs/WHY_URIEL.md), the [Three Gates in detail](docs/THREE_GATES.md), the [architecture](docs/ARCHITECTURE.md), [Blessing specification](docs/BLESSING_SPEC.md), [threat model](docs/THREAT_MODEL.md), [philosophy](docs/PHILOSOPHY.md), and [known limitations](docs/LIMITATIONS.md).
+Read [Why Uriel?](docs/WHY_URIEL.md), the [Three Gates in detail](docs/THREE_GATES.md), the [architecture](docs/ARCHITECTURE.md), the [research lifecycle design](docs/LIFECYCLE.md), [Blessing specification](docs/BLESSING_SPEC.md), [threat model](docs/THREAT_MODEL.md), [philosophy](docs/PHILOSOPHY.md), and [known limitations](docs/LIMITATIONS.md).
 
 ## Portable use
 
