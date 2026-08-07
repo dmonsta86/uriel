@@ -182,7 +182,6 @@ def make_sort_spec(
         "analysis_plan_sha256": None if analysis_plan is None else sha256_file(
             guard_path(root_path, root_path / analysis_plan, must_exist=True)
         ),
-        "created_at_utc": utc_now(),
     }
     spec_bytes = canonical_json(spec)
     spec_sha = sha256_text(spec_bytes)
