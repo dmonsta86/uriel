@@ -50,6 +50,16 @@ class FakeProcess:
         self.stopped = True
         self.returncode = -signum
 
+    def communicate(self, input=None, timeout=None):
+        del input, timeout
+        return None, None
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc_info):
+        return False
+
 
 class ReleaseCheckInterruptionTests(unittest.TestCase):
     def test_signal_handler_raises_recoverable_exception(self) -> None:
@@ -109,6 +119,14 @@ class ReleaseCheckInterruptionTests(unittest.TestCase):
                 )
                 if module.os.name != "nt":
                     stack.enter_context(patch.object(module.os, "killpg", side_effect=fake.stop_group))
+                else:
+                    stack.enter_context(
+                        patch.object(
+                            module.subprocess,
+                            "run",
+                            return_value=type("Completed", (), {"returncode": 1})(),
+                        )
+                    )
                 with self.assertRaises(SystemExit) as caught:
                     module.run(
                         ["fake-command"],
