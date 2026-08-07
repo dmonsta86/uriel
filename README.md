@@ -256,6 +256,48 @@ uriel reminders resolve REMINDER_ID --root . --note "Added the missing control a
 uriel reminders reopen REMINDER_ID --root . --note "New evidence changed the interpretation."
 ```
 
+## Try Uriel without installing anything
+
+**Uriel Lens** is a copy-paste, read-only first pass for people who have a
+question or project but do not want to install software yet.
+
+Attach a paper, proposal, codebase, notes, or even a rough idea to an AI chat,
+then paste the [compact Uriel Lens prompt](src/uriel/data/lens/URIEL_LENS_COMPACT.txt). It
+will:
+
+- recover the strongest version of what you are trying to do;
+- show whether the project may be reaching toward a larger question;
+- map claims to the evidence you actually supplied;
+- check clarity, evidence, contradictions, omitted assumptions, controls, and
+  adversarial weaknesses;
+- fill the gaps it can fill honestly;
+- give a minimum repair, best practical path, and next three actions.
+
+No account or model is endorsed. Think about privacy before uploading sensitive
+material. A local model or redacted copy may be the safer choice.
+
+> **Boundary:** Uriel Lens is advisory. It cannot inspect material it was not
+> given, bind artifacts to hashes, preserve a reproducible ledger, or issue
+> **The Blessing of Uriel**. Use the full harness when provenance and formal
+> verification matter.
+
+Choose a starting point:
+
+- [Copy-paste review](src/uriel/data/lens/URIEL_LENS_COMPACT.txt)
+- [Full project review](src/uriel/data/lens/URIEL_LENS_FULL.md)
+- [Turn a rough question into a project](src/uriel/data/lens/URIEL_SEED_PROMPT.txt)
+- [Install as a portable agent skill](src/uriel/data/lens/uriel-lens-skill.md)
+- [How Uriel Lens works](src/uriel/data/lens/COPY_THIS_ONE.txt)
+
+Installed copies can print the same prompts directly:
+
+```console
+uriel lens --which compact
+uriel lens --which full
+uriel lens --which seed
+uriel lens --which skill
+```
+
 ## From a question to a submission
 
 Uriel does more than point out weaknesses. It can help recover the strongest viable version of an idea, turn it into a research plan, organize evidence and data, prepare a manuscript packet, and guide revisions or submission one field at a time.
