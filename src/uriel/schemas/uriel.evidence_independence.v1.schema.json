@@ -1,0 +1,57 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.evidence_independence.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "claim_id": {
+      "type": "string"
+    },
+    "decision": {
+      "enum": [
+        "ADEQUATE",
+        "INSUFFICIENT",
+        "CONFLICTED",
+        "STALE"
+      ]
+    },
+    "edges": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "independent_families": {
+      "items": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "type": "array"
+    },
+    "nodes": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schema": {
+      "const": "uriel.evidence_independence.v1"
+    },
+    "shared_failure_modes": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema",
+    "claim_id",
+    "nodes",
+    "edges",
+    "independent_families"
+  ],
+  "title": "Uriel Evidence Independence Graph",
+  "type": "object"
+}

@@ -1,0 +1,62 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.evidence_strength.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "claim_id": {
+      "type": "string"
+    },
+    "critical_dimensions": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "decision": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "BLOCKED",
+        "STALE"
+      ]
+    },
+    "dimensions": {
+      "additionalProperties": {
+        "enum": [
+          "UNASSESSED",
+          "INSUFFICIENT",
+          "PARTIAL",
+          "ADEQUATE_WITHIN_SCOPE",
+          "STRONG_WITHIN_SCOPE",
+          "CONFLICTED",
+          "REFUTED",
+          "STALE",
+          "NOT_APPLICABLE_VERIFIED"
+        ]
+      },
+      "type": "object"
+    },
+    "independent_evidence_families": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "notes": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schema": {
+      "const": "uriel.evidence_strength.v1"
+    }
+  },
+  "required": [
+    "schema",
+    "claim_id",
+    "dimensions",
+    "critical_dimensions",
+    "decision"
+  ],
+  "title": "Uriel Evidence Strength Vector",
+  "type": "object"
+}

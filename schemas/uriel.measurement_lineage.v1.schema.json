@@ -1,0 +1,50 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.measurement_lineage.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "final_record_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "measurements": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "record_id": {
+      "type": "string"
+    },
+    "schema": {
+      "const": "uriel.measurement_lineage.v1"
+    },
+    "source_artifact_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "COMPLETE",
+        "PARTIAL",
+        "BLOCKED",
+        "STALE"
+      ]
+    },
+    "transformations": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema",
+    "record_id",
+    "source_artifact_sha256",
+    "measurements",
+    "transformations"
+  ],
+  "title": "Uriel Measurement and Transformation Lineage",
+  "type": "object"
+}
