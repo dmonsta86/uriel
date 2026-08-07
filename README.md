@@ -50,7 +50,7 @@ The trusted core uses only the Python standard library:
 Copy the HTTPS address from the repository's **Code** button, then:
 
 ```console
-git clone https://github.com/dmonsta86/uriel
+git clone https://github.com/dmonsta86/uriel.git
 cd uriel
 python -m pip install .
 uriel --version
