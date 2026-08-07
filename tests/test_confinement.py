@@ -50,6 +50,29 @@ class ConfinementTests(unittest.TestCase):
                 guard_path(root, link / "file.txt")
             self.assertEqual(caught.exception.code, "LINK_TRAVERSAL_REFUSAL")
 
+    def test_project_link_is_refused_even_when_root_spelling_goes_through_ancestor_link(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            real = base / "real"
+            real.mkdir()
+            try:
+                alias = base / "alias"
+                os.symlink(str(real), str(alias), target_is_directory=True)
+            except (OSError, NotImplementedError):
+                self.skipTest("symlink creation is unavailable for this account")
+            root = alias / "project"
+            initialize_project(root, title="x", question="q")
+            outside = real / "outside"
+            outside.mkdir()
+            link = root / "linked"
+            try:
+                os.symlink(str(outside), str(link), target_is_directory=True)
+            except (OSError, NotImplementedError):
+                self.skipTest("symlink creation is unavailable for this account")
+            with self.assertRaises(Refusal) as caught:
+                guard_path(root, link / "file.txt")
+            self.assertEqual(caught.exception.code, "LINK_TRAVERSAL_REFUSAL")
+
 
 if __name__ == "__main__":
     unittest.main()

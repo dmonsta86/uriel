@@ -28,8 +28,11 @@ function Invoke-Uriel {
     # unchanged on Windows PowerShell 5.1 as well as PowerShell 7+.
     $ArgumentList = @($args)
 
-    $python = Get-UrielPythonCommand
-    $exe = $python[0]
+    # Force array semantics. When only `python` is available, PowerShell
+    # otherwise unwraps the one-item result to a string and `$python[0]`
+    # becomes the first character of the executable path.
+    $python = @(Get-UrielPythonCommand)
+    $exe = [string]$python[0]
     $prefix = @()
     if ($python.Count -gt 1) {
         $prefix = $python[1..($python.Count - 1)]
@@ -42,7 +45,6 @@ function Invoke-Uriel {
     else {
         & $exe @prefix -m uriel @ArgumentList
     }
-    return $LASTEXITCODE
 }
 
 function Initialize-UrielProject {
