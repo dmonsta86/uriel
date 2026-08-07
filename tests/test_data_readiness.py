@@ -116,7 +116,7 @@ class DataReadinessTests(unittest.TestCase):
         first = readiness_check(self.root)
         second = readiness_check(self.root)
         self.assertEqual(first["receipt"]["binding_digest"], second["receipt"]["binding_digest"])
-        self.assertEqual(first["receipt_sha256"], second["receipt_sha256"])
+        self.assertEqual(first["receipt"]["source_generation"], second["receipt"]["source_generation"])
 
     def test_jsonl_supported(self):
         path = self.root / "artifacts" / "rows.jsonl"

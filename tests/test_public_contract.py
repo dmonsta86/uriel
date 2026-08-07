@@ -13,7 +13,7 @@ class PublicContractTests(unittest.TestCase):
         text = (ROOT / "README.md").read_text(encoding="utf-8")
         required = (
             "# Uriel Forge",
-            "## Current capability status",
+            "## Current audited capability status",
             "## The Blessing of Uriel",
             "## The Three Gates",
             "Gate 1 — Novelty and Clarity",
@@ -28,7 +28,7 @@ class PublicContractTests(unittest.TestCase):
         text = (ROOT / "README.md").read_text(encoding="utf-8")
         for token in (
             "## The research path",
-            "Question or existing project",
+            "Rough question or existing project",
             "Gate 0",
             "Gate 1",
             "Gate 2",
@@ -39,14 +39,14 @@ class PublicContractTests(unittest.TestCase):
     def test_readme_lens_is_advisory_and_cannot_bless(self) -> None:
         text = (ROOT / "README.md").read_text(encoding="utf-8")
         self.assertIn("The Blessing of Uriel", text)
-        self.assertIn("AI is optional", text)
-        self.assertIn("issue a Blessing", text)
+        self.assertIn("Use Uriel with or without AI", text)
+        self.assertIn("Strict Blessing issuance is **experimental and should remain disabled**", text)
 
     def test_readme_packet_and_budget_sections(self) -> None:
         text = (ROOT / "README.md").read_text(encoding="utf-8")
         self.assertIn("## Use Uriel with or without AI", text)
         self.assertIn("Compatible local model", text)
-        self.assertIn("Compatible web AI", text)
+        self.assertIn("Maintainer note", text)
 
     def test_lifecycle_doc_covers_all_planned_surfaces(self) -> None:
         text = (ROOT / "docs" / "LIFECYCLE.md").read_text(encoding="utf-8")
