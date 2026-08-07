@@ -52,13 +52,6 @@ Official references checked 2026-08-06:
 - https://developers.openai.com/api/docs/guides/your-data
 - https://openai.com/enterprise-privacy/
 
-## compatible external agent
+## External AI Agents & Adapters
 
-compatible external agent itself can call many providers or local models. The selected provider determines important data behavior. compatible external agent Zen's current page lists free-model-specific exceptions in which collected data may be used for improvement and warns against personal or confidential data for some endpoints. Recheck the live page rather than relying on this repository's snapshot.
-
-Official references checked 2026-08-06:
-
-- https://compatible external agent.ai/docs/
-- https://compatible external agent.ai/docs/zen/
-- https://compatible external agent.ai/docs/providers/
-- https://compatible external agent.ai/docs/share/
+External AI agents can call many providers or local models. The selected provider and hosting environment determine important data behavior. Review your provider's current data controls and privacy terms before processing sensitive research material.

@@ -32,32 +32,16 @@ Copy `dist/uriel.pyz` to any machine with Python 3.9+:
 python uriel.pyz intake "My question" --root my-project
 ```
 
-## Route C — compatible external agent with a currently free model
+## Route C — provider-neutral external agent with a free or local model
 
-Install compatible external agent using one of its official methods:
-
-```bash
-# macOS/Linux installer
-curl -fsSL https://compatible external agent.ai/install | bash
-
-# Node.js
-npm install -g compatible external agent-ai
-
-# macOS/Linux Homebrew
-brew install anomalyco/tap/compatible external agent
-```
-
-Windows users can use WSL (recommended by compatible external agent), Chocolatey, Scoop, or npm:
-
-```powershell
-choco install compatible external agent
-# or
-scoop install compatible external agent
-# or
-npm install -g compatible external agent-ai
-```
+Optionally use a provider-neutral open-source agent or CLI tool installed via your preferred package manager (e.g., `npm`, `pip`, `brew`, or native installer).
 
 Then:
+
+```bash
+# Example generic model command
+uriel prompt my-study clarity --provider generic --show
+```
 
 ```bash
 cd /path/to/your/uriel-project
@@ -73,45 +57,21 @@ Use the free pool in short, bounded bursts:
 ```bash
 uriel prompt clarity --root . --provider compatible external agent
 uriel prompt primary-evidence --root . --provider compatible external agent
-compatible external agent models
-```
-
 Start with one claim, one contradiction, or one source. Save scarce context for synthesis only after the evidence table is clean.
 
 The direct adapter is optional:
 
 ```bash
-uriel assist adversarial-review \
-  --root . \
-  --model PROVIDER/MODEL \
-  --acknowledge-external
+uriel prompt repair-review --root . --provider generic --show
 ```
 
-It calls compatible external agent with an attached hash-bound prompt and imports only the required review JSON. The model still cannot pass a Gate.
+It builds a hash-bound review prompt and imports only the required review JSON. The model still cannot pass a Gate.
 
-## Route D — compatible external agent with an offline local model
+## Route D — provider-neutral agent with an offline local model
 
-compatible external agent supports local OpenAI-compatible servers, including configurations for Ollama, LM Studio, llama.cpp, and similar tools. The exact hardware-appropriate model is deliberately not hard-coded in Uriel.
+Local OpenAI-compatible inference tools (such as Ollama, LM Studio, llama.cpp, and similar tools) may be used offline. The exact hardware-appropriate model is deliberately not hard-coded in Uriel.
 
-Typical `compatible external agent.json` fragment for Ollama:
-
-```json
-{
-  "$schema": "https://compatible external agent.ai/config.json",
-  "provider": {
-    "ollama": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Ollama (local)",
-      "options": {"baseURL": "http://127.0.0.1:11434/v1"},
-      "models": {
-        "YOUR_LOCAL_MODEL": {"name": "Local research helper"}
-      }
-    }
-  }
-}
-```
-
-Keep the server bound to loopback, disable sharing, inspect logs/plugins, and confirm the application does not upload prompts or telemetry.
+Keep the server bound to loopback (`127.0.0.1`), disable sharing, inspect logs/plugins, and confirm the application does not upload prompts or telemetry.
 
 ## Route E — web chat with zero initial investment
 
