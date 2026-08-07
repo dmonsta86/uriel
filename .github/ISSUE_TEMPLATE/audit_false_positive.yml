@@ -1,0 +1,51 @@
+name: Audit false positive
+description: Uriel reported a defect that the available evidence does not support.
+title: "[Audit false positive]: "
+labels: ["type:audit-false-positive", "status:triage"]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Uriel version and exact commit
+    validations:
+      required: true
+  - type: textarea
+    id: finding
+    attributes:
+      label: Uriel finding
+      description: Include the finding ID, gate/check ID, severity, and exact wording.
+    validations:
+      required: true
+  - type: dropdown
+    id: ground_truth
+    attributes:
+      label: Ground-truth basis
+      options:
+        - Seeded deterministic benchmark
+        - Official correction/retraction/source event
+        - Author-confirmed evidence
+        - Independent human adjudication
+        - Unresolved disagreement
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Why the finding is unsupported
+      description: Cite exact artifact locations and explain the expected classification.
+    validations:
+      required: true
+  - type: textarea
+    id: fixture
+    attributes:
+      label: Minimal redistributable fixture or reproduction
+      description: Use synthetic or sanitized data where possible.
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy
+      options:
+        - label: I removed restricted or identifying research content.
+          required: true

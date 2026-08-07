@@ -1,0 +1,43 @@
+name: Feature proposal
+description: Propose a bounded improvement to Uriel.
+title: "[Feature]: "
+labels: ["type:feature", "status:triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem
+      description: Describe the research or maintenance problem without prescribing a solution first.
+    validations:
+      required: true
+  - type: textarea
+    id: current_path
+    attributes:
+      label: Current workaround
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: authority
+    attributes:
+      label: Authority and safety impact
+      description: Could this affect Data Readiness, gates, Blessing, source writes, privacy, network, or publication authority?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Verifiable completion condition
+      description: What exact test or user outcome would prove the feature is complete?
+    validations:
+      required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: I understand that a roadmap specification is not a shipped feature.
+          required: true

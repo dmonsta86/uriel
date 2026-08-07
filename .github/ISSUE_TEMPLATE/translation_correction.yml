@@ -1,0 +1,43 @@
+name: Translation correction
+description: Improve a localized README, message, term, prompt, or alt text.
+title: "[Translation]: "
+labels: ["type:translation", "status:triage"]
+body:
+  - type: input
+    id: locale
+    attributes:
+      label: Locale
+      placeholder: "es, fr, pt-BR, zh-Hans, ar, hi, ja"
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: File, message ID, or asset
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current wording
+    validations:
+      required: true
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed wording
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Why is this more accurate or natural?
+    validations:
+      required: true
+  - type: checkboxes
+    id: semantics
+    attributes:
+      label: Scientific and safety semantics
+      options:
+        - label: The proposal does not strengthen a capability status or weaken an authority, privacy, security, or limitation statement.
+          required: true

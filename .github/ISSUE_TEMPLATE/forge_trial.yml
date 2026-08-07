@@ -1,0 +1,45 @@
+name: Forge Trial proposal
+description: Propose a synthetic, open-license, or consented public demonstration.
+title: "[Forge Trial]: "
+labels: ["type:forge-trial", "status:triage"]
+body:
+  - type: dropdown
+    id: class
+    attributes:
+      label: Trial class
+      options:
+        - Synthetic Gold Standard
+        - Maintainer self-audit
+        - Open-license paper
+        - Official source-event case
+        - Reproducibility package
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Source, license, and redistribution rights
+    validations:
+      required: true
+  - type: textarea
+    id: ground_truth
+    attributes:
+      label: Ground-truth basis and human adjudication plan
+    validations:
+      required: true
+  - type: textarea
+    id: metrics
+    attributes:
+      label: Proposed metrics
+      description: Include false positives and misses, not detections alone.
+    validations:
+      required: true
+  - type: checkboxes
+    id: ethics
+    attributes:
+      label: Rights and fairness
+      options:
+        - label: The trial audits artifacts and claims, not author character.
+          required: true
+        - label: Restricted participant, peer-review, or unpublished third-party material will not be exposed.
+          required: true
