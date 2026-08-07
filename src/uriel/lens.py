@@ -32,15 +32,19 @@ NAMES = ("compact", "full", "seed", "skill", "example", "copy_this_one")
 
 
 def _asset_bytes(name: str) -> bytes:
-    resource = resources.files(LENS_PACKAGE).joinpath(name)
     try:
+        resource = resources.files(LENS_PACKAGE).joinpath(name)
         raw = resource.read_bytes()
-    except (OSError, FileNotFoundError, IsADirectoryError) as exc:
-        raise Refusal(
-            "Lens asset {0} is missing from the installation.".format(name),
-            code="LENS_ASSET_MISSING",
-            repairs=["Reinstall or rebuild the package; the lens data files ship inside the wheel."],
-        ) from exc
+    except Exception:
+        fallback = Path(__file__).parent / "data" / "lens" / name
+        if fallback.is_file():
+            raw = fallback.read_bytes()
+        else:
+            raise Refusal(
+                "Lens asset {0} is missing from the installation.".format(name),
+                code="LENS_ASSET_MISSING",
+                repairs=["Reinstall or rebuild the package; the lens data files ship inside the wheel."],
+            )
     digest = hashlib.sha256(raw).hexdigest()
     expected = MANIFEST.get(name)
     if expected is None:
