@@ -1,0 +1,117 @@
+{
+  "$id": "uriel.preflight.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "byte_count": {
+      "type": "integer"
+    },
+    "cloud_sync_indicators": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "copy_estimate": {
+      "additionalProperties": false,
+      "properties": {
+        "bytes": {
+          "type": "integer"
+        },
+        "files": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "files",
+        "bytes"
+      ],
+      "type": "object"
+    },
+    "detected_uriel_state": {
+      "type": "boolean"
+    },
+    "detected_vcs": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "file_count": {
+      "type": "integer"
+    },
+    "formats": {
+      "additionalProperties": false,
+      "properties": {
+        "supported": {
+          "type": "integer"
+        },
+        "unsupported": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "supported",
+        "unsupported"
+      ],
+      "type": "object"
+    },
+    "generated_at_utc": {
+      "type": "string"
+    },
+    "link_or_reparse_presence": {
+      "type": "boolean"
+    },
+    "link_paths": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "read_only_feasible": {
+      "const": true
+    },
+    "root_hash": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "schema": {
+      "const": "uriel.preflight.v1"
+    },
+    "selected_root": {
+      "type": "string"
+    },
+    "sensitive_file_indications": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "unreadable_paths": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema",
+    "selected_root",
+    "root_hash",
+    "file_count",
+    "byte_count",
+    "detected_vcs",
+    "detected_uriel_state",
+    "link_or_reparse_presence",
+    "link_paths",
+    "unreadable_paths",
+    "cloud_sync_indicators",
+    "sensitive_file_indications",
+    "formats",
+    "copy_estimate",
+    "read_only_feasible",
+    "generated_at_utc"
+  ],
+  "title": "Uriel metadata-only preflight",
+  "type": "object"
+}

@@ -1,0 +1,97 @@
+﻿{
+  "$id": "uriel.workspace_consent.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allowed_paths": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "cloud_sync_acknowledged": {
+      "type": "boolean"
+    },
+    "confirmation": {
+      "enum": [
+        "explicit_user",
+        "installer_default_read_only"
+      ]
+    },
+    "created_at_utc": {
+      "type": "string"
+    },
+    "denied_paths": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "mode": {
+      "enum": [
+        "metadata_only",
+        "read_only",
+        "safe_copy",
+        "in_place"
+      ]
+    },
+    "permissions": {
+      "additionalProperties": false,
+      "properties": {
+        "content_read": {
+          "type": "boolean"
+        },
+        "copy": {
+          "type": "boolean"
+        },
+        "external_directory": {
+          "type": "boolean"
+        },
+        "network": {
+          "type": "boolean"
+        },
+        "write": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "content_read",
+        "write",
+        "network",
+        "external_directory",
+        "copy"
+      ],
+      "type": "object"
+    },
+    "project_root_hash": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "review_at_utc": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "schema": {
+      "const": "uriel.workspace_consent.v1"
+    },
+    "sensitive_data_acknowledged": {
+      "type": "boolean"
+    },
+    "workspace_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "workspace_id",
+    "project_root_hash",
+    "mode",
+    "permissions",
+    "created_at_utc",
+    "confirmation"
+  ],
+  "title": "Uriel workspace consent",
+  "type": "object"
+}

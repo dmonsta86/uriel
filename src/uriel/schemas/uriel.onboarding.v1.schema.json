@@ -1,0 +1,70 @@
+﻿{
+  "$id": "uriel.onboarding.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allowed_root_hash": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "consent_record_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "created_at_utc": {
+      "type": "string"
+    },
+    "data_readiness": {
+      "type": "string"
+    },
+    "entry_kind": {
+      "enum": [
+        "new_idea",
+        "existing_project",
+        "manuscript",
+        "submission_form",
+        "submission_decision",
+        "resume",
+        "read_only_review"
+      ]
+    },
+    "mode": {
+      "enum": [
+        "metadata_only",
+        "read_only",
+        "safe_copy",
+        "in_place"
+      ]
+    },
+    "output_root": {
+      "type": "string"
+    },
+    "publication_authority": {
+      "type": "string"
+    },
+    "schema": {
+      "const": "uriel.onboarding.v1"
+    },
+    "source_generation": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "workspace_id": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "workspace_id",
+    "entry_kind",
+    "mode",
+    "allowed_root_hash",
+    "consent_record_sha256",
+    "created_at_utc"
+  ],
+  "title": "Uriel onboarding state",
+  "type": "object"
+}

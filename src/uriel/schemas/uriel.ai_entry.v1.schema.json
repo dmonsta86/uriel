@@ -1,0 +1,75 @@
+﻿{
+  "$id": "uriel.ai_entry.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allowed_root_hash": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "authority_write": {
+      "const": false
+    },
+    "blessing_authority": {
+      "const": false
+    },
+    "completion_conditions": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "consent_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "current_task": {
+      "type": "string"
+    },
+    "files_allowed": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "files_denied": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "files_required": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "mode": {
+      "type": "string"
+    },
+    "network_allowed": {
+      "type": "boolean"
+    },
+    "schema": {
+      "const": "uriel.ai_entry.v1"
+    },
+    "workspace_id": {
+      "type": "string"
+    },
+    "write_allowed": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "schema",
+    "workspace_id",
+    "mode",
+    "allowed_root_hash",
+    "consent_sha256",
+    "authority_write",
+    "blessing_authority",
+    "current_task"
+  ],
+  "title": "Uriel AI entry state",
+  "type": "object"
+}

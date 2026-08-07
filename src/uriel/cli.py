@@ -43,6 +43,17 @@ from .core import (
 from .decisions import DECISION_CLASSES
 from .intake import intake_idea
 from .lens import lens_names, lens_prompt, write_lens
+from .onboarding import (
+    ENTRY_KINDS,
+    consent_set,
+    consent_status,
+    inplace_dryrun,
+    inplace_verify,
+    preflight,
+    review_workspace,
+    safe_copy,
+    start as start_workspace,
+)
 from .prompts import build_prompt
 from .reviews import REVIEW_TASKS, import_review, list_reviews, review_template
 from .schema import validate_project
@@ -95,6 +106,46 @@ def parser() -> argparse.ArgumentParser:
     init.add_argument("--question", default="")
     init.add_argument("--privacy", choices=("public", "internal", "confidential", "restricted"), default="public")
     init.add_argument("--force", action="store_true")
+
+    start_cmd = commands.add_parser("start", help="scaffold a Uriel workspace: entry files, consent, and mode")
+    _root_argument(start_cmd)
+    start_cmd.add_argument("--kind", choices=ENTRY_KINDS, default=None,
+                           help="explicit entry kind; never inferred from file contents")
+    start_cmd.add_argument("--current-task", default="")
+    start_cmd.add_argument("--title", default="")
+    start_cmd.add_argument("--question", default="")
+    start_cmd.add_argument("--privacy", choices=("public", "internal", "confidential", "restricted"), default="public")
+    start_cmd.add_argument("--force", action="store_true")
+
+    preflight_cmd = commands.add_parser("preflight", help="metadata-only preflight of a workspace root")
+    _root_argument(preflight_cmd)
+
+    consent = commands.add_parser("consent", help="create or inspect immutable workspace consent records")
+    consent_actions = consent.add_subparsers(dest="consent_action", required=True)
+    consent_status_cmd = consent_actions.add_parser("status", help="show the latest consent record")
+    _root_argument(consent_status_cmd)
+    consent_set_cmd = consent_actions.add_parser("set", help="create a new consent record (records are immutable)")
+    _root_argument(consent_set_cmd)
+    consent_set_cmd.add_argument("--mode", required=True, choices=("metadata_only", "read_only", "safe_copy", "in_place"))
+    consent_set_cmd.add_argument("--confirm", choices=("explicit_user", "installer_default_read_only"), default="explicit_user")
+    consent_set_cmd.add_argument("--cloud-sync-acknowledged", action="store_true")
+    consent_set_cmd.add_argument("--sensitive-acknowledged", action="store_true")
+    consent_set_cmd.add_argument("--network", action="store_true")
+    consent_set_cmd.add_argument("--external-dir", action="store_true")
+    consent_set_cmd.add_argument("--copy", action="store_true")
+
+    workspace = commands.add_parser("workspace", help="workspace modes: review, safe copy, in-place")
+    workspace_actions = workspace.add_subparsers(dest="workspace_action", required=True)
+    ws_review = workspace_actions.add_parser("review", help="create a read-only review workspace outside the source root")
+    _root_argument(ws_review)
+    ws_review.add_argument("--output", default="")
+    ws_copy = workspace_actions.add_parser("copy", help="build a verified safe working copy")
+    _root_argument(ws_copy)
+    ws_copy.add_argument("--destination", default="")
+    ws_inplace = workspace_actions.add_parser("inplace-dryrun", help="record an in-place plan without any source write")
+    _root_argument(ws_inplace)
+    ws_inplace_verify = workspace_actions.add_parser("inplace-verify", help="verify the source generation is unchanged")
+    _root_argument(ws_inplace_verify)
 
     intake = commands.add_parser("intake", help="preserve a rough question and create or update a project")
     intake.add_argument("question")
@@ -404,6 +455,57 @@ def _print_human(command: str, result: Any, args: Optional[argparse.Namespace] =
             print()
             print(result.get("prompt", ""))
         return
+    if command == "start" and isinstance(result, Mapping):
+        print("Workspace: {0} · {1} · mode {2}".format(
+            result.get("workspace_id"), result.get("entry_kind"), result.get("mode")))
+        print("Consent record: {0}".format(result.get("consent_sha256")))
+        print("Files written: {0}".format(", ".join(result.get("files_written", []))))
+        print("Next: {0}".format(result.get("next_step")))
+        return
+    if command == "preflight" and isinstance(result, Mapping):
+        print("Preflight: {0} files, {1} bytes · root hash {2}".format(
+            result.get("file_count"), result.get("byte_count"), result.get("root_hash")))
+        print("VCS: {0} · Uriel state: {1} · links: {2}".format(
+            ", ".join(result.get("detected_vcs", [])) or "none",
+            result.get("detected_uriel_state"), len(result.get("link_paths", []))))
+        print("Cloud-sync indicators: {0} · sensitive-name indications: {1}".format(
+            ", ".join(result.get("cloud_sync_indicators", [])) or "none",
+            len(result.get("sensitive_file_indications", []))))
+        return
+    if command == "consent" and isinstance(result, Mapping):
+        if args.consent_action == "status":
+            if not result.get("exists"):
+                print("No consent record yet. Run `uriel consent set --mode read_only`.")
+                return
+            latest = result.get("latest", {})
+            print("Consent: {0} records · latest mode {1} · record {2}".format(
+                result.get("records"), latest.get("mode"), latest.get("record_sha256")))
+            permissions = latest.get("permissions", {})
+            print("Permissions: " + ", ".join("{0}={1}".format(key, value) for key, value in sorted(permissions.items())))
+            return
+        print("Consent record: {0} · mode {1}{2}".format(
+            result.get("record_sha256"), result.get("mode"),
+            "" if result.get("created") else " (unchanged)"))
+        return
+    if command == "workspace" and isinstance(result, Mapping):
+        if args.workspace_action == "review":
+            print("Review workspace: {0}".format(result.get("review_workspace")))
+            print("Files: {0}".format(", ".join(result.get("files", []))))
+            return
+        if args.workspace_action == "copy":
+            print("Safe copy: {0} · files copied {1}".format(
+                result.get("destination"), result.get("files_copied")))
+            print("Original generation unchanged: {0}".format(result.get("same_original_generation")))
+            print("Copy manifest: {0}".format(result.get("copy_manifest_sha256")))
+            return
+        if args.workspace_action == "inplace-dryrun":
+            print("In-place dry run recorded: {0}".format(result.get("path")))
+            print(result.get("note"))
+            return
+        if args.workspace_action == "inplace-verify":
+            print("In-place verify: unchanged = {0} · generation {1}".format(
+                result.get("unchanged"), result.get("source_generation")))
+            return
     if command == "reminders" and isinstance(result, list):
         if not result:
             print("No matching reminders.")
@@ -489,6 +591,40 @@ def dispatch(args: argparse.Namespace) -> Any:
             )
         if args.burst_action == "verify":
             return verify_burst(args.packet_dir)
+    if command == "start":
+        return start_workspace(
+            args.root,
+            args.kind,
+            current_task=args.current_task,
+            title=args.title,
+            question=args.question,
+            privacy=args.privacy,
+            force=args.force,
+        )
+    if command == "preflight":
+        return preflight(args.root)
+    if command == "consent":
+        if args.consent_action == "status":
+            return consent_status(args.root)
+        return consent_set(
+            args.root,
+            args.mode,
+            confirmation=args.confirm,
+            cloud_sync_acknowledged=args.cloud_sync_acknowledged,
+            sensitive_data_acknowledged=args.sensitive_acknowledged,
+            network=args.network,
+            external_directory=args.external_dir,
+            copy=args.copy or None,
+        )
+    if command == "workspace":
+        if args.workspace_action == "review":
+            return review_workspace(args.root, output=args.output or None)
+        if args.workspace_action == "copy":
+            return safe_copy(args.root, destination=args.destination or None)
+        if args.workspace_action == "inplace-dryrun":
+            return inplace_dryrun(args.root)
+        if args.workspace_action == "inplace-verify":
+            return inplace_verify(args.root)
     if command == "validate":
         return validate_project(args.root)
     if command == "add-evidence":
