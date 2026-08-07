@@ -1,5 +1,11 @@
 # Uriel
-
+<p align="center">
+  <img
+    src="docs/assets/uriel-banner.png"
+    alt="Uriel — Question assumptions. Trace evidence. Strengthen research."
+    width="100%"
+  >
+</p>
 <p align="center"><strong>Illuminating reproducible research, schema validation, and artifact provenance for AI engineering.</strong></p>
 
 <p align="center">
