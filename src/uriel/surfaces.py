@@ -14,7 +14,7 @@ import re
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Union
 
-from .core import Refusal, guard_path, paths_for, sha256_file, sha256_text, utc_now
+from .core import Refusal, canonical_root, guard_path, paths_for, sha256_file, sha256_text, utc_now
 
 BURST_SCHEMA = "uriel.burst.v1"
 DEFAULT_BUDGET_BYTES = 32_000
@@ -194,7 +194,7 @@ def burst_init(
     """Create the next bounded burst packet from project record files."""
     if not next_task.strip():
         raise Refusal("A next_task is required.", code="BURST_TASK_REQUIRED")
-    root_path = Path(root).expanduser()
+    root_path = canonical_root(root)
     paths = paths_for(root_path)
     if packet_index is None:
         packet_index = _next_index(root_path)
