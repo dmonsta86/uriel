@@ -1,0 +1,107 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "uriel.gate_decision.v1",
+    "title": "Uriel strict gate decision",
+    "description": "Immutable content-addressed authoritative gate decision produced only by deterministic Uriel code.",
+    "type": "object",
+    "required": [
+        "schema",
+        "schema_version",
+        "gate",
+        "gate_name",
+        "decision",
+        "policy",
+        "created_at_utc",
+        "required_check_count",
+        "executed_check_count",
+        "passed_check_count",
+        "failed_check_count",
+        "blocked_check_count",
+        "not_applicable_count",
+        "unresolved_blocker_count",
+        "binding_digest",
+        "decision_sha256",
+        "checks"
+    ],
+    "properties": {
+        "schema": { "const": "uriel.gate_decision.v1" },
+        "schema_version": { "const": 1 },
+        "gate": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "gate_name": { "type": "string" },
+        "decision": {
+            "type": "string",
+            "enum": [
+                "PASS",
+                "FAIL_REFUTED",
+                "FAIL_INCOMPLETE",
+                "FAIL_CONTRADICTORY",
+                "FAIL_UNTESTABLE",
+                "FAIL_UNSUPPORTED",
+                "FAIL_STALE",
+                "FAIL_TAMPERED",
+                "FAIL_DATA_NOT_READY",
+                "FAIL_ADVERSARIAL",
+                "FAIL_SCOPE_MISMATCH",
+                "FAIL_NOVELTY_NOT_ESTABLISHED",
+                "FAIL_REPRODUCIBILITY",
+                "BLOCKED_MISSING_ACCESS",
+                "BLOCKED_MISSING_ARTIFACT",
+                "BLOCKED_AMBIGUOUS_IDENTITY",
+                "BLOCKED_AMBIGUOUS_DEFINITION",
+                "BLOCKED_EXTERNAL_VERIFICATION_REQUIRED",
+                "NEEDS_CLARIFICATION",
+                "NOT_APPLICABLE"
+            ]
+        },
+        "policy": { "type": "string" },
+        "created_at_utc": { "type": "string", "format": "date-time" },
+        "required_check_count": { "type": "integer", "minimum": 0 },
+        "executed_check_count": { "type": "integer", "minimum": 0 },
+        "passed_check_count": { "type": "integer", "minimum": 0 },
+        "failed_check_count": { "type": "integer", "minimum": 0 },
+        "blocked_check_count": { "type": "integer", "minimum": 0 },
+        "not_applicable_count": { "type": "integer", "minimum": 0 },
+        "unresolved_blocker_count": { "type": "integer", "minimum": 0 },
+        "binding_digest": { "type": "string" },
+        "independent_verifier_sha256": { "type": ["string", "null"] },
+        "decision_sha256": { "type": "string", "minLength": 64, "maxLength": 64 },
+        "checks": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["check_id", "status"],
+                "properties": {
+                    "check_id": { "type": "string" },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "PASS",
+                            "FAIL_REFUTED",
+                            "FAIL_INCOMPLETE",
+                            "FAIL_CONTRADICTORY",
+                            "FAIL_UNTESTABLE",
+                            "FAIL_UNSUPPORTED",
+                            "FAIL_STALE",
+                            "FAIL_TAMPERED",
+                            "FAIL_DATA_NOT_READY",
+                            "FAIL_ADVERSARIAL",
+                            "FAIL_SCOPE_MISMATCH",
+                            "FAIL_NOVELTY_NOT_ESTABLISHED",
+                            "FAIL_REPRODUCIBILITY",
+                            "BLOCKED_MISSING_ACCESS",
+                            "BLOCKED_MISSING_ARTIFACT",
+                            "BLOCKED_AMBIGUOUS_IDENTITY",
+                            "BLOCKED_AMBIGUOUS_DEFINITION",
+                            "BLOCKED_EXTERNAL_VERIFICATION_REQUIRED",
+                            "NEEDS_CLARIFICATION",
+                            "NOT_APPLICABLE"
+                        ]
+                    },
+                    "evidence": { "type": "array", "items": { "type": "string" } },
+                    "applicability_predicate": { "type": ["string", "null"] }
+                }
+            }
+        }
+    },
+    "additionalProperties": false
+}

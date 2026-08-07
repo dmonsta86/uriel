@@ -1,0 +1,48 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "uriel.gate_finding.v1",
+    "title": "Uriel strict gate finding",
+    "description": "One deterministic finding with contract status, severity, evidence, and repairs.",
+    "type": "object",
+    "required": ["code", "gate", "severity", "status", "subject", "message"],
+    "properties": {
+        "schema": { "const": "uriel.gate_finding.v1" },
+        "code": { "type": "string" },
+        "gate": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "severity": {
+            "type": "string",
+            "enum": ["FATAL", "BLOCKING", "SCOPE_LIMITING", "NONBLOCKING", "INFORMATIONAL"]
+        },
+        "status": {
+            "type": "string",
+            "enum": [
+                "PASS",
+                "FAIL_REFUTED",
+                "FAIL_INCOMPLETE",
+                "FAIL_CONTRADICTORY",
+                "FAIL_UNTESTABLE",
+                "FAIL_UNSUPPORTED",
+                "FAIL_STALE",
+                "FAIL_TAMPERED",
+                "FAIL_DATA_NOT_READY",
+                "FAIL_ADVERSARIAL",
+                "FAIL_SCOPE_MISMATCH",
+                "FAIL_NOVELTY_NOT_ESTABLISHED",
+                "FAIL_REPRODUCIBILITY",
+                "BLOCKED_MISSING_ACCESS",
+                "BLOCKED_MISSING_ARTIFACT",
+                "BLOCKED_AMBIGUOUS_IDENTITY",
+                "BLOCKED_AMBIGUOUS_DEFINITION",
+                "BLOCKED_EXTERNAL_VERIFICATION_REQUIRED",
+                "NEEDS_CLARIFICATION",
+                "NOT_APPLICABLE"
+            ]
+        },
+        "subject": { "type": "string" },
+        "message": { "type": "string" },
+        "evidence": { "type": "array", "items": { "type": "string" } },
+        "repairs": { "type": "array", "items": { "type": "string" } },
+        "applicability_predicate": { "type": ["string", "null"] }
+    },
+    "additionalProperties": false
+}
