@@ -32,6 +32,8 @@
 
 # Uriel Forge
 
+> **Notice**: यह दस्तावेज़ AI द्वितीय-पास समीक्षा (AI_SECOND_PASS_REVIEWED) अनुवाद है। मूल भाषा सुधारों का स्वागत है।
+
 ### Forge rough questions into research that can show its work.
 
 > **Every idea deserves its strongest fair hearing.**  

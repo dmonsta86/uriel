@@ -1,0 +1,32 @@
+{
+  "anvil": [
+    "TRUTH",
+    "EVIDENCE",
+    "RIGOR",
+    "TRANSPARENCY"
+  ],
+  "challenge": "Will your research withstand the forge?",
+  "data_readiness": "DATA READINESS",
+  "evidence": "EVIDENCE TRACING",
+  "footer": [
+    "OPEN SOURCE",
+    "TRANSPARENT",
+    "REPRODUCIBLE",
+    "AUDITABLE",
+    "COMMUNITY DRIVEN",
+    "BUILT FOR RESEARCHERS"
+  ],
+  "gates": "THREE GATES AUDIT",
+  "locale": "en",
+  "one_sentence": "Uriel Forge is an offline-first research development and assurance toolkit that helps turn rough questions or existing projects into reproducible, submission-ready work—and makes every authoritative conclusion earn its evidence.",
+  "provenance": "PROVENANCE + RECEIPTS",
+  "question_intake": "QUESTION INTAKE",
+  "read_only": "READ-ONLY REVIEW",
+  "repair": "REPAIR PACKETS",
+  "schema": "uriel.localized_image_copy.v1",
+  "sorting": "DETERMINISTIC SORTING",
+  "submission": "SUBMISSION SUPPORT",
+  "subtitle": "Evidence-bound research development and assurance",
+  "supporting": "A fair hearing for the idea. A hard test for the evidence.",
+  "translation_status": "AI_ASSISTED_DRAFT_REQUIRES_REVIEW"
+}

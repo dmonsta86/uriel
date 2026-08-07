@@ -1,0 +1,89 @@
+{
+  "canonical_locale": "en",
+  "core_locales": [
+    {
+      "art_direction": "Western/Mediterranean classical scholar-smith; retain the existing armored, wingless guardian and current forge symbolism.",
+      "direction": "ltr",
+      "language": "English",
+      "locale": "en",
+      "native_name": "English",
+      "readme": "README.md",
+      "reason": "Canonical source language and current public engineering language."
+    },
+    {
+      "art_direction": "Pan-Hispanic master artisan with subtle Iberian filigree and Latin American metalwork warmth; no national costume, conquest, bullfighting, or religious clichés.",
+      "direction": "ltr",
+      "language": "Spanish",
+      "locale": "es",
+      "native_name": "Español",
+      "readme": "README.es.md",
+      "reason": "Broad international reach across Europe and the Americas."
+    },
+    {
+      "art_direction": "Francophone humanist scholar-artisan with subtle engraving, scientific-instrument, Art Nouveau, or Beaux-Arts geometry; culturally broad rather than one national stereotype.",
+      "direction": "ltr",
+      "language": "French",
+      "locale": "fr",
+      "native_name": "Français",
+      "readme": "README.fr.md",
+      "reason": "Research and education reach across Europe, Africa, the Caribbean, and Canada."
+    },
+    {
+      "art_direction": "Diverse Luso-Brazilian guardian-smith with subtle modernist and Afro-Brazilian craft geometry; no carnival, colonial, football, or exoticized imagery.",
+      "direction": "ltr",
+      "language": "Brazilian Portuguese",
+      "locale": "pt-BR",
+      "native_name": "Português (Brasil)",
+      "readme": "README.pt-BR.md",
+      "reason": "Large research and open-source community in Brazil, with wider Portuguese usefulness."
+    },
+    {
+      "art_direction": "East Asian male scholar-smith with restrained Han-inspired lamellar geometry, lacquer and bronze craft, and abstract manuscript/scientific motifs; no dragon, pagoda, imperial, or sacred-calligraphy clichés.",
+      "direction": "ltr",
+      "language": "Simplified Chinese",
+      "locale": "zh-Hans",
+      "native_name": "简体中文",
+      "readme": "README.zh-Hans.md",
+      "reason": "Major research and engineering audience and essential Han-script coverage."
+    },
+    {
+      "art_direction": "Middle Eastern or North African male scholar-smith with subtle geometric brasswork and historical scientific-manuscript motifs; no prophet, mosque, crescent, sacred calligraphy, or one-country stereotype.",
+      "direction": "rtl",
+      "language": "Modern Standard Arabic",
+      "locale": "ar",
+      "native_name": "العربية",
+      "readme": "README.ar.md",
+      "reason": "Wide cross-regional accessibility and essential right-to-left support."
+    },
+    {
+      "art_direction": "South Asian male scholar-smith with subtle textile, metalwork, and mathematical geometry; no deity, sacred mark, caste marker, royal costume, or national caricature.",
+      "direction": "ltr",
+      "language": "Hindi",
+      "locale": "hi",
+      "native_name": "हिन्दी",
+      "readme": "README.hi.md",
+      "reason": "Large South Asian audience and essential Devanagari-script coverage."
+    },
+    {
+      "art_direction": "Japanese male master smith and scholar with restrained lamellar armor and workshop minimalism; no shrine, torii, sacred symbol, anime exaggeration, or theatrical samurai caricature.",
+      "direction": "ltr",
+      "language": "Japanese",
+      "locale": "ja",
+      "native_name": "日本語",
+      "readme": "README.ja.md",
+      "reason": "Major scientific and engineering community and important Japanese-script support."
+    }
+  ],
+  "phase_2_candidates": [
+    "de",
+    "ko",
+    "id",
+    "bn",
+    "tr",
+    "ru",
+    "sw",
+    "zh-Hant"
+  ],
+  "schema": "uriel.locale_registry.v1",
+  "selection_note": "The first wave intentionally stays maintainable while covering Latin, Arabic, Devanagari, Simplified Chinese, and Japanese scripts, including RTL."
+}

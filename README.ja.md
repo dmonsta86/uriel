@@ -32,6 +32,8 @@
 
 # Uriel Forge
 
+> **Notice**: 本ドキュメントはAIセカンドパスレビュー済み翻訳（AI_SECOND_PASS_REVIEWED）です。ネイティブスピーカーによる修正を歓迎します。
+
 ### Forge rough questions into research that can show its work.
 
 > **Every idea deserves its strongest fair hearing.**  

@@ -1,0 +1,28 @@
+{
+  "messages": {
+    "decision.change_result": "What would change the result",
+    "decision.established": "What is established",
+    "decision.needed": "What is needed from you",
+    "decision.next_move": "Strongest next move",
+    "decision.not_established": "What is not established",
+    "decision.prepared": "What Uriel already prepared",
+    "decision.status.blocked": "BLOCKED",
+    "decision.status.not_yet_known": "NOT YET KNOWN",
+    "decision.status.pass": "PASS",
+    "decision.status.refuted": "REFUTED",
+    "decision.status.stale": "STALE",
+    "decision.why": "Why",
+    "gate.g0.name": "Data Readiness",
+    "gate.g1.name": "Novelty and Clarity",
+    "gate.g2.name": "Evidence and Citation",
+    "gate.g3.name": "Adversarial Integrity",
+    "privacy.read_only_default": "Read-only is the default.",
+    "product.name": "Uriel Forge",
+    "product.standard": "Interpret generously. Test rigorously. Report honestly.",
+    "readiness.not_yet_known": "The result is not yet known.",
+    "repair.preferred_next_move": "Preferred next move",
+    "translation.native_review_welcome": "Native-language corrections are welcome."
+  },
+  "schema": "uriel.locale_catalog_source.v1",
+  "source_locale": "en"
+}
