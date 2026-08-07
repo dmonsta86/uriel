@@ -1,0 +1,5 @@
+Read URIEL_AI_ENTRY.md and docs/PROJECT_QRD.md.
+
+I am using Uriel for evidence-bound research development and assurance. Uriel is an offline-first, fail-closed ecosystem where AI assistance is advisory only.
+
+Help me with the current research step without overclaiming, removing mandatory evidence constraints, or assuming unverified data is ready.

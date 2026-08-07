@@ -15,7 +15,7 @@ All notable changes to Uriel are documented here.
 - Checks for clarity, framing, evidence provenance, directness, contradictions, assumptions, controls, omissions, uncertainty, ethics, reproducibility, and common fallacy patterns.
 - Constructive blocker records with exactly three repair paths and durable reminders.
 - Content-addressed Blessing packages with SVG/text certificate, QR payload, submission drafts, and standalone verifier.
-- Provider-neutral prompt export, hash-bound review import, default-deny capability requests, and optional OpenCode adapter.
+- Provider-neutral prompt export, hash-bound review import, default-deny capability requests, and optional compatible external agent adapter.
 - Portable zipapp build and multi-platform CI.
 - Browser-authenticated GitHub publishing helpers and a no-terminal GitHub Desktop path.
 - Tag-triggered GitHub release automation for wheel, source distribution, portable archive, and checksums.

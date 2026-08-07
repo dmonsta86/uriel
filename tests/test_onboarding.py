@@ -90,20 +90,13 @@ class OnboardingTests(unittest.TestCase):
 
     def test_start_writes_entry_files_without_authority(self):
         result = start(self.root, "resume")
-        for name in ("URIEL_START_HERE.md", "URIEL_AI_ENTRY.md", "COPY_THIS_TO_YOUR_AI.txt", "AGENTS.md"):
+        for name in ("URIEL_START_HERE.md", "URIEL_AI_ENTRY.md", "COPY_THIS_TO_YOUR_AI.txt", "NEXT_PROMPT.txt", "AGENTS.md"):
             self.assertIn(name, result["files_written"])
             self.assertTrue((self.root / name).is_file())
         entry = (self.root / "URIEL_AI_ENTRY.md").read_text(encoding="utf-8")
         self.assertIn("Blessing", entry)
         self.assertIn("Data Readiness", entry)
         self.assertIn(self.root.name, entry)
-        for agent in ("uriel-orient.md", "uriel-plan.md", "uriel-build.md"):
-            self.assertTrue((self.root / ".opencode" / "agents" / agent).is_file())
-        orient = (self.root / ".opencode" / "agents" / "uriel-orient.md").read_text(encoding="utf-8")
-        self.assertIn("edit: deny", orient)
-        self.assertIn("bash: deny", orient)
-        build = (self.root / ".opencode" / "agents" / "uriel-build.md").read_text(encoding="utf-8")
-        self.assertIn("git push: deny", build)
 
     def test_start_refuses_to_overwrite_entry_files(self):
         start(self.root, "resume")

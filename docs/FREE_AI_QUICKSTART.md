@@ -21,30 +21,30 @@ python uriel.pyz review-import --root my-project .uriel/review-inbox/review.json
 
 Uriel does not install or silently download a model. That keeps the base app small, understandable, and usable on old hardware.
 
-## Route B — OpenCode free models
+## Route B — compatible external agent free models
 
-OpenCode is an open-source terminal/desktop/IDE agent. Its official model list currently advertises several limited-time free models, including **DeepSeek V4 Flash Free**. The official free list does **not** currently describe DeepSeek V4 Pro as free; do not promise that it is. Free pools can be small or temporary.
+compatible external agent is an open-source terminal/desktop/IDE agent. Its official model list currently advertises several limited-time free models, including **web AI session V4 Flash Free**. The official free list does **not** currently describe web AI session V4 Pro as free; do not promise that it is. Free pools can be small or temporary.
 
-Install OpenCode using its current official instructions. Examples shown by OpenCode include:
+Install compatible external agent using its current official instructions. Examples shown by compatible external agent include:
 
 ```console
 # macOS/Linux install script
-curl -fsSL https://opencode.ai/install | bash
+curl -fsSL https://compatible external agent.ai/install | bash
 
 # Cross-platform Node installation
-npm install -g opencode-ai
+npm install -g compatible external agent-ai
 
-# Windows alternatives shown by OpenCode
-choco install opencode
+# Windows alternatives shown by compatible external agent
+choco install compatible external agent
 # or
-scoop install opencode
+scoop install compatible external agent
 ```
 
 Then, inside the Uriel repository or a Uriel project:
 
 ```console
-opencode models
-opencode
+compatible external agent models
+compatible external agent
 ```
 
 Select a current free model in the UI, or copy its exact `provider/model` identifier:
@@ -56,7 +56,7 @@ uriel assist clarity \
   --acknowledge-external
 ```
 
-Uriel’s adapter uses OpenCode’s non-interactive `run` command, attaches the generated prompt file, and requires the exact `provider/model` form. Raw output is preserved. Only a valid, current-hash-bound JSON review is imported.
+Uriel’s adapter uses compatible external agent’s non-interactive `run` command, attaches the generated prompt file, and requires the exact `provider/model` form. Raw output is preserved. Only a valid, current-hash-bound JSON review is imported.
 
 ### Make a small free pool useful
 
@@ -76,15 +76,15 @@ This is often more reliable than handing an entire unfinished field to one giant
 Generate a prompt and paste it into any web chat you are authorized to use:
 
 ```console
-uriel prompt --root my-project primary-evidence --provider deepseek-web --show
-uriel prompt --root my-project adversarial-review --provider chatgpt-web --show
+uriel prompt --root my-project primary-evidence --provider web AI session-web --show
+uriel prompt --root my-project adversarial-review --provider sol-mode --show
 ```
 
 The prompt contains a review contract and privacy warning. For confidential, unpublished, personal, regulated, contract-restricted, or export-controlled material, use a verified local deployment or an institutionally approved service instead.
 
-## Route D — low-cost OpenCode Go
+## Route D — low-cost compatible external agent Go
 
-OpenCode currently advertises Go at **$5 for the first month and $10/month afterward**, with usage limits and the ability to continue on free models after the paid pool is reached. Treat the price and limits as current information, not a permanent promise.
+compatible external agent currently advertises Go at **$5 for the first month and $10/month afterward**, with usage limits and the ability to continue on free models after the paid pool is reached. Treat the price and limits as current information, not a permanent promise.
 
 This can be useful for short release bursts, but Uriel never requires it.
 
@@ -103,7 +103,7 @@ For the hardest repository-wide or manuscript-wide challenge, prefer the highest
 
 ## Privacy-safe defaults in this repository
 
-`opencode.json` sets sharing to `disabled`. The included `uriel-reviewer` agent denies editing and shell execution. Web access requires approval. These are guardrails, not a substitute for reading the provider’s current policy.
+`compatible external agent.json` sets sharing to `disabled`. The included `uriel-reviewer` agent denies editing and shell execution. Web access requires approval. These are guardrails, not a substitute for reading the provider’s current policy.
 
 ## What Uriel will tell you needs AI or a human
 

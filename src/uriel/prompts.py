@@ -42,21 +42,17 @@ _PROVIDER_NOTES = {
         "Use a model running on hardware you control. Confirm the runtime has no telemetry, cloud fallback, remote embeddings, or automatic sharing "
         "before treating it as offline."
     ),
-    "opencode": (
-        "Run through OpenCode only after selecting a provider/model yourself. Free availability and data-use terms can change. "
-        "Run `opencode models`, read current provider terms, and never assume that a free endpoint is private."
+    "generic-web": (
+        "Paste into a compatible web AI session after reviewing its current privacy and retention terms. "
+        "Never assume an unverified third-party endpoint is private."
     ),
-    "chatgpt-web": (
-        "Paste into ChatGPT Web only after reviewing current data controls and project authorization. For the strongest optional final pass, "
-        "GPT-5.6 Sol at Very High reasoning, or GPT-5.6 Sol Pro is recommended when available; this is a capability suggestion, not a provider endorsement."
-    ),
-    "deepseek-web": (
-        "Paste into a DeepSeek web session or another free service only after reviewing its current privacy terms. Break the work into one claim or "
-        "one source at a time when the context or usage pool is small."
+    "sol-mode": (
+        "Paste into a compatible web AI session. For the deepest Strict Forge and assurance passes, the maintainer specifically recommends "
+        "GPT-5.6 Sol with ultra mode. This is an optional tested recommendation—not a dependency, exclusive integration, privacy endorsement, or guarantee."
     ),
 }
 
-_EXTERNAL_PROVIDERS = {"opencode", "chatgpt-web", "deepseek-web"}
+_EXTERNAL_PROVIDERS = {"generic-web", "sol-mode"}
 _SENSITIVE_CLASSIFICATIONS = {"internal", "confidential", "restricted"}
 
 

@@ -3,7 +3,7 @@
 Implements the phase-4A/4B contracts:
 
 - provider-neutral AI entry files (URIEL_AI_ENTRY.md, COPY_THIS_TO_YOUR_AI.txt,
-  AGENTS.md, .opencode agents) with no model authority;
+  AGENTS.md, NEXT_PROMPT.txt) with no model authority;
 - immutable consent records (``uriel.workspace_consent.v1``) with permission
   levels metadata_only / read_only / safe_copy / in_place;
 - metadata-only preflight (root hash, counts, VCS, links, cloud-sync
@@ -600,17 +600,19 @@ def start(
         "- never change publication authority or Blessing state;\n"
         "- preserve exact next-step instructions.\n"
     )
+    next_prompt_text = (
+        "Read URIEL_AI_ENTRY.md and review the latest output from `uriel audit` or `uriel workbench`. "
+        "Complete the next safe research or repair step without changing authoritative state boundaries.\n"
+    )
     written = {
         "URIEL_START_HERE.md": start_here,
         "URIEL_AI_ENTRY.md": entry_text,
         "COPY_THIS_TO_YOUR_AI.txt": copy_text,
+        "NEXT_PROMPT.txt": next_prompt_text,
         "AGENTS.md": agents_text,
     }
     for name, text in written.items():
         atomic_write(root_path / name, text)
-    opencode_dir = root_path / ".opencode" / "agents"
-    opencode_dir.mkdir(parents=True, exist_ok=True)
-    _write_opencode_agents(opencode_dir)
     atomic_write_json(paths.state / "onboarding.json", onboarding)
     _append_ledger(root_path, "workspace.onboarded", {
         "workspace_id": onboarding["workspace_id"],
@@ -622,98 +624,8 @@ def start(
         "entry_kind": kind,
         "mode": "read_only",
         "consent_sha256": consent["record_sha256"],
-        "files_written": sorted(list(written) + [".opencode/agents/uriel-orient.md",
-                                                 ".opencode/agents/uriel-plan.md",
-                                                 ".opencode/agents/uriel-build.md"]),
-        "next_step": "Run `uriel preflight --root .` or give COPY_THIS_TO_YOUR_AI.txt to an AI.",
+        "files_written": sorted(list(written)),
     }
-
-
-def _write_opencode_agents(agents_dir: Path) -> None:
-    orient = (
-        "---\n"
-        "description: Safely identifies the Uriel workspace type and prepares a read-only plan\n"
-        "mode: primary\n"
-        "temperature: 0.1\n"
-        "permission:\n"
-        "  read: allow\n"
-        "  glob: allow\n"
-        "  grep: allow\n"
-        "  question: allow\n"
-        "  skill: allow\n"
-        "  edit: deny\n"
-        "  bash: deny\n"
-        "  webfetch: deny\n"
-        "  websearch: deny\n"
-        "  external_directory: deny\n"
-        "  task: deny\n"
-        "---\n\n"
-        "Read `URIEL_AI_ENTRY.md` and the machine state first.\n\n"
-        "Remain read-only. Do not use the shell, network, external directories, "
-        "or file edits. Identify whether this is a new idea, existing project, "
-        "manuscript, submission, decision response, or resumed workspace. Ask "
-        "all unavoidable questions in one batch.\n\n"
-        "Do not offer data-dependent conclusions before Data Readiness. Do not "
-        "grant authority or a Blessing.\n"
-    )
-    plan = (
-        "---\n"
-        "description: Read-only planning agent for a Uriel workspace\n"
-        "mode: subagent\n"
-        "temperature: 0.2\n"
-        "permission:\n"
-        "  read: allow\n"
-        "  glob: allow\n"
-        "  grep: allow\n"
-        "  question: allow\n"
-        "  skill: allow\n"
-        "  edit: deny\n"
-        "  bash: deny\n"
-        "  webfetch: deny\n"
-        "  websearch: deny\n"
-        "  external_directory: deny\n"
-        "---\n\n"
-        "Inspect authorized content, build a structured research or repair plan, "
-        "and prepare a proposed packet. Writes remain denied unless Uriel "
-        "creates a separate approved output workspace through its deterministic "
-        "CLI. Never mark Data Readiness PASS, change publication authority, or "
-        "issue a Blessing.\n"
-    )
-    build = (
-        "---\n"
-        "description: Write-capable Uriel agent, used only in an explicitly approved mode\n"
-        "mode: subagent\n"
-        "temperature: 0.2\n"
-        "permission:\n"
-        "  read: allow\n"
-        "  glob: allow\n"
-        "  grep: allow\n"
-        "  question: allow\n"
-        "  skill: allow\n"
-        "  edit: ask\n"
-        "  bash: ask\n"
-        "  webfetch: deny\n"
-        "  websearch: deny\n"
-        "  external_directory: deny\n"
-        "  git push: deny\n"
-        "  git reset --hard: deny\n"
-        "  git clean: deny\n"
-        "  destructive filesystem: deny\n"
-        "---\n\n"
-        "Not used until the user explicitly selects a write-capable mode. "
-        "Automatic writes are allowed only inside `.uriel/` or a verified "
-        "safe-copy workspace. Source edits must be previewed or approved "
-        "according to the consent record. Never change publication authority "
-        "or issue a Blessing.\n"
-    )
-    for name, text in (
-        ("uriel-orient.md", orient),
-        ("uriel-plan.md", plan),
-        ("uriel-build.md", build),
-    ):
-        target = guard_path(agents_dir, agents_dir / name)
-        if not target.exists():
-            atomic_write(target, text)
 
 
 def review_workspace(root: Union[Path, str], output: Optional[Union[Path, str]] = None) -> Dict[str, Any]:

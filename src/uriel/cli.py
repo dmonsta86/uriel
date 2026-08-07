@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence
 
 from . import __version__
-from .adapters import run_opencode
+from .adapters import run_external_agent
 from .audit import PROFILES, audit_project
 from .blessing import issue_blessing, verify_blessing
 from .broker import create_request
@@ -313,15 +313,15 @@ def parser() -> argparse.ArgumentParser:
     prompt = commands.add_parser("prompt", help="create an optional AI/human review prompt")
     _root_argument(prompt)
     prompt.add_argument("task", choices=REVIEW_TASKS)
-    prompt.add_argument("--provider", choices=("generic", "local", "opencode", "chatgpt-web", "deepseek-web"), default="generic")
+    prompt.add_argument("--provider", choices=("generic", "local", "sol-mode", "generic-web"), default="generic")
     prompt.add_argument("--acknowledge-external", action="store_true")
     prompt.add_argument("--include-sensitive", action="store_true", help="include non-public project text; prefer a verified local model")
     prompt.add_argument("--show", action="store_true", help="print the full prompt")
 
-    assist = commands.add_parser("assist", help="run one bounded review through OpenCode")
+    assist = commands.add_parser("assist", help="run one bounded review through an external agent")
     _root_argument(assist)
     assist.add_argument("task", choices=REVIEW_TASKS)
-    assist.add_argument("--model", required=True, help="OpenCode provider/model identifier")
+    assist.add_argument("--model", required=True, help="agent model identifier")
     assist.add_argument("--timeout", type=int, default=900)
     assist.add_argument("--acknowledge-external", action="store_true")
 
@@ -1007,7 +1007,7 @@ def dispatch(args: argparse.Namespace) -> Any:
             result = {key: value for key, value in result.items() if key != "prompt"}
         return result
     if command == "assist":
-        return run_opencode(
+        return run_external_agent(
             args.root,
             task=args.task,
             model=args.model,

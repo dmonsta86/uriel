@@ -3,7 +3,7 @@
 No network client is implemented in Uriel Core.  A request is a local,
 hash-addressed record that explains what an external capability would need and
 what may be disclosed.  Users can fulfill it with an offline model, a web chat,
-OpenCode, or manual research without changing the deterministic audit engine.
+an external agent, or manual research without changing the deterministic audit engine.
 """
 from __future__ import annotations
 
