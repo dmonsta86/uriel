@@ -12,7 +12,7 @@ class PublicContractTests(unittest.TestCase):
     def test_readme_explains_name_blessing_and_three_gates(self) -> None:
         text = (ROOT / "README.md").read_text(encoding="utf-8")
         required = (
-            "# Uriel Forge",
+            "# The Forge of Uriel",
             "## Current audited capability status",
             "## The Blessing of Uriel",
             "## The Three Gates",
