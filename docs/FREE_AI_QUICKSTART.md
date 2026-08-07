@@ -21,42 +21,17 @@ python uriel.pyz review-import --root my-project .uriel/review-inbox/review.json
 
 Uriel does not install or silently download a model. That keeps the base app small, understandable, and usable on old hardware.
 
-## Route B — compatible external agent free models
+## Route B — provider-neutral free models
 
-compatible external agent is an open-source terminal/desktop/IDE agent. Its official model list currently advertises several limited-time free models, including **web AI session V4 Flash Free**. The official free list does **not** currently describe web AI session V4 Pro as free; do not promise that it is. Free pools can be small or temporary.
+Optionally use any provider-neutral terminal, desktop, or IDE agent that connects to your preferred local or free model endpoints.
 
-Install compatible external agent using its current official instructions. Examples shown by compatible external agent include:
-
-```console
-# macOS/Linux install script
-curl -fsSL https://compatible external agent.ai/install | bash
-
-# Cross-platform Node installation
-npm install -g compatible external agent-ai
-
-# Windows alternatives shown by compatible external agent
-choco install compatible external agent
-# or
-scoop install compatible external agent
-```
-
-Then, inside the Uriel repository or a Uriel project:
+Generate a provider-neutral review prompt:
 
 ```console
-compatible external agent models
-compatible external agent
+python uriel.pyz prompt --root my-project clarity --provider generic --show
 ```
 
-Select a current free model in the UI, or copy its exact `provider/model` identifier:
-
-```console
-uriel assist clarity \
-  --root my-project \
-  --model EXACT_PROVIDER/EXACT_FREE_MODEL \
-  --acknowledge-external
-```
-
-Uriel’s adapter uses compatible external agent’s non-interactive `run` command, attaches the generated prompt file, and requires the exact `provider/model` form. Raw output is preserved. Only a valid, current-hash-bound JSON review is imported.
+Attach the generated prompt file to your local or external agent session. Raw output is preserved locally. Only a valid, current-hash-bound JSON review is imported into project state.
 
 ### Make a small free pool useful
 

@@ -328,6 +328,25 @@ class StrictBlessingCliTests(unittest.TestCase):
             self.assertEqual(result.returncode, 2)
             self.assertIn("NOT ELIGIBLE", result.stdout)
 
+    def test_bare_blessing_does_not_issue_legacy_certificate(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            initialize_project(root, title="rough", question="Why?", privacy="public")
+            result = self._run("blessing", "--root", str(root))
+            self.assertEqual(result.returncode, 2)
+            # Ensure no legacy blessing file was created
+            blessing_dir = root / ".uriel" / "blessings"
+            if blessing_dir.exists():
+                self.assertEqual(len(list(blessing_dir.iterdir())), 0)
+
+    def test_absence_of_negative_finding_cannot_produce_pass(self) -> None:
+        from uriel.strict_blessing import _evaluate_check
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            eval_res = _evaluate_check(1, "unknown_unmapped_check_id", [], root, "dummy_digest")
+            self.assertNotEqual(eval_res["status"], "PASS")
+            self.assertEqual(eval_res["status"], "BLOCKED_EXTERNAL_VERIFICATION_REQUIRED")
+
     def test_cli_issue_verify_round_trip(self) -> None:
         root = self._eligible_project()
         issued = self._run("blessing", "issue", "--root", root)

@@ -296,6 +296,8 @@ def parser() -> argparse.ArgumentParser:
     _root_argument(blessing_elig)
     blessing_issue = blessing_actions.add_parser("issue", help="issue the strict Blessing after eligibility, verifier recomputation, and zero blockers")
     _root_argument(blessing_issue)
+    blessing_legacy = blessing_actions.add_parser("legacy", help="[DEPRECATED] issue a legacy Blessing certificate")
+    _root_argument(blessing_legacy)
     blessing_verify = blessing_actions.add_parser("verify", help="verify a strict Blessing package against its records")
     blessing_verify.add_argument("package")
     blessing_verify.add_argument("--root", help="optional live project root")
@@ -981,11 +983,15 @@ def dispatch(args: argparse.Namespace) -> Any:
             return _audit_recheck(args.root, args.profile)
     if command == "blessing":
         if args.blessing_action is None:
-            return issue_blessing(args.root)
+            # Bare 'uriel blessing' prints help and eligibility; it NEVER creates a certificate.
+            return blessing_eligibility(args.root)
         if args.blessing_action == "eligibility":
             return blessing_eligibility(args.root)
         if args.blessing_action == "issue":
             return issue_strict_blessing(args.root)
+        if args.blessing_action == "legacy":
+            print("[DEPRECATION WARNING] Legacy Blessing issuance is deprecated. Use 'uriel blessing issue' for strict Blessing certificates.")
+            return issue_blessing(args.root)
         if args.blessing_action == "verify":
             return verify_strict_blessing(args.package, project_root=args.root or None)
     if command == "verify-blessing":
@@ -1107,7 +1113,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         if command == "audit" and isinstance(result, Mapping) and args.audit_action is None and result.get("status") != "PASS":
             return 2
         if command == "blessing" and isinstance(result, Mapping):
-            if args.blessing_action == "eligibility" and not result.get("eligible"):
+            if (args.blessing_action in ("eligibility", None)) and not result.get("eligible"):
                 return 2
             if args.blessing_action == "issue" and not result.get("verified"):
                 return 2

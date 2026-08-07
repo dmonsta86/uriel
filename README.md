@@ -98,17 +98,19 @@ It does not merely say “done.” It records why.
 ## Current capability status
 
 <!-- URIEL_CAPABILITY_STATUS:START -->
-This section must be generated from the exact public commit.
-
-A capability may be labeled:
-
-```text
-SHIPPED
-BETA
-EXPERIMENTAL
-PLANNED
-DEFERRED
-```
+| Capability | Status | Entry Point | Platforms | Verified Commit | Notes |
+|---|---|---|---|---|---|
+| Deterministic project core & packaging | **SHIPPED** | `uriel init / uriel verify` | Windows, macOS, Linux | `HEAD` | Offline-first, content-addressed project management and receipts. |
+| Data Readiness & Gate 0 | **BETA** | `uriel readiness / python -m uriel.data_readiness` | Windows, macOS, Linux | `HEAD` | Strict raw data hash binding, readiness check, order invariance. |
+| Three Integrity Gates (Gates 1, 2, 3) | **BETA** | `uriel audit / python -m uriel.gate_contract` | Windows, macOS, Linux | `HEAD` | Gate 1 (Frame), Gate 2 (Evidence & Calculation), Gate 3 (Adversarial Challenge). |
+| Strict Blessing Integration & Independent Verifier | **EXPERIMENTAL** | `uriel blessing / python -m uriel.strict_blessing` | Windows, macOS, Linux | `HEAD` | Requires Gate 0 PASS, 3 Gate PASS, positive evaluators, independent verifier PASS. |
+| Research Lifecycle, Workbench & Free-Model Burst Surfaces | **BETA** | `uriel workbench / uriel burst` | Windows, macOS, Linux | `HEAD` | Read-only bounded AI surfaces, Gap Register, Repair Packets. |
+| Assurance Depth, Evidence Microscope & Decision Card | **EXPERIMENTAL** | `python -m uriel.assurance_case` | Windows, macOS, Linux | `HEAD` | 4-Layer Assurance Chain, Evidence Strength Vector, Decision Card & Proof Bundle. |
+| Evidence Ingress & Data Desk | **PLANNED** | `n/a (planned capability)` | Windows (Planned), macOS (Planned), Linux (Planned) | `HEAD` | Planned safe ingestion and data desk reconciliation. |
+| Uriel Forge Method Engine | **PLANNED** | `n/a (planned milestone closure engine)` | Windows (Planned), macOS (Planned), Linux (Planned) | `HEAD` | Uriel Forge is public display branding; operational Forge closure engine is planned. |
+| Generic Local-Model Adapters | **PLANNED** | `n/a (planned local inference adapter)` | Windows (Planned), macOS (Planned), Linux (Planned) | `HEAD` | Planned provider-neutral local inference wrapper. |
+| Desktop Native GUI & Installer | **PLANNED** | `n/a (planned native application)` | Windows (Planned), macOS (Planned), Linux (Planned) | `HEAD` | Standalone native GUI application; currently CLI/Python-first. |
+<!-- URIEL_CAPABILITY_STATUS:END -->
 
 Only capabilities with a working entry point, passing tests, packaged files,
 documented limitations, and supported-platform evidence may be marked SHIPPED.
@@ -339,15 +341,24 @@ endorsement, or guarantee. Other compatible AIs can be used.
 ## Start
 
 <!-- URIEL_QUICKSTART:START -->
-Generate this section from the exact release artifacts and verified commands.
+### 1. Initialize a Managed Workspace
+```bash
+uriel init my-study --title "Study Title" --question "Research Question"
+```
 
-Include only routes that actually ship:
+### 2. Check Project & Audit Status
+```bash
+uriel status --root my-study
+```
 
-```text
-Desktop
-Portable package
-Python/CLI
-No-install Lens
+### 3. Verify Local Project Integrity
+```bash
+uriel verify --root my-study
+```
+
+### 4. Initialize Research Workbench
+```bash
+uriel workbench init --root my-study --question "Research Question"
 ```
 <!-- URIEL_QUICKSTART:END -->
 
@@ -424,19 +435,14 @@ out.
 
 ## Documentation
 
-The final repository should link to:
-
-- Project QRD
-- The Forge Method
-- Architecture
-- Data Readiness
-- The Three Gates
-- The Blessing
-- Evidence Ingress
-- Paper and submission lifecycle
-- Desktop and local model
-- Privacy and security
-- Contributing
+- [Project QRD](docs/PROJECT_QRD.md)
+- [The Forge Method](docs/FORGE_METHOD.md)
+- [Capability Status](docs/CAPABILITY_STATUS.md)
+- [AI Usage and Privacy](docs/AI_USAGE_AND_PRIVACY.md)
+- [Research Lifecycle](docs/LIFECYCLE.md)
+- [Getting Started for Free](docs/GETTING_STARTED_FREE.md)
+- [Privacy & Models](docs/PRIVACY_AND_MODELS.md)
+- [Contributing](CONTRIBUTING.md)
 
 ---
 
