@@ -25,8 +25,8 @@
 
 ## Integration files
 
-- `GEMINI_SETUP_PROMPT.md`
-  - One-shot integration prompt for Gemini.
+- `INTEGRATION_PROMPT.md`
+  - One-shot repository integration prompt.
 
 - `templates/uriel_forge_standalone_overlay.svg`
   - Helper overlay template for deterministic text layout if desired.
