@@ -78,6 +78,24 @@ python uriel.pyz --help
 
 See [Portable use](docs/PORTABLE.md).
 
+### Windows PowerShell wrapper
+
+Dot-source `scripts/Uriel.ps1` to get `Invoke-Uriel` plus a small set of
+strongly-typed helpers (`Initialize-UrielProject`, `Invoke-UrielAudit`,
+`New-UrielSnapshot`, `New-UrielBlessing`, `Test-UrielProject`):
+
+```powershell
+. .\scripts\Uriel.ps1
+Invoke-Uriel --version
+Invoke-UrielAudit -Profile submission -Root my-study
+```
+
+The wrapper prefers `dist/uriel.pyz` when present and otherwise falls back to
+`python -m uriel`, so it works with or without installation. Windows PowerShell
+5.1 and PowerShell 7+ are both supported; if your execution policy blocks
+unsigned scripts, run the dot-source line with
+`powershell -NoProfile -ExecutionPolicy Bypass -Command ". .\scripts\Uriel.ps1; Invoke-Uriel --version"`.
+
 ## Sixty-second start
 
 ```console

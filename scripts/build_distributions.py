@@ -23,10 +23,17 @@ IGNORED_NAMES = {
     ".mypy_cache",
     ".ruff_cache",
     ".venv",
+    ".release-venv",
     "venv",
     "build",
     "dist",
     "__pycache__",
+    ".coverage",
+    "htmlcov",
+    ".env",
+    ".uriel",
+    "release-check.txt",
+    ".uriel-release-check.lock",
 }
 
 
