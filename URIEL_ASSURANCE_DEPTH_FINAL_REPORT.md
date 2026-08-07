@@ -2,7 +2,7 @@
 
 **Date**: 2026-08-07  
 **Branch**: `feature/assurance-depth`  
-**Repository**: `C:\Users\Taller\uriel-work-20260806-175710`  
+**Repository**: `<repo_root>`  
 **Remote**: `https://github.com/dmonsta86/uriel.git`  
 **CI Matrix Status**: **21/21 GREEN PASS** across macOS (Intel/ARM), Windows, and Ubuntu (Python 3.9 - 3.14).  
 **Test Suite**: **254/254 PASS** (0 failures, 0 errors, 100% clean pass).  
