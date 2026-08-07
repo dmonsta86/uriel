@@ -117,7 +117,8 @@ def build_gap(
     row: Dict[str, Any] = {
         "gap_id": gap_id or sha256_text(canonical_json({
             "gate": gate, "failure_code": failure_code,
-            "observed_fact": observed_fact, "created_at_utc": utc_now(),
+            "observed_fact": observed_fact, "why_it_matters": why_it_matters,
+            "affected_claims": list(affected_claims), "affected_artifacts": list(affected_artifacts),
         }))[:16],
         "gate": gate,
         "failure_code": failure_code,
