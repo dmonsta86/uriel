@@ -1,0 +1,88 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.submission_field.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "attachment": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "character_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "do_not_include": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "field_id": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    },
+    "maximum_characters": {
+      "minimum": 0,
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "maximum_words": {
+      "minimum": 0,
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "proposed_answer": {
+      "type": "string"
+    },
+    "required": {
+      "type": "boolean"
+    },
+    "requirement_source": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "schema": {
+      "const": "uriel.submission_field.v1"
+    },
+    "supporting_facts": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "unresolved_placeholders": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "verification_state": {
+      "enum": [
+        "ready",
+        "needs_confirmation",
+        "blocked",
+        "not_applicable"
+      ]
+    }
+  },
+  "required": [
+    "schema",
+    "field_id",
+    "label",
+    "required",
+    "proposed_answer",
+    "verification_state"
+  ],
+  "title": "Uriel Submission Field",
+  "type": "object"
+}

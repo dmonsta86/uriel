@@ -1,0 +1,76 @@
+{
+  "$id": "https://uriel.dev/schemas/uriel.ai_surface.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "acceptance_receipt": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "allowed_task": {
+      "type": "string"
+    },
+    "byte_limit": {
+      "minimum": 0,
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "created_at_utc": {
+      "type": "string"
+    },
+    "no_authority": {
+      "const": true
+    },
+    "project_generation": {
+      "type": "string"
+    },
+    "records_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "redaction_policy": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "row_limit": {
+      "minimum": 0,
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "schema": {
+      "const": "uriel.ai_surface.v1"
+    },
+    "source_manifest_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "surface_id": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "surface_id",
+    "project_generation",
+    "allowed_task",
+    "no_authority",
+    "created_at_utc"
+  ],
+  "title": "Uriel AI Surface",
+  "type": "object"
+}

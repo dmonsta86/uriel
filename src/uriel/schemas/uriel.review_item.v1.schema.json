@@ -1,0 +1,72 @@
+{
+  "$id": "https://uriel.dev/schemas/uriel.review_item.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "classification": {
+      "enum": [
+        "required change",
+        "requested clarification",
+        "requested evidence",
+        "methodological concern",
+        "interpretation concern",
+        "formatting/editorial",
+        "question",
+        "positive observation with no action",
+        "conflict or impossible request"
+      ]
+    },
+    "decision_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "evidence_location": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "item_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "priority": {
+      "enum": [
+        "high",
+        "medium",
+        "low",
+        "none"
+      ]
+    },
+    "proposed_repair": {
+      "type": "string"
+    },
+    "schema": {
+      "const": "uriel.review_item.v1"
+    },
+    "source_text": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "open",
+        "addressed",
+        "deferred",
+        "conflict_resolved"
+      ]
+    }
+  },
+  "required": [
+    "schema",
+    "item_id",
+    "classification",
+    "status"
+  ],
+  "title": "Uriel Review Item",
+  "type": "object"
+}

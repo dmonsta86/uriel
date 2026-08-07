@@ -1,0 +1,60 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.checkpoint.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "created_at_utc": {
+      "type": "string"
+    },
+    "delta_summary": {
+      "type": "object"
+    },
+    "ephemeral_policy_version": {
+      "type": "string"
+    },
+    "generation_id": {
+      "type": "string"
+    },
+    "parent_generation_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "publication_authority": {
+      "type": "string"
+    },
+    "receipt_hashes": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "record_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "records_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "schema": {
+      "const": "uriel.checkpoint.v1"
+    },
+    "source_manifest_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "generation_id",
+    "source_manifest_sha256",
+    "record_count",
+    "ephemeral_policy_version",
+    "publication_authority",
+    "created_at_utc"
+  ],
+  "title": "Uriel Generation Checkpoint",
+  "type": "object"
+}

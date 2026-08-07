@@ -1,0 +1,53 @@
+{
+  "$id": "https://uriel.dev/schemas/uriel.delta.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "current_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "delta_class": {
+      "enum": [
+        "added",
+        "modified",
+        "absent",
+        "volatile",
+        "excluded",
+        "duplicate",
+        "unchanged",
+        "unknown"
+      ]
+    },
+    "generation_id": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "prior_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "relative_path": {
+      "type": "string"
+    },
+    "schema": {
+      "const": "uriel.delta.v1"
+    }
+  },
+  "required": [
+    "schema",
+    "delta_class",
+    "relative_path",
+    "generation_id"
+  ],
+  "title": "Uriel Delta Entry",
+  "type": "object"
+}

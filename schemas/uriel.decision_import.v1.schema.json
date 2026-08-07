@@ -1,0 +1,91 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.decision_import.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "confirmation_state": {
+      "enum": [
+        "explicit",
+        "user_confirmed",
+        "proposed_unconfirmed"
+      ]
+    },
+    "deadline": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "decision_class": {
+      "enum": [
+        "acknowledged",
+        "submitted",
+        "administrative_check",
+        "under_review",
+        "review_invitation",
+        "major_revision",
+        "minor_revision",
+        "revise_and_resubmit",
+        "conditional_acceptance",
+        "accepted",
+        "accepted_in_production",
+        "proofs_received",
+        "published",
+        "desk_rejection",
+        "rejected_with_feedback",
+        "rejected_resubmit_elsewhere",
+        "withdrawn",
+        "unknown"
+      ]
+    },
+    "decision_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "explicit_status_text": {
+      "type": "string"
+    },
+    "inference_confidence": {
+      "maximum": 1,
+      "minimum": 0,
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "manuscript_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "schema": {
+      "const": "uriel.decision_import.v1"
+    },
+    "source_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "unresolved_ambiguity": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "venue": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "schema",
+    "decision_id",
+    "source_sha256",
+    "decision_class",
+    "confirmation_state"
+  ],
+  "title": "Uriel Submission Decision Import",
+  "type": "object"
+}

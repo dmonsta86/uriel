@@ -1,0 +1,89 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.packet_manifest.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "created_at_utc": {
+      "type": "string"
+    },
+    "files": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "size": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "path",
+          "sha256",
+          "size"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "packet_id": {
+      "type": "string"
+    },
+    "packet_type": {
+      "enum": [
+        "lens_review",
+        "research_plan",
+        "paper_submission",
+        "revision_response",
+        "conditional_acceptance",
+        "production",
+        "resubmission",
+        "archive"
+      ]
+    },
+    "parent_packet_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "project_generation": {
+      "type": "string"
+    },
+    "schema": {
+      "const": "uriel.packet_manifest.v1"
+    },
+    "status": {
+      "enum": [
+        "ready",
+        "ready_with_disclosed_limitations",
+        "revision_required",
+        "blocked"
+      ]
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema",
+    "packet_id",
+    "packet_type",
+    "project_generation",
+    "files",
+    "status"
+  ],
+  "title": "Uriel Packet Manifest",
+  "type": "object"
+}
