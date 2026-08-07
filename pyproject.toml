@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "uriel-research"
-version = "1.0.0"
+version = "1.0.0rc2"
 description = "Offline-first, evidence-bound research development, verification, submission, and milestone-closure toolkit."
 readme = "README.md"
 requires-python = ">=3.9"

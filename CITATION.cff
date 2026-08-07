@@ -7,7 +7,7 @@ abstract: >-
   tracing, integrity audits, submission preparation, and verifiable milestone
   closure.
 type: software
-version: 1.0.0
+version: 1.0.0rc2
 date-released: 2026-08-06
 url: "https://github.com/dmonsta86/uriel"
 repository-code: "https://github.com/dmonsta86/uriel"
