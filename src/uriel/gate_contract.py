@@ -308,23 +308,28 @@ def load_gate_decisions(root: Union[str, Path]) -> List[Dict[str, Any]]:
     store = paths.state / "gates"
     if not store.exists():
         return []
-    records: List[Dict[str, Any]] = []
+    records: List[Tuple[Dict[str, Any], int]] = []
     for path in sorted(store.glob("gate-*.json")):
         try:
             record = json.loads(path.read_text(encoding="utf-8"))
+            mtime = path.stat().st_mtime_ns
         except (OSError, json.JSONDecodeError):
             continue
         if not isinstance(record, Mapping) or "decision_sha256" not in record or "gate" not in record:
             continue
-        records.append(record)
-    return records
+        records.append((record, mtime))
+    latest_by_gate: Dict[int, Dict[str, Any]] = {}
+    for record, mtime in sorted(records, key=lambda pair: (str(pair[0].get("created_at_utc", "")), pair[1])):
+        gate = int(record.get("gate"))
+        latest_by_gate[gate] = record
+    return [latest_by_gate[gate] for gate in sorted(latest_by_gate)]
 
 
 def latest_gate_decision(root: Union[str, Path], gate: int) -> Optional[Dict[str, Any]]:
     candidates = [record for record in load_gate_decisions(root) if record.get("gate") == gate]
     if not candidates:
         return None
-    return max(candidates, key=lambda record: str(record.get("created_at_utc", "")))
+    return candidates[-1]
 
 
 def gate_state_summary(root: Union[str, Path]) -> Dict[str, Any]:
@@ -345,7 +350,19 @@ def gate_0_from_readiness(root: Union[str, Path], *, binding_digest: Optional[st
     ``binding_digest`` overrides the receipt-bound digest when the strict
     flow re-binds Gate 0 to the full generation binding.
     """
-    status = readiness_status(root)
+    root_path = canonical_root(root)
+    paths = paths_for(root_path)
+    readiness_dir = guard_path(root_path, paths.state / "readiness")
+    dataset: Optional[str] = None
+    if readiness_dir.is_dir():
+        candidates = sorted(readiness_dir.glob("sortspec-*.json"), key=lambda p: (p.stat().st_mtime_ns, p.name))
+        if candidates:
+            try:
+                spec = json.loads(candidates[-1].read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                spec = {}
+            dataset = str(spec.get("dataset_path", "")).strip() or None
+    status = readiness_status(root, dataset=dataset)
     receipt = status.get("receipt")
     if not status.get("exists") or receipt is None:
         decision = "FAIL_DATA_NOT_READY"

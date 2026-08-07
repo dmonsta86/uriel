@@ -746,10 +746,36 @@ def _gate2(
                     )
                 )
 
+    by_source: Dict[tuple, List[str]] = {}
+    for evidence_id, row in evidence_map.items():
+        artifact = _text(row.get("artifact_path"))
+        locator = _text(row.get("source_locator"))
+        if artifact and locator and bool(row.get("primary")):
+            by_source.setdefault((artifact, locator), []).append(evidence_id)
+    for (artifact, locator), duplicated in sorted(by_source.items()):
+        if len(duplicated) < 2:
+            continue
+        severity, status = _severity(profile)
+        findings.append(
+            _finding(
+                2,
+                "DUPLICATE_CITATION_SOURCE",
+                "Evidence {0}".format(", ".join(duplicated)),
+                "Multiple evidence rows name the same primary artifact and source locator; they cannot be counted as independent evidence.",
+                severity=severity,
+                status=status,
+                evidence=[artifact, locator, *duplicated],
+                repairs=[
+                    "Remove the duplicate row and keep one canonical evidence record per source location.",
+                    "If the rows genuinely differ, give each a distinct source locator (page, row, commit, or record).",
+                    "Count citations once when judging how many independent sources support the claim.",
+                ],
+            )
+        )
+
     for claim_id, claim in claims.items():
         statement = _text(claim.get("statement"))
-        if len(statement) < 16:
-            findings.append(
+        if len(statement) < 16:            findings.append(
                 _finding(
                     2,
                     "CLAIM_INCOMPLETE",
@@ -994,6 +1020,27 @@ def _gate2(
                     ],
                 )
             )
+        elif verified_receipts:
+            latest_verified = max(
+                verified_receipts,
+                key=lambda row: (str(row.get("finished_at_utc", "")), str(row.get("started_at_utc", "")))
+            )
+            if str(latest_verified.get("status")) != "PASS":
+                findings.append(
+                    _finding(
+                        2,
+                        "FRESH_PASS_RECEIPT_MISSING",
+                        "Reproducibility",
+                        "The latest workload run is {0}; a failing or timed-out run of the current generation cannot satisfy Gate 2.".format(
+                            latest_verified.get("status")),
+                        evidence=["/methods/reproducibility_command", current_records],
+                        repairs=[
+                            "Fix the failing analysis or test and rerun the declared command until it passes.",
+                            "Treat a timeout as a failed run: investigate the hang before accepting any result.",
+                            "Preserve the new passing receipt bound to the current source record set.",
+                        ],
+                    )
+                )
 
     return GateResult(
         gate=2,

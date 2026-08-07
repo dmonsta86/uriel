@@ -402,7 +402,7 @@ def readiness_status(root: Union[Path, str], *, dataset: Optional[str] = None) -
     root_path = canonical_root(root)
     paths = paths_for(root_path)
     readiness_dir = guard_path(root_path, paths.state / "readiness")
-    receipts = sorted(readiness_dir.glob("receipt-*.json")) if readiness_dir.is_dir() else []
+    receipts = sorted(readiness_dir.glob("receipt-*.json"), key=lambda p: (p.stat().st_mtime_ns, p.name)) if readiness_dir.is_dir() else []
     if not receipts:
         return {"exists": False, "decision": None,
                 "embargo_sentence": EMBARGO_SENTENCE}

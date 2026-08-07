@@ -117,6 +117,13 @@ def strict_gates_from_audit(root: Union[str, Path]) -> List[Dict[str, Any]]:
                 "evidence": evidence,
                 "applicability_predicate": None,
             })
+        if str(gate0.get("decision")) != "PASS":
+            checks = [{
+                "check_id": check_id,
+                "status": "FAIL_DATA_NOT_READY",
+                "evidence": ["Data Readiness is {0}; substantive gates cannot pass without a ready generation.".format(gate0.get("decision"))],
+                "applicability_predicate": None,
+            } for check_id in check_ids]
         decision = decide_gate(gate_number, checks, binding_digest=digest)
         decision["audit_id"] = report.audit_id
         decisions.append(decision)
@@ -145,17 +152,27 @@ def _check_owns(finding: Any, check_id: str) -> bool:
         return check_id == "internally_consistent"
     if gate == 1 and code in {"PLACEHOLDER_LANGUAGE", "HYPOTHESIS_UNDERSPECIFIED"}:
         return check_id == "strongest_defensible_interpretation"
+    if gate == 1 and code in {
+        "POPULARITY_AS_EVIDENCE", "AUTHORITY_AS_PROOF", "AD_HOMINEM",
+        "FALSE_DILEMMA", "CIRCULAR_SUPPORT", "ABSENCE_AS_PROOF",
+    }:
+        return check_id == "no_assumed_conclusion"
     if gate == 2 and code in {
         "CLAIMS_MISSING", "CLAIM_INCOMPLETE", "CLAIM_UNSUPPORTED", "CLAIM_SCOPE_INCOMPLETE",
         "CLAIM_FALSIFIER_MISSING", "UNKNOWN_EVIDENCE_REFERENCE", "UNRECONCILED_EVIDENCE_ROLE",
-        "TOTAL_EVIDENCE_ROLE_CONFLICT",
+        "TOTAL_EVIDENCE_ROLE_CONFLICT", "ATTESTATION_ALL_KNOWN_MATERIAL_DATA_DECLARED",
     }:
         return check_id == "claim_map_complete"
-    if gate == 2 and code in {"EVIDENCE_MISSING", "EVIDENCE_ARTIFACT_MISSING", "EVIDENCE_PATH_INVALID", "MAJOR_CLAIM_LACKS_DIRECT_PRIMARY_EVIDENCE"}:
+    if gate == 2 and code in {"EVIDENCE_MISSING", "EVIDENCE_ARTIFACT_MISSING", "EVIDENCE_PATH_INVALID", "MAJOR_CLAIM_LACKS_DIRECT_PRIMARY_EVIDENCE",
+                              "SOURCE_LOCATOR_MISSING", "DATA_LOCATION_MISSING", "DIRECT_EXTRACTION_MISSING",
+                              "INTERPRETATION_MISSING", "EVIDENCE_LIMITATIONS_MISSING"}:
         return check_id == "exact_artifact_mapping"
-    if gate == 2 and code in {"EVIDENCE_HASH_MISMATCH", "EVIDENCE_DECLARED_DIGEST_MISMATCH", "EVIDENCE_NOT_MANIFESTED"}:
+    if gate == 2 and code in {"EVIDENCE_HASH_MISMATCH", "EVIDENCE_DECLARED_DIGEST_MISMATCH", "EVIDENCE_NOT_MANIFESTED",
+                              "ATTESTATION_CITATIONS_CHECKED_AGAINST_SOURCES"}:
         return check_id == "artifact_hashes_match"
-    if gate == 2 and code in {"SECONDARY_ONLY_SUPPORT", "CAUSAL_CLAIM_FROM_OBSERVATIONAL_EVIDENCE"}:
+    if gate == 2 and code in {"SECONDARY_ONLY_SUPPORT", "CAUSAL_CLAIM_FROM_OBSERVATIONAL_EVIDENCE",
+                              "ATTESTATION_NO_CLAIM_RELIES_ONLY_ON_ANOTHER_AUTHORS_CONCLUSION",
+                              "DUPLICATE_CITATION_SOURCE"}:
         return check_id == "primary_sources_used"
     if gate == 2 and code == "FRESH_PASS_RECEIPT_MISSING":
         return check_id == "no_stale_inaccessible_dependency"
@@ -163,17 +180,21 @@ def _check_owns(finding: Any, check_id: str) -> bool:
         return check_id == "no_stale_inaccessible_dependency"
     if gate == 2 and code == "REPRODUCIBILITY_COMMAND_MISSING":
         return check_id == "reproducible_from_artifacts"
-    if gate == 3 and code in {"ADVERSARIAL_TEST_INCOMPLETE", "ADVERSARIAL_TEST_NOT_RESOLVED", "CONTROLS_MISSING", "SAMPLE_SIZE_MISSING"}:
+    if gate == 3 and code in {"ADVERSARIAL_TEST_INCOMPLETE", "ADVERSARIAL_TEST_NOT_RESOLVED", "CONTROLS_MISSING", "SAMPLE_SIZE_MISSING",
+                              "ALTERNATIVE_EXPLANATIONS_MISSING", "ADVERSARIAL_TESTS_MISSING"}:
         return check_id == "alternative_explanations"
     if gate == 3 and code in {"CONTRADICTION_UNRESOLVED", "COUNTEREVIDENCE_UNRECONCILED"}:
         return check_id == "contradictory_observations"
-    if gate == 3 and code in {"ASSUMPTIONS_UNDECLARED", "ASSUMPTION_INCOMPLETE", "EXCLUSIONS_UNDECLARED"}:
+    if gate == 3 and code in {"ASSUMPTIONS_UNDECLARED", "ASSUMPTION_INCOMPLETE", "EXCLUSIONS_UNDECLARED",
+                              "STUDY_DESIGN_MISSING", "POPULATION_MISSING", "SAMPLING_MISSING",
+                              "ANALYSIS_PLAN_MISSING", "EFFECT_SIZE_MISSING", "UNCERTAINTY_METHOD_MISSING",
+                              "MISSING_DATA_PLAN", "LIMITATIONS_MISSING"}:
         return check_id == "sensitivity_to_analytical_choices"
     if gate == 3 and code in {"ETHICS_STATUS_MISSING", "ETHICS_RISK_UNMITIGATED"}:
         return check_id == "ethics_privacy_security"
     if gate == 3 and code == "NEGATIVE_RESULTS_ATTESTATION_MISSING":
         return check_id == "contradictory_observations"
-    if gate == 3 and code == "MANDATORY_GATE_WAIVER_REFUSED":
+    if gate == 3 and code in {"MANDATORY_GATE_WAIVER_REFUSED", "REVIEWER_OBJECTIONS_MISSING"}:
         return check_id == "reviewer_objections"
     return False
 
