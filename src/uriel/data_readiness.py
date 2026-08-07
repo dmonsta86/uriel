@@ -442,3 +442,319 @@ def data_readiness_state(root: Union[Path, str]) -> Dict[str, Any]:
               else ("FAIL" if status.get("exists") else "not_started")),
         "embargo_sentence": status.get("embargo_sentence"),
     }
+
+
+SORT_PROPOSAL_SCHEMA = "uriel.sort_proposal.v1"
+SORT_KINDS = (
+    "time_series",
+    "panel_longitudinal",
+    "experiment",
+    "survey",
+    "documents_evidence",
+    "generic_records",
+)
+NEVER_OPERATIONS = (
+    "join_by_row_position",
+    "file_enumeration_order_as_scientific_order",
+    "locale_dependent_ordering",
+    "guessed_primary_key_when_identity_ambiguous",
+    "silent_duplicate_key_drop",
+    "silent_ambiguous_date_or_number_coercion",
+)
+
+_DATETIME_TOKENS = ("timestamp", "datetime", "date", "time", "ts", "dt", "day", "week", "month", "year")
+_DATETIME_SUFFIXES = ("_at", "_on", "_utc", "_local", "_date", "_time")
+_ENTITY_TOKENS = ("id", "uuid", "entity", "subject", "participant", "respondent",
+                  "user", "patient", "unit", "source", "device", "phone")
+_WAVE_TOKENS = ("wave", "visit", "timepoint", "round", "session", "phase", "period", "t_", "tp")
+_CONDITION_TOKENS = ("condition", "treatment", "arm", "experiment", "intervention", "exposure")
+_REPLICATE_TOKENS = ("replicate", "rep", "run", "trial", "iteration", "block", "lane")
+_MEASURE_TOKENS = ("measure", "metric", "variable", "outcome", "item", "question",
+                   "indicator", "score", "response", "answer", "instrument", "tool")
+_SEQUENCE_TOKENS = ("seq", "sequence", "order", "event", "position", "section", "step")
+_VERSION_TOKENS = ("version", "revision", "rev", "v")
+_HEX64_RE = None  # assigned lazily in _looks_like_hash
+
+
+def _split_tokens(name: str) -> List[str]:
+    lowered = name.lower().replace("-", "_").replace(" ", "_")
+    tokens: List[str] = []
+    for piece in lowered.split("_"):
+        if not piece:
+            continue
+        head = piece[0]
+        tail = piece[1:]
+        for index in range(len(tail)):
+            if tail[index].isdigit() and (index == 0 or tail[index - 1].isdigit()):
+                continue
+            if tail[index].isupper():
+                piece = piece[: index + 1] + "_" + piece[index + 1 :]
+        tokens.extend(part for part in piece.split("_") if part)
+    return tokens
+
+
+def _column_labels(name: str) -> List[str]:
+    tokens = _split_tokens(name)
+    labels: List[str] = []
+    if any(token in _DATETIME_TOKENS for token in tokens) or name.lower().endswith(_DATETIME_SUFFIXES):
+        labels.append("timestamp")
+    if any(token in _ENTITY_TOKENS for token in tokens):
+        labels.append("entity")
+    if any(token in _WAVE_TOKENS for token in tokens):
+        labels.append("wave")
+    if any(token in _CONDITION_TOKENS for token in tokens):
+        labels.append("condition")
+    if any(token in _REPLICATE_TOKENS for token in tokens):
+        labels.append("replicate")
+    if any(token in _MEASURE_TOKENS for token in tokens):
+        labels.append("measure")
+    if any(token in _SEQUENCE_TOKENS for token in tokens):
+        labels.append("sequence")
+    if any(token in _VERSION_TOKENS for token in tokens):
+        labels.append("version")
+    return labels
+
+
+def _looks_like_hash(value: str) -> bool:
+    global _HEX64_RE
+    if _HEX64_RE is None:
+        import re
+
+        _HEX64_RE = re.compile(r"^[0-9a-f]{32,64}$")
+    return bool(_HEX64_RE.match(value))
+
+
+def _sample_datetime_ratio(rows: List[Dict[str, str]], column: str, limit: int = 20) -> float:
+    import datetime as _datetime
+
+    seen = 0
+    parsed = 0
+    for row in rows[:limit]:
+        value = _as_text(row.get(column, "")).strip()
+        if not value:
+            continue
+        seen += 1
+        candidate = value
+        if candidate.endswith("Z"):
+            candidate = candidate[:-1] + "+00:00"
+        try:
+            _datetime.datetime.fromisoformat(candidate)
+            parsed += 1
+        except ValueError:
+            continue
+    return (parsed / seen) if seen else 0.0
+
+
+def _classify_columns(rows: List[Dict[str, str]], columns: Sequence[str]) -> Dict[str, List[str]]:
+    """Deterministic, conservative column role classification."""
+    roles: Dict[str, List[str]] = {
+        "timestamp": [], "entity": [], "wave": [], "condition": [],
+        "replicate": [], "measure": [], "sequence": [], "version": [], "hash": [],
+    }
+    for column in columns:
+        for label in _column_labels(column):
+            if label in roles:
+                roles[label].append(column)
+    roles["timestamp"] = [name for name in roles["timestamp"]
+                          if _sample_datetime_ratio(rows, name) >= 0.5]
+    for column in columns:
+        if column in roles["timestamp"] or column in roles["entity"]:
+            continue
+        if all(_looks_like_hash(_as_text(row.get(column, "")).strip())
+               for row in rows[:20] if _as_text(row.get(column, "")).strip()):
+            roles["hash"].append(column)
+    return roles
+
+
+def _unique_ratio(rows: List[Dict[str, str]], key_columns: Sequence[str], limit: int = 50) -> float:
+    seen: set = set()
+    for row in rows[:limit]:
+        seen.add(tuple(_as_text(row.get(name, "")) for name in key_columns))
+    return len(seen) / min(len(rows[:limit]), limit) if rows[:limit] else 0.0
+
+
+def propose_sort_spec_plan(
+    root: Union[Path, str],
+    dataset: str,
+    *,
+    sample: int = 20,
+) -> Dict[str, Any]:
+    """Propose a best-sorting-method plan from the structure of the data (§9.1).
+
+    A proposal only. It never seals a SortSpec, never writes state, and never
+    guesses identity. If no safe identity/sort rule exists the plan returns
+    ``gate_status = BLOCKED_AMBIGUOUS_IDENTITY`` with the minimum identity
+    clarification or reconstruction plan.
+    """
+    root_path = canonical_root(root)
+    paths = paths_for(root_path)
+    dataset_path = guard_path(root_path, root_path / dataset, must_exist=True)
+    if dataset_path.suffix.lower() not in SUPPORTED_SUFFIXES:
+        raise Refusal(
+            "Unsupported dataset format; only CSV, TSV, and JSONL are supported.",
+            code="READINESS_UNSUPPORTED_FORMAT",
+            repairs=["Convert the dataset to CSV, TSV, or JSONL first.",
+                     "Record the conversion as a transformation rule."],
+        )
+    rows, columns = _load_rows(dataset_path)
+    if not columns:
+        raise Refusal("The dataset has no columns; no safe sort rule can be proposed.",
+                      code="READINESS_EMPTY_STRUCTURE",
+                      repairs=["Provide a header row or record schema."])
+    roles = _classify_columns(rows, columns)
+    record_id_rule = "sha256 of the canonical serialized row (immutable record ID)"
+    warnings: List[str] = []
+
+    kind: Optional[str] = None
+    primary: List[str] = []
+    tie_break: List[str] = []
+    evidence: Dict[str, Any] = {}
+    blocked_reasons: List[str] = []
+
+    timestamp = roles["timestamp"][:1]
+    entity = roles["entity"][:1]
+    respondent = [
+        name for name in roles["entity"]
+        if any(token in _split_tokens(name) for token in ("respondent", "user", "participant"))
+    ][:1]
+    wave = roles["wave"][:1]
+    condition = roles["condition"][:1]
+    replicate = roles["replicate"][:1]
+    measure = roles["measure"][:1]
+    sequence = roles["sequence"][:1]
+    version = roles["version"][:1]
+    hash_column = roles["hash"][:1]
+
+    if timestamp:
+        kind = "time_series"
+        evidence["series_timepoint"] = timestamp
+        if entity:
+            evidence["series_entity"] = entity
+            primary = entity + timestamp
+        else:
+            evidence["series_entity"] = "single_series_declared_entity"
+            primary = timestamp
+        if sequence:
+            tie_break.append(sequence[0])
+        tie_break.append(record_id_rule)
+    elif respondent and wave:
+        kind = "survey"
+        evidence["survey_respondent"] = respondent
+        evidence["survey_wave"] = wave
+        primary = respondent + wave
+        if measure:
+            tie_break.append(measure[0])
+        tie_break.append(record_id_rule)
+    elif entity and wave:
+        kind = "panel_longitudinal"
+        evidence["panel_entity"] = entity
+        evidence["panel_timepoint"] = wave
+        primary = entity + wave
+        if measure:
+            tie_break.append(measure[0])
+        tie_break.append(record_id_rule)
+    elif entity and condition:
+        kind = "experiment"
+        evidence["experiment_unit"] = entity
+        evidence["experiment_condition"] = condition
+        primary = entity + condition
+        if replicate:
+            primary.append(replicate[0])
+        if timestamp:
+            tie_break.append(timestamp[0])
+        tie_break.append(record_id_rule)
+    elif entity and (version or timestamp):
+        kind = "documents_evidence"
+        evidence["document_source"] = entity
+        primary = entity
+        if version:
+            primary.append(version[0])
+        elif timestamp:
+            primary.append(timestamp[0])
+        if sequence:
+            tie_break.append(sequence[0])
+        tie_break.append(record_id_rule)
+    elif any(name in roles["entity"] for name in ("id", "uuid")):
+        kind = "generic_records"
+        primary = [name for name in roles["entity"] if name in ("id", "uuid")]
+        tie_break = [record_id_rule]
+        evidence["generic_primary"] = primary
+    else:
+        blocked_reasons.append(
+            "no entity, timepoint, condition, version, or declared primary-key column found"
+        )
+
+    for key_name in primary:
+        ratio = _unique_ratio(rows, [key_name])
+        if ratio < 0.999:
+            warnings.append(
+                "{0}: proposed primary key is not unique in the sample ({1:.0%} unique); "
+                "the duplicate policy must resolve this explicitly, never silently".format(
+                    key_name, ratio
+                )
+            )
+    combined = primary + tie_break[:-1] if tie_break else primary
+    combined_unique = _unique_ratio(rows, [name for name in combined if name != record_id_rule])
+    if combined and combined_unique < 0.999:
+        warnings.append(
+            "proposed composite key is not unique in the sample ({0:.0%}); "
+            "an immutable record ID (content hash) is required as final tie-break".format(
+                combined_unique
+            )
+        )
+    if timestamp:
+        warnings.append(
+            "timestamp column {0}: verify the timezone and that no silent coercion "
+            "occurred; ambiguous dates must be resolved, never coerced".format(timestamp[0])
+        )
+
+    blocked = bool(blocked_reasons)
+    plan: Dict[str, Any] = {
+        "schema": SORT_PROPOSAL_SCHEMA,
+        "version": 1,
+        "dataset": str(dataset_path.relative_to(root_path).as_posix()),
+        "dataset_identity": sha256_file(dataset_path),
+        "detected_kind": kind,
+        "kind_evidence": evidence,
+        "gate_status": "BLOCKED_AMBIGUOUS_IDENTITY" if blocked else "PROPOSAL",
+        "record_identity_rule": record_id_rule,
+        "proposed_primary_keys": primary,
+        "proposed_tie_break_keys": [item for item in tie_break if item != record_id_rule],
+        "immutable_record_id_rule": record_id_rule,
+        "recommended": {
+            "null_ordering": "nulls_last",
+            "duplicate_policy": "block",
+            "normalization_rules": ["utf8_lf", "strip_whitespace"],
+            "canonical_serialization": "utf8_lf_escaped",
+            "order_invariance_test": "shuffle_reproduces_canonical_order",
+        },
+        "refused_operations": list(NEVER_OPERATIONS),
+        "warnings": warnings,
+        "blocked_reasons": blocked_reasons,
+        "identity_clarification_plan": (
+            [
+                "Declare record identity explicitly: add an immutable record ID column "
+                "(for example a stable hash or UUID) or name the columns that uniquely "
+                "identify one row.",
+                "Then run: uriel readiness init-sort-spec --dataset {0} --keys <record-id>".format(
+                    str(dataset_path.relative_to(root_path).as_posix())
+                ),
+            ]
+            if blocked
+            else []
+        ),
+        "next_step": (
+            "uriel readiness init-sort-spec --dataset {0} --keys {1}{2}".format(
+                str(dataset_path.relative_to(root_path).as_posix()),
+                " ".join(primary) if primary else "<record-id>",
+                " --tie-break " + " ".join(
+                    [item for item in tie_break if item != record_id_rule]
+                ) if tie_break and any(item != record_id_rule for item in tie_break) else "",
+            )
+            if not blocked
+            else "Resolve identity first; no SortSpec may be sealed while identity is ambiguous."
+        ),
+        "proposal_only": True,
+        "generated_at_utc": utc_now(),
+    }
+    return plan

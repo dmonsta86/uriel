@@ -170,8 +170,8 @@ def constructive_response(group: str, *, claim: str = "", evidence: str = "") ->
             "verification command",
         ]
         narrowing = "The failure is a project state, not a judgment of the person."
-    return {"group": group, "required_items": items, "governance_note": narrowing,
-            "claim": claim_text, "evidence": evidence_text}
+    return {"group": group, "required_items": items, "minimum_repair": items[0],
+            "governance_note": narrowing, "claim": claim_text, "evidence": evidence_text}
 
 
 def nonblocking_conditions_met(limitations: Any) -> bool:

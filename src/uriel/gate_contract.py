@@ -337,11 +337,13 @@ def gate_state_summary(root: Union[str, Path]) -> Dict[str, Any]:
     }
 
 
-def gate_0_from_readiness(root: Union[str, Path]) -> Dict[str, Any]:
+def gate_0_from_readiness(root: Union[str, Path], *, binding_digest: Optional[str] = None) -> Dict[str, Any]:
     """Derive the Gate 0 decision record from the Data Readiness receipt store.
 
     No substantive gate may pass while the exact generation lacks a valid
     matching receipt; a missing/stale/FAIL receipt is FAIL_DATA_NOT_READY.
+    ``binding_digest`` overrides the receipt-bound digest when the strict
+    flow re-binds Gate 0 to the full generation binding.
     """
     status = readiness_status(root)
     receipt = status.get("receipt")
@@ -362,7 +364,7 @@ def gate_0_from_readiness(root: Union[str, Path]) -> Dict[str, Any]:
         evidence = ["Data Readiness receipt {0} is PASS for the exact generation.".format(
             receipt.get("receipt_sha256"))]
         failing_status = "FAIL_DATA_NOT_READY"
-    binding = receipt.get("binding_digest") if isinstance(receipt, Mapping) else ""
+    binding = binding_digest or (receipt.get("binding_digest") if isinstance(receipt, Mapping) else "")
     checks = [
         _check("source_identity", PASS if decision == PASS else failing_status, evidence),
         _check("record_identity", PASS if decision == PASS else failing_status, evidence),

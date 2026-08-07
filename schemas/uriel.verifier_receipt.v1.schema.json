@@ -1,0 +1,30 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "uriel.verifier_receipt.v1",
+    "title": "Uriel independent verifier receipt",
+    "description": "Receipt proving the verifier recomputed the complete binding digest from live state.",
+    "type": "object",
+    "required": [
+        "schema",
+        "schema_version",
+        "created_at_utc",
+        "decision",
+        "expected_binding_digest",
+        "recomputed_binding_digest",
+        "binding",
+        "errors",
+        "verifier_sha256"
+    ],
+    "properties": {
+        "schema": { "const": "uriel.verifier_receipt.v1" },
+        "schema_version": { "const": 1 },
+        "created_at_utc": { "type": "string", "format": "date-time" },
+        "decision": { "type": "string", "enum": ["PASS", "FAIL"] },
+        "expected_binding_digest": { "type": ["string", "null"] },
+        "recomputed_binding_digest": { "type": ["string", "null"] },
+        "binding": { "type": "object" },
+        "errors": { "type": "array", "items": { "type": "string" } },
+        "verifier_sha256": { "type": "string", "minLength": 64, "maxLength": 64 }
+    },
+    "additionalProperties": false
+}

@@ -40,8 +40,26 @@ from .core import (
     verify_project,
     verify_source_manifest,
 )
-from .data_readiness import data_readiness_state, make_sort_spec, readiness_check, readiness_status
+from .data_readiness import data_readiness_state, make_sort_spec, propose_sort_spec_plan, readiness_check, readiness_status
 from .decisions import DECISION_CLASSES
+from .gate_contract import (
+    gate_0_from_readiness,
+    gate_state_summary,
+    latest_gate_decision,
+)
+from .gate_failures import (
+    AUDIT_TO_FAILURE,
+    classify_failure,
+    constructive_response,
+    nonblocking_conditions_met,
+)
+from .gap_register import (
+    build_gap,
+    load_latest_gap_register,
+    render_gap_register_csv,
+    write_gap_register,
+)
+from .independent_verify import compute_binding_digest, independent_verify, latest_verifier
 from .intake import intake_idea
 from .lens import lens_names, lens_prompt, write_lens
 from .onboarding import (
@@ -56,9 +74,17 @@ from .onboarding import (
     start as start_workspace,
 )
 from .prompts import build_prompt
+from .repair_packet import build_repair_packet, verify_repair_packet
 from .reviews import REVIEW_TASKS, import_review, list_reviews, review_template
 from .schema import validate_project
 from .seed import seed_project, write_seed_brief
+from .strict_blessing import (
+    blessing_eligibility,
+issue_strict_blessing,
+run_strict_gates,
+strict_gates_from_audit,
+verify_strict_blessing,
+)
 from .submission import (
     archive_submission,
     build_response,
@@ -167,6 +193,13 @@ def parser() -> argparse.ArgumentParser:
     _root_argument(rd_status)
     rd_status.add_argument("--dataset", default="")
 
+    data = commands.add_parser("data", help="Data Readiness structure proposals (never seal state)")
+    data_actions = data.add_subparsers(dest="data_action", required=True)
+    data_propose = data_actions.add_parser("propose-sort", help="propose the best sorting method from the structure of the data (§9.1)")
+    _root_argument(data_propose)
+    data_propose.add_argument("--dataset", required=True)
+    data_propose.add_argument("--sample", type=int, default=20, help="sample rows used for detection evidence")
+
     intake = commands.add_parser("intake", help="preserve a rough question and create or update a project")
     intake.add_argument("question")
     _root_argument(intake)
@@ -239,12 +272,33 @@ def parser() -> argparse.ArgumentParser:
     run.add_argument("--id", dest="workload_id")
     run.add_argument("workload", nargs=argparse.REMAINDER, help="command after --")
 
-    audit = commands.add_parser("audit", help="evaluate all Three Gates")
+    audit = commands.add_parser("audit", help="evaluate all Three Gates; subcommands add strict failure guidance")
     _root_argument(audit)
     audit.add_argument("--profile", choices=PROFILES, default="standard")
+    audit_actions = audit.add_subparsers(dest="audit_action")
+    audit_explain = audit_actions.add_parser("explain", help="map audit findings onto the strict failure taxonomy and responses")
+    _root_argument(audit_explain)
+    audit_explain.add_argument("--profile", choices=PROFILES, default="standard")
+    audit_gaps = audit_actions.add_parser("gaps", help="write the content-addressed gap register from current findings")
+    _root_argument(audit_gaps)
+    audit_gaps.add_argument("--profile", choices=PROFILES, default="standard")
+    audit_repair = audit_actions.add_parser("repair-plan", help="build the 14-file constructive repair packet")
+    _root_argument(audit_repair)
+    audit_repair.add_argument("--profile", choices=PROFILES, default="standard")
+    audit_recheck = audit_actions.add_parser("recheck", help="re-run strict Gates 0-3 and report eligibility")
+    _root_argument(audit_recheck)
+    audit_recheck.add_argument("--profile", choices=PROFILES, default="standard")
 
-    blessing = commands.add_parser("blessing", help="issue a Blessing after a submission-profile PASS")
+    blessing = commands.add_parser("blessing", help="issue a Blessing after a submission-profile PASS, or inspect strict eligibility")
     _root_argument(blessing)
+    blessing_actions = blessing.add_subparsers(dest="blessing_action")
+    blessing_elig = blessing_actions.add_parser("eligibility", help="report why strict Blessing is or is not eligible (never creates a certificate)")
+    _root_argument(blessing_elig)
+    blessing_issue = blessing_actions.add_parser("issue", help="issue the strict Blessing after eligibility, verifier recomputation, and zero blockers")
+    _root_argument(blessing_issue)
+    blessing_verify = blessing_actions.add_parser("verify", help="verify a strict Blessing package against its records")
+    blessing_verify.add_argument("package")
+    blessing_verify.add_argument("--root", help="optional live project root")
 
     verify_b = commands.add_parser("verify-blessing", help="verify a Blessing package, optionally against a live project")
     verify_b.add_argument("package")
@@ -362,7 +416,61 @@ def _envelope(status: str, command: str, result: Optional[Any] = None, error: Op
 
 
 def _print_human(command: str, result: Any, args: Optional[argparse.Namespace] = None) -> None:
+    if command == "data" and isinstance(result, Mapping):
+        if args.data_action == "propose-sort":
+            print("Sort proposal: {0} · gate {1}".format(
+                result.get("detected_kind") or "blocked", result.get("gate_status")))
+            print("Dataset: {0} · SHA-256 {1}".format(
+                result.get("dataset"), result.get("dataset_identity")))
+            if result.get("blocked_reasons"):
+                print("Blocked: {0}".format("; ".join(result.get("blocked_reasons", []))))
+                for step in result.get("identity_clarification_plan", []):
+                    print("  - {0}".format(step))
+                return
+            print("Proposed primary keys: {0}".format(", ".join(result.get("proposed_primary_keys", []))))
+            print("Proposed tie-break: {0}".format(", ".join(result.get("proposed_tie_break_keys", [])) or "(immutable record ID)"))
+            for warning in result.get("warnings", []):
+                print("Warning: {0}".format(warning))
+            print("Next step: {0}".format(result.get("next_step")))
+            print("Proposal only; nothing was sealed.")
+            return
     if command == "audit" and isinstance(result, Mapping):
+        if args.audit_action == "explain":
+            print("Strict failure map: {0} findings · audit {1}".format(
+                len(result.get("findings", [])), result.get("audit_id")))
+            for finding in result.get("findings", []):
+                print("Gate {0} {1} -> {2} ({3})".format(
+                    finding.get("gate"), finding.get("code"), finding.get("status"), finding.get("group")))
+                print("  {0}".format(finding.get("message", "")))
+                response = finding.get("response") or {}
+                if response.get("minimum_repair"):
+                    print("  Minimum repair: {0}".format(response["minimum_repair"]))
+            return
+        if args.audit_action == "gaps":
+            print("Gap register: {0} rows · register {1}".format(
+                result.get("gap_count"), (result.get("register") or {}).get("register_sha256")))
+            csv_text = result.get("csv", "")
+            if csv_text:
+                print(csv_text.rstrip())
+            return
+        if args.audit_action == "repair-plan":
+            packet = result.get("packet", {})
+            print("Repair packet: {0}".format(packet.get("packet_dir")))
+            print("Digest: {0} · files: {1} · blockers: {2}".format(
+                packet.get("digest"), packet.get("file_count"), result.get("blocker_count")))
+            return
+        if args.audit_action == "recheck":
+            eligibility = result.get("eligibility", {})
+            print("Strict recheck: eligible = {0}".format(eligibility.get("eligible")))
+            gates = eligibility.get("gates", {})
+            print("Gates: {0}".format(", ".join(
+                "Gate {0}={1}".format(number, status)
+                for number, status in sorted(gates.items()))))
+            print("Verifier: {0} · binding {1}".format(
+                eligibility.get("verifier_decision"), eligibility.get("binding_digest")))
+            for blocker in eligibility.get("blockers", []):
+                print("  BLOCKER: {0}".format(blocker))
+            return
         print("Uriel audit: {0} ({1})".format(result.get("status"), result.get("profile")))
         print("Audit ID: {0}".format(result.get("audit_id")))
         for gate in result.get("gates", []):
@@ -387,6 +495,31 @@ def _print_human(command: str, result: Any, args: Optional[argparse.Namespace] =
             print("The declared state passed this profile. Only the submission profile can earn a Blessing.")
         return
     if command == "blessing" and isinstance(result, Mapping):
+        if args.blessing_action == "eligibility":
+            print("Strict Blessing eligibility: {0}".format("ELIGIBLE" if result.get("eligible") else "NOT ELIGIBLE"))
+            gates = result.get("gates", {})
+            print("Gates: {0}".format(", ".join(
+                "Gate {0}={1}".format(number, status)
+                for number, status in sorted(gates.items()))))
+            print("Verifier: {0} · binding {1}".format(
+                result.get("verifier_decision"), result.get("binding_digest")))
+            for blocker in result.get("blockers", []):
+                print("  BLOCKER: {0}".format(blocker))
+            if result.get("eligible"):
+                print("No certificate was created; run `uriel blessing` to issue after an explicit decision.")
+            return
+        if args.blessing_action in ("issue", "verify"):
+            print("Strict Blessing {0}: {1}".format(
+                "issued" if args.blessing_action == "issue" else "verify",
+                "PASS" if result.get("verified") else "FAIL"))
+            print("Blessing ID: {0}".format(result.get("blessing_id")))
+            print("Package SHA-256: {0}".format(result.get("package_sha256")))
+            print("Binding digest: {0}".format(result.get("binding_digest")))
+            if result.get("ledger_event_sha256"):
+                print("Ledger event: {0}".format(result["ledger_event_sha256"]))
+            for error in result.get("errors", []):
+                print("  ERROR: {0}".format(error))
+            return
         print("Blessing verified: {0}".format(result.get("verified")))
         print("Blessing ID: {0}".format(result.get("blessing_id")))
         print("Package: {0}".format(result.get("package")))
@@ -585,6 +718,113 @@ def _intake(args: argparse.Namespace) -> Dict[str, Any]:
     }
 
 
+def _audit_explain(root: str, profile: str) -> Dict[str, Any]:
+    """Map audit findings onto the strict failure taxonomy and responses."""
+    report = audit_project(root, profile=profile)
+    findings = []
+    for gate in report.gates:
+        for finding in gate.findings:
+            meta = classify_failure(finding.code)
+            response = constructive_response(
+                meta["group"],
+                claim=finding.subject,
+                evidence="; ".join(finding.evidence[:5]),
+            )
+            findings.append({
+                "code": finding.code,
+                "gate": gate.gate,
+                "status": meta["status"],
+                "severity": meta["severity"],
+                "group": meta["group"],
+                "subject": finding.subject,
+                "message": finding.message,
+                "response": response,
+            })
+    return {
+        "audit_id": report.audit_id,
+        "status": report.status,
+        "profile": profile,
+        "findings": findings,
+    }
+
+
+def _audit_gaps(root: str, profile: str) -> Dict[str, Any]:
+    """Write the content-addressed gap register from current audit findings."""
+    report = audit_project(root, profile=profile)
+    rows = []
+    for gate in report.gates:
+        for finding in gate.findings:
+            meta = classify_failure(finding.code)
+            if meta["status"] == "PASS":
+                continue
+            rows.append(build_gap(
+                gate=gate.gate,
+                failure_code=meta["status"],
+                severity=meta["severity"],
+                observed_fact=finding.message,
+                why_it_matters="Finding {0} blocks the strict gate contract".format(finding.code),
+                affected_claims=[finding.subject] if finding.subject else (),
+                affected_artifacts=[],
+                minimum_repair="; ".join(finding.repairs[:3]) or "Define the exact completion conditions.",
+            ))
+    written = write_gap_register(root, rows, label="audit-{0}".format(profile))
+    return {
+        "gap_count": len(rows),
+        "register": written,
+        "csv": render_gap_register_csv(rows) if rows else "",
+    }
+
+
+def _audit_repair(root: str, profile: str) -> Dict[str, Any]:
+    """Build the standalone constructive repair packet from current findings."""
+    report = audit_project(root, profile=profile)
+    register = load_latest_gap_register(root)
+    rows = register.get("gaps", []) if register else []
+    blockers = []
+    for gate in report.gates:
+        for finding in gate.findings:
+            meta = classify_failure(finding.code)
+            if meta["status"] == "PASS":
+                continue
+            blockers.append({
+                "code": finding.code,
+                "gate": gate.gate,
+                "status": meta["status"],
+                "severity": meta["severity"],
+                "subject": finding.subject,
+                "message": finding.message,
+            })
+    worst_gate = blockers[0]["gate"] if blockers else 1
+    gate_names = {0: "Data Readiness", 1: "Novelty & Clarity", 2: "Evidence & Citation", 3: "Adversarial Integrity"}
+    summary = "; ".join(blocker["message"] for blocker in blockers[:5]) or "No blockers reported."
+    packet = build_repair_packet(
+        root,
+        gate=worst_gate,
+        gate_name=gate_names.get(worst_gate, "Unknown"),
+        decision=str(report.status),
+        failure_summary=summary,
+        gates_results=report.as_dict(),
+        blockers=blockers,
+        gaps=rows,
+        sorting_plan="Run `uriel data propose-sort --dataset <path>` and seal a SortSpec before any data-dependent conclusion.",
+        repair_plan="Resolve every blocker in 03_BLOCKERS.csv. Narrowing is allowed; weakening a gate is not.",
+        pivot_options=["Narrow the claim to what the current evidence supports."],
+        evidence_requests=["Provide the missing artifacts listed in 08_EVIDENCE_REQUESTS.md."],
+        updated_project_spec="Requires a new generation whenever a claim, plan, or artifact changes.",
+        completion_checklist=["Gate {0} PASS against the exact contract check list".format(gate) for gate in (0, 1, 2, 3)],
+        recheck_instructions="Run `uriel audit recheck` after every repair; a stale or missing receipt is refused.",
+        next_prompt="Resolve the blockers, then rerun `uriel audit recheck`.",
+    )
+    return {"packet": packet, "blocker_count": len(blockers)}
+
+
+def _audit_recheck(root: str, profile: str) -> Dict[str, Any]:
+    """Re-run strict Gates 0-3 (persisting decisions) and report eligibility."""
+    gates = run_strict_gates(root, persist=True)
+    eligibility = blessing_eligibility(root)
+    return {"gates": gates, "eligibility": eligibility}
+
+
 def dispatch(args: argparse.Namespace) -> Any:
     command = args.command
     if command == "init":
@@ -694,6 +934,9 @@ def dispatch(args: argparse.Namespace) -> Any:
             )
         if args.readiness_action == "status":
             return readiness_status(args.root, dataset=args.dataset or None)
+    if command == "data":
+        if args.data_action == "propose-sort":
+            return propose_sort_spec_plan(args.root, args.dataset, sample=args.sample)
     if command == "validate":
         return validate_project(args.root)
     if command == "add-evidence":
@@ -726,9 +969,25 @@ def dispatch(args: argparse.Namespace) -> Any:
             parts = parts[1:]
         return run_workload(args.root, parts, timeout=args.timeout, workload_id=args.workload_id)
     if command == "audit":
-        return audit_project(args.root, profile=args.profile).as_dict()
+        if args.audit_action is None:
+            return audit_project(args.root, profile=args.profile).as_dict()
+        if args.audit_action == "explain":
+            return _audit_explain(args.root, args.profile)
+        if args.audit_action == "gaps":
+            return _audit_gaps(args.root, args.profile)
+        if args.audit_action == "repair-plan":
+            return _audit_repair(args.root, args.profile)
+        if args.audit_action == "recheck":
+            return _audit_recheck(args.root, args.profile)
     if command == "blessing":
-        return issue_blessing(args.root)
+        if args.blessing_action is None:
+            return issue_blessing(args.root)
+        if args.blessing_action == "eligibility":
+            return blessing_eligibility(args.root)
+        if args.blessing_action == "issue":
+            return issue_strict_blessing(args.root)
+        if args.blessing_action == "verify":
+            return verify_strict_blessing(args.package, project_root=args.root or None)
     if command == "verify-blessing":
         return verify_blessing(args.package, project_root=args.root)
     if command == "verify":
@@ -845,8 +1104,13 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             print(json.dumps(envelope, ensure_ascii=False, sort_keys=True, separators=(",", ":")))
         else:
             _print_human(command, result, args)
-        if command == "audit" and isinstance(result, Mapping) and result.get("status") != "PASS":
+        if command == "audit" and isinstance(result, Mapping) and args.audit_action is None and result.get("status") != "PASS":
             return 2
+        if command == "blessing" and isinstance(result, Mapping):
+            if args.blessing_action == "eligibility" and not result.get("eligible"):
+                return 2
+            if args.blessing_action == "issue" and not result.get("verified"):
+                return 2
         if command == "verify" and isinstance(result, Mapping) and not result.get("verified"):
             return 2
         if command == "verify-blessing" and isinstance(result, Mapping) and not result.get("verified"):
