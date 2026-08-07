@@ -1,0 +1,67 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.release_verdict.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "commit": {
+      "type": "string"
+    },
+    "forge_closure_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "hard_gate_blocked": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "hard_gate_count": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "hard_gate_failed": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "hard_gate_passed": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "known_limitations": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "native_platforms": {
+      "type": "object"
+    },
+    "schema": {
+      "const": "uriel.release_verdict.v1"
+    },
+    "verdict": {
+      "enum": [
+        "PUBLIC_BETA_READY",
+        "RELEASE_CANDIDATE_READY",
+        "STABLE_RELEASE_READY",
+        "NOT_RELEASE_READY"
+      ]
+    },
+    "version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "commit",
+    "version",
+    "hard_gate_count",
+    "hard_gate_passed",
+    "hard_gate_failed",
+    "verdict"
+  ],
+  "title": "Uriel Release Verdict",
+  "type": "object"
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "uriel.locale_catalog.v1",
+  "locale": "es",
+  "status": "AI_SECOND_PASS_REVIEWED",
+  "messages": {
+    "decision.change_result": "Lo que cambiaría el resultado",
+    "decision.established": "Lo que está establecido",
+    "decision.needed": "Lo que se requiere de usted",
+    "decision.next_move": "El siguiente paso más firme",
+    "decision.not_established": "Lo que no está establecido",
+    "decision.prepared": "Lo que Uriel ya preparó",
+    "decision.status.blocked": "BLOCKED",
+    "decision.status.not_yet_known": "NOT YET KNOWN",
+    "decision.status.pass": "PASS",
+    "decision.status.refuted": "REFUTED",
+    "decision.status.stale": "STALE",
+    "decision.why": "Por qué",
+    "gate.g0.name": "Preparación de Datos",
+    "gate.g1.name": "Novedad y Claridad",
+    "gate.g2.name": "Evidencia y Cita",
+    "gate.g3.name": "Integridad Adversaria",
+    "privacy.read_only_default": "Solo lectura es el estado predeterminado.",
+    "product.name": "Uriel Forge",
+    "product.standard": "Interpretar con generosidad. Probar con rigor. Informar con honestidad.",
+    "readiness.not_yet_known": "El resultado aún no se conoce.",
+    "repair.preferred_next_move": "Siguiente paso preferido",
+    "translation.native_review_welcome": "Las correcciones en idioma nativo son bienvenidas."
+  }
+}

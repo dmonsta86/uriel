@@ -1,0 +1,15 @@
+term,translation_rule,note
+Uriel Forge,Do not translate product name,May explain locally on first use
+The Forge Method,Keep English brand; translate explanation,Do not imply shipped engine when planned
+The Blessing of Uriel,Keep proper name recognizable,Do not translate as religious approval
+Gate 0,Keep number,Data Readiness prerequisite
+Gate 1,Novelty and Clarity,Do not rename to framing only
+Gate 2,Evidence and Citation,Evidence must actually support claim
+Gate 3,Adversarial Integrity,"Rivals, confounders, omissions, limits"
+Data Readiness,Translate consistently,Not statistical significance
+Decision Card,Translate user-facing label,Machine schema remains English
+Repair Packet,Translate user-facing label,Hash-bound artifact name may remain
+SHIPPED,Localize label + retain token,Machine token stable
+BETA,Localize label + retain token,Machine token stable
+EXPERIMENTAL,Localize label + retain token,Machine token stable
+PLANNED,Localize label + retain token,Machine token stable

@@ -1,0 +1,133 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.forge_trial_result.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {
+      "type": "string"
+    },
+    "decision": {
+      "enum": [
+        "PASS",
+        "PARTIAL",
+        "FAIL",
+        "BLOCKED",
+        "UNRESOLVED"
+      ]
+    },
+    "findings": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "classification": {
+            "enum": [
+              "CONFIRMED_FINDING",
+              "CANDIDATE_FINDING",
+              "NOT_ESTABLISHED",
+              "FALSE_POSITIVE",
+              "OUT_OF_SCOPE"
+            ]
+          },
+          "evidence": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "finding_id": {
+            "type": "string"
+          },
+          "human_adjudication": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "severity": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "finding_id",
+          "classification",
+          "severity",
+          "evidence"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "limitations": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "manifest_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "metrics": {
+      "additionalProperties": true,
+      "properties": {
+        "false_negative": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "false_positive": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "peak_memory_bytes": {
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "precision": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "recall": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "true_positive": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "wall_seconds": {
+          "minimum": 0,
+          "type": "number"
+        }
+      },
+      "type": "object"
+    },
+    "schema": {
+      "const": "uriel.forge_trial_result.v1"
+    },
+    "uriel_commit": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "case_id",
+    "uriel_commit",
+    "findings",
+    "metrics",
+    "decision",
+    "manifest_sha256"
+  ],
+  "title": "Uriel Forge Trial Result",
+  "type": "object"
+}

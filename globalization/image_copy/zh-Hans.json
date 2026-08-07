@@ -1,0 +1,32 @@
+{
+  "anvil": [
+    "求真",
+    "证据",
+    "严谨",
+    "透明"
+  ],
+  "challenge": "你的研究经得住锻造吗？",
+  "data_readiness": "数据就绪",
+  "evidence": "证据追踪",
+  "footer": [
+    "开源",
+    "透明",
+    "可复现",
+    "可审计",
+    "社区驱动",
+    "为研究而建"
+  ],
+  "gates": "三道关卡审计",
+  "locale": "zh-Hans",
+  "one_sentence": "Uriel Forge 是一个离线优先、以证据为基础的研究开发与质量保障工具包，帮助把初步问题或现有项目转化为可复现、可投稿的工作，并要求每一项权威结论都由证据赢得。",
+  "provenance": "溯源与校验凭证",
+  "question_intake": "问题导入",
+  "read_only": "只读审查",
+  "repair": "修复方案包",
+  "schema": "uriel.localized_image_copy.v1",
+  "sorting": "确定性排序",
+  "submission": "投稿支持",
+  "subtitle": "以证据为基础的研究开发与质量保障",
+  "supporting": "让想法得到公正审视，让证据经受严格检验。",
+  "translation_status": "AI_ASSISTED_DRAFT_REQUIRES_REVIEW"
+}

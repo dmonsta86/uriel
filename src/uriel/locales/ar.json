@@ -1,0 +1,29 @@
+{
+  "schema": "uriel.locale_catalog.v1",
+  "locale": "ar",
+  "status": "AI_SECOND_PASS_REVIEWED",
+  "messages": {
+    "decision.change_result": "ما من شأنه تغيير النتيجة",
+    "decision.established": "ما تم إثباته",
+    "decision.needed": "ما هو مطلوب منك",
+    "decision.next_move": "الخطوة القادمة الأكثر قوة",
+    "decision.not_established": "ما لم يتم إثباته",
+    "decision.prepared": "ما أعده يوريل بالفعل",
+    "decision.status.blocked": "BLOCKED",
+    "decision.status.not_yet_known": "NOT YET KNOWN",
+    "decision.status.pass": "PASS",
+    "decision.status.refuted": "REFUTED",
+    "decision.status.stale": "STALE",
+    "decision.why": "السبب",
+    "gate.g0.name": "جاهزية البيانات",
+    "gate.g1.name": "الأصالة والوضوح",
+    "gate.g2.name": "الأدلة والاستشهاد",
+    "gate.g3.name": "النزاهة التنافسية",
+    "privacy.read_only_default": "القراءة فقط هي الوضع الافتراضي.",
+    "product.name": "Uriel Forge",
+    "product.standard": "التفسير بسخاء. الاختبار بصرامة. الإبلاغ بصدق.",
+    "readiness.not_yet_known": "النتيجة غير معروفة بعد.",
+    "repair.preferred_next_move": "الخطوة القادمة المفضلة",
+    "translation.native_review_welcome": "نرحب بالتصحيحات من الناطقين بها."
+  }
+}

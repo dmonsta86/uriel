@@ -1,0 +1,32 @@
+{
+  "anvil": [
+    "VÉRITÉ",
+    "PREUVES",
+    "RIGUEUR",
+    "TRANSPARENCE"
+  ],
+  "challenge": "Votre recherche résistera-t-elle à la forge ?",
+  "data_readiness": "PRÉPARATION DES DONNÉES",
+  "evidence": "TRAÇABILITÉ DES PREUVES",
+  "footer": [
+    "OPEN SOURCE",
+    "TRANSPARENT",
+    "REPRODUCTIBLE",
+    "AUDITABLE",
+    "PORTÉ PAR LA COMMUNAUTÉ",
+    "CONÇU POUR LA RECHERCHE"
+  ],
+  "gates": "AUDIT DES TROIS PORTES",
+  "locale": "fr",
+  "one_sentence": "Uriel Forge est une boîte à outils hors ligne par défaut pour développer et assurer la recherche, transformer une question initiale ou un projet existant en travail reproductible et prêt à soumettre, et obliger chaque conclusion autoritative à mériter ses preuves.",
+  "provenance": "PROVENANCE + REÇUS",
+  "question_intake": "FORMULATION DE LA QUESTION",
+  "read_only": "EXAMEN EN LECTURE SEULE",
+  "repair": "DOSSIERS DE CORRECTION",
+  "schema": "uriel.localized_image_copy.v1",
+  "sorting": "TRI DÉTERMINISTE",
+  "submission": "AIDE À LA SOUMISSION",
+  "subtitle": "Développement et assurance de la recherche fondés sur les preuves",
+  "supporting": "Une écoute équitable pour l’idée. Une épreuve rigoureuse pour les preuves.",
+  "translation_status": "AI_ASSISTED_DRAFT_REQUIRES_REVIEW"
+}

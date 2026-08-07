@@ -1,0 +1,142 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.forge_trial_case.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "audit_scope": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "case_class": {
+      "enum": [
+        "SYNTHETIC_GOLD_STANDARD",
+        "MAINTAINER_SELF_AUDIT",
+        "OPEN_LICENSE_PAPER",
+        "SOURCE_EVENT",
+        "REPRODUCIBILITY_PACKAGE"
+      ]
+    },
+    "case_id": {
+      "type": "string"
+    },
+    "created_at_utc": {
+      "type": "string"
+    },
+    "ground_truth_level": {
+      "enum": [
+        "SEEDED_DETERMINISTIC",
+        "OFFICIAL_SOURCE_EVENT",
+        "AUTHOR_CONFIRMED",
+        "HUMAN_ADJUDICATED",
+        "UNRESOLVED_CANDIDATE"
+      ]
+    },
+    "human_adjudicators": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "inputs": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "redistributable": {
+            "type": "boolean"
+          },
+          "sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "sha256"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "license": {
+      "additionalProperties": false,
+      "properties": {
+        "attribution": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "redistribution_allowed": {
+          "type": "boolean"
+        },
+        "restrictions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "statement_location": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "verified": {
+          "type": "boolean"
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "verified",
+        "redistribution_allowed"
+      ],
+      "type": "object"
+    },
+    "schema": {
+      "const": "uriel.forge_trial_case.v1"
+    },
+    "source": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "uriel_commit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "case_id",
+    "case_class",
+    "title",
+    "version",
+    "license",
+    "audit_scope",
+    "ground_truth_level",
+    "inputs"
+  ],
+  "title": "Uriel Forge Trial Case",
+  "type": "object"
+}

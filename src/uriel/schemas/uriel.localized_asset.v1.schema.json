@@ -1,0 +1,57 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.localized_asset.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "final_image_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "locale": {
+      "type": "string"
+    },
+    "overlay_copy_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "prompt_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "reference_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "review_notes": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schema": {
+      "const": "uriel.localized_asset.v1"
+    },
+    "status": {
+      "enum": [
+        "PROMPT_READY",
+        "ART_PENDING",
+        "TEXT_PENDING",
+        "REVIEWED",
+        "VERIFIED"
+      ]
+    }
+  },
+  "required": [
+    "schema",
+    "locale",
+    "reference_sha256",
+    "prompt_sha256",
+    "overlay_copy_sha256",
+    "status"
+  ],
+  "title": "Uriel Localized Visual Asset",
+  "type": "object"
+}

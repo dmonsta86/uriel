@@ -1,0 +1,29 @@
+{
+  "schema": "uriel.locale_catalog.v1",
+  "locale": "zh-Hans",
+  "status": "AI_SECOND_PASS_REVIEWED",
+  "messages": {
+    "decision.change_result": "将改变结果的事项",
+    "decision.established": "已确立的事实",
+    "decision.needed": "需要您提供的事项",
+    "decision.next_move": "最稳健的下一步行动",
+    "decision.not_established": "未确立的事项",
+    "decision.prepared": "Uriel已准备就绪的事项",
+    "decision.status.blocked": "BLOCKED",
+    "decision.status.not_yet_known": "NOT YET KNOWN",
+    "decision.status.pass": "PASS",
+    "decision.status.refuted": "REFUTED",
+    "decision.status.stale": "STALE",
+    "decision.why": "原因",
+    "gate.g0.name": "数据就绪度",
+    "gate.g1.name": "新颖性与清晰度",
+    "gate.g2.name": "证据与引用",
+    "gate.g3.name": "对抗性完整性",
+    "privacy.read_only_default": "默认为只读模式。",
+    "product.name": "Uriel Forge",
+    "product.standard": "宽容解读，严格测试，诚实报告。",
+    "readiness.not_yet_known": "结果尚未明确。",
+    "repair.preferred_next_move": "首选下一步行动",
+    "translation.native_review_welcome": "欢迎母语人士提供校对与修正。"
+  }
+}

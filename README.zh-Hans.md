@@ -32,6 +32,8 @@
 
 # Uriel Forge
 
+> **Notice**: 本文档为AI复核翻译版本（AI_SECOND_PASS_REVIEWED）。非常欢迎母语人士提供校对与修正。
+
 ### Forge rough questions into research that can show its work.
 
 > **Every idea deserves its strongest fair hearing.**  

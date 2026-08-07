@@ -1,0 +1,29 @@
+{
+  "schema": "uriel.locale_catalog.v1",
+  "locale": "hi",
+  "status": "AI_SECOND_PASS_REVIEWED",
+  "messages": {
+    "decision.change_result": "परिणाम को क्या बदलेगा",
+    "decision.established": "क्या स्थापित है",
+    "decision.needed": "आपसे क्या आवश्यक है",
+    "decision.next_move": "सबसे मजबूत अगला कदम",
+    "decision.not_established": "क्या स्थापित नहीं है",
+    "decision.prepared": "यूरिएल ने पहले से क्या तैयार किया है",
+    "decision.status.blocked": "BLOCKED",
+    "decision.status.not_yet_known": "NOT YET KNOWN",
+    "decision.status.pass": "PASS",
+    "decision.status.refuted": "REFUTED",
+    "decision.status.stale": "STALE",
+    "decision.why": "क्यों",
+    "gate.g0.name": "डेटा तैयारी",
+    "gate.g1.name": "नवीनता और स्पष्टता",
+    "gate.g2.name": "साक्ष्य और उद्धरण",
+    "gate.g3.name": "प्रतिपक्षी अखंडता",
+    "privacy.read_only_default": "केवल-पठन डिफ़ॉल्ट है।",
+    "product.name": "Uriel Forge",
+    "product.standard": "उदारता से व्याख्या करें। कड़ाई से परीक्षण करें। ईमानदारी से रिपोर्ट करें।",
+    "readiness.not_yet_known": "परिणाम अभी ज्ञात नहीं है।",
+    "repair.preferred_next_move": "पसंदीदा अगला कदम",
+    "translation.native_review_welcome": "मूल भाषा सुधारों का स्वागत है।"
+  }
+}

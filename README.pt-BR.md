@@ -32,6 +32,8 @@
 
 # Uriel Forge
 
+> **Notice**: Este documento é uma tradução revisada por IA (AI_SECOND_PASS_REVIEWED). Correções por falantes nativos são bem-vindas.
+
 ### Forge rough questions into research that can show its work.
 
 > **Every idea deserves its strongest fair hearing.**  

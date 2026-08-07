@@ -1,0 +1,80 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.translation_manifest.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "files": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "path",
+          "sha256"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "generated_at_utc": {
+      "type": "string"
+    },
+    "locale": {
+      "type": "string"
+    },
+    "localized_image_status": {
+      "enum": [
+        "ENGLISH_FALLBACK",
+        "PENDING",
+        "REVIEWED",
+        "VERIFIED"
+      ]
+    },
+    "reviewers": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schema": {
+      "const": "uriel.translation_manifest.v1"
+    },
+    "source_commit": {
+      "type": "string"
+    },
+    "source_readme_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "AI_ASSISTED_DRAFT",
+        "AI_SECOND_PASS_REVIEWED",
+        "NATIVE_REVIEWED",
+        "VERIFIED",
+        "STALE"
+      ]
+    },
+    "translation_method": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "locale",
+    "source_commit",
+    "source_readme_sha256",
+    "status",
+    "files",
+    "generated_at_utc"
+  ],
+  "title": "Uriel Translation Manifest",
+  "type": "object"
+}

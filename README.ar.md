@@ -32,6 +32,8 @@
 
 # Uriel Forge
 
+> **Notice**: هذه الوثيقة هي ترجمة مراجعة بواسطة الذكاء الاصطناعي (AI_SECOND_PASS_REVIEWED). نرحب بتصحيحات الناطقين بها.
+
 ### Forge rough questions into research that can show its work.
 
 > **Every idea deserves its strongest fair hearing.**  
