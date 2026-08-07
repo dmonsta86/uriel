@@ -1,4 +1,4 @@
-include LICENSE README.md START_HERE.md CHANGELOG.md CITATION.cff CODE_OF_CONDUCT.md CONTRIBUTING.md SECURITY.md THIRD_PARTY_NOTICES.md AGENTS.md opencode.json Makefile PUBLISH_TO_GITHUB.cmd OPENAI_CODEX_FOR_OSS_APPLICATION.md
+include LICENSE README.md START_HERE.md CHANGELOG.md CITATION.cff CODE_OF_CONDUCT.md CONTRIBUTING.md SECURITY.md THIRD_PARTY_NOTICES.md AGENTS.md opencode.json Makefile PUBLISH_TO_GITHUB.cmd
 recursive-include src/uriel/schemas *.json
 recursive-include schemas *.json
 recursive-include docs *.md

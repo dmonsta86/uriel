@@ -259,15 +259,9 @@ src/uriel/reviews.py       hash-bound review contract/import
 scripts/Uriel.ps1          PowerShell 5.1+ wrapper
 tests/                     cross-platform standard-library test suite
 schemas/                   editor-facing JSON Schemas
-docs/                      architecture, accessibility, release and grant guides
+docs/                      architecture, accessibility, privacy, and release guides
 .opencode/                 read-only Uriel review agent and slash commands
 ```
-
-## Open-source maintenance and Codex for OSS
-
-The repository contains an honest application worksheet for the OpenAI Codex for Open Source program. It does not fabricate users, adoption, maintenance history, or ecosystem importance. Publish the repository, make the maintainer profile public, add real release/issue activity, and replace the worksheet brackets only with verifiable facts.
-
-See [Codex for OSS application guide](docs/CODEX_FOR_OSS_APPLICATION.md).
 
 ## Development status
 

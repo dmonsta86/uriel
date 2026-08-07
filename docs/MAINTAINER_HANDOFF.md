@@ -17,7 +17,7 @@ Uriel 1.0.0 is an initial release candidate with:
 - persistent repair reminders with exactly three options for blockers;
 - hash-bound optional review imports and privacy-aware prompt export;
 - content-addressed Blessing packages, printable SVG/text certificates, QR payloads, and a standalone verifier;
-- PowerShell, POSIX shell, one-click Windows publishing, repository-metadata binding, OpenCode, CI, release, issue, security, contribution, and Codex-for-OSS assets.
+- PowerShell, POSIX shell, one-click Windows publishing, repository-metadata binding, OpenCode, CI, release, issue, security, and contribution assets.
 
 ## Latest verified local checks
 
@@ -51,7 +51,7 @@ These checks were performed on Linux with Python 3.13. Public GitHub CI must sti
 4. Enable Private vulnerability reporting.
 5. Create `v1.0.0-rc1`; the tag workflow will attach wheel, sdist, portable archive, checksums, and the release-check transcript.
 6. Open public issues for an independent threat-model review, a research-domain pilot, and false-positive/false-negative fixtures.
-7. Apply to Codex for Open Source using `OPENAI_CODEX_FOR_OSS_APPLICATION.md`, replacing only facts that are publicly verifiable.
+7. Keep grant, funding, and account-specific application drafts outside the public repository; publish only accurate acknowledgments or disclosures after an award.
 
 ## Rules a continuation agent must not violate
 

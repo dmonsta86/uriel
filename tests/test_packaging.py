@@ -30,7 +30,6 @@ class PackagingTests(unittest.TestCase):
             "scripts/build_distributions.py",
             "scripts/configure_repository.py",
             "scripts/make_checksums.py",
-            "OPENAI_CODEX_FOR_OSS_APPLICATION.md",
             "src/uriel/core.py",
             "src/uriel/demo.py",
             "src/uriel/audit.py",

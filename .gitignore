@@ -23,3 +23,9 @@ Thumbs.db
 # Local release-check recovery state
 release-check.txt
 .uriel-release-check.lock
+
+# Private grant/funding application drafts (keep outside the public repository)
+OPENAI_CODEX_FOR_OSS_APPLICATION.md
+docs/CODEX_FOR_OSS.md
+docs/CODEX_FOR_OSS_APPLICATION.md
+docs/OPENAI_CODEX_FOR_OSS.md

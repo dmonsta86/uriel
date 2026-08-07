@@ -4,7 +4,7 @@ No browser extension is required, and no one should ask you to send a password, 
 
 ## Route A — GitHub Desktop, almost no terminal use
 
-1. Create or sign in to a GitHub account and make the profile public if you intend to apply to Codex for Open Source.
+1. Create or sign in to a GitHub account.
 2. Install **GitHub Desktop** from its official site.
 3. Download and extract the Uriel **GitHub-ready source ZIP**. Keep the extracted folder somewhere permanent, such as `Documents\GitHub\uriel`.
 4. Open GitHub Desktop and choose **File → Add local repository**. Select the extracted `uriel` folder.
@@ -61,7 +61,7 @@ The release workflow builds and attaches the wheel, source distribution, portabl
 4. Enable **Private vulnerability reporting** under **Settings → Security → Code security and analysis**.
 5. Confirm `pyproject.toml` and `CITATION.cff` contain the actual repository URL; the CLI publisher configures these automatically.
 6. Open two or three honest starter Issues: field-validation pilots, false-positive fixtures, and an independent threat-model review are good first tasks.
-7. Apply to Codex for Open Source only with public, verifiable facts. A new repository should describe ecosystem importance and the maintenance work ahead, not invent adoption.
+7. Keep grant, funding, and account-specific application drafts outside the public repository. Publish only final acknowledgments or disclosures once they are accurate and relevant.
 
 ## Recovery rule
 

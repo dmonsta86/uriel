@@ -7,7 +7,7 @@
 - [x] Tag-triggered release workflow builds wheel, sdist, portable archive, checksums, and the release-check transcript.
 - [x] GitHub Desktop and browser-authenticated CLI publishing routes are documented.
 - [ ] Publish the repository under the maintainer's account.
-- [ ] Replace applicant/account placeholders in the Codex worksheet.
+- [ ] Confirm no private grant, funding, account, or application drafts are tracked.
 - [ ] Confirm the publisher added the real repository URL to `pyproject.toml` and `CITATION.cff`.
 - [ ] Confirm every public CI job passes.
 - [x] Build the wheel/sdist locally and install the wheel into a clean virtual environment for CLI and packaged-schema smoke tests.
