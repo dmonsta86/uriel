@@ -1,8 +1,8 @@
 cff-version: 1.2.0
-message: "If you use Uriel Forge in research, software assurance, or scholarly workflow development, please cite this software."
-title: "Uriel Forge"
+message: "If you use The Forge of Uriel in research, software assurance, or scholarly workflow development, please cite this software."
+title: "The Forge of Uriel"
 abstract: >-
-  Uriel Forge is an offline-first, evidence-bound research development and
+  The Forge of Uriel is an offline-first, evidence-bound research development and
   assurance toolkit for project provenance, data readiness, claim-evidence
   tracing, integrity audits, submission preparation, and verifiable milestone
   closure.

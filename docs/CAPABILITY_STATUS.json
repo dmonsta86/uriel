@@ -120,7 +120,7 @@
     },
     {
       "id": "CAP-FORGE-001",
-      "name": "Uriel Forge Method Engine",
+      "name": "The Forge of Uriel Method Engine",
       "status": "PLANNED",
       "entry_point": "n/a (planned milestone closure engine)",
       "platforms": [
@@ -130,7 +130,7 @@
       ],
       "modules": [],
       "verified_commit": "HEAD",
-      "notes": "Uriel Forge is public display branding; operational Forge closure engine is planned."
+      "notes": "The Forge of Uriel is public display branding; operational Forge closure engine is planned."
     },
     {
       "id": "CAP-LOCAL-AI-001",

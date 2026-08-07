@@ -1,4 +1,4 @@
-# Uriel Forge Capability Status
+# The Forge of Uriel Capability Status
 
 Commit: `748cecce9b69161c1a2a135d4c80c133c06a1274`
 

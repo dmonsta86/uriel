@@ -43,7 +43,7 @@ ALLOWED_RECOMMENDATION_FILES = {
 }
 
 REQUIRED_README_PHRASES = (
-    "Uriel Forge",
+    "The Forge of Uriel",
     "Every idea deserves its strongest fair hearing",
     "Every claim must survive its strongest fair challenge",
     "The Forge Method",

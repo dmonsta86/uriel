@@ -9,6 +9,6 @@
 | Research Lifecycle, Workbench & Free-Model Burst Surfaces | `BETA` | `uriel workbench / uriel burst` | Windows, macOS, Linux | Read-only bounded AI surfaces, Gap Register, Repair Packets. |
 | Assurance Depth, Evidence Microscope & Decision Card | `EXPERIMENTAL` | `python -m uriel.assurance_case` | Windows, macOS, Linux | 4-Layer Assurance Chain, Evidence Strength Vector, Decision Card & Proof Bundle. |
 | Evidence Ingress & Data Desk | `PLANNED` | `n/a (planned capability)` | Windows (Planned), macOS (Planned), Linux (Planned) | Planned safe ingestion and data desk reconciliation. |
-| Uriel Forge Method Engine | `PLANNED` | `n/a (planned milestone closure engine)` | Windows (Planned), macOS (Planned), Linux (Planned) | Uriel Forge is public display branding; operational Forge closure engine is planned. |
+| The Forge of Uriel Method Engine | `PLANNED` | `n/a (planned milestone closure engine)` | Windows (Planned), macOS (Planned), Linux (Planned) | The Forge of Uriel is public display branding; operational Forge closure engine is planned. |
 | Generic Local-Model Adapters | `PLANNED` | `n/a (planned local inference adapter)` | Windows (Planned), macOS (Planned), Linux (Planned) | Planned provider-neutral local inference wrapper. |
 | Desktop Native GUI & Installer | `PLANNED` | `n/a (planned native application)` | Windows (Planned), macOS (Planned), Linux (Planned) | Standalone native GUI application; currently CLI/Python-first. |

@@ -1,7 +1,7 @@
 <p align="center">
   <img
     src="docs/assets/uriel-forge-banner.png"
-    alt="Uriel Forge — evidence-bound research development and assurance"
+    alt="The Forge of Uriel — evidence-bound research development and assurance"
     width="100%"
   >
 </p>
@@ -30,7 +30,7 @@
   <a href="README.ja.md">日本語</a>
 </p>
 
-# Uriel Forge
+# The Forge of Uriel
 
 > **Notice**: Ce document est une traduction révisée par IA (AI_SECOND_PASS_REVIEWED). Les corrections par des locuteurs natifs sont les bienvenues.
 
@@ -40,7 +40,7 @@
 > **Every claim must survive its strongest fair challenge.**  
 > **Is your IDEA strong enough to survive the forge?**
 
-Uriel Forge is an offline-first, truth-oriented research development and assurance toolkit built to challenge ideas, trace claims back to verifiable evidence, expose framing and omissions, and help researchers strengthen work before publication.
+The Forge of Uriel is an offline-first, truth-oriented research development and assurance toolkit built to challenge ideas, trace claims back to verifiable evidence, expose framing and omissions, and help researchers strengthen work before publication.
 
 No good idea should fail just because it is poorly articulated, and no bad idea should survive a proper adversarial review simply because it is well packaged.
 
@@ -81,7 +81,7 @@ Uriel is built to resist all three failures:
    A blocked result should say what remains useful, what is missing, what Uriel
    already prepared, and exactly what would unblock the work.
 
-> **Intellectual dishonesty—omitting disconfirming evidence, posturing with decorative prose, or handwaving unlikely edge cases—is the Achilles' heel of academic research. Uriel Forge undoes this intentionally: it strips framing, forces claims to bind directly to primary evidence, preserves counter-evidence, and proves exact-version reproducibility before any conclusion is accepted.**
+> **Intellectual dishonesty—omitting disconfirming evidence, posturing with decorative prose, or handwaving unlikely edge cases—is the Achilles' heel of academic research. The Forge of Uriel undoes this intentionally: it strips framing, forces claims to bind directly to primary evidence, preserves counter-evidence, and proves exact-version reproducibility before any conclusion is accepted.**
 
 > **Infallibility is the north star. Auditable honesty is the contract.**
 
@@ -379,7 +379,7 @@ the final strict certificate contract.
 
 ## The Forge Method
 
-The public product is named **Uriel Forge** because its purpose is to turn
+The public product is named **The Forge of Uriel** because its purpose is to turn
 unfinished material into work that has been shaped, tested, and proved.
 
 The dedicated Forge Method engine is currently planned. Its contract is already
@@ -605,7 +605,7 @@ raw question
 
 ## Contributing
 
-Uriel Forge welcomes contributions that improve correctness, portability,
+The Forge of Uriel welcomes contributions that improve correctness, portability,
 accessibility, security, documentation, and the research workflow.
 
 Start with [CONTRIBUTING.md](CONTRIBUTING.md). Security issues should follow

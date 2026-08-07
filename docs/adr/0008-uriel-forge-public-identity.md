@@ -1,11 +1,11 @@
-# ADR 0008: Uriel Forge Public Identity & Documentation Pass
+# ADR 0008: The Forge of Uriel Public Identity & Documentation Pass
 
 - **Status**: Accepted
 - **Date**: 2026-08-07
 - **Authors**: AI Assistant & Daniel Esquivel (Maintainer)
 
 ## Context
-Wave U7 establishes the public product display name **Uriel Forge** while preserving complete backward compatibility for the Python package (`uriel`), CLI command (`uriel`), repository name (`uriel`), repository URLs (`https://github.com/dmonsta86/uriel`), and schema IDs.
+Wave U7 establishes the public product display name **The Forge of Uriel** while preserving complete backward compatibility for the Python package (`uriel`), CLI command (`uriel`), repository name (`uriel`), repository URLs (`https://github.com/dmonsta86/uriel`), and schema IDs.
 
 To ensure non-destabilization of earlier feature branches, this wave is isolated on a dedicated feature branch `feature/uriel-forge-public-identity`.
 
