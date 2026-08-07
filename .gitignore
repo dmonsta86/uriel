@@ -23,3 +23,9 @@ Thumbs.db
 # Local release-check recovery state
 release-check.txt
 .uriel-release-check.lock
+
+# Internal agent wave & execution reports (never commit to git)
+*_REPORT.md
+*_FINAL_REPORT.md
+*_SUMMARY.md
+
