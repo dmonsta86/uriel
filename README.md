@@ -25,15 +25,11 @@ It can begin with a polished manuscript or with a rough question that is not yet
 > [!IMPORTANT]
 > Uriel does not certify truth, intelligence, prestige, or publication-worthiness. It certifies only that one exact recorded project state passed a named, inspectable policy and that the resulting package still matches its recorded hashes.
 
-## Why the name Uriel?
+## Why the name?
 
-The name comes from Uriel, a figure in Jewish and Christian apocryphal traditions. The Hebrew name is commonly rendered **“God is my light”** or **“my fire.”** In different texts and later traditions, Uriel guides, warns, interprets difficult questions, reveals what was obscured, and becomes associated with illumination and wisdom.[^uriel-1][^uriel-2]
+Uriel is associated with light, wisdom, and illumination. The project borrows that symbolism for a simple purpose: to bring evidence, assumptions, contradictions, and uncertainty into view.
 
-This project borrows the **metaphor of illumination**, not religious authority. Uriel is not religious software, and no belief is required. It is for people of every faith and no faith. Its decisions come from visible rules, declared evidence, reproducible checks, and cryptographic hashes.
-
-The lantern in the project identity means something simple: shine enough light on an argument that its assumptions, omissions, contradictions, evidence trail, and limits can be seen. The name also explains **The Blessing of Uriel**: a Blessing is earned through inspection and evidence; it is never bestowed because a person, institution, model, or conclusion seems impressive.
-
-Traditions about Uriel differ, so the project does not present one denomination's description as universal fact.
+A successful audit is called **The Blessing of Uriel** because it must be earned by passing all three gates. It records what was examined, what evidence supported the result, and why the submitted version passed. It is not a claim of absolute truth.
 
 ## The doubt worth keeping
 
@@ -365,8 +361,3 @@ Uriel should become stricter only when the new rule is explainable, testable, an
 ## License
 
 MIT. See [LICENSE](LICENSE).
-
----
-
-[^uriel-1]: *Encyclopaedia Judaica*, “Uriel,” describes Uriel's roles in 1 Enoch and IV Ezra, including guiding Enoch and answering Ezra's questions: https://www.encyclopedia.com/philosophy-and-religion/bible/biblical-proper-names/uriel
-[^uriel-2]: The *Jewish Encyclopedia* records the diversity of Uriel traditions and later associations with light and instruction: https://jewishencyclopedia.com/articles/14606-uriel

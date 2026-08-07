@@ -13,19 +13,36 @@ class PublicContractTests(unittest.TestCase):
         text = (ROOT / "README.md").read_text(encoding="utf-8")
         required = (
             "# Uriel — The Evidence Lantern",
-            "## Why the name Uriel?",
-            "metaphor of illumination",
-            "not religious software",
+            "## Why the name?",
+            "light, wisdom, and illumination",
             "## The Blessing of Uriel — earned, never granted",
             "## The Three Gates",
             "Gate 1 — Novelty & Clarity",
             "Gate 2 — Evidence & Citation",
             "Gate 3 — Adversarial Integrity",
             "does **not** mean",
+            "It is not a claim of absolute truth.",
             ".uriel/REMINDERS.md",
         )
         for phrase in required:
             self.assertIn(phrase, text, phrase)
+
+    def test_name_explanation_is_free_of_denominational_wording(self) -> None:
+        documents = (ROOT / "README.md", ROOT / "docs" / "WHY_URIEL.md")
+        forbidden = (
+            "Jewish",
+            "Christian",
+            "apocryphal",
+            "God is my light",
+            "faith and no faith",
+            "archangel",
+            "doctrine",
+            "canonical status",
+        )
+        for document in documents:
+            text = document.read_text(encoding="utf-8")
+            for phrase in forbidden:
+                self.assertNotIn(phrase, text, f"{document.name}: {phrase}")
 
     def test_readme_local_images_exist(self) -> None:
         text = (ROOT / "README.md").read_text(encoding="utf-8")

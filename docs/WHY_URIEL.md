@@ -1,16 +1,10 @@
 # Why Uriel?
 
-## The name
+## Why the name?
 
-Uriel takes its name from a figure in Jewish and Christian apocryphal traditions. The Hebrew name is commonly translated as “God is my light” or “my fire.” Different sources describe different roles: guide, interpreter, warning messenger, keeper of lights, revealer of difficult things, and—especially in later traditions—a figure associated with illumination and wisdom.
+Uriel is associated with light, wisdom, and illumination. The project borrows that symbolism for a simple purpose: to bring evidence, assumptions, contradictions, and uncertainty into view.
 
-Useful references:
-
-- [Encyclopaedia Judaica: Uriel](https://www.encyclopedia.com/philosophy-and-religion/bible/biblical-proper-names/uriel)
-- [Jewish Encyclopedia: Uriel](https://jewishencyclopedia.com/articles/14606-uriel)
-- [Jewish Virtual Library: Uriel](https://www.jewishvirtuallibrary.org/uriel)
-
-The traditions are not identical, and Uriel does not flatten them into one universal religious claim.
+A successful audit is called **The Blessing of Uriel** because it must be earned by passing all three gates. It records what was examined, what evidence supported the result, and why the submitted version passed. It is not a claim of absolute truth.
 
 ## What the project borrows
 
@@ -29,9 +23,7 @@ The lantern in Uriel’s identity therefore means:
 
 ## What the project does not borrow
 
-Uriel is not religious software. It does not invoke spiritual authority, require belief, rank people by faith, or treat a religious title as evidence. People of every faith and no faith are equally welcome.
-
-The engine’s trust boundary is deliberately ordinary and inspectable:
+Uriel borrows only the symbolism of light. It does not rank people, require belief of any kind, or treat any title or origin as evidence. The engine’s trust boundary is deliberately ordinary and inspectable:
 
 - declared schemas;
 - deterministic checks;
@@ -41,7 +33,7 @@ The engine’s trust boundary is deliberately ordinary and inspectable:
 - explicit policy versions;
 - reproducible verification.
 
-No religious claim can pass a Gate merely because it is religious, and no secular claim can pass merely because it is secular. Both must satisfy the same evidence rules.
+No claim can pass a Gate merely because of its source or phrasing, and no claim is exempt because it sounds confident or familiar. Every claim must satisfy the same evidence rules.
 
 ## Why call the certificate a Blessing?
 
