@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and open-ended ideas
+    url: https://github.com/dmonsta86/uriel/discussions
+    about: Use Discussions for questions, brainstorming, and broad community feedback.
+  - name: Security vulnerability
+    url: https://github.com/dmonsta86/uriel/security/policy
+    about: Do not disclose security vulnerabilities in a public issue.

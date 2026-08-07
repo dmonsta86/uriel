@@ -1,0 +1,49 @@
+name: Audit miss / false negative
+description: Uriel failed to identify a known problem.
+title: "[Audit miss]: "
+labels: ["type:audit-miss", "status:triage"]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Uriel version and exact commit
+    validations:
+      required: true
+  - type: textarea
+    id: missed
+    attributes:
+      label: Known issue Uriel missed
+      description: Name the expected gate/check/finding where possible.
+    validations:
+      required: true
+  - type: dropdown
+    id: ground_truth
+    attributes:
+      label: Ground-truth basis
+      options:
+        - Seeded deterministic benchmark
+        - Official correction/retraction/source event
+        - Author-confirmed evidence
+        - Independent human adjudication
+        - Unresolved candidate
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and exact location
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction or safe fixture
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Uriel output
+      description: State the expected status, severity, explanation, and repair path.
+    validations:
+      required: true

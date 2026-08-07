@@ -1,0 +1,28 @@
+name: Documentation correction
+description: Report inaccurate, outdated, unclear, or broken public documentation.
+title: "[Docs]: "
+labels: ["type:documentation", "status:triage"]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: File and section or URL
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is wrong or unclear?
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: Suggested correction
+  - type: checkboxes
+    id: claim
+    attributes:
+      label: Capability claim
+      options:
+        - label: This report identifies whether the wording affects a shipped/beta/experimental/planned capability claim.
+          required: true

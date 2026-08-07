@@ -1,0 +1,86 @@
+name: Bug report
+description: Report reproducible incorrect software behavior.
+title: "[Bug]: "
+labels: ["type:bug", "status:triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping strengthen Uriel. Remove private research data, credentials, and identifying paths before submitting.
+  - type: input
+    id: version
+    attributes:
+      label: Uriel version and commit
+      placeholder: "uriel --version; git rev-parse HEAD if applicable"
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: Installation type
+      options:
+        - Wheel / pip
+        - Source checkout
+        - Portable .pyz
+        - Installer or wrapper
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: Operating system, architecture, and Python version
+      placeholder: "Windows 11 x64, Python 3.12.4"
+    validations:
+      required: true
+  - type: textarea
+    id: workflow
+    attributes:
+      label: Command or workflow
+      description: Include the exact public command and sanitized project layout.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproduction
+      description: Give exact steps and a minimal synthetic or sanitized fixture.
+    validations:
+      required: true
+  - type: textarea
+    id: receipts
+    attributes:
+      label: Logs, receipts, hashes, or screenshots
+      description: Attach only material you are allowed to share.
+  - type: dropdown
+    id: deterministic
+    attributes:
+      label: Does it reproduce consistently?
+      options:
+        - Every time
+        - Intermittently
+        - Once
+        - Unknown
+    validations:
+      required: true
+  - type: checkboxes
+    id: source_change
+    attributes:
+      label: Source safety
+      options:
+        - label: I checked whether Uriel changed source files unexpectedly and described the result above.
+          required: true
+        - label: I removed credentials, private research data, and identifying absolute paths.
+          required: true

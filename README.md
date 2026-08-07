@@ -486,6 +486,40 @@ retention, training, and privacy terms.
 
 ---
 
+## Help keep Uriel strong
+
+Found a bug, a missed issue, or a false finding? Please report it.
+
+| What you found | Where to report |
+|---|---|
+| Software behaved incorrectly | **Bug report** |
+| Uriel flagged something unsupported | **Audit false positive** |
+| Uriel missed a known issue | **Audit miss / false negative** |
+| Documentation is wrong or unclear | **Documentation correction** |
+| A translation needs improvement | **Translation correction** |
+| A bounded improvement idea | **Feature proposal** or **Discussions** |
+| A public demonstration case | **Forge Trial proposal** |
+| A security vulnerability | **Private security report — never a public issue** |
+
+Good reports include the exact Uriel version, platform, installation type,
+public command, expected and actual behavior, reproduction steps, and a minimal
+synthetic or sanitized fixture.
+
+A scientific-audit disagreement should state its ground-truth basis. Another
+model's opinion is not enough by itself.
+
+Uriel's maintenance standard is the same as its research standard:
+
+```text
+preserve the evidence
+admit false positives
+record misses
+publish the fix
+keep the regression test
+```
+
+---
+
 ## Safety model
 
 Uriel is designed around:

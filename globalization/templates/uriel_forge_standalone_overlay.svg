@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3840" height="2160" viewBox="0 0 3840 2160">
+  <!--
+    Deterministic overlay template.
+    Replace {{BACKGROUND_URI}} and {{...}} fields from OVERLAY_COPY.json.
+    Keep the art background free of generated text.
+  -->
+  <image href="{{BACKGROUND_URI}}" x="0" y="0" width="3840" height="2160" preserveAspectRatio="xMidYMid slice"/>
+  <rect x="0" y="0" width="3840" height="2160" fill="#05080b" opacity="0.16"/>
+
+  <g font-family="Noto Sans, Noto Sans Arabic, Noto Sans Devanagari, Noto Sans CJK SC, sans-serif"
+     fill="#f5f1e8">
+    <text x="190" y="170" font-size="92" font-weight="800">{{PRODUCT_NAME}}</text>
+    <text x="190" y="252" font-size="42" fill="#e9bd68">{{SUBTITLE}}</text>
+    <text x="190" y="390" font-size="62" font-weight="700">{{CHALLENGE}}</text>
+    <text x="190" y="458" font-size="34" fill="#f0cf8a">{{SUPPORTING_LINE}}</text>
+
+    <g font-size="34" font-weight="700">
+      <text x="170" y="790">{{LABEL_QUESTION}}</text>
+      <text x="170" y="930">{{LABEL_REVIEW}}</text>
+      <text x="170" y="1070">{{LABEL_READINESS}}</text>
+      <text x="170" y="1210">{{LABEL_SORTING}}</text>
+
+      <text x="2850" y="720">{{LABEL_EVIDENCE}}</text>
+      <text x="2850" y="860">{{LABEL_GATES}}</text>
+      <text x="2850" y="1000">{{LABEL_REPAIR}}</text>
+      <text x="2850" y="1140">{{LABEL_SUBMISSION}}</text>
+      <text x="2850" y="1280">{{LABEL_PROVENANCE}}</text>
+    </g>
+
+    <g font-size="30" font-weight="700" fill="#f0cf8a">
+      <text x="250" y="2050">{{FOOTER_1}}</text>
+      <text x="1200" y="2050">{{FOOTER_2}}</text>
+      <text x="2250" y="2050">{{FOOTER_3}}</text>
+      <text x="3200" y="2050">{{FOOTER_4}}</text>
+    </g>
+  </g>
+</svg>
