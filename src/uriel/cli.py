@@ -42,9 +42,11 @@ from .core import (
 )
 from .decisions import DECISION_CLASSES
 from .intake import intake_idea
+from .lens import lens_names, lens_prompt, write_lens
 from .prompts import build_prompt
 from .reviews import REVIEW_TASKS, import_review, list_reviews, review_template
 from .schema import validate_project
+from .seed import seed_project, write_seed_brief
 from .submission import (
     archive_submission,
     build_response,
@@ -56,6 +58,8 @@ from .submission import (
     submission_status,
     submit_verify,
 )
+from .surfaces import burst_init, verify_burst
+from .workbench import workbench_init, workbench_next, workbench_plan, workbench_status
 
 
 class _Parser(argparse.ArgumentParser):
@@ -97,6 +101,42 @@ def parser() -> argparse.ArgumentParser:
     _root_argument(intake)
     intake.add_argument("--title", default="")
     intake.add_argument("--privacy", choices=("public", "internal", "confidential", "restricted"), default="public")
+
+    lens = commands.add_parser("lens", help="print a verified zero-install advisory Lens/Seed prompt")
+    lens.add_argument("--which", choices=("compact", "full", "seed", "skill", "example"), default="compact")
+    lens.add_argument("--output", default="", help="write the prompt to a file instead of stdout")
+
+    seed = commands.add_parser("seed", help="turn a rough question into a researchable project")
+    seed.add_argument("question")
+    _root_argument(seed)
+    seed.add_argument("--title", default="")
+    seed.add_argument("--privacy", choices=("public", "internal", "confidential", "restricted"), default="public")
+    seed.add_argument("--output", default="", help="write the human-readable seed brief to a file")
+
+    workbench = commands.add_parser("workbench", help="maintain research plans, claims, controls, and decisions")
+    workbench_actions = workbench.add_subparsers(dest="workbench_action", required=True)
+    wb_init = workbench_actions.add_parser("init", help="create the first workbench generation")
+    _root_argument(wb_init)
+    wb_init.add_argument("--question", required=True)
+    wb_plan = workbench_actions.add_parser("plan", help="apply a validated plan file as a new generation")
+    _root_argument(wb_plan)
+    wb_plan.add_argument("--file", required=True, dest="plan_file", help="path to a uriel.workbench_plan.v1 JSON file")
+    wb_status = workbench_actions.add_parser("status", help="summarize the current generation and its gaps")
+    _root_argument(wb_status)
+    wb_next = workbench_actions.add_parser("next", help="show the exact next action and write a durable next prompt")
+    _root_argument(wb_next)
+    wb_next.add_argument("--output", default="", help="path to write NEXT_PROMPT.txt")
+
+    burst = commands.add_parser("burst", help="create or verify bounded resumable free-model packets")
+    burst_actions = burst.add_subparsers(dest="burst_action", required=True)
+    burst_init_cmd = burst_actions.add_parser("init", help="create the next bounded burst packet")
+    _root_argument(burst_init_cmd)
+    burst_init_cmd.add_argument("--records", nargs="+", default=[], help="project-relative record files to include")
+    burst_init_cmd.add_argument("--next-task", required=True)
+    burst_init_cmd.add_argument("--budget-bytes", type=int, default=32000)
+    burst_init_cmd.add_argument("--redact", action="store_true", help="expose metadata and hashes only")
+    burst_verify_cmd = burst_actions.add_parser("verify", help="re-hash a burst packet against its manifest")
+    burst_verify_cmd.add_argument("--packet", required=True, dest="packet_dir")
 
     validate = commands.add_parser("validate", help="validate uriel.project.json structure")
     _root_argument(validate)
@@ -250,7 +290,7 @@ def _envelope(status: str, command: str, result: Optional[Any] = None, error: Op
     return value
 
 
-def _print_human(command: str, result: Any) -> None:
+def _print_human(command: str, result: Any, args: Optional[argparse.Namespace] = None) -> None:
     if command == "audit" and isinstance(result, Mapping):
         print("Uriel audit: {0} ({1})".format(result.get("status"), result.get("profile")))
         print("Audit ID: {0}".format(result.get("audit_id")))
@@ -280,6 +320,82 @@ def _print_human(command: str, result: Any) -> None:
         print("Blessing ID: {0}".format(result.get("blessing_id")))
         print("Package: {0}".format(result.get("package")))
         print("Certificate: {0}".format(result.get("certificate_svg")))
+        return
+    if command == "seed" and isinstance(result, Mapping):
+        print("Uriel Seed record: {0}".format(result.get("seed_id")))
+        print("Status: {0}".format(result.get("status")))
+        print("Clarification batch: {0} question(s) — answer only the ones that change the design".format(
+            len(result.get("clarification_questions", []))
+        ))
+        if result.get("brief"):
+            print("Brief saved to: {0} (SHA-256 {1})".format(result["brief"].get("output"), result["brief"].get("sha256")))
+        print("Next: fill the minimal-design scaffolds, then `uriel audit --profile exploratory`.")
+        return
+    if command == "workbench" and isinstance(result, Mapping):
+        if args.workbench_action == "init":
+            print("Workbench created: {0}".format(result.get("workbench_id")))
+            print("Generation: {0}".format(result.get("generation_id")))
+            print("Next: `uriel workbench plan --file plan.json` to add claims and design.")
+            return
+        if args.workbench_action == "plan":
+            print("Workbench updated: {0}".format(result.get("workbench_id")))
+            print("New generation: {0}".format(result.get("generation_id")))
+            return
+        if args.workbench_action == "status":
+            if not result.get("exists"):
+                print("No workbench yet. " + str(result.get("next_action", "")))
+                return
+            print("Workbench {0} · generation {1} · status {2}".format(
+                result.get("workbench_id"), result.get("generation_id"), result.get("status")
+            ))
+            counts = result.get("item_counts", {})
+            if counts:
+                print("Items: " + ", ".join("{0}={1}".format(key, value) for key, value in sorted(counts.items())))
+            else:
+                print("Items: none yet — label the material first.")
+            print("Rival explanations: {0} · Pivots: {1}".format(
+                result.get("rival_explanation_count"), ", ".join(result.get("pivots", [])) or "none"
+            ))
+            gaps = result.get("design_gaps", [])
+            if gaps:
+                print("Design gaps: {0}".format(", ".join(gaps)))
+            else:
+                print("Design: complete.")
+            return
+        if args.workbench_action == "next":
+            if not result.get("exists"):
+                print("No workbench yet. " + str(result.get("next_action", "")))
+                return
+            print("Next action: {0}".format(result.get("next_action")))
+            if result.get("next_prompt_path"):
+                print("Next prompt: {0} (SHA-256 {1})".format(result.get("next_prompt_path"), result.get("next_prompt_sha256")))
+            return
+    if command == "burst" and isinstance(result, Mapping):
+        if args.burst_action == "init":
+            print("Burst packet: {0}".format(result.get("packet")))
+            print("Records selected: {0} · bytes: {1} · redacted: {2}".format(
+                result.get("selected_records"), result.get("bytes"), result.get("redacted")
+            ))
+            print("Next prompt written; packet carries no authority.")
+            return
+        if args.burst_action == "verify":
+            print("Burst verify: {0} files checked".format(result.get("checked")))
+            if result.get("verified"):
+                print("PASS — all hashes match.")
+            else:
+                print("FAIL — missing: {0} · mismatched: {1} · unknown: {2}".format(
+                    result.get("missing"), result.get("mismatched"), result.get("unknown_files")
+                ))
+            return
+    if command == "lens" and isinstance(result, Mapping):
+        print("Uriel Lens advisory prompt: {0}".format(result.get("asset")))
+        print("Advisory only; cannot issue a Blessing.")
+        if result.get("output"):
+            print("Saved to: {0}".format(result.get("output")))
+            print("SHA-256: {0}".format(result.get("sha256")))
+        else:
+            print()
+            print(result.get("text", ""))
         return
     if command == "prompt" and isinstance(result, Mapping):
         print("Prompt saved: {0}".format(result.get("prompt_path")))
@@ -324,6 +440,55 @@ def dispatch(args: argparse.Namespace) -> Any:
         return initialize_project(args.path, title=args.title, question=args.question, privacy=args.privacy, force=args.force)
     if command == "intake":
         return _intake(args)
+    if command == "lens":
+        if args.output:
+            return write_lens(Path("."), args.which, Path(args.output))
+        return {
+            "asset": args.which,
+            "advisory_only": True,
+            "text": lens_prompt(args.which),
+            "available": lens_names(),
+        }
+    if command == "seed":
+        value = seed_project(
+            args.root,
+            args.question,
+            title=args.title,
+            privacy=args.privacy,
+        )
+        if args.output:
+            value["brief"] = write_seed_brief(args.root, Path(args.output))
+        return value
+    if command == "workbench":
+        if args.workbench_action == "init":
+            return workbench_init(args.root, args.question)
+        if args.workbench_action == "plan":
+            plan_target = guard_path(args.root, args.plan_file, must_exist=True)
+            try:
+                plan_value = json.loads(plan_target.read_text(encoding="utf-8"))
+            except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+                raise Refusal(
+                    "Could not parse workbench plan file: {0}".format(exc),
+                    code="WORKBENCH_PLAN_UNREADABLE",
+                ) from exc
+            if not isinstance(plan_value, Mapping):
+                raise Refusal("Workbench plan file must contain a JSON object.", code="WORKBENCH_PLAN_UNREADABLE")
+            return workbench_plan(args.root, plan_value)
+        if args.workbench_action == "status":
+            return workbench_status(args.root)
+        if args.workbench_action == "next":
+            return workbench_next(args.root, output=args.output or None)
+    if command == "burst":
+        if args.burst_action == "init":
+            return burst_init(
+                args.root,
+                args.records,
+                next_task=args.next_task,
+                budget_bytes=args.budget_bytes,
+                redact=args.redact,
+            )
+        if args.burst_action == "verify":
+            return verify_burst(args.packet_dir)
     if command == "validate":
         return validate_project(args.root)
     if command == "add-evidence":
@@ -474,7 +639,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         if json_output:
             print(json.dumps(envelope, ensure_ascii=False, sort_keys=True, separators=(",", ":")))
         else:
-            _print_human(command, result)
+            _print_human(command, result, args)
         if command == "audit" and isinstance(result, Mapping) and result.get("status") != "PASS":
             return 2
         if command == "verify" and isinstance(result, Mapping) and not result.get("verified"):
