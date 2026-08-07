@@ -5,20 +5,21 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "uriel-research"
 version = "1.0.0"
-description = "Offline-first research integrity harness, Three-Gate auditor, and SHA-256 provenance ledger"
+description = "Offline-first, evidence-bound research development, verification, submission, and milestone-closure toolkit."
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [{name = "Uriel contributors"}]
 keywords = [
-  "research",
+  "research-integrity",
+  "open-science",
   "reproducibility",
   "provenance",
-  "scientific-integrity",
-  "schema-validation",
-  "open-science",
-  "audit",
+  "data-quality",
+  "research-software",
+  "scholarly-communication",
+  "offline-first",
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -62,4 +63,4 @@ include-package-data = true
 where = ["src"]
 
 [tool.setuptools.package-data]
-uriel = ["py.typed", "schemas/*.json"]
+uriel = ["py.typed", "schemas/*.json", "data/lens/*"]

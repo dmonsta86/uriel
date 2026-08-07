@@ -1,0 +1,50 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.uncertainty_budget.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "certainty_ceiling": {
+      "enum": [
+        "REFUTED",
+        "NOT_ESTABLISHED",
+        "BLOCKED",
+        "SUGGESTIVE_WITHIN_SCOPE",
+        "SUPPORTED_WITHIN_SCOPE",
+        "STRONGLY_SUPPORTED_WITHIN_SCOPE",
+        "REPRODUCED_WITHIN_DECLARED_CONDITIONS"
+      ]
+    },
+    "claim_id": {
+      "type": "string"
+    },
+    "critical_unknowns": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "reversal_conditions": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schema": {
+      "const": "uriel.uncertainty_budget.v1"
+    },
+    "sources": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema",
+    "claim_id",
+    "sources",
+    "certainty_ceiling"
+  ],
+  "title": "Uriel Uncertainty Budget",
+  "type": "object"
+}

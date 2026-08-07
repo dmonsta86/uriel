@@ -1,0 +1,79 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.decision_card.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "alternative_moves": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 2,
+      "type": "array"
+    },
+    "established": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 3,
+      "type": "array"
+    },
+    "needed_from_user": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "not_established": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "preferred_next_move": {
+      "type": "string"
+    },
+    "prepared": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "proof_bundle_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "reversal_conditions": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schema": {
+      "const": "uriel.decision_card.v1"
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "REVISION_REQUIRED",
+        "BLOCKED",
+        "NOT_YET_KNOWN",
+        "REFUTED",
+        "STALE"
+      ]
+    },
+    "why": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "status",
+    "established",
+    "not_established",
+    "why",
+    "preferred_next_move",
+    "proof_bundle_sha256"
+  ],
+  "title": "Uriel Decision Card",
+  "type": "object"
+}

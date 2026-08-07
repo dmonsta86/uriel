@@ -1,0 +1,60 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.publication_authority.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "authority_source": {
+      "enum": [
+        "deterministic_rule",
+        "user_confirmation",
+        "external_artifact"
+      ]
+    },
+    "notes": {
+      "type": "string"
+    },
+    "project_generation": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "recorded_at_utc": {
+      "type": "string"
+    },
+    "schema": {
+      "const": "uriel.publication_authority.v1"
+    },
+    "source_artifact_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "state": {
+      "enum": [
+        "not_assessed",
+        "not_ready",
+        "internal_review_ready",
+        "submission_ready",
+        "submission_authorized",
+        "submitted",
+        "revision_required",
+        "resubmission_ready",
+        "conditionally_accepted",
+        "accepted",
+        "production_ready",
+        "published",
+        "withdrawn"
+      ]
+    }
+  },
+  "required": [
+    "schema",
+    "project_generation",
+    "state",
+    "authority_source",
+    "recorded_at_utc"
+  ],
+  "title": "Uriel Publication Authority",
+  "type": "object"
+}

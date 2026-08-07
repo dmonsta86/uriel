@@ -1,0 +1,82 @@
+﻿{
+  "$id": "uriel.data_readiness.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "analysis_plan_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "binding_digest": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "blocked_check_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "decision": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "BLOCKED",
+        "STALE"
+      ]
+    },
+    "executed_check_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "failed_check_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "independent_verifier_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "normalized_generation": {
+      "type": "string"
+    },
+    "not_applicable_count": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "required_check_count": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "schema": {
+      "const": "uriel.data_readiness.v1"
+    },
+    "sort_spec_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "source_generation": {
+      "type": "string"
+    },
+    "unresolved_blocker_count": {
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "schema",
+    "source_generation",
+    "normalized_generation",
+    "sort_spec_sha256",
+    "analysis_plan_sha256",
+    "required_check_count",
+    "executed_check_count",
+    "failed_check_count",
+    "blocked_check_count",
+    "decision",
+    "binding_digest"
+  ],
+  "title": "Uriel Data Readiness Receipt",
+  "type": "object"
+}

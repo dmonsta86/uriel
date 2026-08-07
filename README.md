@@ -1,363 +1,445 @@
 <p align="center">
   <img
-    src="docs/assets/uriel-banner.png"
-    alt="Uriel — Question assumptions. Trace evidence. Strengthen research."
+    src="docs/assets/uriel-forge-banner.png"
+    alt="Uriel Forge — evidence-bound research development and assurance"
     width="100%"
   >
 </p>
 
-# Uriel — The Evidence Lantern
+# Uriel Forge
 
-<p align="center"><strong>Question assumptions. Trace evidence. Strengthen research.</strong></p>
+### Evidence-bound research development and assurance
 
-<p align="center">
-  <a href="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml"><img alt="CI status" src="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml/badge.svg"></a>
-  <img alt="Python 3.9+" src="https://img.shields.io/badge/Python-3.9%2B-blue">
-  <img alt="Runtime dependencies: zero" src="https://img.shields.io/badge/runtime%20dependencies-0-brightgreen">
-  <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-green">
-  <img alt="Offline first" src="https://img.shields.io/badge/core-offline--first-orange">
-</p>
+> **Every idea deserves its strongest fair hearing.**  
+> **Every claim must survive its strongest fair challenge.**
 
-Uriel is a free, offline-first research integrity harness for people who want to ask better questions, expose weak links in an argument, connect claims to inspectable evidence, and preserve a reproducible record of what was actually checked.
+Uriel Forge helps turn rough questions and existing projects into clear,
+reproducible, submission-ready research.
 
-It can begin with a polished manuscript or with a rough question that is not yet expressed in academic language. Uriel preserves the original idea, asks only the clarifying questions that matter, and turns every unresolved problem into a durable repair path rather than a dismissal.
+It checks data readiness before anyone draws conclusions, traces important
+claims back to evidence, exposes contradictions and material omissions, builds
+research and submission packets, and records exactly why a milestone is—or is
+not—ready.
 
-> [!IMPORTANT]
-> Uriel does not certify truth, intelligence, prestige, or publication-worthiness. It certifies only that one exact recorded project state passed a named, inspectable policy and that the resulting package still matches its recorded hashes.
+AI is optional. Uriel's authoritative state is local, deterministic, and
+fail-closed. An AI may help clarify, draft, organize, and propose. It cannot
+mark data ready, pass an integrity gate, change publication authority, close an
+authoritative Forge result, or issue a Blessing.
 
-## Why the name?
+```text
+Interpret generously.
+Test rigorously.
+Report honestly.
+```
 
-Uriel is associated with light, wisdom, and illumination. The project borrows that symbolism for a simple purpose: to bring evidence, assumptions, contradictions, and uncertainty into view.
+---
 
-A successful audit is called **The Blessing of Uriel** because it must be earned by passing all three gates. It records what was examined, what evidence supported the result, and why the submitted version passed. It is not a claim of absolute truth.
+## What can I do with Uriel?
 
-## The doubt worth keeping
+### Bring a rough idea
 
-Think of a time you asked why something worked the way it did. You received an answer, but some small part of it did not fit what you had observed. You let the mismatch go because the explanation sounded settled: *it is what it is*.
+Uriel helps recover the strongest clear, testable version without confusing
+poor wording with poor thinking.
 
-That twinge of doubt is not proof that you are right. It may be a misunderstanding, missing context, or an intuition that fails as soon as it meets data. But it is still information: your model of the world and the explanation you were given do not yet fit together.
+### Review an existing project safely
 
-Uriel is built for that moment. It does not tell you to trust your first impression, and it does not tell you to discard it. It helps you state the question clearly, identify what would settle it, find the most direct evidence available, test competing explanations, and update your position faithfully.
+Existing projects are read-only by default. Uriel can prepare a separate review
+workspace or a verified working copy before changes are made.
 
-A child, an outsider, or a tired researcher can ask a valuable question badly. Uriel judges the recorded argument—not the polish, credentials, age, status, confidence, or cost of the tools behind it.
+### Prepare data before analysis
 
-## What Uriel does
+Uriel blocks data-dependent interpretation until the exact data generation has
+passed identity, sorting, normalization, reconciliation, and independent
+verification.
 
-The deterministic core uses only the Python standard library. Without an account, API key, paid model, GPU, or database server, it can:
+Before that, the answer is:
 
-- preserve a rough question before suggesting clearer formulations;
-- confine all trusted state to one exact project root and refuse path, link, junction, and volume escapes;
-- create atomic JSON state and a hash-chained provenance ledger;
-- inventory project files in a content-addressed SHA-256 source manifest;
-- execute explicit workloads without a shell and bind their output to before/after source receipts;
-- register evidence as modular claim → artifact → locator → extraction → interpretation → limitation chains;
-- distinguish direct or primary evidence from secondary interpretation;
-- detect structural gaps, contradictory declarations, unsupported claims, framing risks, common fallacy patterns, stale receipts, omissions, and scope drift;
-- run the Three Gates under exploratory, standard, strict, or submission profiles;
-- preserve every blocker in `.uriel/REMINDERS.md`, with exactly three repair paths;
-- issue and verify a portable `URIEL-BLESSING-v1` package only after the submission profile passes.
+> **Not yet known.**
 
-AI and human reviewers may add candidate findings, search terms, or source locators. They remain outside the trust core and cannot pass a Gate merely by asserting that something is correct.
+### Trace every important claim
 
-## The Blessing of Uriel — earned, never granted
+Material claims can be linked to:
 
-A Blessing is not praise and it is not a rubber stamp. It is a content-addressed attestation that **one exact declared project state** met every mandatory condition under a named Uriel policy version.
+- exact artifacts and locations;
+- hashes and versions;
+- supporting and contrary evidence;
+- scope and uncertainty;
+- measurement and transformation lineage;
+- independent evidence families.
 
-A Blessing can be issued only when all of the following are true:
+### Build the paper and submission
 
-1. the project schema is valid and the question, hypothesis, scope, definitions, and falsifier are explicit;
-2. the exact source manifest verifies and no included file is missing, changed, unexpectedly added, or replaced through a link;
-3. every major claim resolves to current, inspectable support with an exact artifact hash and locator;
-4. required execution receipts are fresh, bound to the same source state, and successful;
-5. all Three Gates pass under the `submission` profile;
-6. no mandatory Gate waiver or open blocker reminder remains;
-7. the generated package, certificate, audit, receipts, and verifier agree on the same hashes.
+Depending on the capability status of the current release, Uriel can help
+prepare research plans, manuscripts, limitations, data-availability statements,
+figures, tables, form entries, reviewer responses, revision plans, and
+submission archives.
 
-The package includes a printable SVG certificate, QR payload, exact source manifest, complete Three-Gate audit, bound receipts, limitations and availability drafts, and a standalone standard-library verifier.
+### Prove when a milestone is finished
 
-### What a Blessing means
+The Forge Method creates a durable closure bundle containing:
 
-It means:
+```text
+mission
+requirements
+hard and soft gates
+blockers
+work packages
+test plan
+decisions
+evidence
+closure receipts
+final result
+```
 
-- the declared record passed the implemented submission policy;
-- the certificate refers to a specific, immutable project state;
-- the package can be checked for tampering without trusting Uriel's author or an online service;
-- a reviewer can see exactly what was included, what was tested, and what limitations were declared.
+It does not merely say “done.” It records why.
 
-### What a Blessing does not mean
+---
 
-It does **not** mean:
+## Current capability status
 
-- the hypothesis is true;
-- the work is globally novel or the literature search is complete;
-- an instrument, dataset, quotation, or interpretation is unbiased or correct;
-- no relevant data was withheld outside the declared project;
-- ethics, law, privacy, consent, licensing, or safety requirements are satisfied;
-- the work survived independent peer review;
-- a journal, conference, funder, or regulator should accept it;
-- the author's identity was cryptographically verified.
+<!-- URIEL_CAPABILITY_STATUS:START -->
+This section must be generated from the exact public commit.
 
-A Blessing is therefore a strong, reproducible evidence boundary—not omniscience.
+A capability may be labeled:
+
+```text
+SHIPPED
+BETA
+EXPERIMENTAL
+PLANNED
+DEFERRED
+```
+
+Only capabilities with a working entry point, passing tests, packaged files,
+documented limitations, and supported-platform evidence may be marked SHIPPED.
+<!-- URIEL_CAPABILITY_STATUS:END -->
+
+---
+
+## The research path
+
+```text
+Question or existing project
+        ↓
+Clarify the idea and define the claim
+        ↓
+Build the roadmap and research plan
+        ↓
+Acquire and organize evidence
+        ↓
+Gate 0 — Verify data before analysis
+        ↓
+Build the manuscript and submission packet
+        ↓
+Gate 1 — Novelty and Clarity
+Gate 2 — Evidence and Citation
+Gate 3 — Adversarial Integrity
+        ↓
+Forge milestone closure
+        ↓
+Possible Blessing for the exact research version
+```
+
+The capability table above states which parts are available in the current
+public release.
+
+---
+
+## The Forge Method
+
+The Forge Method is for substantial milestones—not every tiny edit.
+
+Use it for:
+
+- a feature branch;
+- a data-generation seal;
+- a methods freeze;
+- a manuscript;
+- a submission or revision packet;
+- a release candidate;
+- a new evidence-source adapter;
+- a security hardening pass.
+
+A Standard Forge bundle records:
+
+```text
+MISSION.md
+REQUIREMENT_BASELINES.json
+GATE_REGISTER.csv
+BLOCKER_REGISTER.csv
+WORK_PACKAGES.csv
+TEST_PLAN.md
+DECISION.md
+AUDIT_RESULTS.md
+CLOSURE_LEDGER.csv
+forge.json
+RESULT.json
+evidence/
+SHA256SUMS.txt
+```
+
+A milestone cannot close while a required gate is missing, a blocker is
+unresolved, evidence does not verify, or the exact bound version has changed.
+
+---
+
+## Data before conclusions
+
+No verified data-dependent result exists until Gate 0 passes for the exact
+generation.
+
+Changing any material:
+
+```text
+data
+record identity
+schema
+sorting rule
+duplicate rule
+join
+exclusion
+transformation
+analysis plan
+```
+
+invalidates dependent readiness and conclusions.
+
+Uriel does not confuse:
+
+- more citations with independent evidence;
+- more rows with valid data;
+- more decimals with accuracy;
+- more confident language with stronger support.
+
+---
 
 ## The Three Gates
 
-Every audit evaluates all three Gates. A submission Blessing requires all three to pass with no unresolved blocker.
+### Gate 1 — Novelty and Clarity
 
-| Gate | The question it asks | What blocks a Blessing |
-|---|---|---|
-| **1. Novelty & Clarity** | Is the idea precise, neutral, testable, and honestly situated against prior work? | Vague terms, circular claims, loaded framing, no falsifier, or novelty claims beyond the recorded search. |
-| **2. Evidence & Citation** | Can every important claim be traced to exact, current, inspectable support? | Missing artifacts or locators, stale hashes, inference presented as observation, omitted data, or conclusions inherited without inspecting their basis. |
-| **3. Adversarial Integrity** | Has the preferred explanation survived a serious attempt to break it? | Control mismatches, hidden assumptions, unresolved contradictions, unexplained exclusions or missingness, absent alternatives, or conclusions that outrun the method. |
+Is the exact question or contribution clear, scoped, testable, internally
+consistent, and honestly framed?
 
-### Gate 1 — Novelty & Clarity
+### Gate 2 — Evidence and Citation
 
-**Question:** Is there a precise, neutral, non-circular, falsifiable proposition worth testing?
-
-A pass requires, where applicable:
-
-- a bounded question and hypothesis;
-- operational definitions and explicit comparators;
-- a result that would count against the preferred explanation;
-- neutral restatement and review of loaded framing;
-- scope and non-claims that prevent silent generalization;
-- a dated, reproducible prior-work search record;
-- nearest prior work and concrete differentiators;
-- honest limits on any novelty claim.
-
-Common blockers include vague or elastic terms, circular definitions, authority or popularity used as proof, loaded framing, no falsifier, undefined populations or outcomes, and claims of universal novelty that the search record cannot support.
-
-### Gate 2 — Evidence & Citation
-
-**Question:** Does each important claim resolve to exact, current, directly inspectable support?
-
-Uriel prefers the shortest reliable chain:
-
-```text
-claim
-  → exact artifact or primary source
-  → SHA-256 digest
-  → precise locator
-  → verbatim extraction or measured value
-  → independent interpretation
-  → alternative interpretations
-  → limitation
-```
-
-Primary evidence is preferred whenever it is realistically reachable. Secondary papers remain useful for navigation, synthesis, vocabulary, and historical context, but another author's conclusion should not silently replace the underlying measurement, method, code output, archival record, or first-party source.
-
-Common blockers include unsupported claims, citation-only evidence with no inspected artifact, stale or changed files, missing locators, inference presented as observation, causal language unsupported by design, selective reporting, omitted data, and contradictions that were recorded but never reconciled.
+Does every material claim map to direct, current, verifiable evidence that
+actually supports it?
 
 ### Gate 3 — Adversarial Integrity
 
-**Question:** Has the preferred explanation survived a fair attempt to break it?
+Does the work survive credible alternatives, confounders, control mismatches,
+edge cases, sensitivity checks, contradictions, limitations, and reviewer
+challenge?
 
-A pass requires, where applicable:
+A failed gate is a project state—not a judgment of the person.
 
-- matched controls and justified comparison groups;
-- declared exclusions, missingness, stopping rules, and negative results;
-- competing explanations and counterevidence;
-- explicit assumptions and tests that would expose their failure;
-- contradiction records with evidence-based reconciliation;
-- edge cases, race conditions, sensitivity checks, and failure modes;
-- bounded conclusions that do not outrun the sample or method;
-- ethics, privacy, licensing, safety, funding, and conflict disclosures;
-- limitations written strongly enough that a skeptical reviewer can use them.
+Uriel produces a repair packet showing:
 
-Common blockers include control mismatch, unexplained exclusions, absent negative findings, unresolved contradictions, missing-data silence, hidden assumptions, post-hoc scope expansion, unsupported waivers, and a limitations section that protects the conclusion instead of informing the reader.
+- what failed;
+- what remains useful;
+- the smallest honest repair;
+- the strongest next move;
+- the exact condition for recheck.
 
-## Audit profiles
+---
 
-| Profile | Intended use | Result |
-|---|---|---|
-| `exploratory` | A rough question or early idea | Converts missing structure into a research plan and durable reminders. |
-| `standard` | An active research or software project | Expects a coherent claim, evidence map, and adversarial record. |
-| `strict` | High-stakes internal review | Raises the evidentiary and contradiction-handling bar. |
-| `submission` | A paper, release, or formal deliverable | Mandatory for a Blessing; no unresolved blocker is allowed. |
+## The Blessing of Uriel
 
-A failed Gate says only that the **current recorded state** has not earned a pass. It does not say that the question is foolish or that the project should be abandoned. Every blocker explains the gap, records the affected evidence, and offers exactly three ways forward.
+A Blessing is Uriel's strictest exact-version research audit.
 
-## Sixty-second start
-
-Install from the public repository:
-
-```console
-git clone https://github.com/dmonsta86/uriel.git
-cd uriel
-python -m pip install .
-uriel --version
-```
-
-Start with a rough question:
-
-```console
-mkdir my-question
-uriel intake "Could plants retain a measurable response to earlier weather?" --root my-question
-cd my-question
-uriel audit --profile exploratory
-```
-
-Uriel preserves the original wording and writes unresolved findings to:
+It means the bound version passed:
 
 ```text
-.uriel/REMINDERS.md
+Gate 0
+Gate 1
+Gate 2
+Gate 3
+Independent verification
+Certificate binding
 ```
 
-Register a directly inspectable artifact:
+with no unresolved blocking finding.
 
-```console
-uriel add-evidence artifacts/observation.csv \
-  --id E1 --claim C1 \
-  --description "Raw observation table from the declared protocol" \
-  --source-locator "local:artifacts/observation.csv" \
-  --data-location "rows 2-41, columns timestamp and response" \
-  --extraction "The exact values used by analysis.py" \
-  --interpretation "What those values support in the bounded sample" \
-  --limitations "What this artifact cannot establish"
-```
+A Blessing does **not** mean:
 
-Run an analysis or test and preserve a receipt:
+- eternal or universal truth;
+- guaranteed publication;
+- replacement for peer review, ethics review, or specialist judgment;
+- immunity from new evidence.
 
-```console
-uriel run --id analysis -- python analysis.py
-uriel snapshot --index
-uriel audit --profile submission
-uriel blessing
-```
+It means the declared version survived Uriel's published checks under its
+recorded scope and limitations.
 
-Verify a copied Blessing package without installing Uriel:
+---
 
-```console
-python verify.py PATH_TO_BLESSING
-```
+## Concise in front, complete underneath
 
-Verify it against the current local project and ledger:
-
-```console
-uriel verify-blessing PATH_TO_BLESSING --root PATH_TO_PROJECT
-```
-
-## One engine for new and existing work
-
-### Beginning with an idle question
-
-`uriel intake` preserves the exact wording, creates a project, runs an exploratory audit, and identifies the smallest clarifications needed to make the idea testable. The goal is not to force a child, outsider, or non-specialist to sound academic. The goal is to separate the valuable question from the missing structure around it.
-
-### Auditing an existing paper or project
-
-Place the manuscript, code, data extracts, protocols, and relevant artifacts beneath one project root. Register claims and evidence, execute reproducible checks through `uriel run`, build a source snapshot, and use the submission profile to expose unsupported mappings, omissions, contradictions, control problems, and scope drift before submission.
-
-### Revisiting a refusal
-
-Every blocker is durable. List, resolve, or reopen it later:
-
-```console
-uriel reminders list --root .
-uriel reminders resolve REMINDER_ID --root . --note "Added the missing control and reran analysis."
-uriel reminders reopen REMINDER_ID --root . --note "New evidence changed the interpretation."
-```
-
-## Offline first; AI optional
-
-The trusted core does not need AI. Uriel identifies tasks that genuinely require semantic judgment, literature search, or domain expertise and can export a bounded prompt for a human reviewer, a local model, OpenCode, ChatGPT Web, DeepSeek Web, or another service.
-
-```console
-uriel prompt primary-evidence --provider generic --show
-uriel prompt adversarial-review --provider local --show
-```
-
-No provider is endorsed. Pricing, retention, training use, jurisdiction, security controls, and terms can change. Before sending non-public work to any external service, check the provider's current policy and your authorization to disclose the material.
-
-For confidential or restricted projects, prefer the offline deterministic core, an authorized human reviewer, or a carefully inspected local model. “Free” describes price, not privacy.
-
-Read [Privacy and optional AI](docs/PRIVACY_AND_AI.md), [Free/cheap AI quick start](docs/FREE_AI_QUICKSTART.md), and [Model selection](docs/MODEL_GUIDE.md).
-
-## Architecture
-
-```mermaid
-flowchart LR
-    Q[Question or existing project] --> I[Intake and schema]
-    I --> S[Exact source manifest]
-    S --> R[Shell-free workloads and receipts]
-    S --> G1[Gate 1: Novelty and Clarity]
-    R --> G2[Gate 2: Evidence and Citation]
-    G1 --> G2
-    G2 --> G3[Gate 3: Adversarial Integrity]
-    G3 -->|Blocker| M[Durable reminder and three repair paths]
-    M --> I
-    G3 -->|All pass under submission profile| B[URIEL-BLESSING-v1]
-    B --> V[Standalone and live verification]
-    A[Optional human or AI review] -->|hash-bound, untrusted input| G1
-    A --> G2
-    A --> G3
-```
-
-The AI boundary remains outside the trust core. Imported reviews must match the current project and source hashes. Their existence cannot pass a Gate; every proposed locator and interpretation still has to be inspected and registered.
-
-Read [Why Uriel?](docs/WHY_URIEL.md), the [Three Gates in detail](docs/THREE_GATES.md), the [architecture](docs/ARCHITECTURE.md), [Blessing specification](docs/BLESSING_SPEC.md), [threat model](docs/THREAT_MODEL.md), [philosophy](docs/PHILOSOPHY.md), and [known limitations](docs/LIMITATIONS.md).
-
-## Portable use
-
-Build a one-file standard-library-only application:
-
-```console
-python scripts/build_portable.py
-python dist/uriel.pyz --version
-```
-
-Copy `dist/uriel.pyz` to another machine with a compatible Python installation:
-
-```console
-python uriel.pyz --help
-```
-
-See [Portable use](docs/PORTABLE.md).
-
-## Compatibility and verification
-
-Uriel is designed for Windows, macOS, and Linux and has zero runtime package dependencies. The repository's GitHub Actions matrix is the authoritative public compatibility record; local success on one machine is not represented as proof of another platform.
-
-Development verification:
-
-```console
-python -m pip install --upgrade pip setuptools wheel
-python -m pip install -e .
-python -m unittest discover -s tests -v
-python scripts/privacy_sweep.py
-python scripts/release_check.py --full
-```
-
-The public compatibility record—not a README promise—is authoritative. The release remains a candidate until the advertised matrix is green and external users have exercised real projects that reveal false positives, false negatives, usability failures, and domain-specific gaps. See [Compatibility and support](docs/COMPATIBILITY.md).
-
-## Repository map
+The default user view is a Decision Card:
 
 ```text
-src/uriel/                 trusted Python package
-src/uriel/core.py          confinement, atomic state, manifests, receipts, ledger
-src/uriel/demo.py          bounded end-to-end passing fixture
-src/uriel/audit.py         Three-Gate policy engine
-src/uriel/blessing.py      package, certificate, QR payload, verification
-src/uriel/prompts.py       privacy-aware optional review prompts
-src/uriel/reviews.py       hash-bound review contract and import
-scripts/Uriel.ps1          PowerShell 5.1+ wrapper
-tests/                     cross-platform standard-library test suite
-schemas/                   editor-facing JSON Schemas
-docs/                      architecture, privacy, accessibility, and release guidance
-.opencode/                 read-only optional Uriel review agent and commands
+Status
+What is established
+What is not established
+Why
+Strongest next move
+What Uriel prepared
+What is needed from you
+What would change the result
 ```
 
-## Contributing
+The full proof remains available behind it:
 
-Start with [CONTRIBUTING.md](CONTRIBUTING.md) and [AGENTS.md](AGENTS.md). The most valuable contributions are:
+- claim/evidence maps;
+- data and transformation lineage;
+- uncertainty records;
+- framing and omission registers;
+- test receipts;
+- adversarial results;
+- hashes and manifests.
 
-- reproducible false-positive and false-negative fixtures;
-- discipline-specific reporting and evidence adapters;
-- accessibility and plain-language improvements;
-- cross-platform failures with minimal reproductions;
-- threat-model and verifier hardening;
-- examples where a superficially strong argument fails one Gate for a non-obvious reason.
+---
 
-Uriel should become stricter only when the new rule is explainable, testable, and paired with a constructive repair path.
+## Use Uriel with or without AI
+
+### No AI
+
+The deterministic core can manage verified project state, manifests, receipts,
+data readiness, audit gates, packets, and closure records locally—subject to
+the current capability table.
+
+### Compatible local model
+
+An optional local model may help with clarification, candidate analysis,
+drafting, and roadmap suggestions on suitable hardware.
+
+It has no authority to pass a gate or issue a Blessing.
+
+### Compatible web AI
+
+Uriel can prepare a bounded, redacted packet and one instruction for a
+compatible web AI.
+
+Review that service's privacy, retention, and training terms before uploading
+unpublished or sensitive work.
+
+### Maintainer-tested high-capability configuration
+
+For the deepest Strict Forge, assurance, and adversarial passes, the maintainer
+recommends:
+
+```text
+GPT-5.6 Sol with ultra mode
+```
+
+This is optional. It is not a dependency, exclusive integration, privacy
+endorsement, or guarantee. Other compatible AIs can be used.
+
+---
+
+## Start
+
+<!-- URIEL_QUICKSTART:START -->
+Generate this section from the exact release artifacts and verified commands.
+
+Include only routes that actually ship:
+
+```text
+Desktop
+Portable package
+Python/CLI
+No-install Lens
+```
+<!-- URIEL_QUICKSTART:END -->
+
+A managed workspace may include:
+
+```text
+URIEL_AI_ENTRY.md
+COPY_THIS_TO_YOUR_AI.txt
+NEXT_PROMPT.txt
+```
+
+These files are provider-neutral.
+
+---
+
+## Safety model
+
+Uriel is designed around:
+
+```text
+read-only defaults
+exact-root confinement
+verified managed copies
+explicit consent
+immutable generations
+atomic writes
+checksums
+no hidden network
+no telemetry
+no automatic AI-provider installation
+prompt-injected content treated as untrusted data
+```
+
+Keep an independent backup of important work.
+
+---
+
+## Origin
+
+Uriel grew out of a research workflow developed in practice while the
+maintainer was working toward a first published paper.
+
+The project turns that hard-earned process into a reusable, auditable system.
+That history is a maintainer account—not a claim that Uriel guarantees
+publication or has already been validated for every field.
+
+---
+
+## Why the name?
+
+Uriel is associated with light, wisdom, and illumination. The project uses that
+symbolism in a secular way.
+
+The forge is now the central image: raw questions and incomplete projects enter;
+clear claims, verified evidence, reproducible work, and honest next steps come
+out.
+
+---
+
+## Principles
+
+- Every idea gets a fair chance to become clear.
+- No claim gets a free pass once it is.
+- Primary evidence is preferred over inherited conclusions.
+- Missing evidence remains missing.
+- Contradictory evidence remains visible.
+- Before data readiness, the result is not yet known.
+- A failed state must produce a useful path forward.
+- Concise explanations must preserve the full truth boundary.
+- Authority comes from verified artifacts and explicit decisions—not model
+  confidence.
+
+---
+
+## Documentation
+
+The final repository should link to:
+
+- Project QRD
+- The Forge Method
+- Architecture
+- Data Readiness
+- The Three Gates
+- The Blessing
+- Evidence Ingress
+- Paper and submission lifecycle
+- Desktop and local model
+- Privacy and security
+- Contributing
+
+---
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+MIT. See [`LICENSE`](LICENSE).

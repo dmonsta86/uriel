@@ -1,0 +1,1 @@
+Read URIEL_AI_ENTRY.md and review the latest output from `uriel audit` or `uriel workbench`. Complete the next safe research or repair step without changing authoritative state boundaries.

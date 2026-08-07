@@ -52,13 +52,13 @@ Official references checked 2026-08-06:
 - https://developers.openai.com/api/docs/guides/your-data
 - https://openai.com/enterprise-privacy/
 
-## OpenCode
+## compatible external agent
 
-OpenCode itself can call many providers or local models. The selected provider determines important data behavior. OpenCode Zen's current page lists free-model-specific exceptions in which collected data may be used for improvement and warns against personal or confidential data for some endpoints. Recheck the live page rather than relying on this repository's snapshot.
+compatible external agent itself can call many providers or local models. The selected provider determines important data behavior. compatible external agent Zen's current page lists free-model-specific exceptions in which collected data may be used for improvement and warns against personal or confidential data for some endpoints. Recheck the live page rather than relying on this repository's snapshot.
 
 Official references checked 2026-08-06:
 
-- https://opencode.ai/docs/
-- https://opencode.ai/docs/zen/
-- https://opencode.ai/docs/providers/
-- https://opencode.ai/docs/share/
+- https://compatible external agent.ai/docs/
+- https://compatible external agent.ai/docs/zen/
+- https://compatible external agent.ai/docs/providers/
+- https://compatible external agent.ai/docs/share/

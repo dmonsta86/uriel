@@ -1,0 +1,95 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.claim_assurance.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "assumptions": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "claim_class": {
+      "enum": [
+        "DESCRIPTIVE",
+        "COMPARATIVE",
+        "ASSOCIATIONAL",
+        "PREDICTIVE",
+        "CAUSAL",
+        "MECHANISTIC",
+        "GENERALIZATION",
+        "REPRODUCIBILITY",
+        "SOFTWARE_BEHAVIOR",
+        "SAFETY_OR_SECURITY",
+        "NORMATIVE_OR_POLICY",
+        "NOVELTY"
+      ]
+    },
+    "claim_id": {
+      "type": "string"
+    },
+    "contrary_evidence": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "critical_dimensions": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "decision": {
+      "enum": [
+        "REFUTED",
+        "NOT_ESTABLISHED",
+        "BLOCKED",
+        "SUGGESTIVE_WITHIN_SCOPE",
+        "SUPPORTED_WITHIN_SCOPE",
+        "STRONGLY_SUPPORTED_WITHIN_SCOPE",
+        "REPRODUCED_WITHIN_DECLARED_CONDITIONS",
+        "STALE"
+      ]
+    },
+    "evidence_floor": {
+      "type": "object"
+    },
+    "residual_uncertainty": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "reversal_conditions": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schema": {
+      "const": "uriel.claim_assurance.v1"
+    },
+    "scope": {
+      "type": "object"
+    },
+    "supporting_evidence": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema",
+    "claim_id",
+    "claim_class",
+    "scope",
+    "evidence_floor",
+    "critical_dimensions",
+    "decision",
+    "residual_uncertainty"
+  ],
+  "title": "Uriel Claim Assurance Case",
+  "type": "object"
+}

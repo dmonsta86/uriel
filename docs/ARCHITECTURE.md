@@ -34,7 +34,7 @@ TRUSTED / DETERMINISTIC
 
 OPTIONAL / UNTRUSTED INPUT
   prompts.py    bounded export
-  adapters.py   OpenCode process invocation
+  adapters.py   compatible external agent process invocation
   reviews.py    contract validation and content binding
   humans        source interpretation, methods, ethics, judgment
   providers     search/model output, never self-authenticating

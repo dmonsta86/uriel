@@ -17,7 +17,7 @@ Uriel 1.0.0 is an initial release candidate with:
 - persistent repair reminders with exactly three options for blockers;
 - hash-bound optional review imports and privacy-aware prompt export;
 - content-addressed Blessing packages, printable SVG/text certificates, QR payloads, and a standalone verifier;
-- PowerShell and POSIX launchers, OpenCode integration, CI, release, issue, security, and contribution assets.
+- PowerShell and POSIX launchers, compatible external agent integration, CI, release, issue, security, and contribution assets.
 
 ## Latest verified local checks
 
@@ -63,7 +63,7 @@ Local checks do not establish the public multi-platform support matrix. GitHub C
 - Do not add private paths, credentials, unpublished research content, identities, or adoption claims.
 - Preserve Python 3.9 compatibility and zero runtime dependencies unless a documented major-version decision changes that boundary.
 
-## Copy-paste continuation prompt for Gemini, DeepSeek, or another coding agent
+## Copy-paste continuation prompt for compatible AI, web AI session, or another coding agent
 
 ```text
 You are maintaining the Uriel open-source repository. Work directly in the extracted repository and do not redesign it from scratch.

@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "uriel.seed.v1",
+  "title": "Uriel Seed record",
+  "description": "Deterministic seed record: preserved question, one combined clarification batch, proposed project shapes, minimal design scaffolds, first source targets, and next actions. Nothing here judges novelty, truth, or the author.",
+  "type": "object",
+  "required": [
+    "schema",
+    "seed_id",
+    "intake_id",
+    "created_at_utc",
+    "original_question",
+    "question_sha256",
+    "assessment",
+    "clarification_questions",
+    "three_project_shapes",
+    "key_terms_and_variables",
+    "minimal_design",
+    "first_primary_sources",
+    "ethics_flags",
+    "next_three_actions",
+    "status",
+    "truth_boundary"
+  ],
+  "properties": {
+    "schema": { "const": "uriel.seed.v1" },
+    "seed_id": { "type": "string", "pattern": "^seed-[0-9a-f]{16}$" },
+    "intake_id": { "type": "string", "minLength": 1 },
+    "created_at_utc": { "type": "string", "minLength": 1 },
+    "original_question": { "type": "string", "minLength": 1 },
+    "question_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "assessment": { "type": "string", "enum": ["unassessed-not-rejected"] },
+    "clarification_questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "question", "why_it_matters"],
+        "properties": {
+          "id": { "type": "string" },
+          "question": { "type": "string" },
+          "why_it_matters": { "type": "string" }
+        }
+      }
+    },
+    "three_project_shapes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "proposed", "note"],
+        "properties": {
+          "name": { "type": "string" },
+          "proposed": { "type": "string" },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "key_terms_and_variables": { "type": "array", "items": { "type": "string" } },
+    "minimal_design": {
+      "type": "object",
+      "required": [
+        "hypothesis",
+        "rival_hypothesis",
+        "simple_test",
+        "useful_control",
+        "result_against"
+      ],
+      "properties": {
+        "hypothesis": { "type": "string" },
+        "rival_hypothesis": { "type": "string" },
+        "simple_test": { "type": "string" },
+        "useful_control": { "type": "string" },
+        "result_against": { "type": "string" }
+      }
+    },
+    "first_primary_sources": { "type": "array", "items": { "type": "string" } },
+    "ethics_flags": { "type": "array", "items": { "type": "string" } },
+    "next_three_actions": { "type": "array", "items": { "type": "string" } },
+    "status": {
+      "type": "string",
+      "enum": [
+        "READY_FOR_SEED_REVIEW",
+        "WORTH_EXPLORING",
+        "NEEDS_ONE_CLARIFICATION",
+        "PROMISING_BUT_NEEDS_EVIDENCE",
+        "BETTER_AS_A_DIFFERENT_QUESTION",
+        "NOT_TESTABLE_YET"
+      ]
+    },
+    "truth_boundary": { "type": "array", "items": { "type": "string" } }
+  }
+}

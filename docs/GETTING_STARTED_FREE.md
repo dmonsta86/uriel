@@ -32,48 +32,48 @@ Copy `dist/uriel.pyz` to any machine with Python 3.9+:
 python uriel.pyz intake "My question" --root my-project
 ```
 
-## Route C — OpenCode with a currently free model
+## Route C — compatible external agent with a currently free model
 
-Install OpenCode using one of its official methods:
+Install compatible external agent using one of its official methods:
 
 ```bash
 # macOS/Linux installer
-curl -fsSL https://opencode.ai/install | bash
+curl -fsSL https://compatible external agent.ai/install | bash
 
 # Node.js
-npm install -g opencode-ai
+npm install -g compatible external agent-ai
 
 # macOS/Linux Homebrew
-brew install anomalyco/tap/opencode
+brew install anomalyco/tap/compatible external agent
 ```
 
-Windows users can use WSL (recommended by OpenCode), Chocolatey, Scoop, or npm:
+Windows users can use WSL (recommended by compatible external agent), Chocolatey, Scoop, or npm:
 
 ```powershell
-choco install opencode
+choco install compatible external agent
 # or
-scoop install opencode
+scoop install compatible external agent
 # or
-npm install -g opencode-ai
+npm install -g compatible external agent-ai
 ```
 
 Then:
 
 ```bash
 cd /path/to/your/uriel-project
-opencode
+compatible external agent
 # In the TUI: /connect
 # Then: /models
 ```
 
-As of 2026-08-06, OpenCode lists **DeepSeek V4 Flash Free** and several other models as limited-time free. The free list can disappear or change, and OpenCode warns that data collected during several free periods may be used to improve the model. **DeepSeek V4 Pro is listed in the paid low-cost OpenCode Go catalog, not the current free list.**
+As of 2026-08-06, compatible external agent lists **web AI session V4 Flash Free** and several other models as limited-time free. The free list can disappear or change, and compatible external agent warns that data collected during several free periods may be used to improve the model. **web AI session V4 Pro is listed in the paid low-cost compatible external agent Go catalog, not the current free list.**
 
 Use the free pool in short, bounded bursts:
 
 ```bash
-uriel prompt clarity --root . --provider opencode
-uriel prompt primary-evidence --root . --provider opencode
-opencode models
+uriel prompt clarity --root . --provider compatible external agent
+uriel prompt primary-evidence --root . --provider compatible external agent
+compatible external agent models
 ```
 
 Start with one claim, one contradiction, or one source. Save scarce context for synthesis only after the evidence table is clean.
@@ -87,17 +87,17 @@ uriel assist adversarial-review \
   --acknowledge-external
 ```
 
-It calls OpenCode with an attached hash-bound prompt and imports only the required review JSON. The model still cannot pass a Gate.
+It calls compatible external agent with an attached hash-bound prompt and imports only the required review JSON. The model still cannot pass a Gate.
 
-## Route D — OpenCode with an offline local model
+## Route D — compatible external agent with an offline local model
 
-OpenCode supports local OpenAI-compatible servers, including configurations for Ollama, LM Studio, llama.cpp, and similar tools. The exact hardware-appropriate model is deliberately not hard-coded in Uriel.
+compatible external agent supports local OpenAI-compatible servers, including configurations for Ollama, LM Studio, llama.cpp, and similar tools. The exact hardware-appropriate model is deliberately not hard-coded in Uriel.
 
-Typical `opencode.json` fragment for Ollama:
+Typical `compatible external agent.json` fragment for Ollama:
 
 ```json
 {
-  "$schema": "https://opencode.ai/config.json",
+  "$schema": "https://compatible external agent.ai/config.json",
   "provider": {
     "ollama": {
       "npm": "@ai-sdk/openai-compatible",

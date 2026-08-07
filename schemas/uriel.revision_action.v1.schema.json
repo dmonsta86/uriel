@@ -1,0 +1,73 @@
+{
+  "$id": "https://uriel.dev/schemas/uriel.revision_action.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "action_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "action_type": {
+      "enum": [
+        "edit_manuscript",
+        "add_evidence",
+        "add_analysis",
+        "respond_text",
+        "request_clarification",
+        "administrative",
+        "production_task",
+        "other"
+      ]
+    },
+    "depends_on": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "description": {
+      "type": "string"
+    },
+    "manuscript_location": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "notes": {
+      "type": "string"
+    },
+    "priority": {
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "review_item_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "schema": {
+      "const": "uriel.revision_action.v1"
+    },
+    "status": {
+      "enum": [
+        "open",
+        "in_progress",
+        "completed",
+        "superseded"
+      ]
+    }
+  },
+  "required": [
+    "schema",
+    "action_id",
+    "action_type",
+    "status"
+  ],
+  "title": "Uriel Revision Action",
+  "type": "object"
+}
