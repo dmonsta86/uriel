@@ -40,6 +40,7 @@ from .core import (
     verify_project,
     verify_source_manifest,
 )
+from .data_readiness import data_readiness_state, make_sort_spec, readiness_check, readiness_status
 from .decisions import DECISION_CLASSES
 from .intake import intake_idea
 from .lens import lens_names, lens_prompt, write_lens
@@ -146,6 +147,25 @@ def parser() -> argparse.ArgumentParser:
     _root_argument(ws_inplace)
     ws_inplace_verify = workspace_actions.add_parser("inplace-verify", help="verify the source generation is unchanged")
     _root_argument(ws_inplace_verify)
+
+    readiness = commands.add_parser("readiness", help="Data Readiness Gate 0: SortSpec, checks, and receipts")
+    readiness_actions = readiness.add_subparsers(dest="readiness_action", required=True)
+    rd_init = readiness_actions.add_parser("init-sort-spec", help="generate a versioned SortSpec (identity must be declared)")
+    _root_argument(rd_init)
+    rd_init.add_argument("--dataset", required=True)
+    rd_init.add_argument("--keys", nargs="+", default=[])
+    rd_init.add_argument("--tie-break", nargs="+", default=[])
+    rd_init.add_argument("--nulls", choices=("nulls_first", "nulls_last", "nulls_error"), default="nulls_last")
+    rd_init.add_argument("--dup-policy", choices=("block", "exact", "keep_first"), default="block")
+    rd_init.add_argument("--analysis-plan", default="")
+    rd_check = readiness_actions.add_parser("check", help="run the Gate 0 check matrix and write a receipt")
+    _root_argument(rd_check)
+    rd_check.add_argument("--sort-spec", default="")
+    rd_check.add_argument("--dataset", default="")
+    rd_check.add_argument("--analysis-plan", default="")
+    rd_status = readiness_actions.add_parser("status", help="latest receipt and staleness against current data")
+    _root_argument(rd_status)
+    rd_status.add_argument("--dataset", default="")
 
     intake = commands.add_parser("intake", help="preserve a rough question and create or update a project")
     intake.add_argument("question")
@@ -506,6 +526,35 @@ def _print_human(command: str, result: Any, args: Optional[argparse.Namespace] =
             print("In-place verify: unchanged = {0} · generation {1}".format(
                 result.get("unchanged"), result.get("source_generation")))
             return
+    if command == "readiness" and isinstance(result, Mapping):
+        if args.readiness_action == "init-sort-spec":
+            print("SortSpec: {0} · rows seen: {1}".format(
+                result.get("sort_spec_sha256"), result.get("row_count")))
+            print("Record identity: {0} · duplicate policy: {1}".format(
+                ", ".join(result["sort_spec"].get("primary_keys", [])),
+                result["sort_spec"].get("duplicate_policy")))
+            return
+        if args.readiness_action == "check":
+            receipt = result.get("receipt", {})
+            print("Data Readiness: {0} · receipt {1}".format(
+                receipt.get("decision"), result.get("receipt_sha256")))
+            failed = [check["check"] for check in result.get("checks", []) if check["status"] == "FAIL"]
+            print("Checks: {0} executed · {1} failed".format(
+                receipt.get("executed_check_count"), receipt.get("failed_check_count")))
+            if failed:
+                print("Failed: {0}".format(", ".join(failed)))
+            if result.get("embargo_sentence"):
+                print(result["embargo_sentence"])
+            return
+        if args.readiness_action == "status":
+            if not result.get("exists"):
+                print("No receipt yet. " + str(result.get("embargo_sentence")))
+                return
+            print("Data Readiness: {0} · receipt {1}".format(
+                result.get("decision"), result.get("receipt_sha256")))
+            if result.get("embargo_sentence"):
+                print(result["embargo_sentence"])
+            return
     if command == "reminders" and isinstance(result, list):
         if not result:
             print("No matching reminders.")
@@ -625,6 +674,26 @@ def dispatch(args: argparse.Namespace) -> Any:
             return inplace_dryrun(args.root)
         if args.workspace_action == "inplace-verify":
             return inplace_verify(args.root)
+    if command == "readiness":
+        if args.readiness_action == "init-sort-spec":
+            return make_sort_spec(
+                args.root,
+                args.dataset,
+                keys=args.keys,
+                tie_break=args.tie_break,
+                nulls=args.nulls,
+                duplicate_policy=args.dup_policy,
+                analysis_plan=args.analysis_plan or None,
+            )
+        if args.readiness_action == "check":
+            return readiness_check(
+                args.root,
+                args.sort_spec or None,
+                dataset=args.dataset or None,
+                analysis_plan=args.analysis_plan or None,
+            )
+        if args.readiness_action == "status":
+            return readiness_status(args.root, dataset=args.dataset or None)
     if command == "validate":
         return validate_project(args.root)
     if command == "add-evidence":

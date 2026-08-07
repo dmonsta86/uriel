@@ -532,6 +532,9 @@ def start(
                 ],
             )
     probe = preflight(root_path)
+    from .data_readiness import data_readiness_state
+
+    readiness = data_readiness_state(root_path)
     consent = consent_set(
         root_path,
         "read_only",
@@ -549,7 +552,7 @@ def start(
         "consent_record_sha256": consent["record_sha256"],
         "created_at_utc": utc_now(),
         "output_root": str(paths.state),
-        "data_readiness": "not_started",
+        "data_readiness": readiness.get("data_readiness", "not_started"),
         "publication_authority": "none",
         "source_generation": probe["root_hash"],
         "current_task": current_task.strip(),

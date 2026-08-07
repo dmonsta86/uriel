@@ -1,0 +1,115 @@
+{
+  "$id": "uriel.sort_spec.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "analysis_plan_sha256": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "canonical_serialization": {
+      "const": "utf8_lf_escaped"
+    },
+    "columns": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "created_at_utc": {
+      "type": "string"
+    },
+    "cross_platform_status": {
+      "const": "deterministic_utf8_lf_no_locale"
+    },
+    "dataset_identity": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "dataset_path": {
+      "type": "string"
+    },
+    "duplicate_policy": {
+      "enum": [
+        "block",
+        "exact",
+        "keep_first"
+      ]
+    },
+    "exclusions": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "join_policy": {
+      "const": "single_dataset_row_position_join_forbidden"
+    },
+    "normalization_rules": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "null_ordering": {
+      "enum": [
+        "nulls_first",
+        "nulls_last",
+        "nulls_error"
+      ]
+    },
+    "order_invariance_tests": {
+      "items": {
+        "const": "shuffle_reproduces_canonical_order"
+      },
+      "type": "array"
+    },
+    "primary_keys": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "record_identity": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "schema": {
+      "const": "uriel.sort_spec.v1"
+    },
+    "tie_break_keys": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "version": {
+      "const": 1
+    }
+  },
+  "required": [
+    "schema",
+    "version",
+    "dataset_identity",
+    "dataset_path",
+    "columns",
+    "record_identity",
+    "primary_keys",
+    "tie_break_keys",
+    "null_ordering",
+    "normalization_rules",
+    "duplicate_policy",
+    "join_policy",
+    "canonical_serialization",
+    "order_invariance_tests",
+    "cross_platform_status",
+    "exclusions",
+    "created_at_utc"
+  ],
+  "title": "Uriel SortSpec",
+  "type": "object"
+}
