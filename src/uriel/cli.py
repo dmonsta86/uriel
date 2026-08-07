@@ -23,12 +23,14 @@ from .core import (
     build_index,
     build_manifest,
     doctor,
+    guard_path,
     initialize_project,
     list_reminders,
     load_project,
     paths_for,
     pretty_json,
     project_status,
+    read_json,
     run_workload,
     save_project,
     sha256_file,
@@ -38,10 +40,22 @@ from .core import (
     verify_project,
     verify_source_manifest,
 )
+from .decisions import DECISION_CLASSES
 from .intake import intake_idea
 from .prompts import build_prompt
 from .reviews import REVIEW_TASKS, import_review, list_reviews, review_template
 from .schema import validate_project
+from .submission import (
+    archive_submission,
+    build_response,
+    import_decision,
+    submit_guide,
+    submit_init,
+    submit_next_prompt,
+    submit_plan,
+    submission_status,
+    submit_verify,
+)
 
 
 class _Parser(argparse.ArgumentParser):
@@ -173,6 +187,52 @@ def parser() -> argparse.ArgumentParser:
 
     doctor_cmd = commands.add_parser("doctor", help="check local runtime health without using the network")
     _root_argument(doctor_cmd)
+
+    submit = commands.add_parser("submit", help="guide a submission through decisions, revision, and production")
+    submit_commands = submit.add_subparsers(dest="submit_action", required=True)
+
+    submit_init = submit_commands.add_parser("init", help="initialize the submission lifecycle store")
+    _root_argument(submit_init)
+    submit_init.add_argument("--dry-run", action="store_true")
+
+    submit_import = submit_commands.add_parser("import-decision", help="import an editor email, decision letter, or reviewer comments")
+    _root_argument(submit_import)
+    submit_import.add_argument("--text", help="decision source text (or use --source)")
+    submit_import.add_argument("--source", help="path to the decision artifact (hashed as the source)")
+    submit_import.add_argument("--venue", default=None)
+    submit_import.add_argument("--manuscript-id", default=None)
+    submit_import.add_argument("--deadline", default=None)
+    submit_import.add_argument("--decision-class", choices=DECISION_CLASSES, default=None, help="confirm the decision class")
+    submit_import.add_argument("--dry-run", action="store_true")
+
+    submit_plan = submit_commands.add_parser("plan", help="build the revision, acceptance, or rejection plan")
+    _root_argument(submit_plan)
+    submit_plan.add_argument("--dry-run", action="store_true")
+
+    submit_response = submit_commands.add_parser("build-response", help="create an immutable response packet generation")
+    _root_argument(submit_response)
+    submit_response.add_argument("--fields", default=None, help="path to a submission-fields JSON (array of uriel.submission_field.v1)")
+    submit_response.add_argument("--dry-run", action="store_true")
+
+    submit_guide = submit_commands.add_parser("guide", help="render a field-by-field form walkthrough")
+    _root_argument(submit_guide)
+    submit_guide.add_argument("--fields", default=None, help="path to a submission-fields JSON")
+    submit_guide.add_argument("--dry-run", action="store_true")
+
+    submit_verify = submit_commands.add_parser("verify", help="verify decisions, authority, and the current packet")
+    _root_argument(submit_verify)
+
+    submit_archive = submit_commands.add_parser("archive", help="create a deterministic ZIP archive of the current packet")
+    _root_argument(submit_archive)
+    submit_archive.add_argument("--dry-run", action="store_true")
+
+    submit_status = submit_commands.add_parser("status", help="show the submission state summary")
+    _root_argument(submit_status)
+
+    submit_prompt = submit_commands.add_parser("next-prompt", help="produce the exact next-prompt file for the next AI session")
+    _root_argument(submit_prompt)
+    submit_prompt.add_argument("--output", default=None, help="write the next prompt to this project-relative path")
+    submit_prompt.add_argument("--dry-run", action="store_true")
     return top
 
 
@@ -352,6 +412,53 @@ def dispatch(args: argparse.Namespace) -> Any:
         return update_reminder(args.root, args.reminder_id, status=status, note=args.note)
     if command == "doctor":
         return doctor(args.root)
+    if command == "submit":
+        if args.submit_action == "init":
+            return submit_init(args.root, dry_run=args.dry_run)
+        if args.submit_action == "import-decision":
+            if args.source:
+                source_path = Path(args.source)
+                source_text = source_path.read_text(encoding="utf-8")
+            elif args.text:
+                source_text = args.text
+            else:
+                raise Refusal("Provide decision text with --text or an artifact path with --source.", code="DECISION_SOURCE_REQUIRED")
+            return import_decision(
+                args.root,
+                source_text,
+                venue=args.venue,
+                manuscript_id=args.manuscript_id,
+                deadline=args.deadline,
+                decision_class=args.decision_class,
+                user_confirmed=bool(args.decision_class),
+                dry_run=args.dry_run,
+            )
+        if args.submit_action == "plan":
+            return submit_plan(args.root, dry_run=args.dry_run)
+        if args.submit_action == "build-response":
+            fields = None
+            if args.fields:
+                fields_target = guard_path(args.root, args.fields, must_exist=True)
+                try:
+                    fields_value = json.loads(fields_target.read_text(encoding="utf-8"))
+                except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+                    raise Refusal(f"Could not parse submission fields file: {exc}", code="INVALID_FIELDS") from exc
+                if isinstance(fields_value, Mapping):
+                    fields_value = fields_value.get("fields", [])
+                if not isinstance(fields_value, list):
+                    raise Refusal("Submission fields file must contain an array of uriel.submission_field.v1 records.", code="INVALID_FIELDS")
+                fields = fields_value
+            return build_response(args.root, fields=fields, dry_run=args.dry_run)
+        if args.submit_action == "guide":
+            return submit_guide(args.root, fields_path=args.fields, dry_run=args.dry_run)
+        if args.submit_action == "verify":
+            return submit_verify(args.root)
+        if args.submit_action == "archive":
+            return archive_submission(args.root, dry_run=args.dry_run)
+        if args.submit_action == "status":
+            return submission_status(args.root)
+        if args.submit_action == "next-prompt":
+            return submit_next_prompt(args.root, output=args.output, dry_run=args.dry_run)
     raise Refusal("Unknown command.", code="UNKNOWN_COMMAND")
 
 

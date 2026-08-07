@@ -278,7 +278,7 @@ works without any AI provider.
 
 - [x] Phase 1 — architecture and public contract (this document)
 - [x] Phase 2 — schemas and immutable packet model
-- [ ] Phase 3 — submission lifecycle core
+- [x] Phase 3 — submission lifecycle core
 - [ ] Phase 4 — minimum-prompt and free-AI workflow
 - [ ] Phase 5 — workbench and publication authority
 - [ ] Phase 6 — Data Desk

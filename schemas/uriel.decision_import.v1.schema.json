@@ -10,6 +10,9 @@
         "proposed_unconfirmed"
       ]
     },
+    "created_at_utc": {
+      "type": "string"
+    },
     "deadline": {
       "type": [
         "string",
@@ -52,6 +55,12 @@
         "number",
         "null"
       ]
+    },
+    "inference_matches": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
     },
     "manuscript_id": {
       "type": [
