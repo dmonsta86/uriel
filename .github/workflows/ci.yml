@@ -9,35 +9,82 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONUTF8: "1"
+  PYTHONIOENCODING: "utf-8"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
 jobs:
-  test:
-    name: ${{ matrix.os }} / Python ${{ matrix.python }}
+  compatibility:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }} / x64
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python: ['3.9', '3.10', '3.11', '3.12']
+        os: [ubuntu-latest, windows-latest, macos-15-intel]
+        python: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - name: Check out the exact commit
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python }}
-      - name: Install Uriel
-        run: python -m pip install .
-      - name: Compile
-        run: python -m compileall -q src tests
-      - name: Unit tests
+          architecture: x64
+
+      - name: Show interpreter and platform
+        run: |
+          python -VV
+          python -c "import os, platform, struct, sys; print('executable:', sys.executable); print('platform:', platform.platform()); print('machine:', platform.machine()); print('bits:', struct.calcsize('P') * 8); print('cwd:', os.getcwd())"
+
+      - name: Install build tooling
+        run: python -m pip install --upgrade pip "setuptools>=77" wheel
+
+      - name: Install Uriel without runtime dependencies
+        run: python -m pip install --no-deps --no-build-isolation .
+
+      - name: Verify installed dependency state
+        run: python -m pip check
+
+      - name: Compile source and tests
+        run: python -m compileall -q src tests scripts examples
+
+      - name: Run unit tests
         run: python -m unittest discover -s tests -v
-      - name: Privacy sweep
+
+      - name: Run privacy sweep
         run: python scripts/privacy_sweep.py
+
       - name: Build portable archive
         run: python scripts/build_portable.py
-      - name: Portable smoke test
-        run: python dist/uriel.pyz --version
-      - name: Installed CLI smoke test
-        run: uriel --version
-      - name: PowerShell wrapper smoke test
+
+      - name: Smoke-test module and portable entry points
+        run: |
+          python -m uriel --version
+          python dist/uriel.pyz --version
+
+      - name: Smoke-test installed console entry point
+        run: >-
+          python -c "import shutil, subprocess; executable=shutil.which('uriel');
+          assert executable, 'installed uriel console script was not found on PATH';
+          print('console script:', executable);
+          subprocess.run([executable, '--version'], check=True)"
+
+      - name: Smoke-test POSIX wrapper
+        if: runner.os != 'Windows'
+        shell: bash
+        run: sh scripts/uriel.sh --version
+
+      - name: Smoke-test Windows PowerShell wrapper
         if: runner.os == 'Windows'
         shell: powershell
         run: |
@@ -45,21 +92,101 @@ jobs:
           Invoke-Uriel --version
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-  package:
-    name: Build distributions
-    runs-on: ubuntu-latest
+      - name: Record failure context
+        if: failure()
+        shell: bash
+        run: |
+          {
+            echo "runner.os=${{ runner.os }}"
+            echo "runner.arch=${{ runner.arch }}"
+            echo "matrix.os=${{ matrix.os }}"
+            echo "matrix.python=${{ matrix.python }}"
+            echo "sha=${{ github.sha }}"
+            python -VV 2>&1 || true
+            python -m pip --version 2>&1 || true
+            python -m pip list 2>&1 || true
+          } > ci-failure-context.txt
+
+      - name: Upload failure context
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ci-failure-${{ matrix.os }}-py${{ matrix.python }}-${{ github.run_attempt }}
+          path: ci-failure-context.txt
+          if-no-files-found: error
+          retention-days: 14
+
+  macos-arm64-smoke:
+    name: macOS arm64 / Python ${{ matrix.python }}
+    runs-on: macos-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.12", "3.14"]
+
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
       - uses: actions/setup-python@v7
         with:
-          python-version: '3.12'
-      - run: python -m pip install build
-      - run: python -m build
-      - run: python scripts/build_portable.py
+          python-version: ${{ matrix.python }}
+          architecture: arm64
+
+      - name: Install and test Apple Silicon path
+        run: |
+          python -VV
+          python -c "import platform, struct; print(platform.platform()); print(platform.machine()); assert struct.calcsize('P') * 8 == 64"
+          python -m pip install --upgrade pip "setuptools>=77" wheel
+          python -m pip install --no-deps --no-build-isolation .
+          python -m pip check
+          python -m unittest discover -s tests -v
+          python scripts/privacy_sweep.py
+          python scripts/build_portable.py
+          python dist/uriel.pyz --version
+
+  package:
+    name: Build and verify release artifacts
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          architecture: x64
+
+      - name: Install release tooling
+        run: python -m pip install --upgrade pip "setuptools>=77" wheel build
+
+      - name: Run full release check
+        run: python scripts/release_check.py --full --command-timeout 600
+
+      - name: Confirm expected release files
+        shell: bash
+        run: |
+          test -n "$(find dist -maxdepth 1 -name '*.whl' -print -quit)"
+          test -n "$(find dist -maxdepth 1 -name '*.tar.gz' -print -quit)"
+          test -f dist/uriel.pyz
+          test -f dist/SHA256SUMS.txt
+          test -f dist/release-check.txt
+          grep -q '^STATUS: PASS$' dist/release-check.txt
+          grep -q '^RESULT: PASS$' dist/release-check.txt
+
       - uses: actions/upload-artifact@v7
         with:
-          name: uriel-distributions
+          name: uriel-distributions-${{ github.sha }}
           path: |
             dist/*.whl
             dist/*.tar.gz
             dist/*.pyz
+            dist/SHA256SUMS.txt
+            dist/release-check.txt
+          if-no-files-found: error
+          retention-days: 30

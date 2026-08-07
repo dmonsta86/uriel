@@ -275,42 +275,46 @@ def guard_path(root: Union[Path, str], candidate: Union[Path, str], *, must_exis
         raw = root_path / raw
     raw = Path(os.path.abspath(str(raw)))
 
-    try:
-        raw_common = os.path.commonpath([str(root_path), str(raw)])
-    except ValueError as exc:
-        raise Refusal("The path is on a different volume.", code="PATH_VOLUME_ESCAPE") from exc
-    if _path_key(Path(raw_common)) != _path_key(root_path):
+    # Detect project-local links BEFORE any confinement comparison.  The
+    # comparison base below is the fully resolved root, while the caller's
+    # candidate may pass through unresolved ancestor links (macOS
+    # /var -> /private/var) or Windows 8.3 short names, so a lexical
+    # commonpath check could otherwise fire PATH_CONFINEMENT_REFUSAL before
+    # the link on the candidate path is ever inspected.  A link is
+    # project-local when its resolved parent sits at or below the resolved
+    # project root; ancestor links above the root (such as /var) are normal
+    # path normalization and are not refused.
+    accumulated = Path(raw.anchor)
+    for part in raw.parts[1:]:
+        accumulated = accumulated / part
+        if not (accumulated.exists() and is_reparse_or_link(accumulated)):
+            continue
+        try:
+            parent_resolved = accumulated.parent.resolve(strict=False)
+        except OSError:
+            parent_resolved = None
+        if parent_resolved is not None:
+            try:
+                parent_resolved.relative_to(root_path)
+            except ValueError:
+                # Link sits above the project root (e.g. the /var -> /private
+                # ancestor on macOS); it does not traverse from inside the
+                # project, so keep walking.
+                continue
         raise Refusal(
-            "Uriel refused a path outside the project root.",
-            code="PATH_CONFINEMENT_REFUSAL",
-            details={"candidate": str(raw), "root": str(root_path)},
+            "Uriel refused a symlink, junction, or reparse point inside the project.",
+            code="LINK_TRAVERSAL_REFUSAL",
+            details={"path": str(accumulated)},
             repairs=[
-                "Move the file or output beneath the project root.",
-                "Use a project-relative path without `..` components.",
-                "Create an explicit, hashed copy inside `artifacts/` and reference that copy.",
+                "Replace the link with a real project-local file or directory.",
+                "Copy the referenced artifact into `artifacts/` and hash the copy.",
+                "Remove the link from the audited source set and document why it was excluded.",
             ],
         )
 
-    try:
-        relative = raw.relative_to(root_path)
-    except ValueError as exc:
-        raise Refusal("Uriel refused a path outside the project root.", code="PATH_CONFINEMENT_REFUSAL") from exc
-
-    current = root_path
-    for part in relative.parts:
-        current = current / part
-        if current.exists() and is_reparse_or_link(current):
-            raise Refusal(
-                "Uriel refused a symlink, junction, or reparse point inside the project.",
-                code="LINK_TRAVERSAL_REFUSAL",
-                details={"path": str(current)},
-                repairs=[
-                    "Replace the link with a real project-local file or directory.",
-                    "Copy the referenced artifact into `artifacts/` and hash the copy.",
-                    "Remove the link from the audited source set and document why it was excluded.",
-                ],
-            )
-
+    # Resolve the candidate so the confinement comparison uses the same
+    # canonical base as canonical_root(), regardless of how the caller
+    # spelled the root.
     try:
         resolved = raw.resolve(strict=must_exist)
     except FileNotFoundError as exc:
@@ -328,6 +332,11 @@ def guard_path(root: Union[Path, str], candidate: Union[Path, str], *, must_exis
             "Uriel refused a resolved path outside the project root.",
             code="PATH_CONFINEMENT_REFUSAL",
             details={"candidate": str(raw), "resolved": str(resolved)},
+            repairs=[
+                "Move the file or output beneath the project root.",
+                "Use a project-relative path without `..` components.",
+                "Create an explicit, hashed copy inside `artifacts/` and reference that copy.",
+            ],
         )
     return resolved
 
