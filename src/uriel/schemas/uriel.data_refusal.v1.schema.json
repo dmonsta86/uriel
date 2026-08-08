@@ -1,0 +1,31 @@
+{
+  "$id": "uriel.data_refusal.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Uriel Data Quarantine and Refusal Record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "created_at_utc",
+    "operation",
+    "code",
+    "message",
+    "source_logical_label",
+    "source_identity_sha256",
+    "safe_state",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": {"const": "uriel.data_refusal.v1"},
+    "schema_version": {"const": 1},
+    "created_at_utc": {"type": "string", "minLength": 1},
+    "operation": {"enum": ["PLAN", "IMPORT", "INSPECT", "DIFF", "RECONCILE", "VERIFY"]},
+    "code": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,63}$"},
+    "message": {"type": "string", "minLength": 1},
+    "source_logical_label": {"type": ["string", "null"], "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "source_identity_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "safe_state": {"const": "NO_WRITE"},
+    "record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

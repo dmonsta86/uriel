@@ -414,10 +414,11 @@ def execute(args: argparse.Namespace, root: Path, report: Path) -> int:
             checked([sys.executable, "-m", "pip", "--python", str(python), "check"], env=clean_environment)
             schema_check = (
                 "import importlib.resources as r; "
+                "from uriel.data_contracts import DATA_SCHEMA_FILES; "
                 "p=r.files('uriel.schemas'); "
                 "required={'uriel.audit.v1.schema.json','uriel.blessing.v1.schema.json',"
                 "'uriel.external_review.v1.schema.json','uriel.project.v1.schema.json',"
-                "'uriel.source_manifest.v1.schema.json'}; "
+                "'uriel.source_manifest.v1.schema.json'} | set(DATA_SCHEMA_FILES.values()); "
                 "actual={x.name for x in p.iterdir() if x.name.endswith('.json')}; "
                 "assert required <= actual, sorted(required-actual); print('packaged schemas: PASS')"
             )

@@ -77,14 +77,15 @@ policy with human reasons, absence-fact delta classification (deletion is a
 fact, not a conclusion about corruption), an exact duplicate ledger, an
 SQLite index, and an independent read-only verifier. Anomaly detection will
 create a review queue of leads, not scientific findings. Scale claims will only
-be made with measured benchmark receipts. No public Data Desk command is
-claimed by the current capability catalog.
+be made with measured benchmark receipts. The current `uriel data plan` and
+`uriel data verify-record` surfaces are contract-only, no-write previews; no
+managed import, profile, generation, or reconciliation capability is claimed.
 
 ### Paper Builder (planned)
 
 The planned Paper Builder will maintain a canonical, transparent manuscript directory
-(sections, tables, figures, supplements, statements, style, manifest) instead of treating DOCX or
-PDF as the source of truth. The standard-library core always emits Markdown,
+(sections, tables, figures, supplements, statements, style, manifest) instead of
+treating DOCX or PDF as the source of truth. The standard-library core always emits Markdown,
 UTF-8 text, HTML, JSON/JSONL, CSV/TSV, SQLite, checksum manifests, and ZIP
 packets. A conservative deterministic `docx-lite` writer is provided only if
 it can be validated as Office Open XML; PDF support is always print-ready HTML

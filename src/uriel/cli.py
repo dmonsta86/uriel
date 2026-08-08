@@ -40,6 +40,15 @@ from .core import (
     verify_project,
     verify_source_manifest,
 )
+from .data_contracts import (
+    DEFAULT_MAX_COLUMNS,
+    DEFAULT_MAX_NESTING_DEPTH,
+    DEFAULT_MAX_RECORDS,
+    DEFAULT_MAX_SOURCE_BYTES,
+    DEFAULT_TIMEOUT_SECONDS,
+    plan_data_import,
+    verify_data_record_file,
+)
 from .data_readiness import data_readiness_state, make_sort_spec, propose_sort_spec_plan, readiness_check, readiness_status
 from .decisions import DECISION_CLASSES
 from .gate_contract import (
@@ -193,8 +202,20 @@ def parser() -> argparse.ArgumentParser:
     _root_argument(rd_status)
     rd_status.add_argument("--dataset", default="")
 
-    data = commands.add_parser("data", help="Data Readiness structure proposals (never seal state)")
+    data = commands.add_parser("data", help="local Evidence Ingress contracts and Data Readiness proposals")
     data_actions = data.add_subparsers(dest="data_action", required=True)
+    data_plan = data_actions.add_parser("plan", help="inspect one selected regular file and emit a no-write import plan")
+    _root_argument(data_plan)
+    data_plan.add_argument("--source", required=True, help="one explicitly selected local regular file")
+    data_plan.add_argument("--label", default="", help="path-free logical label; defaults to a hash-derived label")
+    data_plan.add_argument("--max-source-bytes", type=int, default=DEFAULT_MAX_SOURCE_BYTES)
+    data_plan.add_argument("--max-records", type=int, default=DEFAULT_MAX_RECORDS)
+    data_plan.add_argument("--max-columns", type=int, default=DEFAULT_MAX_COLUMNS)
+    data_plan.add_argument("--max-nesting-depth", type=int, default=DEFAULT_MAX_NESTING_DEPTH)
+    data_plan.add_argument("--timeout-seconds", type=int, default=DEFAULT_TIMEOUT_SECONDS)
+    data_verify = data_actions.add_parser("verify-record", help="verify one project-relative versioned Data Desk record")
+    _root_argument(data_verify)
+    data_verify.add_argument("--record", required=True, help="project-relative JSON record path")
     data_propose = data_actions.add_parser("propose-sort", help="propose the best sorting method from the structure of the data (§9.1)")
     _root_argument(data_propose)
     data_propose.add_argument("--dataset", required=True)
@@ -419,6 +440,19 @@ def _envelope(status: str, command: str, result: Optional[Any] = None, error: Op
 
 def _print_human(command: str, result: Any, args: Optional[argparse.Namespace] = None) -> None:
     if command == "data" and isinstance(result, Mapping):
+        if args.data_action == "plan":
+            plan = result.get("plan", {})
+            source = plan.get("source", {}) if isinstance(plan, Mapping) else {}
+            print("Evidence Ingress plan: DRY_RUN · no writes · no network")
+            print("Source: {0} · {1} · {2} bytes".format(
+                source.get("logical_label"), source.get("format"), source.get("size_bytes")))
+            print("SHA-256: {0}".format(source.get("content_sha256")))
+            print("Source location remained private; managed copy is not implemented in this package.")
+            return
+        if args.data_action == "verify-record":
+            print("Data record: PASS · {0}".format(result.get("schema")))
+            print("Record SHA-256: {0}".format(result.get("record_sha256")))
+            return
         if args.data_action == "propose-sort":
             print("Sort proposal: {0} · gate {1}".format(
                 result.get("detected_kind") or "blocked", result.get("gate_status")))
@@ -937,6 +971,19 @@ def dispatch(args: argparse.Namespace) -> Any:
         if args.readiness_action == "status":
             return readiness_status(args.root, dataset=args.dataset or None)
     if command == "data":
+        if args.data_action == "plan":
+            return plan_data_import(
+                args.root,
+                args.source,
+                label=args.label,
+                max_source_bytes=args.max_source_bytes,
+                max_records=args.max_records,
+                max_columns=args.max_columns,
+                max_nesting_depth=args.max_nesting_depth,
+                timeout_seconds=args.timeout_seconds,
+            )
+        if args.data_action == "verify-record":
+            return verify_data_record_file(args.root, args.record)
         if args.data_action == "propose-sort":
             return propose_sort_spec_plan(args.root, args.dataset, sample=args.sample)
     if command == "validate":

@@ -27,6 +27,7 @@ A Rust rewrite could eventually reduce startup/runtime variability and produce n
 ```text
 TRUSTED / DETERMINISTIC
   core.py       confinement, hashing, atomic state, ledger, receipts
+  data_contracts.py  local Evidence Ingress contracts and no-write planning
   schema.py     structural and reference validation
   audit.py      declared-policy evaluation
   blessing.py   content-addressed package and verifier
@@ -64,11 +65,19 @@ project/
     index/files.sqlite
 ```
 
+The reserved `.uriel/data/` managed store is not created by the R1.1 contract
+preview. A later package may create it only after explicit plan review and must
+keep immutable raw artifacts separate from derived generations.
+
 `.uriel/` is derived, local state and is ignored by default. Publish selected Blessing packages or audit exports deliberately; do not commit secrets or raw restricted data.
 
 ## Determinism and content binding
 
 - Canonical JSON sorts keys and uses stable separators.
+- Data contract records bind their body with `record_sha256`; nested resource
+  budgets carry their own independently recomputable binding.
+- A no-write import plan exposes a logical label, media, size, and content hash
+  while keeping the selected absolute source path private and ephemeral.
 - Source records are sorted by case-folded project-relative path.
 - Every record contains path, SHA-256, size, and media type.
 - The source manifest has a digest over all records and a root-binding digest.

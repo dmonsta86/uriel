@@ -1,0 +1,37 @@
+{
+  "$id": "uriel.raw_artifact.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Uriel Immutable Raw Artifact Record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "created_at_utc",
+    "artifact_id",
+    "logical_label",
+    "managed_relative_path",
+    "media_type",
+    "format",
+    "size_bytes",
+    "content_sha256",
+    "source_access_condition",
+    "immutable",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": {"const": "uriel.raw_artifact.v1"},
+    "schema_version": {"const": 1},
+    "created_at_utc": {"type": "string", "minLength": 1},
+    "artifact_id": {"type": "string", "pattern": "^raw-[0-9a-f]{64}$"},
+    "logical_label": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "managed_relative_path": {"type": "string", "minLength": 1},
+    "media_type": {"type": "string", "minLength": 1},
+    "format": {"enum": ["CSV", "TSV", "JSON", "JSONL", "UTF8_TEXT", "MARKDOWN"]},
+    "size_bytes": {"type": "integer", "minimum": 0},
+    "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_access_condition": {"const": "USER_SELECTED_LOCAL_REGULAR_FILE"},
+    "immutable": {"const": true},
+    "record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

@@ -2,6 +2,16 @@
 
 All notable changes to Uriel are documented here.
 
+## Unreleased
+
+### Added
+
+- Versioned R1.1 Evidence Ingress/Data Desk contracts for import planning,
+  immutable raw artifacts, generations, profiles, transformations,
+  reconciliation, refusals, resource budgets, and independent verification.
+- `uriel data plan` as a path-private, budgeted, no-write local-file dry run,
+  plus `uriel data verify-record` for exact schema/version/hash verification.
+
 ## 1.0.0-rc2 — 2026-08-06
 
 This release-candidate line contains the current offline-first research

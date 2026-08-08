@@ -32,7 +32,7 @@ The current checkout has passed:
 
 ```text
 Python compilation: PASS
-Unit tests: 263/263 PASS
+Full unit-test suite: PASS (exact count recorded in release-check.txt)
 Privacy sweep: PASS
 Portable zipapp: PASS
 Wheel build: PASS
