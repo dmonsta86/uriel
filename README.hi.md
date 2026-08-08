@@ -1,7 +1,7 @@
 <p align="center">
   <img
     src="docs/assets/the-forge-of-uriel/hero.png"
-    alt="The Forge of Uriel: a vigilant scholar-smith tests a research idea at an anvil, surrounded by data readiness, evidence tracing, integrity gates, revision records, and provenance receipts."
+    alt="The Forge of Uriel: एक सतर्क विद्वान-लोहार निहाई पर एक शोध विचार का परीक्षण करता है, जो डेटा तैयारी, साक्ष्य ट्रैकिंग, अखंडता द्वारों, संशोधन रिकॉर्ड और उत्पत्ति रसीदों से घिरा हुआ है।"
     width="100%"
   >
 </p>
@@ -21,13 +21,13 @@
 
 # The Forge of Uriel
 
-> **Notice**: यह दस्तावेज़ AI द्वितीय-पास समीक्षा (AI_SECOND_PASS_REVIEWED) अनुवाद है। मूल भाषा सुधारों का स्वागत है।
+> **Notice**: यह दस्तावेज़ AI द्वारा समीक्षा की गई अनुवादित प्रति है (AI_SECOND_PASS_REVIEWED)। मूल भाषियों के सुधारों का स्वागत है।
 
-### Open-source, offline-first research development and hardening
+### ओपन-सोर्स, ऑफलाइन-फर्स्ट शोध विकास और सुदृढ़ीकरण टूलकिट
 
-> **Is your IDEA strong enough to survive the forge?**
+> **क्या आपका विचार भट्टी (Forge) में जीवित रहने के लिए पर्याप्त मजबूत है?**
 >
-> A fair hearing for the idea. A hard test for the evidence.
+> विचार के लिए एक निष्पक्ष सुनवाई। साक्ष्य के लिए एक कठिन परीक्षण।
 
 The Forge of Uriel helps turn rough questions and existing projects into
 structured, reproducible, submission-ready research.
