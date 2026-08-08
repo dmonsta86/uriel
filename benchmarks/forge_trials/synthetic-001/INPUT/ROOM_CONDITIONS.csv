@@ -1,0 +1,3 @@
+room,condition,mean_noise_db,mean_daylight_lux,assignment
+A,plant,38,620,existing quiet room
+B,control,52,280,existing interior room

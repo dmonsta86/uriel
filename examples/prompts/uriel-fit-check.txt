@@ -1,0 +1,76 @@
+I am considering using **The Forge of Uriel**, an offline-first research
+development and hardening toolkit.
+
+Do not endorse it automatically. Assess whether it is a useful fit for my actual
+project.
+
+Uriel is most relevant when a project may benefit from one or more of these:
+
+- turning a rough observation into a clear, testable research question;
+- preserving the original idea while identifying its strongest defensible form;
+- verifying dataset identity, sorting, duplicates, joins, exclusions, and
+  transformations before analysis;
+- tracing material claims to exact evidence, artifacts, locations, or
+  datapoints;
+- exposing omitted counter-evidence, null findings, hidden limitations,
+  misleading framing, or conclusions stronger than the evidence;
+- stress-testing rival explanations, confounders, leakage, scope, and causal
+  language;
+- converting a failed check into a concrete repair or next study;
+- preparing manuscript sections, limitations, reviewer responses, submission
+  fields, and durable packets;
+- preserving a reproducible audit trail without granting scientific authority
+  to an AI;
+- keeping sensitive work local or sending only a bounded, redacted packet to an
+  online AI.
+
+Ask me one compact batch of questions covering:
+
+1. What am I starting with: an idea, data, code, manuscript, reviewer decision,
+   or existing project?
+2. What stage is it at?
+3. What is the central claim or question?
+4. What data and file formats exist?
+5. What part currently feels uncertain, fragile, stalled, or hard to explain?
+6. What evidence would change my mind?
+7. Is the work sensitive, proprietary, embargoed, or participant-related?
+8. What outcome do I need next: research plan, analysis readiness, stronger
+   paper, submission, revision, replication, or honest stop/pivot?
+9. What tools, scripts, notebooks, references, and decisions already exist?
+10. What must not be changed or uploaded?
+
+Then output exactly:
+
+## Fit verdict
+`STRONG FIT`, `PARTIAL FIT`, or `LOW FIT`
+
+## Why
+Explain the decisive reasons in plain language.
+
+## Best Uriel routes
+Choose at most three:
+- Idea formation
+- Safe project review
+- Data Readiness
+- Claim-to-evidence audit
+- Adversarial paper hardening
+- Repair and next-study planning
+- Submission/revision lifecycle
+- Reproducibility and exact-version verification
+
+## What Uriel is unlikely to solve
+State any domain-expertise, proprietary-data, ethics, legal, experimental,
+instrumentation, or unavailable-evidence boundary.
+
+## First safe input packet
+List the smallest files or information I should prepare. Do not request
+credentials or unnecessary sensitive data.
+
+## First useful result
+Describe the most valuable result I should expect from the first pass.
+
+## Exact next prompt
+Write one prompt I can give to an AI working inside my project folder.
+
+Do not confuse fluent writing with evidence. Do not claim the result is known
+before the data and project state are actually inspected.

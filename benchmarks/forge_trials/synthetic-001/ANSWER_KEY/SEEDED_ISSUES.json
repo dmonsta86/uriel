@@ -1,0 +1,151 @@
+{
+  "case_id": "synthetic-001",
+  "issue_count": 24,
+  "issues": [
+    {
+      "evidence": "Abstract says 40; participant file and methods contain 30.",
+      "id": "S001",
+      "severity": "CRITICAL",
+      "title": "Sample-size contradiction"
+    },
+    {
+      "evidence": "Abstract says randomized; methods and room file show existing-room assignment.",
+      "id": "S002",
+      "severity": "CRITICAL",
+      "title": "False randomization claim"
+    },
+    {
+      "evidence": "Plant condition is inseparable from lower noise and greater daylight.",
+      "id": "S003",
+      "severity": "HIGH",
+      "title": "Room confounding"
+    },
+    {
+      "evidence": "Plan names completion time; paper promotes accuracy after inspection.",
+      "id": "S004",
+      "severity": "HIGH",
+      "title": "Primary-outcome switching"
+    },
+    {
+      "evidence": "Clean data show greater time improvement in control than plant.",
+      "id": "S005",
+      "severity": "HIGH",
+      "title": "Primary outcome contradicts narrative"
+    },
+    {
+      "evidence": "Clean week-4 means and change scores do not support the claim.",
+      "id": "S006",
+      "severity": "HIGH",
+      "title": "Claimed 25% accuracy effect unsupported"
+    },
+    {
+      "evidence": "Raw week-4 means are compared instead of change/baseline-adjusted results.",
+      "id": "S007",
+      "severity": "HIGH",
+      "title": "Baseline difference ignored"
+    },
+    {
+      "evidence": "Three controls were excluded outside the preregistered rule.",
+      "id": "S008",
+      "severity": "HIGH",
+      "title": "Post-hoc control exclusions"
+    },
+    {
+      "evidence": "Plan requires participant_id; methods say row position.",
+      "id": "S009",
+      "severity": "CRITICAL",
+      "title": "Unsafe row-position join"
+    },
+    {
+      "evidence": "P014 week 4 appears twice.",
+      "id": "S010",
+      "severity": "HIGH",
+      "title": "Duplicate outcome record"
+    },
+    {
+      "evidence": "P201 should be P021.",
+      "id": "S011",
+      "severity": "HIGH",
+      "title": "Transposed participant ID"
+    },
+    {
+      "evidence": "P008 week 3 is entered in minutes under a seconds column.",
+      "id": "S012",
+      "severity": "HIGH",
+      "title": "Unit mismatch"
+    },
+    {
+      "evidence": "P025 week-4 accuracy is missing and not reported.",
+      "id": "S013",
+      "severity": "MEDIUM",
+      "title": "Missing outcome"
+    },
+    {
+      "evidence": "Several outcomes and subgroups are tested without a declared correction.",
+      "id": "S014",
+      "severity": "MEDIUM",
+      "title": "Multiple-comparison risk"
+    },
+    {
+      "evidence": "Clean novice data do not show the claimed stronger plant benefit.",
+      "id": "S015",
+      "severity": "HIGH",
+      "title": "Novice-subgroup claim reversed"
+    },
+    {
+      "evidence": "Nonrandomized room assignment cannot establish a causal plant effect.",
+      "id": "S016",
+      "severity": "HIGH",
+      "title": "Causal overreach"
+    },
+    {
+      "evidence": "Single-institution graduate sample cannot establish all knowledge workers.",
+      "id": "S017",
+      "severity": "HIGH",
+      "title": "Population overgeneralization"
+    },
+    {
+      "evidence": "Room effects are plausible and not ruled out.",
+      "id": "S018",
+      "severity": "HIGH",
+      "title": "Impossible-language overreach"
+    },
+    {
+      "evidence": "Contrary timing result is hand-waved as an artifact without proof.",
+      "id": "S019",
+      "severity": "MEDIUM",
+      "title": "Selective counter-evidence dismissal"
+    },
+    {
+      "evidence": "Figure axis begins at 60%, visually magnifying a small raw difference.",
+      "id": "S020",
+      "severity": "MEDIUM",
+      "title": "Truncated-axis persuasion"
+    },
+    {
+      "evidence": "Source notes say the scorer knew the room.",
+      "id": "S021",
+      "severity": "MEDIUM",
+      "title": "Outcome scorer not blinded"
+    },
+    {
+      "evidence": "Prior note is observational and cannot establish the causal premise.",
+      "id": "S022",
+      "severity": "MEDIUM",
+      "title": "Prior study misused"
+    },
+    {
+      "evidence": "Randomization, sample size, outcomes, and magnitude do not match the supplied artifacts.",
+      "id": "S023",
+      "severity": "HIGH",
+      "title": "Abstract/body inconsistency"
+    },
+    {
+      "evidence": "Paper says retesting is unnecessary despite unresolved confounding and data errors.",
+      "id": "S024",
+      "severity": "MEDIUM",
+      "title": "Future-work foreclosure"
+    }
+  ],
+  "schema": "forge.synthetic_trial_ground_truth.v1"
+}

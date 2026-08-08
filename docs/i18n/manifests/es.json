@@ -1,0 +1,14 @@
+{
+  "source_commit": "3d50569ef8cdcfc20059c381d6f1c4dfaa94d4d8",
+  "source_readme_sha256": "8e8dde04f6e3634d63fc16d7d5ea791cf7449b7cb1fec8c9cd268e779f521d3e",
+  "locale": "es",
+  "translation_status": "AI_SECOND_PASS_REVIEWED",
+  "reviewers": [],
+  "readme_path": "README.es.md",
+  "readme_sha256": "99810e86bdfdf00fce5b4b7cd81936fc96feadc5020ec47d2cede14dda1d4045",
+  "image_status": "ENGLISH_FALLBACK",
+  "image_path": "docs/assets/the-forge-of-uriel/hero.png",
+  "image_sha256": "0012a2e35149cb6efcfb6e1f503c8cd750d03af27eae417e2fa849bb64ad038e",
+  "verified_at_utc": "2026-08-07T21:52:00Z",
+  "schema": "uriel.translation_manifest.v1"
+}
