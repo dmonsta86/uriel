@@ -1,9 +1,23 @@
+<div dir="rtl">
+
 <p align="center">
   <img
-    src="docs/assets/the-forge-of-uriel/localized/hero-ar.png"
-    alt="The Forge of Uriel: عالم وحداد يقظ يختبر فكرة بحثية على السندان، محاطًا بجاهزية البيانات، وتتبع الأدلة، وبوابات النزاهة، وسجلات المراجعة، وإيصالات المصدر."
+    src="docs/assets/the-forge-of-uriel/hero.png"
+    alt="The Forge of Uriel"
     width="100%"
   >
+</p>
+
+<p align="center">
+  <a href="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml">
+    <img alt="CI" src="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml/badge.svg">
+  </a>
+  <img alt="Status: public beta" src="https://img.shields.io/badge/status-public%20beta-f59e0b">
+  <img alt="Python 3.9+" src="https://img.shields.io/badge/python-3.9%2B-3776AB">
+  <a href="LICENSE">
+    <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-22c55e">
+  </a>
+  <img alt="Runtime dependencies: zero" src="https://img.shields.io/badge/runtime%20dependencies-0-0f766e">
 </p>
 
 <p align="center">
@@ -18,27 +32,22 @@
   <a href="README.ja.md">日本語</a>
 </p>
 
-
 # The Forge of Uriel
 
-> **Notice**: هذه الوثيقة عبارة عن ترجمة تمت مراجعتها بواسطة الذكاء الاصطناعي (AI_SECOND_PASS_REVIEWED). نرحب بتصحيحات المتحدثين الأصليين.
+> **Notice**: هذه الوثيقة عبارة عن ترجمة تمت مراجعتها بواسطة الذكاء الاصطناعي (AI_SECOND_PASS_REVIEWED). ملاحظة بصرية: الصورة أعلاه هي النسخة الإنجليزية الأصلية (ENGLISH_FALLBACK). نرحب بتصحيحات المتحدثين الأصليين.
 
+<!-- URIEL:SECTION:mission:START -->
 ### تطوير وتحصين الأبحاث مفتوحة المصدر والمحلية أولاً
 
 > **هل فكرتك قوية بما يكفي للبقاء على قيد الحياة في المسبك؟**
 >
 > جلسة استماع عادلة للفكرة. اختبار صارم للأدلة.
 
-The Forge of Uriel helps turn rough questions and existing projects into
-structured, reproducible, submission-ready research.
+يساعد The Forge of Uriel في تحويل الأسئلة الأولية والمشاريع الحالية إلى أبحاث مهيكلة وقابلة للتكرار وجاهزة للتقديم.
 
-It verifies data before analysis, traces important claims back to evidence,
-preserves contradictions and limitations, exposes misleading framing and
-unsupported conclusions, and turns failed checks into concrete repair and
-submission paths.
+يتأكد من البيانات قبل التحليل، ويتتبع الادعاءات الهامة حتى الأدلة المباشرة، ويحفظ التناقضات والقيود، ويكشف التأطير المضلل والاستنتاجات غير المدعومة، ويحول الفحوصات الفاشلة إلى مسارات إصلاح وتقديم ملموسة.
 
-It is not designed to make research sound stronger. It is designed to show
-exactly how strong the research is—and what would make it stronger.
+لم يتم تصميمه لجعل البحث يبدو أقوى، بل صُمم ليظهر بدقة مدى قوة البحث وما الذي يجعله أقوى.
 
 ```text
 Interpret generously.
@@ -48,36 +57,42 @@ Report honestly.
 
 ---
 
+<!-- URIEL:SECTION:status:START -->
+## حدود الإصدار الحالي
+
+إن The Forge of Uriel **1.0.0-rc2** هو إصدار مرشح عام لمجموعة أدوات تطوير وتحصين الأبحاث مفتوحة المصدر والمحلية أولاً.
+
+```text
+uriel --version
+# uriel 1.0.0rc2
+```
+
+---
+
+<!-- URIEL:SECTION:difference:START -->
 ## ما الذي يجعله مختلفًا
 
-Most research tools handle one layer: literature search, writing, statistics,
-citations, reproducibility, or review.
+تتعامل معظم أدوات البحث مع طبقة واحدة: البحث في الأدبيات، الكتابة، الإحصاء، الاقتباسات، القابلية للتكرار، أو المراجعة.
 
-The Forge of Uriel is built to connect the chain.
+تم بناء The Forge of Uriel لربط السلسلة بأكملها.
 
 ### إعطاء الفكرة أعدل جلسة استماع
 
-Poor articulation is not evidence of poor thinking. Uriel preserves the
-original question, clarifies the strongest testable version, records competing
-interpretations, identifies hidden assumptions, and asks what evidence would
-disprove the idea.
+الصياغة الضعيفة ليست دليلاً على ضعف التفكير. يحفظ Uriel السؤال الأصلي، ويوضح أقوى نسخة قابلة للاختبار، ويسجل التفسيرات المتنافسة، ويوضح الافتراضات الخفية، ويسأل ما هي الأدلة التي قد تدحض الفكرة.
 
 ### التحقق من البيانات قبل استخلاص النتائج
 
-Gate 0 prevents a data-dependent result from receiving authority until the
-exact dataset generation has passed identity, sorting, normalization,
-reconciliation, and staleness checks.
+تمنع البوابة 0 نتيجة تعتمد على البيانات من الحصول على السلطة حتى تتجاوز عملية إنتاج مجموعة البيانات فحوصات الهوية والتجميع والتطبيع والتسوية والتقادم.
 
-Before that, the honest answer is:
+قبل ذلك، تكون الإجابة الصريحة هي:
 
-> **The result is not yet known.**
+> **النتيجة لم تُعرف بعد.**
 
 ### معاملة الاستنتاجات كادعاءات وليست سلطة موروثة
 
-A published conclusion, a prestigious author, a confident model, or a long
-bibliography does not substitute for evidence.
+الاستنتاج المنشور، أو المؤلف المرموق، أو النموذج الواثق، أو قائمة المراجع الطويلة لا تستبدل الأدلة.
 
-Uriel asks:
+يسأل Uriel:
 
 ```text
 What exactly is being claimed?
@@ -91,311 +106,99 @@ What would change the result?
 
 ### تحدي العمل المكتمل
 
-The Three Gates test clarity, evidence, and adversarial integrity. Uriel looks
-for omitted counter-evidence, hidden denominators, overgeneralization, causal
-overreach, control mismatches, leakage, fragile assumptions, stale sources, and
-summary language that exceeds the underlying result.
+تختبر البوابات الثلاث الوضوح والأدلة والمتانة التنافسية. يبحث Uriel عن الأدلة المضادة الخفية، والمقامات المخفية، والتعميم المفرط، والتجاوزات السببية، وعدم تطابق الضوابط، والتسريبات، والافتراضات الهشة، والمصادر القديمة، ولغة الملخص التي تتجاوز النتيجة الأساسية.
 
 ### الإصلاح بدلاً من مجرد الانتقاد
 
-A failed check should not end with a vague rejection.
+لا ينبغي أن ينتهي الفحص الفاشل برفض غامض.
 
-Uriel records what remains useful, identifies the smallest honest repair,
-selects the strongest next move, prepares what can be prepared safely, and
-states the exact condition for recheck.
+يسجل Uriel ما يظل مفيدًا، ويحدد أصغر إصلاح صريح، ويختار أقوى خطوة تالية، ويعد ما يمكن إعداده بأمان، ويحدد الشرط الدقيق لإعادة الفحص.
 
 ---
 
+<!-- URIEL:SECTION:intellectual-honesty:START -->
 ## لا ينبغي أن يكسب البحث بالتأطير
 
-Two failures repeatedly weaken research:
+تضعف فجوتان الأبحاث بشكل متكرر:
 
-1. counter-evidence, null findings, limitations, or awkward datapoints disappear
-   from the final story; and
-2. the conclusion becomes broader or more certain than the underlying evidence
-   permits.
+1. اختفاء الأدلة المضادة، والنتائج الصفرية، والقيود من القصة النهائية؛ و
+2. أن يصبح الاستنتاج أوسع أو أكثر يقينًا مما تدعمه الأدلة الأساسية.
 
-A confident summary cannot erase an asterisk.
+يجعل Uriel هذه النقاط دائمة. يسجل ما تم اختباره، وما فشل، وما تم إغفاله، وما يظل غير مؤكد.
 
-Uriel deliberately distinguishes:
+---
+
+<!-- URIEL:SECTION:quick-start:START -->
+## البدء السريع
+
+قم بتهيئة مساحة عمل الأدلة في جذر مشروعك:
 
 ```text
-not established
-unlikely
-difficult to test
-infeasible within the declared boundary
+uriel init
+uriel status
+uriel verify
+```
+
+---
+
+<!-- URIEL:SECTION:data-readiness:START -->
+## جاهزية البيانات (البوابة 0)
+
+قبل تحليل البيانات أو استخلاص النتائج، قم بتشغيل فحوصات جاهزية البيانات:
+
+إذا فشلت البوابة 0، يتم حظر التحليل اللاحق حتى يتم استعادة نزاهة البيانات.
+
+```text
+uriel readiness
+```
+
+---
+
+<!-- URIEL:SECTION:gates:START -->
+## البوابات الثلاث
+
+### البوابة 1 — النطاق ولغة الادعاءات
+
+تقيم ما إذا كانت الادعاءات الرئيسية محددة بدقة، والمصطلحات متسقة، ويتم التخلص من التجاوزات السببية.
+
+### البوابة 2 — جاهزية البيانات والأدلة المباشرة
+
+تتطلب دعم كل ادعاء جوهري بأدلة مباشرة وقابلة للتتبع وإنتاج بيانات موثوق.
+
+### البوابة 3 — المتانة التنافسية والقيود
+
+تكشف التفسيرات المتنافسة، وانحيازات التأطير، والأدلة المضادة المنسية، وقيود التطبيق.
+
+---
+
+<!-- URIEL:SECTION:blessing:START -->
+## بركة أوريل (The Blessing of Uriel)
+
+بركة أوريل (*The Blessing of Uriel*) هي شهادة تدقيق موقعة ومربوطة بالتجزئة المشفرة (`.ublessing`).
+
+وتشير إلى أن حزمة البحث قد اجتازت البوابات الثلاث بنجاح بموجب قواعد حتمية صارمة. تشهد البركة على التحقق من الأدلة؛ ولا تمنح سلطة مطلقة ولا تستبدل مراجعة الأقران.
+
+```text
 refuted
 impossible
 ```
 
-Those are not interchangeable conclusions.
-
-The system does not ask the reader to accept another person's conclusion—or an
-AI's conclusion—without showing how it was made.
-
 ---
 
-## What you can do
+<!-- URIEL:SECTION:ai:START -->
+## استخدم Uriel مع أو بدون الذكاء الاصطناعي
 
-| Starting point | Uriel helps you produce |
-|---|---|
-| A rough idea | A preserved original question, strongest testable interpretation, rival explanations, disconfirming evidence, and a research roadmap |
-| An existing project | A read-only project map, gap register, source-invariance receipt, and safe integration plan |
-| A tabular dataset | A versioned identity and sorting specification, deterministic generation, readiness blockers, and stale-state protection |
-| A paper or proposal | Claim-to-evidence maps, contradiction and omission registers, limitations, repair actions, and stronger scoped conclusions |
-| Reviewer or editor feedback | A decision import, revision matrix, response packet, form guide, verification step, and deterministic archive |
-| A substantial milestone | A documented Forge Method closure contract and, when the operational engine ships, an authoritative closure bundle |
+### ملاحظة صانع المشروع
 
----
+تم تطوير The Forge of Uriel باستخدام مكثف لـ GPT-5.6 Sol في وضع `ultra`.
 
-## حدود الإصدار الحالي
-
-This section must reflect the exact released commit. Never promote a capability
-because its design document exists.
-
-### Available now
-
-- deterministic local project core;
-- content-addressed manifests, ledgers, receipts, and verification;
-- project initialization and verification;
-- wheel, source distribution, and portable `.pyz`;
-- provider-neutral operation;
-- zero third-party runtime dependencies in the audited core.
-
-### Beta
-
-- Lens and question development;
-- intake, preflight, and read-only project review;
-- safe working-copy controls;
-- Gate 0 / Data Readiness for the documented formats;
-- Three-Gate audit and repair packets;
-- Workbench, reminders, bounded bursts, and durable next prompts;
-- submission, reviewer-response, and revision lifecycle;
-- localized public documentation.
-
-### Experimental
-
-- Strict Blessing evaluation and verification;
-- Assurance Depth and Evidence Microscope library surfaces.
-
-Strict Blessing issuance must remain disabled unless the exact release proves
-every mandatory positive evaluator and independent binding check. Missing,
-ambiguous, stale, or unverified evidence can never produce PASS.
-
-### Planned
-
-- operational Forge Method engine;
-- Evidence Ingress and full Data Desk;
-- optional local-model runtime;
-- desktop GUI and native graphical installers;
-- reviewed locale-specific hero artwork.
-
-Planned features are intentionally outside the current release contract. They
-are not hidden shipped features and they are not reasons to distrust the
-working core.
-
-See [`docs/CAPABILITY_STATUS.md`](docs/CAPABILITY_STATUS.md) for the exact
-commit-bound evidence matrix.
-
----
-
-## Quick start
-
-Use only commands verified against the exact released artifact.
-
-### From the repository
-
-```bash
-git clone https://github.com/dmonsta86/uriel.git
-cd uriel
-python -m pip install .
-uriel --version
-```
-
-### Start a project
-
-```bash
-mkdir my-study
-cd my-study
-
-uriel init . \
-  --title "Cold-weather battery life" \
-  --question "Why does battery life appear to drop faster in the cold?"
-
-uriel status --root .
-uriel verify --root .
-```
-
-### Develop the question
-
-```bash
-uriel seed \
-  "Why does battery life appear to drop faster in the cold?" \
-  --root . \
-  --output seed.md
-
-uriel workbench init \
-  --root . \
-  --question "Why does battery life appear to drop faster in the cold?"
-
-uriel workbench next --root . --output NEXT_PROMPT.txt
-```
-
-### Review an existing project safely
-
-Use the exact current commands shown by:
-
-```bash
-uriel --help
-uriel preflight --help
-```
-
-Read-only review must not change source files. A managed-copy workflow must
-reconcile the copied file set before it becomes trusted.
-
-### Prepare data before analysis
-
-Gate 0 currently supports only the formats documented by the exact release.
-
-The current audited scope includes:
-
-```text
-CSV
-TSV
-JSONL
-```
-
-A versioned SortSpec records:
-
-```text
-dataset identity
-record identity
-primary and tie-break keys
-null ordering
-duplicate policy
-Unicode and category normalization
-date/time and timezone rules
-join keys and expected cardinality
-analysis-plan binding
-```
-
-Shuffling the same records must produce the same sealed generation. Any
-material change makes dependent readiness and conclusions stale.
-
-Use:
-
-```bash
-uriel readiness --help
-```
-
-for the exact released command structure.
-
----
-
-## مسار البحث
-
-```text
-Rough question or existing project
-        ↓
-Preserve and clarify the idea
-        ↓
-Build the roadmap and research plan
-        ↓
-Inventory evidence and prepare the data
-        ↓
-Gate 0 — Data Readiness
-        ↓
-Trace claims, counter-evidence, framing, and uncertainty
-        ↓
-Build manuscript and submission artifacts
-        ↓
-Gate 1 — Novelty and Clarity
-Gate 2 — Evidence and Citation
-Gate 3 — Adversarial Integrity
-        ↓
-Repair, narrow, pivot, refute, or pass
-        ↓
-Forge Method milestone closure
-        ↓
-Possible Blessing for the exact research version
-```
-
-Uriel does not force a dramatic conclusion. The honest result may be a narrower
-claim, a better measurement plan, a replication, a useful negative result, a
-methods paper, a dataset, a software tool, or a demonstration that the original
-claim does not survive.
-
----
-
-## البوابات الثلاث
-
-### Gate 1 — Novelty and Clarity
-
-Is the exact question or contribution clear, scoped, testable, operationally
-defined, internally consistent, and distinguishable from prior work within a
-declared search boundary?
-
-Gate 1 first attempts a fair reconstruction. Weak wording alone cannot fail a
-potentially useful idea.
-
-### Gate 2 — Evidence and Citation
-
-Does every material claim map to direct, current, verifiable evidence that
-actually supports it?
-
-Uriel preserves contrary, null, and negative evidence rather than treating
-citation volume as proof.
-
-### Gate 3 — Adversarial Integrity
-
-Does the work survive credible rival explanations, confounders, control
-mismatches, leakage, sensitivity checks, changed assumptions, omitted
-limitations, and reviewer challenge?
-
-A failed gate is a project state—not a judgment of the researcher.
-
----
-
-## بركة أوريل (The Blessing of Uriel)
-
-The Blessing is intended to be Uriel's strictest exact-version research audit.
-
-Its target contract requires:
-
-```text
-Gate 0
-Gate 1
-Gate 2
-Gate 3
-independent verification
-certificate binding
-zero unresolved blockers
-```
-
-A Blessing does not mean eternal truth, universal applicability, guaranteed
-publication, or replacement for peer review, ethics review, or domain
-expertise.
-
-It means the declared version survived the published checks under its recorded
-scope and limitations.
-
-The README must state the exact current issuance status truthfully.
-
----
-
-## Use it with or without AI
-
-### No AI
-
-The deterministic core can manage local project state, manifests, receipts,
-readiness, audits, repair packets, Workbench state, and submission state without
-an online model.
+هذه تقرير تجربة وليست اعتمادًا حصريًا أو بديلًا للتحقق المباشر. يمكن استخدام أنظمة ذكاء اصطناعي أخرى.
 
 ### ذكاء اصطناعي متوافق
 
-A compatible AI may help clarify, organize, draft, and critique.
+يمكن للذكاء الاصطناعي المتوافق المساعدة في التوضيح والتنظيم والصياغة والنقد.
 
-It may not:
+ولكنه لا يستطيع:
 
 ```text
 mark Data Readiness PASS
@@ -405,24 +208,12 @@ override a deterministic failure
 issue a Blessing
 ```
 
-### ملاحظة صانع المشروع
-
-The Forge of Uriel was developed with extensive use of GPT-5.6 Sol in `ultra`
-mode, which the maintainer recommends for its deepest long-horizon research and
-adversarial passes.
-
-That is an experience report—not a dependency, exclusive integration, privacy
-endorsement, guarantee, or substitute for deterministic verification. Other
-capable AI systems can be used.
-
-Before uploading unpublished or sensitive work to any online service, review
-its privacy, retention, and training terms.
-
 ---
 
+<!-- URIEL:SECTION:privacy:START -->
 ## الأمان والخصوصية
 
-Uriel is designed around:
+تم تصميم Uriel حول المبادئ التالية:
 
 ```text
 read-only defaults
@@ -430,132 +221,25 @@ exact-root confinement
 explicit consent
 verified managed copies
 immutable generations
-atomic derived-state writes
-content hashes
-no hidden network
-no telemetry
-no credential access
-bounded AI-facing packets
-untrusted project instructions treated as data
 ```
-
-Keep an independent backup of important work.
-
-See:
-
-- [`SECURITY.md`](SECURITY.md)
-- [`docs/THREAT_MODEL.md`](docs/THREAT_MODEL.md)
-- [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md)
 
 ---
 
+<!-- URIEL:SECTION:trials:START -->
 ## تجارب المسبك (The Forge Trials)
 
-The Forge Trials are reproducible demonstrations of what Uriel detects, what it
-misses, and what it gets wrong.
+تجارب المسبك هي عروض توضيحية مرجعية قابلة للتكرار لنتائج Uriel.
 
-A credible trial reports:
-
-```text
-known or adjudicated defects
-true positives
-false positives
-false negatives
-repair output
-exact Uriel commit
-reproduction instructions
-limitations
-```
-
-A benchmark that publishes detections while hiding false positives would
-violate Uriel's own standard.
+راجع [`docs/FORGE_TRIALS.md`](docs/FORGE_TRIALS.md) و [`benchmarks/forge_trials/synthetic-001/`](benchmarks/forge_trials/synthetic-001/).
 
 ---
 
-## Help keep Uriel honest
-
-Report:
-
-- software bugs;
-- audit false positives;
-- audit misses;
-- documentation errors;
-- translation corrections;
-- bounded feature proposals;
-- Forge Trial cases.
-
-Security vulnerabilities belong in the private security-reporting path—not a
-public issue.
-
-A scientific-audit disagreement should state its ground-truth basis. Another
-model's opinion is not enough by itself.
-
-See [`docs/COMMUNITY.md`](docs/COMMUNITY.md) and [`SECURITY.md`](SECURITY.md).
-
----
-
-## Languages
-
-English is the canonical machine-contract language.
-
-Public documentation may also be available in:
-
-```text
-Español
-Français
-Português (Brasil)
-简体中文
-العربية
-हिन्दी
-日本語
-```
-
-Commands, schemas, JSON keys, hashes, and machine statuses remain stable across
-languages. A translated README must state its source commit and review status.
-
----
-
-## Known limitations
-
-The exact release notes and capability matrix are authoritative.
-
-At minimum, keep these visible while they remain true:
-
-- Strict Blessing issuance is experimental or disabled.
-- The operational Forge Method engine is planned.
-- Evidence Ingress and the full Data Desk are planned.
-- The local-model runtime is planned.
-- The desktop GUI and native graphical installers are planned.
-- Native end-to-end coverage may differ from package/unit-test compatibility.
-- Gate 0 supports only its documented formats.
-- AI quality varies and AI has no authority.
-
----
-
-## لماذا هذا الاسم؟
-
-Uriel is associated with wisdom and illumination. The project uses that
-symbolism in a secular way.
-
-The forge represents disciplined development:
-
-```text
-rough idea
-→ clear claim
-→ prepared evidence
-→ adversarial testing
-→ honest result
-→ durable proof
-```
-
----
-
+<!-- URIEL:SECTION:community:START -->
 ## المساهمة
 
-Contributions that improve correctness, portability, accessibility, security,
-documentation, translations, and research workflows are welcome.
+نرحب بالمساهمات التي تحسن الدقة والأمان والتوثيق والترجمات.
 
-Start with:
+ابدأ بـ:
 
 - [`CONTRIBUTING.md`](CONTRIBUTING.md)
 - [`SUPPORT.md`](SUPPORT.md)
@@ -563,10 +247,20 @@ Start with:
 
 ---
 
-## الاقتباس
+<!-- URIEL:SECTION:limitations:START -->
+## القيود المعروفة
 
-Citation metadata are provided in [`CITATION.cff`](CITATION.cff).
+تم بناء The Forge of Uriel لفرض النزاهة الفكرية وتسلسل الأدلة، ولكن له حدود محددة:
 
-## الترخيص
+- لا يمكن لـ Uriel اختراع بيانات مفقودة أو تقديم قياسات معملية.
+- عدسات الذكاء الاصطناعي استشارية ولا تملك سلطة على قرارات البوابات الحتمية.
+- اجتياز البوابة أو إصدار البركة يشهد على تتبع الأدلة فقط؛ وليس ضمانًا للقبول في المجلات.
 
-MIT. See [`LICENSE`](LICENSE).
+---
+
+## Citation and License
+
+بيانات الاقتباس متوفرة في [`CITATION.cff`](CITATION.cff). الترخيص MIT في [`LICENSE`](LICENSE).
+
+
+</div>

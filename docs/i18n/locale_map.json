@@ -1,0 +1,62 @@
+{
+  "canonical_locale": "en",
+  "locales": [
+    {
+      "direction": "ltr",
+      "image_path": "docs/assets/the-forge-of-uriel/hero.png",
+      "image_status": "LOCALIZED",
+      "locale": "en",
+      "readme": "README.md"
+    },
+    {
+      "direction": "ltr",
+      "image_path": "docs/assets/the-forge-of-uriel/hero.png",
+      "image_status": "ENGLISH_FALLBACK",
+      "locale": "es",
+      "readme": "README.es.md"
+    },
+    {
+      "direction": "ltr",
+      "image_path": "docs/assets/the-forge-of-uriel/hero.png",
+      "image_status": "ENGLISH_FALLBACK",
+      "locale": "fr",
+      "readme": "README.fr.md"
+    },
+    {
+      "direction": "ltr",
+      "image_path": "docs/assets/the-forge-of-uriel/hero.png",
+      "image_status": "ENGLISH_FALLBACK",
+      "locale": "pt-BR",
+      "readme": "README.pt-BR.md"
+    },
+    {
+      "direction": "ltr",
+      "image_path": "docs/assets/the-forge-of-uriel/hero.png",
+      "image_status": "ENGLISH_FALLBACK",
+      "locale": "zh-Hans",
+      "readme": "README.zh-Hans.md"
+    },
+    {
+      "direction": "rtl",
+      "image_path": "docs/assets/the-forge-of-uriel/hero.png",
+      "image_status": "ENGLISH_FALLBACK",
+      "locale": "ar",
+      "readme": "README.ar.md"
+    },
+    {
+      "direction": "ltr",
+      "image_path": "docs/assets/the-forge-of-uriel/hero.png",
+      "image_status": "ENGLISH_FALLBACK",
+      "locale": "hi",
+      "readme": "README.hi.md"
+    },
+    {
+      "direction": "ltr",
+      "image_path": "docs/assets/the-forge-of-uriel/hero.png",
+      "image_status": "ENGLISH_FALLBACK",
+      "locale": "ja",
+      "readme": "README.ja.md"
+    }
+  ],
+  "schema": "uriel.locale_map.v1"
+}

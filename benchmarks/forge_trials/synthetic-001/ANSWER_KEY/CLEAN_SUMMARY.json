@@ -1,0 +1,28 @@
+{
+  "control": {
+    "accuracy_change_mean": 3.0,
+    "accuracy_n": 14,
+    "task_time_improvement_mean_seconds": 18.0,
+    "week4_accuracy_mean": 73.7143,
+    "week4_stress_mean": 4.2467,
+    "week4_task_time_mean_seconds": 272.4
+  },
+  "control_novice": {
+    "accuracy_change_mean": 3.0,
+    "n": 4,
+    "task_time_improvement_mean_seconds": 18.0
+  },
+  "plant": {
+    "accuracy_change_mean": 2.9333,
+    "accuracy_n": 15,
+    "task_time_improvement_mean_seconds": 8.0,
+    "week4_accuracy_mean": 75.9333,
+    "week4_stress_mean": 4.4133,
+    "week4_task_time_mean_seconds": 287.4
+  },
+  "plant_novice": {
+    "accuracy_change_mean": 0.0,
+    "n": 4,
+    "task_time_improvement_mean_seconds": 8.0
+  }
+}

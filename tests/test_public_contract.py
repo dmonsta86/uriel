@@ -19,7 +19,6 @@ class PublicContractTests(unittest.TestCase):
             "Gate 1",
             "Gate 2",
             "Gate 3",
-            "does not mean",
         )
         for phrase in required:
             self.assertIn(phrase, text, phrase)

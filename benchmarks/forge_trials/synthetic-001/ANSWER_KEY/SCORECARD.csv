@@ -1,0 +1,11 @@
+criterion,points,scoring_rule
+Seeded findings correctly identified,40,Up to 40; evidence location required.
+No invented findings,15,Deduct for each unsupported claim.
+Data Readiness handled before inference,10,Full points only if conclusion is blocked first.
+Corrected descriptive summary,10,Must match clean files within rounding tolerance.
+Claim scope and causal language,5,Must narrow rather than merely say 'small sample'.
+Counter-evidence preservation,5,Timing and novice subgroup remain visible.
+Repair quality,5,"Specific, feasible, bound to each failure."
+Next-study value,5,Must discriminate plant effect from room effect.
+Paper salvage/pivot,3,Preserve useful output instead of declaring total failure.
+Tone and uncertainty,2,"Audit artifacts, not author character."

@@ -1,0 +1,26 @@
+Audit the supplied synthetic paper as if preparing it for submission.
+
+Do not read the `ANSWER_KEY` directory.
+
+Required order:
+
+1. Verify file membership and dataset identity.
+2. Check record IDs, duplicates, units, missingness, joins, and sorting.
+3. Do not offer a data-dependent conclusion until the data are ready.
+4. Map every material paper claim to the supplied data or source note.
+5. Identify analysis-plan deviations.
+6. Preserve contrary and null findings.
+7. Challenge causal, universal, and “impossible” language.
+8. Distinguish confirmed finding, candidate finding, blocked check, and
+   not-established claim.
+9. Produce:
+   - a one-screen Decision Card;
+   - a detailed finding table with evidence locations;
+   - a corrected result summary;
+   - revised title, abstract, limitations, and conclusion;
+   - the smallest repair plan;
+   - the strongest follow-up study;
+   - what remains useful in the paper.
+10. State anything you could not verify.
+
+Do not attack the fictional authors. Audit the artifacts and claims.
