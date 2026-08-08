@@ -1,6 +1,6 @@
 <p align="center">
   <img
-    src="docs/assets/the-forge-of-uriel/hero.png"
+    src="docs/assets/the-forge-of-uriel/localized/hero-ja.png"
     alt="The Forge of Uriel：警惕な学者鍛冶職人が金床で研究アイデアをテストし、データ準備状態、証拠追跡、整合性ゲート、改訂記録、出所受領書に囲まれています。"
     width="100%"
   >
@@ -48,21 +48,21 @@ Report honestly.
 
 ---
 
-## What makes it different
+## 何が違うのか
 
 Most research tools handle one layer: literature search, writing, statistics,
 citations, reproducibility, or review.
 
 The Forge of Uriel is built to connect the chain.
 
-### Give the idea its strongest fair hearing
+### アイデアに最も公平な検証機会を与える
 
 Poor articulation is not evidence of poor thinking. Uriel preserves the
 original question, clarifies the strongest testable version, records competing
 interpretations, identifies hidden assumptions, and asks what evidence would
 disprove the idea.
 
-### Verify the data before drawing conclusions
+### 結論を出す前にデータを検証する
 
 Gate 0 prevents a data-dependent result from receiving authority until the
 exact dataset generation has passed identity, sorting, normalization,
@@ -72,7 +72,7 @@ Before that, the honest answer is:
 
 > **The result is not yet known.**
 
-### Treat conclusions as claims—not inherited authority
+### 結論を継承された権威ではなく主張として扱う
 
 A published conclusion, a prestigious author, a confident model, or a long
 bibliography does not substitute for evidence.
@@ -89,14 +89,14 @@ What remains unknown?
 What would change the result?
 ```
 
-### Challenge the finished work
+### 完成した研究に挑む
 
 The Three Gates test clarity, evidence, and adversarial integrity. Uriel looks
 for omitted counter-evidence, hidden denominators, overgeneralization, causal
 overreach, control mismatches, leakage, fragile assumptions, stale sources, and
 summary language that exceeds the underlying result.
 
-### Repair instead of merely criticizing
+### 単に批判するのではなく修復する
 
 A failed check should not end with a vague rejection.
 
@@ -106,7 +106,7 @@ states the exact condition for recheck.
 
 ---
 
-## Research should not be won by framing
+## 研究はフレーミングによって勝つべきではない
 
 Two failures repeatedly weaken research:
 
@@ -148,7 +148,7 @@ AI's conclusion—without showing how it was made.
 
 ---
 
-## Current release boundary
+## 現在のリリース境界
 
 This section must reflect the exact released commit. Never promote a capability
 because its design document exists.
@@ -292,7 +292,7 @@ for the exact released command structure.
 
 ---
 
-## The research path
+## 研究のパス
 
 ```text
 Rough question or existing project
@@ -327,7 +327,7 @@ claim does not survive.
 
 ---
 
-## The Three Gates
+## 3つのゲート (The Three Gates)
 
 ### Gate 1 — Novelty and Clarity
 
@@ -356,7 +356,7 @@ A failed gate is a project state—not a judgment of the researcher.
 
 ---
 
-## The Blessing of Uriel
+## ウリエルの祝福 (The Blessing of Uriel)
 
 The Blessing is intended to be Uriel's strictest exact-version research audit.
 
@@ -391,7 +391,7 @@ The deterministic core can manage local project state, manifests, receipts,
 readiness, audits, repair packets, Workbench state, and submission state without
 an online model.
 
-### A compatible AI
+### 互換性のある AI
 
 A compatible AI may help clarify, organize, draft, and critique.
 
@@ -405,7 +405,7 @@ override a deterministic failure
 issue a Blessing
 ```
 
-### Maintainer note
+### メンテナーからの注記
 
 The Forge of Uriel was developed with extensive use of GPT-5.6 Sol in `ultra`
 mode, which the maintainer recommends for its deepest long-horizon research and
@@ -420,7 +420,7 @@ its privacy, retention, and training terms.
 
 ---
 
-## Safety and privacy
+## セキュリティとプライバシー
 
 Uriel is designed around:
 
@@ -449,7 +449,7 @@ See:
 
 ---
 
-## The Forge Trials
+## フォージ試練 (The Forge Trials)
 
 The Forge Trials are reproducible demonstrations of what Uriel detects, what it
 misses, and what it gets wrong.
@@ -532,7 +532,7 @@ At minimum, keep these visible while they remain true:
 
 ---
 
-## Why the name?
+## 名前の由来
 
 Uriel is associated with wisdom and illumination. The project uses that
 symbolism in a secular way.
@@ -550,7 +550,7 @@ rough idea
 
 ---
 
-## Contributing
+## 貢献
 
 Contributions that improve correctness, portability, accessibility, security,
 documentation, translations, and research workflows are welcome.
@@ -563,10 +563,10 @@ Start with:
 
 ---
 
-## Citation
+## 引用
 
 Citation metadata are provided in [`CITATION.cff`](CITATION.cff).
 
-## License
+## ライセンス
 
 MIT. See [`LICENSE`](LICENSE).

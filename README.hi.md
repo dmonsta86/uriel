@@ -1,6 +1,6 @@
 <p align="center">
   <img
-    src="docs/assets/the-forge-of-uriel/hero.png"
+    src="docs/assets/the-forge-of-uriel/localized/hero-hi.png"
     alt="The Forge of Uriel: एक सतर्क विद्वान-लोहार निहाई पर एक शोध विचार का परीक्षण करता है, जो डेटा तैयारी, साक्ष्य ट्रैकिंग, अखंडता द्वारों, संशोधन रिकॉर्ड और उत्पत्ति रसीदों से घिरा हुआ है।"
     width="100%"
   >
@@ -48,21 +48,21 @@ Report honestly.
 
 ---
 
-## What makes it different
+## क्या चीज़ इसे अलग बनाती है
 
 Most research tools handle one layer: literature search, writing, statistics,
 citations, reproducibility, or review.
 
 The Forge of Uriel is built to connect the chain.
 
-### Give the idea its strongest fair hearing
+### विचार को उसकी सबसे मजबूत निष्पक्ष सुनवाई दें
 
 Poor articulation is not evidence of poor thinking. Uriel preserves the
 original question, clarifies the strongest testable version, records competing
 interpretations, identifies hidden assumptions, and asks what evidence would
 disprove the idea.
 
-### Verify the data before drawing conclusions
+### निष्कर्ष निकालने से पहले डेटा का सत्यापन करें
 
 Gate 0 prevents a data-dependent result from receiving authority until the
 exact dataset generation has passed identity, sorting, normalization,
@@ -72,7 +72,7 @@ Before that, the honest answer is:
 
 > **The result is not yet known.**
 
-### Treat conclusions as claims—not inherited authority
+### निष्कर्षों को दावों के रूप में मानें - विरासत में मिली अथॉरिटी नहीं
 
 A published conclusion, a prestigious author, a confident model, or a long
 bibliography does not substitute for evidence.
@@ -89,14 +89,14 @@ What remains unknown?
 What would change the result?
 ```
 
-### Challenge the finished work
+### पूरे किए गए काम को चुनौती दें
 
 The Three Gates test clarity, evidence, and adversarial integrity. Uriel looks
 for omitted counter-evidence, hidden denominators, overgeneralization, causal
 overreach, control mismatches, leakage, fragile assumptions, stale sources, and
 summary language that exceeds the underlying result.
 
-### Repair instead of merely criticizing
+### केवल आलोचना करने के बजाय मरम्मत करें
 
 A failed check should not end with a vague rejection.
 
@@ -106,7 +106,7 @@ states the exact condition for recheck.
 
 ---
 
-## Research should not be won by framing
+## शोध को फ्रेमिंग द्वारा नहीं जीता जाना चाहिए
 
 Two failures repeatedly weaken research:
 
@@ -148,7 +148,7 @@ AI's conclusion—without showing how it was made.
 
 ---
 
-## Current release boundary
+## वर्तमान रिलीज़ सीमा
 
 This section must reflect the exact released commit. Never promote a capability
 because its design document exists.
@@ -292,7 +292,7 @@ for the exact released command structure.
 
 ---
 
-## The research path
+## शोध पथ
 
 ```text
 Rough question or existing project
@@ -327,7 +327,7 @@ claim does not survive.
 
 ---
 
-## The Three Gates
+## तीन द्वार (The Three Gates)
 
 ### Gate 1 — Novelty and Clarity
 
@@ -356,7 +356,7 @@ A failed gate is a project state—not a judgment of the researcher.
 
 ---
 
-## The Blessing of Uriel
+## उरिएल का आशीर्वाद (The Blessing of Uriel)
 
 The Blessing is intended to be Uriel's strictest exact-version research audit.
 
@@ -391,7 +391,7 @@ The deterministic core can manage local project state, manifests, receipts,
 readiness, audits, repair packets, Workbench state, and submission state without
 an online model.
 
-### A compatible AI
+### एक संगत AI
 
 A compatible AI may help clarify, organize, draft, and critique.
 
@@ -405,7 +405,7 @@ override a deterministic failure
 issue a Blessing
 ```
 
-### Maintainer note
+### मेंटेनर नोट
 
 The Forge of Uriel was developed with extensive use of GPT-5.6 Sol in `ultra`
 mode, which the maintainer recommends for its deepest long-horizon research and
@@ -420,7 +420,7 @@ its privacy, retention, and training terms.
 
 ---
 
-## Safety and privacy
+## सुरक्षा और गोपनीयता
 
 Uriel is designed around:
 
@@ -449,7 +449,7 @@ See:
 
 ---
 
-## The Forge Trials
+## फोर्ज परीक्षण (The Forge Trials)
 
 The Forge Trials are reproducible demonstrations of what Uriel detects, what it
 misses, and what it gets wrong.
@@ -532,7 +532,7 @@ At minimum, keep these visible while they remain true:
 
 ---
 
-## Why the name?
+## यह नाम क्यों?
 
 Uriel is associated with wisdom and illumination. The project uses that
 symbolism in a secular way.
@@ -550,7 +550,7 @@ rough idea
 
 ---
 
-## Contributing
+## योगदान
 
 Contributions that improve correctness, portability, accessibility, security,
 documentation, translations, and research workflows are welcome.
@@ -563,10 +563,10 @@ Start with:
 
 ---
 
-## Citation
+## साइटेशन
 
 Citation metadata are provided in [`CITATION.cff`](CITATION.cff).
 
-## License
+## लाइसेंस
 
 MIT. See [`LICENSE`](LICENSE).
