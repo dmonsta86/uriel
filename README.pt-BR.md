@@ -1,7 +1,7 @@
 <p align="center">
   <img
-    src="docs/assets/the-forge-of-uriel/hero.png"
-    alt="The Forge of Uriel"
+    src="docs/assets/i18n/pt-BR/uriel-forge-hero.png"
+    alt="The Forge of Uriel: um pesquisador-ferreiro forja evidências"
     width="100%"
   >
 </p>
@@ -32,7 +32,7 @@
 
 # The Forge of Uriel
 
-> **Notice**: Este documento é uma tradução revisada por IA (AI_SECOND_PASS_REVIEWED). Nota visual: A imagem acima é a versão original em inglês (ENGLISH_FALLBACK). Correções de falantes nativos são bem-vindas.
+> **Aviso**: Esta documentação e o texto da imagem são traduções revisadas por IA (AI_SECOND_PASS_REVIEWED); a ilustração é uma variante localizada (LOCALIZED). Correções de falantes nativos são bem-vindas.
 
 <!-- URIEL:SECTION:mission:START -->
 ### Desenvolvimento e blindagem de pesquisa de código aberto e local
@@ -129,13 +129,21 @@ O Uriel torna esses pontos duráveis. Ele registra o que foi testado, o que falh
 <!-- URIEL:SECTION:quick-start:START -->
 ## Início Rápido
 
-Inicialize um espaço de trabalho de evidências na raiz do seu projeto:
+A partir de uma cópia do repositório, instale sem dependências de execução nem
+uma compilação isolada que exija rede:
 
 ```text
-uriel init
-uriel status
-uriel verify
+python -m pip install --no-deps --no-build-isolation .
+uriel start --root ../my-study --kind new_idea --title "My study" --question "What would change my conclusion?"
+uriel status --root ../my-study
+uriel verify --root ../my-study
 ```
+
+Pacote de distribuição: `uriel-research`. Importação Python e comando CLI:
+`uriel`.
+
+Para a opção de arquivo único sem instalação, consulte
+[`docs/GETTING_STARTED_FREE.md`](docs/GETTING_STARTED_FREE.md).
 
 ---
 
@@ -172,14 +180,13 @@ Expõe explicações concorrentes, vieses de enquadramento, contra-evidências o
 <!-- URIEL:SECTION:blessing:START -->
 ## A Bênção de Uriel
 
-A Bênção de Uriel (*The Blessing of Uriel*) é um certificado de auditoria assinado e vinculado criptograficamente por conteúdo (`.ublessing`).
+A Bênção de Uriel é um pacote experimental de atestação endereçado por
+conteúdo. Ela vincula uma geração exata do projeto às decisões registradas das
+portas, aos comprovantes, às limitações e à recomputação do verificador.
 
-Indica que um pacote de pesquisa passou por todas as três portas sob regras determinísticas estritas. Uma Bênção certifica que a evidência foi verificada; ela não concede autoridade divina nem substitui a revisão por pares.
-
-```text
-refuted
-impossible
-```
+Ela significa que esses predicados registrados passaram para esses artefatos
+exatos. Não é validação científica independente, assinatura criptográfica do
+autor, revisão por pares nem prova de que as medições sejam verdadeiras.
 
 ---
 
@@ -226,7 +233,17 @@ immutable generations
 <!-- URIEL:SECTION:trials:START -->
 ## As Provas da Forja
 
-As Provas da Forja são demonstrações de referência reproduzíveis das capacidades de verificação de evidências e reparo do Uriel.
+A prova sintética incluída é um conjunto reproduzível com 24 problemas selados
+no gabarito e uma rubrica de 100 pontos. A verificação de lançamento recalcula
+o resumo limpo e valida o conjunto; ela não afirma que o Uriel detectou um
+problema sem um relatório cego posteriormente adjudicado.
+
+```text
+python scripts/check_forge_trial.py
+```
+
+O método Forge descreve o fluxo público; o mecanismo geral de fechamento
+automático de marcos permanece planejado.
 
 Consulte [`docs/FORGE_TRIALS.md`](docs/FORGE_TRIALS.md) e [`benchmarks/forge_trials/synthetic-001/`](benchmarks/forge_trials/synthetic-001/).
 
@@ -252,7 +269,7 @@ O The Forge of Uriel foi construído para impor a honestidade intelectual e a li
 
 - O Uriel não pode inventar dados ausentes nem fornecer medições de laboratório.
 - As lentes de IA são consultivas e não possuem autoridade sobre as decisões determinísticas das portas.
-- Uma Porta aprovada ou uma Bênção emitida certifica o rastreamento de evidências; não é uma garantia de aceitação em revistas nem de consenso entre pares.
+- Uma Porta ou Bênção experimental informa que os predicados registrados pelo Uriel passaram para artefatos exatos. Ela não estabelece validade de medição, verdade, aceitação editorial nem consenso.
 
 ---
 

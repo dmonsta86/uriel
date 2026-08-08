@@ -1,11 +1,13 @@
 # The Forge of Uriel — Project QRD
 
-**Document type:** Quality Requirements Document  
-**Public product:** The Forge of Uriel  
-**Python distribution and CLI:** `uriel`  
-**Category:** Evidence-bound research development and assurance  
-**Status:** Product contract. Availability claims must be generated from the
-exact public commit.
+**Document type:** Quality Requirements Document
+**Public product:** The Forge of Uriel
+**Python distribution:** `uriel-research`
+**Python import and CLI:** `uriel`
+**Category:** Evidence-bound research development and assurance
+**Status:** Product contract. Availability claims are generated from the
+canonical capability catalog and checked against live modules, tests, and
+commands.
 
 ## Mission
 
@@ -27,11 +29,11 @@ It must:
 ## Main routes
 
 ```text
-Desktop
+Desktop (planned)
 CLI/Python
 Zero-install Lens
 Generic AI entry
-Optional local model
+Optional local-model adapter (planned; bounded prompt handoff is available)
 ```
 
 No AI route is required for authoritative operation.

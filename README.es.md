@@ -1,7 +1,7 @@
 <p align="center">
   <img
-    src="docs/assets/the-forge-of-uriel/hero.png"
-    alt="The Forge of Uriel"
+    src="docs/assets/i18n/es/uriel-forge-hero.png"
+    alt="The Forge of Uriel: un investigador-herrero forja evidencias"
     width="100%"
   >
 </p>
@@ -32,7 +32,7 @@
 
 # The Forge of Uriel
 
-> **Notice**: Este documento es una traducción revisada por IA (AI_SECOND_PASS_REVIEWED). Nota visual: La imagen superior es la versión original en inglés (ENGLISH_FALLBACK). Correcciones de hablantes nativos son bienvenidas.
+> **Aviso**: Esta documentación y el texto de la imagen son traducciones revisadas por IA (AI_SECOND_PASS_REVIEWED); la ilustración es una variante localizada (LOCALIZED). Se agradecen las correcciones de hablantes nativos.
 
 <!-- URIEL:SECTION:mission:START -->
 ### Desarrollo y blindaje de investigación de código abierto y local
@@ -129,13 +129,21 @@ Uriel hace que esos puntos sean duraderos. Registra lo que se probó, lo que fal
 <!-- URIEL:SECTION:quick-start:START -->
 ## Inicio rápido
 
-Inicializa un espacio de trabajo de evidencia en la raíz de tu proyecto:
+Desde una copia del repositorio, instala sin dependencias de ejecución ni una
+compilación aislada que necesite red:
 
 ```text
-uriel init
-uriel status
-uriel verify
+python -m pip install --no-deps --no-build-isolation .
+uriel start --root ../my-study --kind new_idea --title "My study" --question "What would change my conclusion?"
+uriel status --root ../my-study
+uriel verify --root ../my-study
 ```
+
+Paquete de distribución: `uriel-research`. Módulo importable de Python y
+comando CLI: `uriel`.
+
+Para la ruta de un solo archivo sin instalación, consulta
+[`docs/GETTING_STARTED_FREE.md`](docs/GETTING_STARTED_FREE.md).
 
 ---
 
@@ -172,14 +180,13 @@ Expone explicaciones competidoras, sesgos de encuadre, contraevidencia omitida y
 <!-- URIEL:SECTION:blessing:START -->
 ## La Bendición de Uriel
 
-La Bendición de Uriel (*The Blessing of Uriel*) es un certificado de auditoría firmado y vinculado criptográficamente por contenido (`.ublessing`).
+La Bendición de Uriel es un paquete experimental de atestación direccionado
+por contenido. Vincula una generación exacta del proyecto con las decisiones de
+las puertas, los recibos, las limitaciones y la recomputación del verificador.
 
-Indica que un paquete de investigación ha superado las tres puertas bajo reglas deterministas estrictas. Una Bendición certifica que la evidencia fue verificada; no otorga autoridad divina ni sustituye la revisión por pares.
-
-```text
-refuted
-impossible
-```
+Significa que esos predicados registrados se cumplieron para esos artefactos
+exactos. No constituye validación científica independiente, firma criptográfica
+del autor, revisión por pares ni prueba de que las mediciones sean verdaderas.
 
 ---
 
@@ -226,7 +233,17 @@ immutable generations
 <!-- URIEL:SECTION:trials:START -->
 ## Las Pruebas de la Forja
 
-Las Pruebas de la Forja son demostraciones de referencia reproducibles de las capacidades de comprobación de evidencia y reparación de Uriel.
+La prueba sintética incluida es un conjunto reproducible con 24 problemas
+sellados en la clave de respuestas y una rúbrica de 100 puntos. La comprobación
+de lanzamiento recalcula el resumen limpio y valida el conjunto; no afirma que
+Uriel haya detectado un problema sin un informe ciego posteriormente adjudicado.
+
+```text
+python scripts/check_forge_trial.py
+```
+
+El método Forge describe el flujo de trabajo público; el motor automático
+general de cierre de hitos sigue planificado.
 
 Consulta [`docs/FORGE_TRIALS.md`](docs/FORGE_TRIALS.md) y [`benchmarks/forge_trials/synthetic-001/`](benchmarks/forge_trials/synthetic-001/).
 
@@ -252,7 +269,7 @@ The Forge of Uriel está construido para hacer cumplir la honestidad intelectual
 
 - Uriel no puede inventar datos faltantes ni suministrar mediciones de laboratorio.
 - Las lentes de IA son consultivas y no tienen autoridad sobre las decisiones deterministas de las puertas.
-- Una Puerta superada o una Bendición emitida me certifica el rastreo de evidencia; no es una garantía de aceptación en revistas ni de consenso entre pares.
+- Una Puerta o Bendición experimental informa que los predicados registrados por Uriel se cumplieron para artefactos exactos. No establece validez de medición, verdad, aceptación editorial ni consenso entre pares.
 
 ---
 

@@ -1,28 +1,33 @@
 {
   "schema": "uriel.capability_inventory.v1",
-  "commit": "353019d242fc42c43e86dafed53e4e6e41ee89ac",
+  "source": "src/uriel/capability_status.py",
+  "source_fingerprint": "27fa9cd5b73c04e70af75752dc8376006a63037e2f935380aaa153ade6ae4b5b",
   "capabilities": [
     {
       "id": "CAP-CORE-001",
-      "name": "Deterministic project core & packaging",
+      "name": "Deterministic project core and packaging",
       "status": "SHIPPED",
-      "entry_point": "uriel init / uriel verify",
+      "entry_point": "uriel start / uriel verify / uriel doctor",
       "platforms": [
         "Windows",
         "macOS",
         "Linux"
       ],
       "modules": [
-        "src/uriel/core.py"
+        "src/uriel/core.py",
+        "src/uriel/cli.py"
       ],
-      "verified_commit": "HEAD",
-      "notes": "Offline-first, content-addressed project management and receipts."
+      "verification": [
+        "tests/test_core.py",
+        "tests/test_packaging.py"
+      ],
+      "notes": "Offline-first project confinement, content-addressed records, receipts, and zero runtime dependencies."
     },
     {
       "id": "CAP-READINESS-001",
-      "name": "Data Readiness & Gate 0",
+      "name": "Data Readiness and Gate 0",
       "status": "BETA",
-      "entry_point": "uriel readiness / python -m uriel.data_readiness",
+      "entry_point": "uriel readiness",
       "platforms": [
         "Windows",
         "macOS",
@@ -31,14 +36,16 @@
       "modules": [
         "src/uriel/data_readiness.py"
       ],
-      "verified_commit": "HEAD",
-      "notes": "Strict raw data hash binding, readiness check, order invariance."
+      "verification": [
+        "tests/test_data_readiness.py"
+      ],
+      "notes": "Dataset identity, sorting, normalization, reconciliation, staleness, and order-invariance checks."
     },
     {
       "id": "CAP-GATES-001",
-      "name": "Three Integrity Gates (Gates 1, 2, 3)",
+      "name": "Three Integrity Gates",
       "status": "BETA",
-      "entry_point": "uriel audit / python -m uriel.gate_contract",
+      "entry_point": "uriel audit",
       "platforms": [
         "Windows",
         "macOS",
@@ -48,14 +55,17 @@
         "src/uriel/gate_contract.py",
         "src/uriel/audit.py"
       ],
-      "verified_commit": "HEAD",
-      "notes": "Gate 1 (Frame), Gate 2 (Evidence & Calculation), Gate 3 (Adversarial Challenge)."
+      "verification": [
+        "tests/test_gate_contract.py",
+        "tests/test_audit.py"
+      ],
+      "notes": "Scope and claim language, direct evidence, and adversarial robustness with fail-closed repair guidance."
     },
     {
       "id": "CAP-BLESSING-001",
-      "name": "Strict Blessing Integration & Independent Verifier",
+      "name": "Strict Blessing and independent verifier",
       "status": "EXPERIMENTAL",
-      "entry_point": "uriel blessing / python -m uriel.strict_blessing",
+      "entry_point": "uriel blessing / uriel verify-blessing",
       "platforms": [
         "Windows",
         "macOS",
@@ -65,14 +75,17 @@
         "src/uriel/strict_blessing.py",
         "src/uriel/independent_verify.py"
       ],
-      "verified_commit": "HEAD",
-      "notes": "Requires Gate 0 PASS, 3 Gate PASS, positive evaluators, independent verifier PASS."
+      "verification": [
+        "tests/test_strict_blessing.py",
+        "tests/test_blessing.py"
+      ],
+      "notes": "Content-addressed attestation of recorded gate decisions and exact bound artifacts; not independent scientific validation."
     },
     {
       "id": "CAP-LIFECYCLE-001",
-      "name": "Research Lifecycle, Workbench & Free-Model Burst Surfaces",
+      "name": "Research lifecycle, workbench, repair, and submission",
       "status": "BETA",
-      "entry_point": "uriel workbench / uriel burst",
+      "entry_point": "uriel intake / uriel workbench / uriel burst / uriel submit",
       "platforms": [
         "Windows",
         "macOS",
@@ -84,14 +97,18 @@
         "src/uriel/gap_register.py",
         "src/uriel/repair_packet.py"
       ],
-      "verified_commit": "HEAD",
-      "notes": "Read-only bounded AI surfaces, Gap Register, Repair Packets."
+      "verification": [
+        "tests/test_workbench.py",
+        "tests/test_lifecycle_packet.py",
+        "tests/test_lifecycle_submission.py"
+      ],
+      "notes": "Question intake, bounded review packets, gap records, repair packets, decisions, and submission support."
     },
     {
       "id": "CAP-ASSURANCE-001",
-      "name": "Assurance Depth, Evidence Microscope & Decision Card",
+      "name": "Assurance depth, evidence microscope, and decision card",
       "status": "EXPERIMENTAL",
-      "entry_point": "python -m uriel.assurance_case",
+      "entry_point": "Python API (uriel.assurance_case, uriel.decision_card)",
       "platforms": [
         "Windows",
         "macOS",
@@ -101,64 +118,84 @@
         "src/uriel/assurance_case.py",
         "src/uriel/decision_card.py"
       ],
-      "verified_commit": "HEAD",
-      "notes": "4-Layer Assurance Chain, Evidence Strength Vector, Decision Card & Proof Bundle."
+      "verification": [
+        "tests/test_assurance_depth.py"
+      ],
+      "notes": "Exploratory assurance chains, evidence-strength records, and decision artifacts; no dedicated CLI contract yet."
+    },
+    {
+      "id": "CAP-TRIALS-001",
+      "name": "Synthetic Forge Trial fixture and adjudicated scorer",
+      "status": "BETA",
+      "entry_point": "python scripts/check_forge_trial.py",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "modules": [
+        "src/uriel/forge_trials.py"
+      ],
+      "verification": [
+        "tests/test_forge_trials.py"
+      ],
+      "notes": "Validates the sealed synthetic fixture and scores supplied adjudicated findings; it does not claim a detector was run."
     },
     {
       "id": "CAP-INGRESS-001",
-      "name": "Evidence Ingress & Data Desk",
+      "name": "Evidence ingress and Data Desk",
       "status": "PLANNED",
       "entry_point": "n/a (planned capability)",
       "platforms": [
-        "Windows (Planned)",
-        "macOS (Planned)",
-        "Linux (Planned)"
+        "Windows (planned)",
+        "macOS (planned)",
+        "Linux (planned)"
       ],
       "modules": [],
-      "verified_commit": "HEAD",
-      "notes": "Planned safe ingestion and data desk reconciliation."
+      "verification": [],
+      "notes": "Planned safe ingestion and table reconciliation; no shipped ingress or Data Desk module."
     },
     {
       "id": "CAP-FORGE-001",
-      "name": "The Forge of Uriel Method Engine",
+      "name": "Operational Forge Method closure engine",
       "status": "PLANNED",
-      "entry_point": "n/a (planned milestone closure engine)",
+      "entry_point": "n/a (planned capability)",
       "platforms": [
-        "Windows (Planned)",
-        "macOS (Planned)",
-        "Linux (Planned)"
+        "Windows (planned)",
+        "macOS (planned)",
+        "Linux (planned)"
       ],
       "modules": [],
-      "verified_commit": "HEAD",
-      "notes": "The Forge of Uriel is public display branding; operational Forge closure engine is planned."
+      "verification": [],
+      "notes": "The Forge of Uriel is the public identity; a general automatic milestone-closure engine is not implemented."
     },
     {
       "id": "CAP-LOCAL-AI-001",
-      "name": "Generic Local-Model Adapters",
+      "name": "Built-in local-model adapter",
       "status": "PLANNED",
-      "entry_point": "n/a (planned local inference adapter)",
+      "entry_point": "n/a (planned capability)",
       "platforms": [
-        "Windows (Planned)",
-        "macOS (Planned)",
-        "Linux (Planned)"
+        "Windows (planned)",
+        "macOS (planned)",
+        "Linux (planned)"
       ],
       "modules": [],
-      "verified_commit": "HEAD",
-      "notes": "Planned provider-neutral local inference wrapper."
+      "verification": [],
+      "notes": "External and local models can consume bounded prompts today; Uriel does not ship an inference provider."
     },
     {
       "id": "CAP-DESKTOP-001",
-      "name": "Desktop Native GUI & Installer",
+      "name": "Desktop GUI and native installer",
       "status": "PLANNED",
-      "entry_point": "n/a (planned native application)",
+      "entry_point": "n/a (planned capability)",
       "platforms": [
-        "Windows (Planned)",
-        "macOS (Planned)",
-        "Linux (Planned)"
+        "Windows (planned)",
+        "macOS (planned)",
+        "Linux (planned)"
       ],
       "modules": [],
-      "verified_commit": "HEAD",
-      "notes": "Standalone native GUI application; currently CLI/Python-first."
+      "verification": [],
+      "notes": "The supported product is currently CLI/Python-first."
     }
   ]
 }

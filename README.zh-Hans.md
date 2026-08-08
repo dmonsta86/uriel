@@ -1,7 +1,7 @@
 <p align="center">
   <img
-    src="docs/assets/the-forge-of-uriel/hero.png"
-    alt="The Forge of Uriel"
+    src="docs/assets/i18n/zh-Hans/uriel-forge-hero.png"
+    alt="The Forge of Uriel：研究锻造者正在锻造证据"
     width="100%"
   >
 </p>
@@ -32,7 +32,7 @@
 
 # The Forge of Uriel
 
-> **Notice**: 本文档为 AI 复核翻译（AI_SECOND_PASS_REVIEWED）。视觉说明：顶部图片为英文原版图像（ENGLISH_FALLBACK）。欢迎母语者提出修正意见。
+> **说明**：本文档及图片文字均为 AI 二次复核翻译（AI_SECOND_PASS_REVIEWED）；插图为本地化版本（LOCALIZED）。欢迎母语者提出修正。
 
 <!-- URIEL:SECTION:mission:START -->
 ### 开源、离线优先的科研开发与强化工具包
@@ -129,13 +129,19 @@ Uriel 使这些关键点保持持久记录。它记录了测试内容、失败�
 <!-- URIEL:SECTION:quick-start:START -->
 ## 快速开始
 
-在项目根目录下初始化证据工作区：
+从仓库检出版本安装；不安装运行时依赖，也不使用需要联网的隔离构建：
 
 ```text
-uriel init
-uriel status
-uriel verify
+python -m pip install --no-deps --no-build-isolation .
+uriel start --root ../my-study --kind new_idea --title "My study" --question "What would change my conclusion?"
+uriel status --root ../my-study
+uriel verify --root ../my-study
 ```
+
+发行包名：`uriel-research`。Python 导入名及 CLI 命令：`uriel`。
+
+无需安装的单文件用法见
+[`docs/GETTING_STARTED_FREE.md`](docs/GETTING_STARTED_FREE.md)。
 
 ---
 
@@ -172,14 +178,11 @@ uriel readiness
 <!-- URIEL:SECTION:blessing:START -->
 ## 乌列尔的祝福 (The Blessing of Uriel)
 
-乌列尔的祝福 (*The Blessing of Uriel*) 是一份经过电子签名和内容寻址哈希绑定的审计证书 (`.ublessing`)。
+乌列尔的祝福是一种实验性的内容寻址证明包。它把项目的精确版本与
+Uriel 记录的关卡判定、凭证、局限性及独立验证器的重新计算绑定在一起。
 
-它表明研究包已在严格的确定性规则下成功通过了所有三大关卡。祝福证书仅证明证据已通过验证；它并不赋予神圣权威，也不能替代同行评审。
-
-```text
-refuted
-impossible
-```
+它只表示这些记录的判定条件对这些精确绑定的工件成立；它不是独立的
+科学验证、作者的加密签名、同行评审，也不能证明底层测量必然为真。
 
 ---
 
@@ -226,7 +229,15 @@ immutable generations
 <!-- URIEL:SECTION:trials:START -->
 ## 熔炉考验 (The Forge Trials)
 
-熔炉考验是可复现的基准演示，展示了 Uriel 的证据检查与修复能力。
+内置合成考验是一套可复现夹具，答案中封存了 24 个问题，并配有
+100 分裁决量表。发布检查会重新计算清洗后的摘要并验证夹具完整性；
+若没有先提交并裁决盲测报告，它不会声称 Uriel 检出了任何问题。
+
+```text
+python scripts/check_forge_trial.py
+```
+
+公开的 Forge Method 描述工作流程；通用自动里程碑闭环引擎仍在规划中。
 
 请参阅 [`docs/FORGE_TRIALS.md`](docs/FORGE_TRIALS.md) 与 [`benchmarks/forge_trials/synthetic-001/`](benchmarks/forge_trials/synthetic-001/)。
 
@@ -252,7 +263,7 @@ The Forge of Uriel 旨在贯彻求真务实的态度与证据追溯，但其具�
 
 - Uriel 无法凭空捏造缺失的数据或提供实验室测量值。
 - AI 视角仅具建议性质，对确定性的关卡决策拥有零权威。
-- 通过关卡或获得祝福仅证明证据追溯无误；这并非期刊接收或同行共识的担保。
+- 关卡或实验性祝福只报告 Uriel 记录的判定条件对精确绑定工件成立；它不确立测量有效性、真理、期刊接收或同行共识。
 
 ---
 

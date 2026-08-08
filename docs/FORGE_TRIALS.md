@@ -1,29 +1,48 @@
 # The Forge Trials
 
-The **Forge Trials** are reproducible demonstrations and benchmark cases that test how **The Forge of Uriel** evaluates research papers, verifies data readiness, traces claims to evidence, and generates concrete repair paths.
-
-They demonstrate what Uriel detects, what it refutes, what it preserves, and how it furthers research.
+The **Forge Trials** are reproducible fixtures for evaluating research-review
+workflows. A fixture can validate its own inputs, answer key, rubric, and clean
+recomputation. Detector performance exists only after a blind report is mapped
+to the answer key and adjudicated.
 
 ---
 
 ## 1. Synthetic Gold Standard Trial: `synthetic-001`
 
-`synthetic-001` is the first official Synthetic Gold Standard Forge Trial. Its ground truth is fully known and deterministically verified.
+`synthetic-001` is the first official Synthetic Gold Standard Forge Trial.
+Its 24 seeded issues are fully known to the answer key and hidden during a
+blind run.
 
-- **Location**: [`benchmarks/forge_trials/synthetic-001/`](benchmarks/forge_trials/synthetic-001/)
-- **Input Folder**: [`benchmarks/forge_trials/synthetic-001/INPUT/`](benchmarks/forge_trials/synthetic-001/INPUT/)
-- **Answer Key Folder**: [`benchmarks/forge_trials/synthetic-001/ANSWER_KEY/`](benchmarks/forge_trials/synthetic-001/ANSWER_KEY/)
+- **Location**: [`benchmarks/forge_trials/synthetic-001/`](../benchmarks/forge_trials/synthetic-001/)
+- **Input Folder**: [`benchmarks/forge_trials/synthetic-001/INPUT/`](../benchmarks/forge_trials/synthetic-001/INPUT/)
+- **Answer Key Folder**: [`benchmarks/forge_trials/synthetic-001/ANSWER_KEY/`](../benchmarks/forge_trials/synthetic-001/ANSWER_KEY/)
 
 ### Separation Rule
 `INPUT` and `ANSWER_KEY` are kept strictly separated. The answer key is never altered or overfitted to artificially boost Uriel's score.
 
-### Seeded Issues & Detections (24 Seeded Flaws)
+### Seeded issues in the answer key (not automatic detections)
 The synthetic manuscript and dataset contain 24 seeded flaws across 5 risk categories:
 1. **Gate 0 (Data Readiness & Integrity)**: Duplicate participant IDs, malformed join keys, unit mismatches (Fahrenheit vs Celsius room temperatures), excluded baseline records.
 2. **Gate 1 (Scope & Claim Language)**: Causal overreach in title ("Indoor Plants Dramatically Reduce Cognitive Fatigue"), overgeneralized population scope.
 3. **Gate 2 (Evidence & Citation Lineage)**: Abstract claim mismatches, unsupported subgroup statistics.
 4. **Gate 3 (Adversarial Robustness & Limitations)**: Omitted null results in task-time metrics, hidden confounding variables, unaddressed alternative explanations.
 5. **Repair & Next Study Planning**: Concrete, deterministic repair targets to produce an honest, publication-ready revision.
+
+### Truth boundary
+
+Run the fixture-integrity check with:
+
+```text
+python scripts/check_forge_trial.py
+```
+
+That command verifies required files, unique issue identifiers, the 100-point
+scorecard, hashes, and the clean-summary recomputation. It deliberately reports
+`detector_status: NOT_RUN` and no precision, recall, or release verdict.
+
+To calculate detector metrics, first perform a blind run using only `INPUT/`
+and `TRIAL_PROMPT.txt`. Afterward, a human adjudicator maps supported report
+findings to answer-key issue IDs. Only those supplied IDs are scored.
 
 ---
 

@@ -1,7 +1,7 @@
 <p align="center">
   <img
-    src="docs/assets/the-forge-of-uriel/hero.png"
-    alt="The Forge of Uriel"
+    src="docs/assets/i18n/ja/uriel-forge-hero.png"
+    alt="The Forge of Uriel：研究者である鍛冶師が証拠を鍛える様子"
     width="100%"
   >
 </p>
@@ -32,7 +32,7 @@
 
 # The Forge of Uriel
 
-> **Notice**: 本文書は AI による二次確認済み翻訳（AI_SECOND_PASS_REVIEWED）です。視覚的注意：上部の画像は英語版のオリジナル（ENGLISH_FALLBACK）です。ネイティブスピーカーによる修正を歓迎します。
+> **注記**：本文書と画像内テキストは AI による二次レビュー済みの翻訳（AI_SECOND_PASS_REVIEWED）で、イラストはローカライズ版（LOCALIZED）です。ネイティブスピーカーによる修正を歓迎します。
 
 <!-- URIEL:SECTION:mission:START -->
 ### オープンソース・オフラインファーストの研究開発および強化ツールキット
@@ -129,13 +129,21 @@ Uriel はこれらの点を永続的に記録します。何がテストされ�
 <!-- URIEL:SECTION:quick-start:START -->
 ## クイックスタート
 
-プロジェクトのルートで証拠ワークスペースを初期化します：
+リポジトリのチェックアウトから、実行時依存関係やネットワークを使う
+隔離ビルドなしでインストールします：
 
 ```text
-uriel init
-uriel status
-uriel verify
+python -m pip install --no-deps --no-build-isolation .
+uriel start --root ../my-study --kind new_idea --title "My study" --question "What would change my conclusion?"
+uriel status --root ../my-study
+uriel verify --root ../my-study
 ```
+
+配布パッケージ名：`uriel-research`。Python の import 名と CLI
+コマンド：`uriel`。
+
+インストール不要の単一ファイル版は
+[`docs/GETTING_STARTED_FREE.md`](docs/GETTING_STARTED_FREE.md) を参照してください。
 
 ---
 
@@ -172,14 +180,13 @@ uriel readiness
 <!-- URIEL:SECTION:blessing:START -->
 ## ウリエルの祝福 (The Blessing of Uriel)
 
-ウリエルの祝福 (*The Blessing of Uriel*) は、署名されコンテンツアドレス指定された監査証明書 (`.ublessing`) です。
+ウリエルの祝福は、実験的なコンテンツアドレス型アテステーション
+パッケージです。プロジェクトの正確な世代を、記録されたゲート判定、
+レシート、限界、独立検証器の再計算に結び付けます。
 
-研究パケットが厳格な確定性規則の下で3つのゲートすべてを通過したことを示します。祝福は証拠が検証されたことを証明するものであり、査読の代替となるものではありません。
-
-```text
-refuted
-impossible
-```
+これは、その正確に束縛された成果物について記録済みの条件が通過した
+ことだけを意味します。独立した科学的検証、著者の暗号署名、査読、
+または測定値が真であることの証明ではありません。
 
 ---
 
@@ -226,7 +233,17 @@ immutable generations
 <!-- URIEL:SECTION:trials:START -->
 ## フォージ試練 (The Forge Trials)
 
-フォージ試練は、Uriel の証拠検証および修復機能の再現可能なベンチマークデモです。
+同梱の合成試練は、解答に封印された 24 件の問題と 100 点の判定基準を
+備えた再現可能なフィクスチャです。リリース検査はクリーンな要約を
+再計算してフィクスチャを検証しますが、盲検レポートを提出して判定
+しない限り、Uriel が問題を検出したとは主張しません。
+
+```text
+python scripts/check_forge_trial.py
+```
+
+公開 Forge Method はワークフローを説明します。汎用の自動マイル
+ストーン完了エンジンは、引き続き計画段階です。
 
 [`docs/FORGE_TRIALS.md`](docs/FORGE_TRIALS.md) および [`benchmarks/forge_trials/synthetic-001/`](benchmarks/forge_trials/synthetic-001/) を参照してください。
 
@@ -252,6 +269,7 @@ The Forge of Uriel は知的誠実さと証拠の追跡性を強制するため�
 
 - Uriel は欠落したデータを捏造したり実験室の測定値を提供したりすることはできません。
 - AI レンズは助言的なものであり、確定的なゲート決定に対する権威を持ちません。
+- ゲートまたは実験的な祝福は、Uriel の記録済み条件が正確に束縛された成果物について通過したことだけを報告します。測定の妥当性、真実、掲載受理、または同業者の合意を確立するものではありません。
 
 ---
 

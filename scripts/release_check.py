@@ -21,6 +21,17 @@ from pathlib import Path
 from typing import BinaryIO, List, Mapping, Optional, Sequence
 
 
+PRE_BUILD_CHECKS = (
+    "scripts/check_community_health.py",
+    "scripts/check_public_identity.py",
+    "scripts/check_readme.py",
+    "scripts/check_i18n.py",
+    "scripts/check_localization_integrity.py",
+    "scripts/check_capability_status.py",
+    "scripts/check_forge_trial.py",
+)
+
+
 class ReleaseInterrupted(Exception):
     """Raised by signal handlers so active child processes can be stopped cleanly."""
 
@@ -311,6 +322,8 @@ def execute(args: argparse.Namespace, root: Path, report: Path) -> int:
         )
 
     checked([sys.executable, "-m", "compileall", "-q", "src", "tests", "scripts", "examples"])
+    for checker in PRE_BUILD_CHECKS:
+        checked([sys.executable, checker])
     checked([sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v"])
     checked([sys.executable, "scripts/privacy_sweep.py"])
 

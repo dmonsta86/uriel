@@ -10,50 +10,50 @@
     },
     {
       "direction": "ltr",
-      "image_path": "docs/assets/the-forge-of-uriel/hero.png",
-      "image_status": "ENGLISH_FALLBACK",
+      "image_path": "docs/assets/i18n/es/uriel-forge-hero.png",
+      "image_status": "LOCALIZED",
       "locale": "es",
       "readme": "README.es.md"
     },
     {
       "direction": "ltr",
-      "image_path": "docs/assets/the-forge-of-uriel/hero.png",
-      "image_status": "ENGLISH_FALLBACK",
+      "image_path": "docs/assets/i18n/fr/uriel-forge-hero.png",
+      "image_status": "LOCALIZED",
       "locale": "fr",
       "readme": "README.fr.md"
     },
     {
       "direction": "ltr",
-      "image_path": "docs/assets/the-forge-of-uriel/hero.png",
-      "image_status": "ENGLISH_FALLBACK",
+      "image_path": "docs/assets/i18n/pt-BR/uriel-forge-hero.png",
+      "image_status": "LOCALIZED",
       "locale": "pt-BR",
       "readme": "README.pt-BR.md"
     },
     {
       "direction": "ltr",
-      "image_path": "docs/assets/the-forge-of-uriel/hero.png",
-      "image_status": "ENGLISH_FALLBACK",
+      "image_path": "docs/assets/i18n/zh-Hans/uriel-forge-hero.png",
+      "image_status": "LOCALIZED",
       "locale": "zh-Hans",
       "readme": "README.zh-Hans.md"
     },
     {
       "direction": "rtl",
-      "image_path": "docs/assets/the-forge-of-uriel/hero.png",
-      "image_status": "ENGLISH_FALLBACK",
+      "image_path": "docs/assets/i18n/ar/uriel-forge-hero.png",
+      "image_status": "LOCALIZED",
       "locale": "ar",
       "readme": "README.ar.md"
     },
     {
       "direction": "ltr",
-      "image_path": "docs/assets/the-forge-of-uriel/hero.png",
-      "image_status": "ENGLISH_FALLBACK",
+      "image_path": "docs/assets/i18n/hi/uriel-forge-hero.png",
+      "image_status": "LOCALIZED",
       "locale": "hi",
       "readme": "README.hi.md"
     },
     {
       "direction": "ltr",
-      "image_path": "docs/assets/the-forge-of-uriel/hero.png",
-      "image_status": "ENGLISH_FALLBACK",
+      "image_path": "docs/assets/i18n/ja/uriel-forge-hero.png",
+      "image_status": "LOCALIZED",
       "locale": "ja",
       "readme": "README.ja.md"
     }

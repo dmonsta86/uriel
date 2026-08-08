@@ -147,13 +147,22 @@ what was omitted, and what remains uncertain.
 <!-- URIEL:SECTION:quick-start:START -->
 ## Quick Start
 
-Initialize an evidence workspace in your project root:
+From a repository checkout, install without runtime dependencies or an
+isolated network build:
 
 ```text
-uriel init
-uriel status
-uriel verify
+python -m pip install --no-deps --no-build-isolation .
+uriel start --root ../my-study --kind new_idea --title "My study" --question "What would change my conclusion?"
+uriel status --root ../my-study
+uriel verify --root ../my-study
 ```
+
+Distribution package: `uriel-research`
+
+Python import and CLI command: `uriel`
+
+For the no-install single-file route, see
+[`docs/GETTING_STARTED_FREE.md`](docs/GETTING_STARTED_FREE.md).
 
 ---
 
@@ -190,14 +199,13 @@ Exposes rival explanations, framing biases, omitted counter-evidence, and applic
 <!-- URIEL:SECTION:blessing:START -->
 ## The Blessing of Uriel
 
-The Blessing of Uriel (*The Blessing of Uriel*) is a signed, content-addressed audit certificate (`.ublessing`).
+The Blessing of Uriel is an experimental, content-addressed attestation package.
+It binds an exact project generation to Uriel's recorded gate decisions,
+receipts, limitations, and independent verifier recomputation.
 
-```text
-refuted
-impossible
-```
-
-It indicates that a research packet has passed all three gates under strict deterministic rules. A Blessing certifies that evidence was verified; it does not grant divine authority or replace peer review.
+A Blessing means those recorded predicates passed for those exact bound
+artifacts. It is not independent scientific validation, a cryptographic author
+signature, peer review, or proof that the underlying measurements are true.
 
 ---
 
@@ -248,7 +256,17 @@ immutable generations
 <!-- URIEL:SECTION:trials:START -->
 ## The Forge Trials
 
-The Forge Trials are reproducible benchmark demonstrations of Uriel's evidence checking, Forge Method milestone closure, and repair capabilities.
+The bundled synthetic Forge Trial is a reproducible fixture with 24 sealed
+answer-key issues and a 100-point adjudication rubric. Its release check
+recomputes the clean summary and validates fixture integrity; it does not claim
+that Uriel detected an issue unless a blind report is supplied and adjudicated.
+
+```text
+python scripts/check_forge_trial.py
+```
+
+The public Forge Method describes the workflow. A general automatic
+milestone-closure engine remains planned.
 
 See [`docs/FORGE_TRIALS.md`](docs/FORGE_TRIALS.md) and [`benchmarks/forge_trials/synthetic-001/`](benchmarks/forge_trials/synthetic-001/).
 
@@ -274,7 +292,7 @@ The Forge of Uriel is built to enforce intellectual honesty and evidence lineage
 
 - Uriel cannot invent missing data or supply lab measurements.
 - AI lenses are advisory and carry zero authority over deterministic gate decisions.
-- A passed Gate or issued Blessing verifies evidence tracing and claim bounds—it is not a guarantee of journal acceptance or peer consensus.
+- A Gate or experimental Blessing reports that Uriel's recorded predicates passed for exact bound artifacts. It does not establish measurement validity, truth, journal acceptance, or peer consensus.
 
 ---
 

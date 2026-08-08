@@ -62,6 +62,19 @@ class FakeProcess:
 
 
 class ReleaseCheckInterruptionTests(unittest.TestCase):
+    def test_release_gates_cover_public_truth_surfaces(self) -> None:
+        module = load_release_check()
+        required = {
+            "scripts/check_community_health.py",
+            "scripts/check_public_identity.py",
+            "scripts/check_readme.py",
+            "scripts/check_i18n.py",
+            "scripts/check_localization_integrity.py",
+            "scripts/check_capability_status.py",
+            "scripts/check_forge_trial.py",
+        }
+        self.assertEqual(set(module.PRE_BUILD_CHECKS), required)
+
     def test_signal_handler_raises_recoverable_exception(self) -> None:
         module = load_release_check()
         with self.assertRaises(module.ReleaseInterrupted) as caught:

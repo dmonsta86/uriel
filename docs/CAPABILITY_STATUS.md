@@ -1,14 +1,24 @@
-# Uriel Capability Status & Inventory
+# The Forge of Uriel Capability Status
 
-| Capability | Status | Verified entry point | Platforms | Notes |
-|---|---|---|---|---|
-| Deterministic project core & packaging | `SHIPPED` | `uriel init / uriel verify` | Windows, macOS, Linux | Offline-first, content-addressed project management and receipts. |
-| Data Readiness & Gate 0 | `BETA` | `uriel readiness / python -m uriel.data_readiness` | Windows, macOS, Linux | Strict raw data hash binding, readiness check, order invariance. |
-| Three Integrity Gates (Gates 1, 2, 3) | `BETA` | `uriel audit / python -m uriel.gate_contract` | Windows, macOS, Linux | Gate 1 (Frame), Gate 2 (Evidence & Calculation), Gate 3 (Adversarial Challenge). |
-| Strict Blessing Integration & Independent Verifier | `EXPERIMENTAL` | `uriel blessing / python -m uriel.strict_blessing` | Windows, macOS, Linux | Requires Gate 0 PASS, 3 Gate PASS, positive evaluators, independent verifier PASS. |
-| Research Lifecycle, Workbench & Free-Model Burst Surfaces | `BETA` | `uriel workbench / uriel burst` | Windows, macOS, Linux | Read-only bounded AI surfaces, Gap Register, Repair Packets. |
-| Assurance Depth, Evidence Microscope & Decision Card | `EXPERIMENTAL` | `python -m uriel.assurance_case` | Windows, macOS, Linux | 4-Layer Assurance Chain, Evidence Strength Vector, Decision Card & Proof Bundle. |
-| Evidence Ingress & Data Desk | `PLANNED` | `n/a (planned capability)` | Windows (Planned), macOS (Planned), Linux (Planned) | Planned safe ingestion and data desk reconciliation. |
-| The Forge of Uriel Method Engine | `PLANNED` | `n/a (planned milestone closure engine)` | Windows (Planned), macOS (Planned), Linux (Planned) | The Forge of Uriel is public display branding; operational Forge closure engine is planned. |
-| Generic Local-Model Adapters | `PLANNED` | `n/a (planned local inference adapter)` | Windows (Planned), macOS (Planned), Linux (Planned) | Planned provider-neutral local inference wrapper. |
-| Desktop Native GUI & Installer | `PLANNED` | `n/a (planned native application)` | Windows (Planned), macOS (Planned), Linux (Planned) | Standalone native GUI application; currently CLI/Python-first. |
+Catalog fingerprint: `27fa9cd5b73c04e70af75752dc8376006a63037e2f935380aaa153ade6ae4b5b`
+
+Status meanings:
+
+- `SHIPPED`: supported core behavior with a public CLI contract.
+- `BETA`: usable and tested, with interfaces or policy still allowed to evolve.
+- `EXPERIMENTAL`: available for careful evaluation; not a claim of scientific authority.
+- `PLANNED`: named boundary only; no implementation is claimed.
+
+| Capability | Status | Verified entry point | Platforms | Evidence | Notes |
+|---|---|---|---|---|---|
+| Deterministic project core and packaging | `SHIPPED` | `uriel start / uriel verify / uriel doctor` | Windows, macOS, Linux | `src/uriel/core.py`, `src/uriel/cli.py`, `tests/test_core.py`, `tests/test_packaging.py` | Offline-first project confinement, content-addressed records, receipts, and zero runtime dependencies. |
+| Data Readiness and Gate 0 | `BETA` | `uriel readiness` | Windows, macOS, Linux | `src/uriel/data_readiness.py`, `tests/test_data_readiness.py` | Dataset identity, sorting, normalization, reconciliation, staleness, and order-invariance checks. |
+| Three Integrity Gates | `BETA` | `uriel audit` | Windows, macOS, Linux | `src/uriel/gate_contract.py`, `src/uriel/audit.py`, `tests/test_gate_contract.py`, `tests/test_audit.py` | Scope and claim language, direct evidence, and adversarial robustness with fail-closed repair guidance. |
+| Strict Blessing and independent verifier | `EXPERIMENTAL` | `uriel blessing / uriel verify-blessing` | Windows, macOS, Linux | `src/uriel/strict_blessing.py`, `src/uriel/independent_verify.py`, `tests/test_strict_blessing.py`, `tests/test_blessing.py` | Content-addressed attestation of recorded gate decisions and exact bound artifacts; not independent scientific validation. |
+| Research lifecycle, workbench, repair, and submission | `BETA` | `uriel intake / uriel workbench / uriel burst / uriel submit` | Windows, macOS, Linux | `src/uriel/workbench.py`, `src/uriel/surfaces.py`, `src/uriel/gap_register.py`, `src/uriel/repair_packet.py`, `tests/test_workbench.py`, `tests/test_lifecycle_packet.py`, `tests/test_lifecycle_submission.py` | Question intake, bounded review packets, gap records, repair packets, decisions, and submission support. |
+| Assurance depth, evidence microscope, and decision card | `EXPERIMENTAL` | `Python API (uriel.assurance_case, uriel.decision_card)` | Windows, macOS, Linux | `src/uriel/assurance_case.py`, `src/uriel/decision_card.py`, `tests/test_assurance_depth.py` | Exploratory assurance chains, evidence-strength records, and decision artifacts; no dedicated CLI contract yet. |
+| Synthetic Forge Trial fixture and adjudicated scorer | `BETA` | `python scripts/check_forge_trial.py` | Windows, macOS, Linux | `src/uriel/forge_trials.py`, `tests/test_forge_trials.py` | Validates the sealed synthetic fixture and scores supplied adjudicated findings; it does not claim a detector was run. |
+| Evidence ingress and Data Desk | `PLANNED` | `n/a (planned capability)` | Windows (planned), macOS (planned), Linux (planned) | — | Planned safe ingestion and table reconciliation; no shipped ingress or Data Desk module. |
+| Operational Forge Method closure engine | `PLANNED` | `n/a (planned capability)` | Windows (planned), macOS (planned), Linux (planned) | — | The Forge of Uriel is the public identity; a general automatic milestone-closure engine is not implemented. |
+| Built-in local-model adapter | `PLANNED` | `n/a (planned capability)` | Windows (planned), macOS (planned), Linux (planned) | — | External and local models can consume bounded prompts today; Uriel does not ship an inference provider. |
+| Desktop GUI and native installer | `PLANNED` | `n/a (planned capability)` | Windows (planned), macOS (planned), Linux (planned) | — | The supported product is currently CLI/Python-first. |

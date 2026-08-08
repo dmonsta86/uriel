@@ -2,8 +2,8 @@
 
 <p align="center">
   <img
-    src="docs/assets/the-forge-of-uriel/hero.png"
-    alt="The Forge of Uriel"
+    src="docs/assets/i18n/ar/uriel-forge-hero.png"
+    alt="The Forge of Uriel: باحث حدّاد يصقل الأدلة"
     width="100%"
   >
 </p>
@@ -34,7 +34,7 @@
 
 # The Forge of Uriel
 
-> **Notice**: هذه الوثيقة عبارة عن ترجمة تمت مراجعتها بواسطة الذكاء الاصطناعي (AI_SECOND_PASS_REVIEWED). ملاحظة بصرية: الصورة أعلاه هي النسخة الإنجليزية الأصلية (ENGLISH_FALLBACK). نرحب بتصحيحات المتحدثين الأصليين.
+> **تنبيه**: خضعت هذه الوثيقة ونصوص الصورة لمراجعة ثانية بمساعدة الذكاء الاصطناعي (AI_SECOND_PASS_REVIEWED)، والرسم إصدار موطّن (LOCALIZED). نرحب بتصحيحات الناطقين باللغة.
 
 <!-- URIEL:SECTION:mission:START -->
 ### تطوير وتحصين الأبحاث مفتوحة المصدر والمحلية أولاً
@@ -131,13 +131,20 @@ What would change the result?
 <!-- URIEL:SECTION:quick-start:START -->
 ## البدء السريع
 
-قم بتهيئة مساحة عمل الأدلة في جذر مشروعك:
+ثبّت من نسخة المستودع من دون تبعيات تشغيل أو بناء معزول يحتاج إلى الشبكة:
 
 ```text
-uriel init
-uriel status
-uriel verify
+python -m pip install --no-deps --no-build-isolation .
+uriel start --root ../my-study --kind new_idea --title "My study" --question "What would change my conclusion?"
+uriel status --root ../my-study
+uriel verify --root ../my-study
 ```
+
+اسم حزمة التوزيع: `uriel-research`. واسم الاستيراد في Python وأمر CLI:
+`uriel`.
+
+لمسار الملف الواحد بلا تثبيت، راجع
+[`docs/GETTING_STARTED_FREE.md`](docs/GETTING_STARTED_FREE.md).
 
 ---
 
@@ -174,14 +181,11 @@ uriel readiness
 <!-- URIEL:SECTION:blessing:START -->
 ## بركة أوريل (The Blessing of Uriel)
 
-بركة أوريل (*The Blessing of Uriel*) هي شهادة تدقيق موقعة ومربوطة بالتجزئة المشفرة (`.ublessing`).
+بركة أوريل حزمة إثبات تجريبية موجّهة بالمحتوى. تربط نسخة محددة تمامًا من
+المشروع بقرارات البوابات المسجلة والإيصالات والقيود وإعادة حساب المتحقق المستقل.
 
-وتشير إلى أن حزمة البحث قد اجتازت البوابات الثلاث بنجاح بموجب قواعد حتمية صارمة. تشهد البركة على التحقق من الأدلة؛ ولا تمنح سلطة مطلقة ولا تستبدل مراجعة الأقران.
-
-```text
-refuted
-impossible
-```
+تعني أن الشروط المسجلة نجحت لتلك الملفات المرتبطة تحديدًا. وليست تحققًا علميًا
+مستقلًا، أو توقيعًا تشفيريًا للمؤلف، أو مراجعة أقران، أو دليلًا على صحة القياسات.
 
 ---
 
@@ -228,7 +232,16 @@ immutable generations
 <!-- URIEL:SECTION:trials:START -->
 ## تجارب المسبك (The Forge Trials)
 
-تجارب المسبك هي عروض توضيحية مرجعية قابلة للتكرار لنتائج Uriel.
+التجربة الاصطناعية المرفقة حزمة قابلة للتكرار تضم 24 مشكلة مختومة في مفتاح
+الإجابة ومقياس تحكيم من 100 نقطة. يعيد فحص الإصدار حساب الملخص النظيف ويتحقق
+من سلامة الحزمة؛ ولا يدّعي أن Uriel اكتشف مشكلة ما لم يُقدَّم تقرير أعمى ويُحكَّم.
+
+```text
+python scripts/check_forge_trial.py
+```
+
+تصف Forge Method سير العمل العام؛ أما محرك الإغلاق التلقائي العام للمراحل
+فلا يزال مخططًا له.
 
 راجع [`docs/FORGE_TRIALS.md`](docs/FORGE_TRIALS.md) و [`benchmarks/forge_trials/synthetic-001/`](benchmarks/forge_trials/synthetic-001/).
 
@@ -254,7 +267,7 @@ immutable generations
 
 - لا يمكن لـ Uriel اختراع بيانات مفقودة أو تقديم قياسات معملية.
 - عدسات الذكاء الاصطناعي استشارية ولا تملك سلطة على قرارات البوابات الحتمية.
-- اجتياز البوابة أو إصدار البركة يشهد على تتبع الأدلة فقط؛ وليس ضمانًا للقبول في المجلات.
+- لا تفيد البوابة أو البركة التجريبية إلا بأن شروط Uriel المسجلة نجحت للملفات المرتبطة تحديدًا؛ ولا تثبت صلاحية القياس أو الحقيقة أو القبول في مجلة أو إجماع الأقران.
 
 ---
 

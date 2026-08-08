@@ -9,12 +9,14 @@ This is the complete trusted path, not a reduced demo.
 ```bash
 git clone <repository-url>
 cd uriel
-python -m pip install -e .
+python -m pip install --no-deps --no-build-isolation .
 
-uriel intake "Could the apparent effect come from the way the control was selected?" --root ../my-study
-cd ../my-study
-uriel audit --profile exploratory
+uriel start --root ../my-study --kind new_idea --title "Control-selection study" --question "Could the apparent effect come from the way the control was selected?"
+uriel audit --root ../my-study --profile exploratory
 ```
+
+The distribution package is `uriel-research`; the Python import and CLI command
+are both `uriel`.
 
 Add direct source artifacts under `sources/`, generated results under `artifacts/`, and edit `uriel.project.json`. Repeat the audit until each claim is explicit and supported.
 
@@ -29,43 +31,21 @@ python scripts/build_portable.py
 Copy `dist/uriel.pyz` to any machine with Python 3.9+:
 
 ```bash
-python uriel.pyz intake "My question" --root my-project
+python uriel.pyz start --root my-project --kind new_idea --title "My study" --question "What would change my conclusion?"
 ```
 
 ## Route C — provider-neutral external agent with a free or local model
 
-Optionally use a provider-neutral open-source agent or CLI tool installed via your preferred package manager (e.g., `npm`, `pip`, `brew`, or native installer).
-
-Then:
+Generate a bounded prompt, inspect it locally, and then paste it into the
+compatible tool of your choice:
 
 ```bash
-# Example generic model command
-uriel prompt my-study clarity --provider generic --show
+uriel prompt clarity --root ../my-study --provider generic --show
+uriel prompt primary-evidence --root ../my-study --provider generic --show
 ```
 
-```bash
-cd /path/to/your/uriel-project
-compatible external agent
-# In the TUI: /connect
-# Then: /models
-```
-
-As of 2026-08-06, compatible external agent lists **web AI session V4 Flash Free** and several other models as limited-time free. The free list can disappear or change, and compatible external agent warns that data collected during several free periods may be used to improve the model. **web AI session V4 Pro is listed in the paid low-cost compatible external agent Go catalog, not the current free list.**
-
-Use the free pool in short, bounded bursts:
-
-```bash
-uriel prompt clarity --root . --provider compatible external agent
-uriel prompt primary-evidence --root . --provider compatible external agent
-Start with one claim, one contradiction, or one source. Save scarce context for synthesis only after the evidence table is clean.
-
-The direct adapter is optional:
-
-```bash
-uriel prompt repair-review --root . --provider generic --show
-```
-
-It builds a hash-bound review prompt and imports only the required review JSON. The model still cannot pass a Gate.
+Start with one claim, contradiction, or source. Uriel produces a hash-bound
+review prompt; model output remains advisory and cannot pass a Gate.
 
 ## Route D — provider-neutral agent with an offline local model
 
@@ -73,12 +53,16 @@ Local OpenAI-compatible inference tools (such as Ollama, LM Studio, llama.cpp, a
 
 Keep the server bound to loopback (`127.0.0.1`), disable sharing, inspect logs/plugins, and confirm the application does not upload prompts or telemetry.
 
+```bash
+uriel prompt adversarial-review --root ../my-study --provider local --show
+```
+
 ## Route E — web chat with zero initial investment
 
 Generate a prompt, inspect it, and paste it manually into an available web model:
 
 ```bash
-uriel prompt repair-review --root . --provider generic --show
+uriel prompt repair-review --root ../my-study --provider generic-web --acknowledge-external --show
 ```
 
 For small usage pools:

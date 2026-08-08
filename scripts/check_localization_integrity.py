@@ -6,6 +6,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import struct
 import sys
 import unicodedata
 from pathlib import Path
@@ -25,8 +26,20 @@ FORBIDDEN_BIDI = {
     "\u2066", "\u2067", "\u2068", "\u2069",
 }
 
+COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
+
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def png_dimensions(path: Path) -> tuple[int, int]:
+    header = path.read_bytes()[:24]
+    if len(header) != 24 or header[:8] != b"\x89PNG\r\n\x1a\n":
+        raise ValueError("not a PNG")
+    return struct.unpack(">II", header[16:24])
+
+def hero_source(text: str) -> str | None:
+    match = re.search(r'<img\s+[^>]*src="([^"]+)"', text, re.IGNORECASE)
+    return match.group(1) if match else None
 
 def load_strict(path: Path):
     def pairs(items):
@@ -67,8 +80,14 @@ def main() -> int:
     english_lines = set(non_code_lines(english_text))
     english_image = ROOT / "docs/assets/the-forge-of-uriel/hero.png"
     english_image_hash = sha256(english_image)
+    localized_hashes: dict[str, str] = {}
 
-    for item in locale_map["locales"]:
+    locales = locale_map.get("locales", [])
+    locale_ids = [item.get("locale") for item in locales]
+    if len(locale_ids) != len(set(locale_ids)):
+        errors.append("locale map contains duplicate locale identifiers")
+
+    for item in locales:
         locale = item["locale"]
         readme_path = ROOT / item["readme"]
         manifest_path = MANIFESTS / f"{locale}.json"
@@ -83,6 +102,21 @@ def main() -> int:
         text = readme_path.read_text(encoding="utf-8")
         manifest = load_strict(manifest_path)
 
+        expected_manifest_fields = {
+            "schema": "uriel.translation_manifest.v1",
+            "locale": locale,
+            "readme_path": item["readme"],
+            "image_status": item["image_status"],
+            "image_path": item["image_path"],
+        }
+        for field, expected in expected_manifest_fields.items():
+            if manifest.get(field) != expected:
+                errors.append(
+                    f"{locale}: manifest {field}={manifest.get(field)!r}, expected {expected!r}"
+                )
+        if not COMMIT_RE.fullmatch(str(manifest.get("source_commit", ""))):
+            errors.append(f"{locale}: manifest source_commit is not a full Git object ID")
+
         if unicodedata.normalize("NFC", text) != text:
             errors.append(f"{locale}: README is not NFC normalized")
         if any(ch in text for ch in FORBIDDEN_BIDI):
@@ -96,12 +130,26 @@ def main() -> int:
             errors.append(f"{locale}: stale English source hash")
         if manifest.get("readme_sha256") != sha256(readme_path):
             errors.append(f"{locale}: README hash mismatch")
+        bound_hero = hero_source(text)
+        if bound_hero != item["image_path"]:
+            errors.append(
+                f"{locale}: README hero source {bound_hero!r} does not match locale map "
+                f"{item['image_path']!r}"
+            )
 
         image_path = ROOT / item["image_path"]
         if not image_path.is_file():
             errors.append(f"{locale}: missing image {item['image_path']}")
             continue
         image_hash = sha256(image_path)
+        if manifest.get("image_sha256") != image_hash:
+            errors.append(f"{locale}: image hash mismatch")
+        try:
+            width, height = png_dimensions(image_path)
+            if abs((width / height) - (16 / 9)) > 0.01:
+                errors.append(f"{locale}: hero is not 16:9 ({width}x{height})")
+        except (OSError, ValueError) as exc:
+            errors.append(f"{locale}: invalid PNG hero: {exc}")
 
         if item["image_status"] == "ENGLISH_FALLBACK":
             if item["image_path"] != "docs/assets/the-forge-of-uriel/hero.png":
@@ -115,6 +163,59 @@ def main() -> int:
                 errors.append(f"{locale}: localized asset is only a copied English image")
             if f"docs/assets/i18n/{locale}/" not in item["image_path"]:
                 errors.append(f"{locale}: localized image path is not locale-specific")
+            if "LOCALIZED" not in text:
+                errors.append(f"{locale}: README does not disclose localized artwork")
+            if "ENGLISH_FALLBACK" in text:
+                errors.append(f"{locale}: README still claims an English visual fallback")
+            duplicate = localized_hashes.get(image_hash)
+            if duplicate:
+                errors.append(f"{locale}: localized hero duplicates {duplicate}")
+            localized_hashes[image_hash] = locale
+
+            provenance = {
+                "image_art_path": f"docs/assets/i18n/{locale}/uriel-forge-hero-art.png",
+                "image_copy_path": f"globalization/image_copy/{locale}.json",
+                "image_renderer_path": "scripts/render_localized_heroes.py",
+            }
+            for field, expected in provenance.items():
+                if manifest.get(field) != expected:
+                    errors.append(
+                        f"{locale}: manifest {field}={manifest.get(field)!r}, expected {expected!r}"
+                    )
+
+            art_path = ROOT / provenance["image_art_path"]
+            copy_path = ROOT / provenance["image_copy_path"]
+            renderer_path = ROOT / provenance["image_renderer_path"]
+            if not art_path.is_file():
+                errors.append(f"{locale}: missing approved art layer")
+            else:
+                art_hash = sha256(art_path)
+                if manifest.get("image_art_sha256") != art_hash:
+                    errors.append(f"{locale}: art-layer hash mismatch")
+                if art_hash == image_hash:
+                    errors.append(f"{locale}: final hero has no deterministic text overlay")
+                try:
+                    if png_dimensions(art_path) != png_dimensions(image_path):
+                        errors.append(f"{locale}: art and final hero dimensions differ")
+                except (OSError, ValueError) as exc:
+                    errors.append(f"{locale}: invalid art-layer PNG: {exc}")
+            if not copy_path.is_file():
+                errors.append(f"{locale}: missing deterministic image copy")
+            else:
+                copy_hash = sha256(copy_path)
+                if manifest.get("image_copy_sha256") != copy_hash:
+                    errors.append(f"{locale}: image-copy hash mismatch")
+                image_copy = load_strict(copy_path)
+                if image_copy.get("locale") != locale:
+                    errors.append(f"{locale}: image copy declares the wrong locale")
+                if image_copy.get("translation_status") != manifest.get("translation_status"):
+                    errors.append(f"{locale}: README and image-copy review statuses differ")
+            if not renderer_path.is_file():
+                errors.append(f"{locale}: missing deterministic image renderer")
+            elif manifest.get("image_renderer_sha256") != sha256(renderer_path):
+                errors.append(f"{locale}: image-renderer hash mismatch")
+        elif item["image_status"] not in {"ENGLISH_FALLBACK", "LOCALIZED"}:
+            errors.append(f"{locale}: unknown image status {item['image_status']!r}")
 
         if locale != "en":
             localized_lines = non_code_lines(text)

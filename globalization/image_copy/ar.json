@@ -5,7 +5,7 @@
     "الصرامة",
     "الشفافية"
   ],
-  "challenge": "هل يصمد بحثك أمام محكّ الصياغة؟",
+  "challenge": "هل يصمد بحثك أمام اختبار المِسبك؟",
   "data_readiness": "جاهزية البيانات",
   "evidence": "تتبّع الأدلة",
   "footer": [
@@ -28,5 +28,5 @@
   "submission": "دعم التقديم",
   "subtitle": "تطوير البحث وضمانه القائم على الأدلة",
   "supporting": "إنصافٌ للفكرة، واختبارٌ صارمٌ للأدلة.",
-  "translation_status": "AI_ASSISTED_DRAFT_REQUIRES_REVIEW"
+  "translation_status": "AI_SECOND_PASS_REVIEWED"
 }

@@ -1,80 +1,121 @@
 {
-  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.translation_manifest.v1.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.translation_manifest.v1.schema.json",
+  "title": "Uriel Core-8 translation and image manifest",
+  "type": "object",
   "additionalProperties": false,
+  "required": [
+    "source_commit",
+    "source_readme_sha256",
+    "locale",
+    "translation_status",
+    "reviewers",
+    "readme_path",
+    "readme_sha256",
+    "image_status",
+    "image_path",
+    "image_sha256",
+    "verified_at_utc",
+    "schema"
+  ],
   "properties": {
-    "files": {
-      "items": {
-        "additionalProperties": false,
-        "properties": {
-          "path": {
-            "type": "string"
-          },
-          "sha256": {
-            "pattern": "^[0-9a-f]{64}$",
-            "type": "string"
-          }
-        },
-        "required": [
-          "path",
-          "sha256"
-        ],
-        "type": "object"
-      },
-      "type": "array"
-    },
-    "generated_at_utc": {
-      "type": "string"
-    },
-    "locale": {
-      "type": "string"
-    },
-    "localized_image_status": {
-      "enum": [
-        "ENGLISH_FALLBACK",
-        "PENDING",
-        "REVIEWED",
-        "VERIFIED"
-      ]
-    },
-    "reviewers": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "schema": {
-      "const": "uriel.translation_manifest.v1"
-    },
     "source_commit": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$",
+      "description": "Committed baseline used when the review began; file hashes are authoritative."
     },
     "source_readme_sha256": {
-      "pattern": "^[0-9a-f]{64}$",
-      "type": "string"
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
     },
-    "status": {
+    "locale": {
+      "type": "string",
+      "minLength": 2
+    },
+    "translation_status": {
       "enum": [
         "AI_ASSISTED_DRAFT",
+        "AI_ASSISTED_DRAFT_REQUIRES_REVIEW",
         "AI_SECOND_PASS_REVIEWED",
         "NATIVE_REVIEWED",
         "VERIFIED",
         "STALE"
       ]
     },
-    "translation_method": {
-      "type": "string"
+    "reviewers": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "readme_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "readme_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "image_status": {
+      "enum": ["ENGLISH_FALLBACK", "LOCALIZED"]
+    },
+    "image_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "image_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "image_art_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "image_art_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "image_copy_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "image_copy_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "image_renderer_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "image_renderer_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "verified_at_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "schema": {
+      "const": "uriel.translation_manifest.v1"
     }
   },
-  "required": [
-    "schema",
-    "locale",
-    "source_commit",
-    "source_readme_sha256",
-    "status",
-    "files",
-    "generated_at_utc"
-  ],
-  "title": "Uriel Translation Manifest",
-  "type": "object"
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "locale": {"not": {"const": "en"}},
+          "image_status": {"const": "LOCALIZED"}
+        },
+        "required": ["locale", "image_status"]
+      },
+      "then": {
+        "required": [
+          "image_art_path",
+          "image_art_sha256",
+          "image_copy_path",
+          "image_copy_sha256",
+          "image_renderer_path",
+          "image_renderer_sha256"
+        ]
+      }
+    }
+  ]
 }

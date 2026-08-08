@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.forge_trial_detector_score.v1.schema.json",
+  "title": "Uriel adjudicated Forge Trial detector score",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "case_id",
+    "status",
+    "adjudication",
+    "precision",
+    "recall",
+    "f1",
+    "fixture_digest"
+  ],
+  "properties": {
+    "schema": {
+      "const": "uriel.forge_trial_detector_score.v1"
+    },
+    "case_id": {"type": "string"},
+    "status": {"enum": ["NOT_RUN", "SCORED"]},
+    "adjudication": {"type": "string"},
+    "expected_issue_count": {"type": "integer", "minimum": 0},
+    "observed_issue_count": {"type": "integer", "minimum": 0},
+    "true_positive_count": {"type": "integer", "minimum": 0},
+    "false_positive_count": {"type": "integer", "minimum": 0},
+    "false_negative_count": {"type": "integer", "minimum": 0},
+    "precision": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "recall": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "f1": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "true_positive_ids": {"type": "array", "items": {"type": "string"}},
+    "false_positive_ids": {"type": "array", "items": {"type": "string"}},
+    "false_negative_ids": {"type": "array", "items": {"type": "string"}},
+    "fixture_digest": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

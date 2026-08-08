@@ -2,8 +2,8 @@
 
 ## Purpose
 
-The Forge Method proves whether a substantial, named body of work is actually
-ready.
+The Forge Method defines an evidence-backed decision procedure for evaluating
+whether a substantial, named body of work is ready.
 
 It is intended for:
 
@@ -111,9 +111,13 @@ SHA256SUMS.txt
 
 ## Relationship to the Blessing
 
-Forge proves milestone closure.
+A completed, independently checked Forge bundle records a milestone-closure
+decision for an exact bound version. The current Uriel package documents this
+method and supplies several underlying records, but it does not yet implement a
+general automatic Forge closure engine.
 
-The Blessing proves the exact research artifact passed Uriel's strict research
-integrity gates.
+The experimental Blessing records that an exact research artifact passed
+Uriel's configured research-integrity predicates. It is not independent
+scientific validation.
 
 A Forge bundle may support a Blessing, but cannot grant one.

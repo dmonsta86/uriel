@@ -1,7 +1,7 @@
 <p align="center">
   <img
-    src="docs/assets/the-forge-of-uriel/hero.png"
-    alt="The Forge of Uriel"
+    src="docs/assets/i18n/fr/uriel-forge-hero.png"
+    alt="The Forge of Uriel : un chercheur-forgeron met les preuves à l’épreuve"
     width="100%"
   >
 </p>
@@ -32,7 +32,7 @@
 
 # The Forge of Uriel
 
-> **Notice**: Ce document est une traduction révisée par IA (AI_SECOND_PASS_REVIEWED). Note visuelle : L'image ci-dessus est la version originale anglaise (ENGLISH_FALLBACK). Les corrections de locuteurs natifs sont les bienvenues.
+> **Avis** : Cette documentation et le texte de l’image sont des traductions révisées par IA (AI_SECOND_PASS_REVIEWED) ; l’illustration est une variante localisée (LOCALIZED). Les corrections de locuteurs natifs sont les bienvenues.
 
 <!-- URIEL:SECTION:mission:START -->
 ### Développement et consolidation de recherche open-source et local
@@ -129,13 +129,21 @@ Uriel rend ces points durables. Il enregistre ce qui a été testé, ce qui a é
 <!-- URIEL:SECTION:quick-start:START -->
 ## Démarrage rapide
 
-Initialisez un espace de travail de preuves à la racine de votre projet :
+Depuis une copie du dépôt, installez sans dépendances d'exécution ni
+construction isolée nécessitant le réseau :
 
 ```text
-uriel init
-uriel status
-uriel verify
+python -m pip install --no-deps --no-build-isolation .
+uriel start --root ../my-study --kind new_idea --title "My study" --question "What would change my conclusion?"
+uriel status --root ../my-study
+uriel verify --root ../my-study
 ```
+
+Paquet de distribution : `uriel-research`. Import Python et commande CLI :
+`uriel`.
+
+Pour la version autonome sans installation, consultez
+[`docs/GETTING_STARTED_FREE.md`](docs/GETTING_STARTED_FREE.md).
 
 ---
 
@@ -172,14 +180,14 @@ Expose les explications concurrentes, les biais de cadrage, les contre-preuves o
 <!-- URIEL:SECTION:blessing:START -->
 ## La Bénédiction d'Uriel
 
-La Bénédiction d'Uriel (*The Blessing of Uriel*) est un certificat d'audit signé et lié par adressage de contenu (`.ublessing`).
+La Bénédiction d'Uriel est un paquet expérimental d'attestation adressé par
+contenu. Elle lie une génération exacte du projet aux décisions enregistrées
+des portes, aux reçus, aux limites et au recalcul du vérificateur.
 
-Il indique qu'un dossier de recherche a franchi avec succès les trois portes selon des règles déterministes strictes. Une Bénédiction certifie que les preuves ont été vérifiées ; elle n'accorde pas d'autorité divine et ne remplace pas l'évaluation par les pairs.
-
-```text
-refuted
-impossible
-```
+Elle signifie que ces prédicats enregistrés ont réussi pour ces artefacts
+précis. Ce n'est ni une validation scientifique indépendante, ni une signature
+cryptographique de l'auteur, ni une évaluation par les pairs, ni une preuve de
+la véracité des mesures.
 
 ---
 
@@ -226,7 +234,17 @@ immutable generations
 <!-- URIEL:SECTION:trials:START -->
 ## Les Épreuves de la Forge
 
-Les Épreuves de la Forge sont des démonstrations de référence reproductibles des capacités de vérification de preuves et de réparation d'Uriel.
+L'épreuve synthétique fournie est un jeu reproductible comportant 24 problèmes
+scellés dans le corrigé et une grille de 100 points. Le contrôle de publication
+recalcule le résumé nettoyé et valide le jeu ; il n'affirme pas qu'Uriel a
+détecté un problème sans rapport aveugle ensuite évalué.
+
+```text
+python scripts/check_forge_trial.py
+```
+
+La méthode Forge décrit le flux public ; le moteur général de clôture
+automatique des jalons reste planifié.
 
 Consultez [`docs/FORGE_TRIALS.md`](docs/FORGE_TRIALS.md) et [`benchmarks/forge_trials/synthetic-001/`](benchmarks/forge_trials/synthetic-001/).
 
@@ -252,7 +270,7 @@ The Forge of Uriel est conçu pour faire respecter l'honnêteté intellectuelle 
 
 - Uriel ne peut pas inventer de données manquantes ni fournir de mesures de laboratoire.
 - Les lentilles IA sont consultatives et n'ont aucune autorité sur les décisions déterministes des portes.
-- Une Porte franchie ou une Bénédiction délivrée certifie le traçage des preuves ; ce n'est pas une garantie d'acceptation dans une revue ni de consensus entre pairs.
+- Une Porte ou Bénédiction expérimentale indique que les prédicats enregistrés par Uriel ont réussi pour des artefacts précis. Elle n'établit ni validité des mesures, ni vérité, ni acceptation éditoriale, ni consensus.
 
 ---
 
