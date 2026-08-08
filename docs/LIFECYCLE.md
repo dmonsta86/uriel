@@ -1,8 +1,10 @@
 # Uriel research lifecycle
 
-This document specifies the planned research-lifecycle layer on top of the
-existing deterministic core. It describes design intent for the next release;
-the checklist at the bottom records what is implemented as the work lands.
+This document records the research-lifecycle layer on top of the existing
+deterministic core. The intake, bounded AI-surface, workbench, checkpoint,
+decision, repair, and submission portions are current beta surfaces. Data Desk,
+Paper Builder, and advanced export work remain planned; the checklist at the
+bottom is the authoritative boundary for this document.
 
 The core promise is unchanged: Uriel certifies only that one exact recorded
 project state passed a named, inspectable policy. The lifecycle layer helps a
@@ -29,14 +31,14 @@ opportunity if supported, and the evidence needed.
 
 ## Entry points
 
-### Uriel Lens (advisory, zero-install)
+### Uriel Lens (current advisory, zero-install surface)
 
 A user attaches or pastes a project and uses one prompt. The response is
 advisory and read-only. Lens can map visible claims, gaps, contradictions, and
 next steps. It cannot issue a Blessing, inspect files it was not given, bind a
 review to artifact hashes, or preserve an audit ledger.
 
-### Uriel Seed
+### Uriel Seed (current intake surface)
 
 Turns a rough question into a viable research project: restate the strongest
 plausible idea, mark assumptions and unknowns, ask the smallest necessary
@@ -46,7 +48,7 @@ treated as poor thinking.
 
 ## Full harness
 
-### Research Workbench
+### Research Workbench (current beta surface)
 
 Plans and records the project: research-plan records, claim/evidence maps,
 durable refused/deferred finding reminders, and the constructive Diamond Path:
@@ -67,20 +69,21 @@ concrete pivot: narrower claim, different outcome or comparison, observational
 study, replication, methods paper, dataset/resource paper, negative result,
 software/tool paper, or review/evidence map.
 
-### Data Desk
+### Data Desk (planned next capability)
 
-Inventories, sorts, normalizes, hashes, and indexes data with immutable
-generation-based checkpoints, a declarative ephemeral/exclusion policy with
-human reasons, absence-fact delta classification (deletion is a fact, not a
-conclusion about corruption), an exact duplicate ledger, an SQLite index, and
-an independent read-only verifier. Anomaly detection creates a review queue of
-leads, not scientific findings. Scale claims are only made with measured
-benchmark receipts.
+The target Data Desk will inventory, sort, normalize, hash, and index data with
+immutable generation-based checkpoints, a declarative ephemeral/exclusion
+policy with human reasons, absence-fact delta classification (deletion is a
+fact, not a conclusion about corruption), an exact duplicate ledger, an
+SQLite index, and an independent read-only verifier. Anomaly detection will
+create a review queue of leads, not scientific findings. Scale claims will only
+be made with measured benchmark receipts. No public Data Desk command is
+claimed by the current capability catalog.
 
-### Paper Builder
+### Paper Builder (planned)
 
-Maintains a canonical, transparent manuscript directory (sections, tables,
-figures, supplements, statements, style, manifest) instead of treating DOCX or
+The planned Paper Builder will maintain a canonical, transparent manuscript directory
+(sections, tables, figures, supplements, statements, style, manifest) instead of treating DOCX or
 PDF as the source of truth. The standard-library core always emits Markdown,
 UTF-8 text, HTML, JSON/JSONL, CSV/TSV, SQLite, checksum manifests, and ZIP
 packets. A conservative deterministic `docx-lite` writer is provided only if
@@ -89,7 +92,7 @@ plus detected optional engines, never a silent install. Every export records a
 receipt: source generation, format, adapter, command, output hash, warnings,
 and validation result.
 
-### Submission Guide
+### Submission Guide (current beta surface)
 
 Understands the full lifecycle from idea to archival record:
 
@@ -279,8 +282,8 @@ works without any AI provider.
 - [x] Phase 1 — architecture and public contract (this document)
 - [x] Phase 2 — schemas and immutable packet model
 - [x] Phase 3 — submission lifecycle core
-- [ ] Phase 4 — minimum-prompt and free-AI workflow
-- [ ] Phase 5 — workbench and publication authority
+- [x] Phase 4 — bounded minimum-prompt and free-AI workflow
+- [x] Phase 5 — workbench, decisions, and publication authority
 - [ ] Phase 6 — Data Desk
 - [ ] Phase 7 — Paper Builder and exports
-- [ ] Phase 8 — cross-platform and security hardening
+- [x] Phase 8 — release, portability, and security baseline (broader independent review remains)

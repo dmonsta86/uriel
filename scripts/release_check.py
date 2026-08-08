@@ -161,6 +161,18 @@ def _stop_process(process: subprocess.Popen[str]) -> None:
             pass
 
 
+def _temporary_output_file():
+    """Capture child output without making a platform code page fatal.
+
+    Child processes on Windows can write the active console/code-page encoding
+    directly to a redirected file descriptor. The release checker must retain
+    the command result and readable diagnostics even when one byte is not valid
+    UTF-8; a logging decode failure must never replace the actual test result.
+    """
+
+    return tempfile.TemporaryFile(mode="w+", encoding="utf-8", errors="replace")
+
+
 def run(
     command: Sequence[str],
     root: Path,
@@ -178,9 +190,7 @@ def run(
     # Child output goes to real files, not pipes, so verbose builds cannot
     # deadlock. A heartbeat is printed and checkpointed every 15 seconds so a
     # slow platform never looks like a silent stall.
-    with tempfile.TemporaryFile(mode="w+", encoding="utf-8") as stdout_file, tempfile.TemporaryFile(
-        mode="w+", encoding="utf-8"
-    ) as stderr_file:
+    with _temporary_output_file() as stdout_file, _temporary_output_file() as stderr_file:
         popen_kwargs = {
             "cwd": str(root),
             "text": True,

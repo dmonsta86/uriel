@@ -2,16 +2,18 @@
 
 A release is evidence about one exact commit. Do not tag first and hope the checks become green afterward.
 
-## 1. Work on a maintenance branch
+## 1. Verify the canonical candidate
 
 ```console
 git switch main
-git pull --ff-only
 git status
-git switch -c release/1.0.0-rc1
+git worktree list
 ```
 
-Do not continue from a dirty tree. Never use a force-push on `main` for ordinary release work.
+The canonical 215 product line is this `main` worktree. Do not create a second
+canonical copy or move the existing `v1.0.0-rc2` tag. If a remote update is
+needed, inspect the local relation and obtain operator approval before fetching
+or pulling. Do not continue from a dirty or unexpected worktree.
 
 ## 2. Run the complete local release check
 
@@ -52,16 +54,19 @@ git diff
 
 Check for local paths, private application notes, credentials, generated `.uriel` state, stale repository URLs, and claims that exceed the evidence.
 
-## 4. Push a branch and use pull-request CI
+## 4. Commit the candidate and use the approved review route
 
 ```console
 git add -A
 git diff --cached --check
-git commit -m "release: prepare Uriel 1.0.0-rc1"
-git push -u origin HEAD
+git commit -m "release: prepare exact reviewed candidate"
 ```
 
-Open a pull request and wait for every mandatory compatibility and package job. A local pass proves only the local environment. The public matrix is the compatibility record for the proposed commit.
+An operator may push the exact reviewed commit through the approved public
+review route. Open a pull request or use the repository's authorized main-line
+release route and wait for every mandatory compatibility and package job. A
+local pass proves only the local environment. The public matrix is the
+compatibility record for the proposed commit.
 
 ## 5. Merge and verify the public tree
 
@@ -69,7 +74,6 @@ After the pull request is green and merged:
 
 ```console
 git switch main
-git pull --ff-only
 git fetch origin
 git rev-parse HEAD
 git rev-parse origin/main
@@ -82,9 +86,12 @@ The two commit hashes must match and the working tree must be clean.
 ## 6. Create the release-candidate tag
 
 ```console
-git tag -a v1.0.0-rc1 -m "Uriel 1.0.0 release candidate 1"
-git push origin v1.0.0-rc1
+git tag -a vX.Y.Z-rcN -m "Uriel release candidate"
+git push origin vX.Y.Z-rcN
 ```
+
+Use the exact reviewed candidate version. Tagging and pushing are
+operator-approved external actions; never move or overwrite an existing tag.
 
 The release workflow should build and attach:
 

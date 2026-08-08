@@ -2,7 +2,12 @@
 
 All notable changes to Uriel are documented here.
 
-## 1.0.0 — 2026-08-06
+## 1.0.0-rc2 — 2026-08-06
+
+This release-candidate line contains the current offline-first research
+assurance, lifecycle, submission, verification, localization, and packaging
+baseline. Future release assets must bind to the exact reviewed commit; the
+existing `v1.0.0-rc2` tag is not moved.
 
 ### Added
 

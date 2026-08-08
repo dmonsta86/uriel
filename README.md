@@ -63,6 +63,9 @@ Report honestly.
 
 The Forge of Uriel **1.0.0-rc2** is a public release candidate of an open-source, offline-first research development and hardening toolkit.
 
+See the [public roadmap](docs/ROADMAP.md) for current capabilities and the
+next evidence-gated product lanes.
+
 ```text
 uriel --version
 # uriel 1.0.0rc2

@@ -34,4 +34,4 @@ Version 1 uses SHA-256 content addressing, not public-key author signatures. The
 
 ## Maturity
 
-This is an initial release candidate with a bounded passing fixture and cross-platform CI configuration. It needs public false-positive/false-negative datasets, discipline-specific validation, usability studies, and independent security review before anyone should mandate it for publication.
+This is a release candidate with a bounded passing fixture and cross-platform CI configuration. It needs public false-positive/false-negative datasets, discipline-specific validation, usability studies, and independent security review before anyone should mandate it for publication.

@@ -62,6 +62,14 @@ class FakeProcess:
 
 
 class ReleaseCheckInterruptionTests(unittest.TestCase):
+    def test_captured_child_output_replaces_non_utf8_bytes(self) -> None:
+        module = load_release_check()
+        with module._temporary_output_file() as captured:
+            captured.buffer.write(b"diagnostic\x96tail")
+            captured.seek(0)
+            output = captured.read()
+        self.assertEqual("diagnostic\ufffdtail", output)
+
     def test_release_gates_cover_public_truth_surfaces(self) -> None:
         module = load_release_check()
         required = {

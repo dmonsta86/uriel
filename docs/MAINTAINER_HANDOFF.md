@@ -1,12 +1,13 @@
 # Maintainer handoff and durable continuation point
 
-Checked locally on **2026-08-06**.
+Checked locally on **2026-08-08** at canonical `main` HEAD
+`14ba9606e8989a710356132fa0366c4a16bfa962`.
 
 This file is the shortest authoritative continuation point for a human or coding agent. The larger design rationale lives in `README.md`, `docs/ARCHITECTURE.md`, `docs/THREAT_MODEL.md`, `docs/LIMITATIONS.md`, and `AGENTS.md`.
 
 ## Current implementation state
 
-Uriel 1.0.0 is an initial release candidate with:
+Uriel `1.0.0rc2` is the current release-candidate code line with:
 
 - a Python 3.9+ standard-library-only runtime;
 - root confinement and link/reparse traversal refusal;
@@ -17,7 +18,13 @@ Uriel 1.0.0 is an initial release candidate with:
 - persistent repair reminders with exactly three options for blockers;
 - hash-bound optional review imports and privacy-aware prompt export;
 - content-addressed Blessing packages, printable SVG/text certificates, QR payloads, and a standalone verifier;
+- beta research lifecycle, workbench, repair, checkpoint, decision, and submission surfaces;
+- experimental assurance-depth APIs and a sealed synthetic Forge Trial validator/scorer;
 - PowerShell and POSIX launchers, compatible external agent integration, CI, release, issue, security, and contribution assets.
+
+The current `main` commit is a post-tag maintenance revision. The existing
+`v1.0.0-rc2` tag remains immutable; no release claim should combine its assets
+with later `main` changes until a new exact candidate is reviewed and tagged.
 
 ## Latest verified local checks
 
@@ -25,7 +32,7 @@ The current checkout has passed:
 
 ```text
 Python compilation: PASS
-Unit tests: 27/27 PASS
+Unit tests: 263/263 PASS
 Privacy sweep: PASS
 Portable zipapp: PASS
 Wheel build: PASS
@@ -41,16 +48,20 @@ Rough-question reminder persistence: PASS
 `pip check`: PASS
 ```
 
-Local checks do not establish the public multi-platform support matrix. GitHub CI must establish the advertised Python 3.9-3.12 matrix on Linux, Windows, and macOS.
+Local checks do not establish the public multi-platform support matrix. The
+workflow is configured for Python 3.9–3.14 on Linux, Windows, and macOS
+(including an Apple Silicon smoke job); public CI must establish which exact
+jobs passed for the candidate commit.
 
 ## Exact next actions
 
-1. Confirm every GitHub Actions job is green on Linux, Windows, and macOS for each advertised Python version.
-2. Run the privacy sweep and full release check against the exact public `main` tree.
-3. Enable private vulnerability reporting in the repository security settings.
-4. Create `v1.0.0-rc1`; the tag workflow should attach the wheel, source distribution, portable archive, checksums, and release-check transcript.
-5. Open public issues for an independent threat-model review, a research-domain pilot, and false-positive/false-negative fixtures.
-6. Keep grant, funding, and account-specific application drafts outside the public repository; publish only accurate acknowledgments or disclosures after an award.
+1. Run the privacy sweep and full release check against the exact candidate `main` commit.
+2. Observe public CI for that exact commit across the configured matrix; do not infer it from workflow YAML.
+3. Enable private vulnerability reporting in repository settings if the operator chooses to do so.
+4. Create a new exact release-candidate tag only after review; never move the existing `v1.0.0-rc2` tag.
+5. Open public issues for an independent threat-model review, a research-domain pilot, and false-positive/false-negative fixtures after operator approval.
+6. Implement the local Evidence Ingress/Data Desk lane while preserving the planned capability label until executable evidence closes it.
+7. Keep grant, funding, and account-specific application drafts outside the public repository; publish only accurate acknowledgments or disclosures after an award.
 
 ## Rules a continuation agent must not violate
 
@@ -78,6 +89,7 @@ Read, in order:
 7. docs/RELEASE_CHECKLIST.md
 
 Non-negotiable constraints:
+- The canonical product line is project 215 in the `Scientific-Institutions` repository on `main`; do not create a second canonical copy.
 - Python 3.9+ and zero runtime dependencies.
 - Offline deterministic core; optional AI remains outside the trust boundary.
 - No telemetry, silent network access, auto-sharing, or mandatory account.
@@ -88,7 +100,8 @@ Non-negotiable constraints:
 - Never invent users, stars, downloads, benchmarks, citations, grants, field validation, or venue acceptance.
 - Add a regression test for every behavior change.
 
-Before editing, run:
+Before editing, verify the repository identity and run:
+git status --short --branch
 python scripts/release_check.py --full
 
 After editing, run:
@@ -97,7 +110,7 @@ python scripts/release_check.py --full
 If a terminal or agent is interrupted after the wheel and source archive were rebuilt, resume without discarding that work; Uriel verifies that the source fingerprint is unchanged:
 python scripts/release_check.py --full --reuse-artifacts
 
-Report changed files, exact tests run, failures, unresolved risks, and the current Git status. Do not claim Windows/macOS or Python 3.9–3.12 success unless public CI proves it.
+Report changed files, exact tests run, failures, unresolved risks, and the current Git status. Do not claim Windows/macOS or Python 3.9–3.14 success unless public CI proves it. Do not push, tag, release, or delete/rewrite Git history without operator approval.
 ```
 
 ## Recovery artifacts

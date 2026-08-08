@@ -5,28 +5,25 @@ This is the repeatable local-to-GitHub workflow for `https://github.com/dmonsta8
 ## 1. Update the local copy safely
 
 ```powershell
-$Repo = 'C:\path\to\uriel'
+$Repo = '<path-to-canonical-uriel>'
 Set-Location $Repo
 git switch main
-git pull --ff-only
-git status
+git status --short --branch
+git worktree list
 ```
 
-Do not continue unless the working tree is clean.
+Treat this `main` worktree as the canonical product line. Do not create a
+second Uriel copy. If a remote update is needed, inspect the local relation and
+obtain operator approval before fetching/pulling; do not pull over local work
+or a locally newer `main` automatically. Do not continue unless the working
+tree is clean and the worktree is the expected canonical path.
 
-## 2. Create an isolated maintenance branch
+## 2. Keep maintenance scope explicit
 
-```powershell
-git switch -c maintenance/SHORT-DESCRIPTION
-```
-
-Examples:
-
-```text
-maintenance/cross-platform-ci
-maintenance/readme-blessing-explanation
-maintenance/release-candidate-1
-```
+For this canonical 215 checkout, make one coherent accepted maintenance change
+on `main` and commit it locally. A human may authorize a separate review branch
+for a specific public pull request, but that branch is never a second canonical
+copy and is not an automatic step for a continuation agent.
 
 ## 3. Create or refresh a local build environment
 
@@ -96,6 +93,9 @@ fix: preserve confinement semantics on macOS
 git push -u origin HEAD
 ```
 
+This is an operator-approved external action. Never force-push, delete a remote
+ref, or push an unreviewed dirty/rebased history.
+
 Open a pull request or merge only after the branch CI is green. Never use `--force` on `main` for ordinary maintenance.
 
 ## 9. Inspect GitHub Actions from PowerShell
@@ -130,8 +130,7 @@ Do not rerun repeatedly when the same deterministic code error appears; fix the 
 
 ```powershell
 git switch main
-git pull --ff-only
-git status
+git status --short --branch
 python scripts\privacy_sweep.py
 python scripts\release_check.py --full
 git fetch origin
@@ -139,14 +138,18 @@ git rev-parse HEAD
 git rev-parse origin/main
 ```
 
-The two hashes must match.
+Fetch only with operator approval. The two hashes must match before claiming
+that the public remote tree contains the local candidate.
 
 ## 11. Tag a release candidate only after the matrix is green
 
 ```powershell
-git tag -a v1.0.0-rc1 -m "Uriel 1.0.0 release candidate 1"
-git push origin v1.0.0-rc1
+git tag -a vX.Y.Z-rcN -m "Uriel release candidate"
+git push origin vX.Y.Z-rcN
 ```
+
+Use the exact reviewed candidate version. Never move or overwrite an existing
+tag such as `v1.0.0-rc2`.
 
 Confirm the release workflow attaches the wheel, source archive, portable `.pyz`, checksums, and release-check transcript.
 
@@ -155,7 +158,7 @@ Confirm the release workflow attaches the wheel, source archive, portable `.pyz`
 - A failed test or script does not erase committed work.
 - Before running a large transformation, commit the current good state or create a branch.
 - Use `git diff` before `git restore` or `git reset`.
-- Use `git restore --staged --worktree .` only when you intentionally want to discard every uncommitted change.
+- Do not use a broad restore/reset/clean command in an automated continuation. Preserve the diff and obtain explicit recovery direction before discarding anything.
 - Use `git reflog` to locate commits after an accidental branch move.
 - Keep the original complete recovery ZIP and Git bundle outside the repository.
 - Keep Git Credential Manager credentials unless they are stale, compromised, or belong to the wrong account.
