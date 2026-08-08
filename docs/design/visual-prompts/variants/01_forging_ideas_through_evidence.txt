@@ -1,9 +1,0 @@
-Create a complete standalone 16:9 Uriel Forge hero poster in cinematic painterly realism. Show Uriel as an original fictional adult man: wingless, armored without looking militaristic, part scholar and part blacksmith. He is in a forge-lit research workshop striking an anvil with one controlled hammer blow while reviewing a manuscript or evidence record. His expression is critical: one eyebrow subtly raised, eyes warm, alert, reserved, and supportive. He looks interested and vigilant, as if he has noticed a problem and wants to help strengthen the idea. Never smug, condescending, comic, or melodramatic.
-
-Make this a full information poster, not just a portrait. The environment should visually communicate: idea intake, read-only project review, Data Readiness / Gate 0, deterministic sorting and database structure, claim-to-evidence tracing, the Three Gates audit, repair packets / forward path, manuscript and submission support, provenance / manifests / hashes / verification receipts. Use meaningful abstract symbols, structured panels, charts, tables, source chains, and seals, but no real dataset and no fake scientific claim.
-
-Color palette: dark graphite, iron, copper, ember, amber glow, disciplined sparks, serious workshop atmosphere. Keep the overall tone somber, sincere, intelligent, and trustworthy.
-
-Text layout must be clean and high-contrast. Reserve clear panels so deterministic typography can be added later. Include the product identity area at top, left/right feature rails, and a lower principles strip.
-
-Render the headline in clear readable English: “Is your IDEA strong enough to survive the forge?” Keep the rest of the text minimal and elegant, with placeholder-safe composition. No logos, no brand marks, no watermarks.

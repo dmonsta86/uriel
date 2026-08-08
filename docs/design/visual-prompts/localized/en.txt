@@ -1,0 +1,38 @@
+Create one complete standalone 16:9 locale edition of The Forge of Uriel for
+English.
+
+Keep the official product name visibly recognizable as:
+
+THE FORGE OF URIEL
+
+Localize the subtitle, challenge, supporting line, feature labels, alt text, and
+explanatory copy naturally.
+
+Use this challenge:
+
+Is your IDEA strong enough to survive the forge?
+
+Use this supporting line:
+
+A fair hearing for the idea. A hard test for the evidence.
+
+
+Uriel is an original fictional adult man, wingless and armored without looking
+militaristic. He is a mature scholar-smith and careful investigator. His
+expression is exact: one eyebrow subtly raised; warm, vigilant, intellectually
+alert eyes; quiet recognition of a possible problem; restrained encouragement;
+willingness to help; wisdom without superiority. Never smug, angry,
+condescending, comic, theatrical, or sales-like.
+
+
+The poster must still show the complete product: question development,
+read-only review, Data Readiness, deterministic sorting/database structure,
+evidence tracing, the Three Gates, repair, submission, and provenance.
+
+Cultural adaptation must be subtle and respectful through craft motifs,
+typography, workshop materials, and ornament. Do not use a national costume,
+flag, sacred symbol, stereotype, religious figure, or caricature.
+
+For reliable typography, prefer generating art with clean text-safe panels and
+adding exact localized copy through a deterministic overlay. The final asset
+must be a complete standalone poster.

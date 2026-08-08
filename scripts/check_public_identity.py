@@ -44,11 +44,9 @@ ALLOWED_RECOMMENDATION_FILES = {
 
 REQUIRED_README_PHRASES = (
     "The Forge of Uriel",
-    "Every idea deserves its strongest fair hearing",
-    "Every claim must survive its strongest fair challenge",
-    "The Forge Method",
+    "Forge Method",
     "The Blessing of Uriel",
-    "Data before conclusions",
+    "The Three Gates",
 )
 
 FORBIDDEN_PLACEHOLDERS = (
@@ -113,6 +111,12 @@ def main() -> int:
         for phrase in REQUIRED_README_PHRASES:
             if phrase not in readme_text:
                 errors.append(f"README.md: required public phrase missing: {phrase}")
+
+        # Fail-closed regression check against active URIEL FORGE title branding or obsolete hero references
+        if re.search(r"^#+\s*Uriel Forge\b", readme_text, re.MULTILINE):
+            errors.append("README.md: active heading still uses 'Uriel Forge' instead of 'The Forge of Uriel'")
+        if "uriel-forge-banner.png" in readme_text or "01_uriel_forge" in readme_text:
+            errors.append("README.md: active hero image reference points to obsolete 'uriel-forge-banner.png'")
 
     for path in tracked_files():
         rel = path.relative_to(ROOT).as_posix()

@@ -1,0 +1,49 @@
+Create a complete standalone 16:9 poster for a research product titled:
+
+THE FORGE OF URIEL
+
+Use cinematic painterly realism with dark graphite, iron, bronze, copper, and
+restrained amber forge light.
+
+
+Uriel is an original fictional adult man, wingless and armored without looking
+militaristic. He is a mature scholar-smith and careful investigator. His
+expression is exact: one eyebrow subtly raised; warm, vigilant, intellectually
+alert eyes; quiet recognition of a possible problem; restrained encouragement;
+willingness to help; wisdom without superiority. Never smug, angry,
+condescending, comic, theatrical, or sales-like.
+
+
+He strikes an anvil with one measured hammer blow while examining a research
+manuscript or evidence record.
+
+The full poster—not only the character—must explain the system. Include
+meaningful visual zones for:
+
+- question intake;
+- read-only project review;
+- Data Readiness / Gate 0;
+- deterministic sorting, record identity, and database structure;
+- claim-to-evidence tracing;
+- Three Gates review;
+- repair and revision;
+- submission readiness;
+- provenance, manifests, hashes, and verification receipts.
+
+Use the exact large visible copy:
+
+THE FORGE OF URIEL
+
+OFFLINE-FIRST RESEARCH DEVELOPMENT AND ASSURANCE
+
+“Is your IDEA strong enough to survive the forge?”
+
+A fair hearing for the idea. A hard test for the evidence.
+
+Lower principles:
+
+TRUTH • EVIDENCE • RIGOR • TRANSPARENCY
+
+Make all major text legible. Do not add a provider logo, halo, wings, sacred
+symbol, watermark, comic fantasy excess, or fake scientific result. Keep the
+image serious, human, precise, and useful as a GitHub README hero.
