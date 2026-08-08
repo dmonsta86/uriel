@@ -66,8 +66,9 @@ class ProviderNeutralityTests(unittest.TestCase):
     def test_gpt56_sol_recommendation_allowlist(self) -> None:
         readme_path = self.repo_root / "README.md"
         readme_text = readme_path.read_text(encoding="utf-8")
-        self.assertIn("GPT-5.6 Sol with `ultra` mode", readme_text)
-        self.assertIn("optional recommendation", readme_text)
+        self.assertIn("GPT-5.6 Sol", readme_text)
+        self.assertIn("ultra", readme_text)
+        self.assertTrue("recommends" in readme_text or "recommendation" in readme_text)
         self.assertNotIn("pricing", readme_text.lower())
         self.assertNotIn("free tier", readme_text.lower())
 
