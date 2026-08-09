@@ -1,6 +1,6 @@
 # The Forge of Uriel Capability Status
 
-Catalog fingerprint: `27fa9cd5b73c04e70af75752dc8376006a63037e2f935380aaa153ade6ae4b5b`
+Catalog fingerprint: `157c38b84eec572215b999e42be4dd0e323916fe98214ab036bf43596c69a81c`
 
 Status meanings:
 
@@ -18,7 +18,7 @@ Status meanings:
 | Research lifecycle, workbench, repair, and submission | `BETA` | `uriel intake / uriel workbench / uriel burst / uriel submit` | Windows, macOS, Linux | `src/uriel/workbench.py`, `src/uriel/surfaces.py`, `src/uriel/gap_register.py`, `src/uriel/repair_packet.py`, `tests/test_workbench.py`, `tests/test_lifecycle_packet.py`, `tests/test_lifecycle_submission.py` | Question intake, bounded review packets, gap records, repair packets, decisions, and submission support. |
 | Assurance depth, evidence microscope, and decision card | `EXPERIMENTAL` | `Python API (uriel.assurance_case, uriel.decision_card)` | Windows, macOS, Linux | `src/uriel/assurance_case.py`, `src/uriel/decision_card.py`, `tests/test_assurance_depth.py` | Exploratory assurance chains, evidence-strength records, and decision artifacts; no dedicated CLI contract yet. |
 | Synthetic Forge Trial fixture and adjudicated scorer | `BETA` | `python scripts/check_forge_trial.py` | Windows, macOS, Linux | `src/uriel/forge_trials.py`, `tests/test_forge_trials.py` | Validates the sealed synthetic fixture and scores supplied adjudicated findings; it does not claim a detector was run. |
-| Evidence ingress and Data Desk | `PLANNED` | `n/a (planned capability)` | Windows (planned), macOS (planned), Linux (planned) | — | Planned safe ingestion and table reconciliation; no shipped ingress or Data Desk module. |
+| Evidence ingress and Data Desk | `EXPERIMENTAL` | `uriel data plan / import / inspect / diff / reconcile / verify-generation` | Windows, macOS, Linux | `src/uriel/data_contracts.py`, `src/uriel/data_ingress.py`, `src/uriel/data_desk.py`, `tests/test_data_contracts.py`, `tests/test_data_ingress.py`, `tests/test_data_desk.py`, `tests/test_cli.py` | Bounded local immutable intake, structural generations, per-record delta ledgers, derived indexes, preserve-all reconciliation, and deep verification; no scientific finding or Gate 0 authority. |
 | Operational Forge Method closure engine | `PLANNED` | `n/a (planned capability)` | Windows (planned), macOS (planned), Linux (planned) | — | The Forge of Uriel is the public identity; a general automatic milestone-closure engine is not implemented. |
 | Built-in local-model adapter | `PLANNED` | `n/a (planned capability)` | Windows (planned), macOS (planned), Linux (planned) | — | External and local models can consume bounded prompts today; Uriel does not ship an inference provider. |
 | Desktop GUI and native installer | `PLANNED` | `n/a (planned capability)` | Windows (planned), macOS (planned), Linux (planned) | — | The supported product is currently CLI/Python-first. |

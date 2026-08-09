@@ -1,8 +1,8 @@
 """Versioned Evidence Ingress and Data Desk contracts.
 
-This module freezes the R1.1 contract boundary.  It can inspect one explicitly
-selected local regular file and produce a privacy-preserving dry-run plan, but
-it does not copy, normalize, reconcile, or otherwise mutate source data.
+This module owns schema discovery, canonical record binding, safe source
+inspection, and privacy-preserving no-write plans. Runtime intake and derived
+generation behavior remain isolated in ``data_ingress`` and ``data_desk``.
 """
 from __future__ import annotations
 
@@ -31,27 +31,41 @@ from .core import (
 
 
 DATA_POLICY_VERSION = "uriel.data_policy.v1"
-DATA_IMPORT_PLAN_SCHEMA = "uriel.data_import_plan.v1"
+DATA_IMPORT_PLAN_SCHEMA_V1 = "uriel.data_import_plan.v1"
+DATA_IMPORT_PLAN_SCHEMA = "uriel.data_import_plan.v2"
 DATA_IMPORT_RECEIPT_SCHEMA = "uriel.data_import_receipt.v1"
 RAW_ARTIFACT_SCHEMA = "uriel.raw_artifact.v1"
-DATA_GENERATION_SCHEMA = "uriel.data_generation_manifest.v1"
-DATA_PROFILE_SCHEMA = "uriel.data_profile.v1"
+DATA_DELTA_ENTRY_SCHEMA = "uriel.data_delta_entry.v1"
+DATA_GENERATION_SCHEMA_V1 = "uriel.data_generation_manifest.v1"
+DATA_GENERATION_SCHEMA = "uriel.data_generation_manifest.v2"
+DATA_PROFILE_SCHEMA_V1 = "uriel.data_profile.v1"
+DATA_PROFILE_SCHEMA = "uriel.data_profile.v2"
 DATA_TRANSFORM_SCHEMA = "uriel.data_transform_receipt.v1"
-DATA_RECONCILIATION_SCHEMA = "uriel.data_reconciliation.v1"
+DATA_RECONCILIATION_SCHEMA_V1 = "uriel.data_reconciliation.v1"
+DATA_RECONCILIATION_SCHEMA = "uriel.data_reconciliation.v2"
 DATA_REFUSAL_SCHEMA = "uriel.data_refusal.v1"
-RESOURCE_BUDGET_SCHEMA = "uriel.resource_budget.v1"
+RESOURCE_BUDGET_SCHEMA_V1 = "uriel.resource_budget.v1"
+RESOURCE_BUDGET_SCHEMA = "uriel.resource_budget.v2"
 DATA_VERIFICATION_SCHEMA = "uriel.data_verification_receipt.v1"
 
+DATA_IMPORT_PLAN_SCHEMAS = frozenset({DATA_IMPORT_PLAN_SCHEMA_V1, DATA_IMPORT_PLAN_SCHEMA})
+
 DATA_SCHEMA_FILES: Mapping[str, str] = {
-    DATA_IMPORT_PLAN_SCHEMA: "uriel.data_import_plan.v1.schema.json",
+    DATA_IMPORT_PLAN_SCHEMA_V1: "uriel.data_import_plan.v1.schema.json",
+    DATA_IMPORT_PLAN_SCHEMA: "uriel.data_import_plan.v2.schema.json",
     DATA_IMPORT_RECEIPT_SCHEMA: "uriel.data_import_receipt.v1.schema.json",
     RAW_ARTIFACT_SCHEMA: "uriel.raw_artifact.v1.schema.json",
-    DATA_GENERATION_SCHEMA: "uriel.data_generation_manifest.v1.schema.json",
-    DATA_PROFILE_SCHEMA: "uriel.data_profile.v1.schema.json",
+    DATA_DELTA_ENTRY_SCHEMA: "uriel.data_delta_entry.v1.schema.json",
+    DATA_GENERATION_SCHEMA_V1: "uriel.data_generation_manifest.v1.schema.json",
+    DATA_GENERATION_SCHEMA: "uriel.data_generation_manifest.v2.schema.json",
+    DATA_PROFILE_SCHEMA_V1: "uriel.data_profile.v1.schema.json",
+    DATA_PROFILE_SCHEMA: "uriel.data_profile.v2.schema.json",
     DATA_TRANSFORM_SCHEMA: "uriel.data_transform_receipt.v1.schema.json",
-    DATA_RECONCILIATION_SCHEMA: "uriel.data_reconciliation.v1.schema.json",
+    DATA_RECONCILIATION_SCHEMA_V1: "uriel.data_reconciliation.v1.schema.json",
+    DATA_RECONCILIATION_SCHEMA: "uriel.data_reconciliation.v2.schema.json",
     DATA_REFUSAL_SCHEMA: "uriel.data_refusal.v1.schema.json",
-    RESOURCE_BUDGET_SCHEMA: "uriel.resource_budget.v1.schema.json",
+    RESOURCE_BUDGET_SCHEMA_V1: "uriel.resource_budget.v1.schema.json",
+    RESOURCE_BUDGET_SCHEMA: "uriel.resource_budget.v2.schema.json",
     DATA_VERIFICATION_SCHEMA: "uriel.data_verification_receipt.v1.schema.json",
 }
 
@@ -68,6 +82,7 @@ DEFAULT_MAX_SOURCE_BYTES = 100 * 1024 * 1024
 DEFAULT_MAX_RECORDS = 1_000_000
 DEFAULT_MAX_COLUMNS = 10_000
 DEFAULT_MAX_NESTING_DEPTH = 64
+DEFAULT_MAX_FIELD_BYTES = 1024 * 1024
 DEFAULT_TIMEOUT_SECONDS = 60
 MAX_RECORD_FILE_BYTES = 4 * 1024 * 1024
 _REPARSE_POINT = 0x400
@@ -246,10 +261,11 @@ def validate_data_record(record: Mapping[str, Any]) -> Dict[str, Any]:
         errors.append(digest_error)
     _relative_path_errors(record, "$", errors)
 
-    if schema_id == DATA_IMPORT_PLAN_SCHEMA:
+    if schema_id in DATA_IMPORT_PLAN_SCHEMAS:
         budget = record.get("resource_budget")
         if isinstance(budget, Mapping):
-            _validate_schema_node(budget, load_data_schema(RESOURCE_BUDGET_SCHEMA), "$/resource_budget", errors)
+            budget_schema_id = str(budget.get("schema", ""))
+            _validate_schema_node(budget, load_data_schema(budget_schema_id), "$/resource_budget", errors)
             budget_hash_error = _hash_error(budget, "$/resource_budget")
             if budget_hash_error:
                 errors.append(budget_hash_error)
@@ -264,6 +280,77 @@ def validate_data_record(record: Mapping[str, Any]) -> Dict[str, Any]:
     elif schema_id == DATA_RECONCILIATION_SCHEMA:
         if record.get("preserved_conflict_count") != record.get("conflict_count"):
             errors.append("$: every conflicting record must remain preserved")
+        has_result = record.get("result_generation_id") is not None
+        if has_result != (record.get("result_records_sha256") is not None):
+            errors.append("$: result generation and result records hash must be present or absent together")
+        if not has_result and record.get("result_record_count") != 0:
+            errors.append("$: a read-only reconciliation preview must report zero result records")
+        if has_result != (record.get("delta_ledger_relative_path") is not None):
+            errors.append("$: only a persisted reconciliation result may bind a delta-ledger path")
+    elif schema_id == DATA_DELTA_ENTRY_SCHEMA:
+        if record.get("exact_counterpart_count", 0) > record.get("counterpart_count", 0):
+            errors.append("$: exact counterpart count cannot exceed total counterpart count")
+        if record.get("classification") == "UNKNOWN" and record.get("key_sha256") is not None:
+            errors.append("$: a missing-key UNKNOWN entry must not claim a key hash")
+    elif schema_id == DATA_GENERATION_SCHEMA:
+        decisions = record.get("parser_decisions")
+        if isinstance(decisions, Mapping):
+            columns = decisions.get("columns")
+            if isinstance(columns, list) and record.get("column_count") != len(columns):
+                errors.append("$: column_count must equal the parser decision column set")
+            if isinstance(columns, list):
+                column_ids = [row.get("column_id") for row in columns if isinstance(row, Mapping)]
+                positions = [row.get("position") for row in columns if isinstance(row, Mapping)]
+                if len(column_ids) != len(set(column_ids)):
+                    errors.append("$/parser_decisions/columns: column IDs must be unique")
+                if positions != list(range(len(columns))):
+                    errors.append("$/parser_decisions/columns: positions must be contiguous source order")
+                for annotation in record.get("user_confirmed_annotations", []):
+                    if isinstance(annotation, Mapping) and annotation.get("column_id") not in set(column_ids):
+                        errors.append("$/user_confirmed_annotations: annotation column is not in the generation")
+            expected_decisions = {
+                "CSV": "DELIMITED_UTF8_COMMA_QUOTE_DOUBLEQUOTE_STRICT_HEADER_ROW_1",
+                "TSV": "DELIMITED_UTF8_TAB_QUOTE_DOUBLEQUOTE_STRICT_HEADER_ROW_1",
+                "JSON": "JSON_UTF8_OBJECT_OR_OBJECT_ARRAY_SORTED_COLUMNS_DUPLICATE_KEYS_REFUSED",
+                "JSONL": "JSONL_UTF8_OBJECT_PER_NONBLANK_LINE_SORTED_COLUMNS_DUPLICATE_KEYS_REFUSED",
+                "UTF8_TEXT": "UTF8_TEXT_ONE_RECORD_PER_PHYSICAL_LINE",
+                "MARKDOWN": "UTF8_MARKDOWN_ONE_RECORD_PER_PHYSICAL_LINE_NO_RENDER",
+                "RECONCILED": "PRESERVE_LEFT_ORDER_THEN_RIGHT_ORDER_NO_COERCION",
+            }
+            if decisions.get("format_decision") != expected_decisions.get(record.get("format")):
+                errors.append("$/parser_decisions/format_decision: decision does not match the declared format")
+        if record.get("format") == "RECONCILED":
+            if len(record.get("parent_generation_ids", [])) != 2 or record.get("reconciliation_sha256") is None:
+                errors.append("$: a reconciled generation requires two ordered parents and a reconciliation binding")
+            if record.get("operation_binding_sha256") is None:
+                errors.append("$: a reconciled generation requires an operation identity binding")
+        elif record.get("reconciliation_sha256") is not None:
+            errors.append("$: only a reconciled generation may carry a reconciliation binding")
+        elif record.get("parent_generation_ids") or record.get("operation_binding_sha256") is not None:
+            errors.append("$: a source generation must not claim parents or an operation binding")
+        expected_index = ".uriel/data/indexes/{0}.sqlite".format(record.get("generation_id"))
+        if record.get("derived_index_relative_path") != expected_index:
+            errors.append("$/derived_index_relative_path: index path must bind the generation ID")
+    elif schema_id == DATA_PROFILE_SCHEMA:
+        columns = record.get("columns")
+        if isinstance(columns, list):
+            column_id_list = [row.get("column_id") for row in columns if isinstance(row, Mapping)]
+            column_ids = set(column_id_list)
+            positions = [row.get("position") for row in columns if isinstance(row, Mapping)]
+            if len(column_id_list) != len(column_ids):
+                errors.append("$/columns: column IDs must be unique")
+            if positions != list(range(len(columns))):
+                errors.append("$/columns: positions must be contiguous source order")
+            for candidate in record.get("candidate_keys", []):
+                if candidate not in column_ids:
+                    errors.append("$/candidate_keys: candidate key is not a profiled column")
+            for annotation in record.get("user_confirmed_annotations", []):
+                if isinstance(annotation, Mapping) and annotation.get("column_id") not in column_ids:
+                    errors.append("$/user_confirmed_annotations: annotation column is not profiled")
+            for row in columns:
+                if isinstance(row, Mapping) and isinstance(record.get("row_count"), int):
+                    if row.get("null_count", 0) > record["row_count"]:
+                        errors.append("$/columns: null_count cannot exceed row_count")
     elif schema_id == DATA_VERIFICATION_SCHEMA:
         if record.get("decision") == "PASS" and record.get("errors"):
             errors.append("$: a PASS verification receipt cannot contain errors")
@@ -294,6 +381,7 @@ def make_resource_budget(
     max_records: int = DEFAULT_MAX_RECORDS,
     max_columns: int = DEFAULT_MAX_COLUMNS,
     max_nesting_depth: int = DEFAULT_MAX_NESTING_DEPTH,
+    max_field_bytes: int = DEFAULT_MAX_FIELD_BYTES,
     timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
 ) -> Dict[str, Any]:
     """Build and validate the versioned local resource ceiling."""
@@ -301,12 +389,13 @@ def make_resource_budget(
     budget = bind_data_record(
         {
             "schema": RESOURCE_BUDGET_SCHEMA,
-            "schema_version": 1,
+            "schema_version": 2,
             "policy_version": DATA_POLICY_VERSION,
             "max_source_bytes": max_source_bytes,
             "max_records": max_records,
             "max_columns": max_columns,
             "max_nesting_depth": max_nesting_depth,
+            "max_field_bytes": max_field_bytes,
             "timeout_seconds": timeout_seconds,
         }
     )
@@ -484,6 +573,7 @@ def plan_data_import(
     max_records: int = DEFAULT_MAX_RECORDS,
     max_columns: int = DEFAULT_MAX_COLUMNS,
     max_nesting_depth: int = DEFAULT_MAX_NESTING_DEPTH,
+    max_field_bytes: int = DEFAULT_MAX_FIELD_BYTES,
     timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
 ) -> Dict[str, Any]:
     """Create a no-write plan for one explicit local regular file."""
@@ -495,6 +585,7 @@ def plan_data_import(
         max_records=max_records,
         max_columns=max_columns,
         max_nesting_depth=max_nesting_depth,
+        max_field_bytes=max_field_bytes,
         timeout_seconds=timeout_seconds,
     )
     source_observation = inspect_selected_source(source, max_source_bytes, timeout_seconds)
@@ -513,7 +604,7 @@ def plan_data_import(
     plan = bind_data_record(
         {
             "schema": DATA_IMPORT_PLAN_SCHEMA,
-            "schema_version": 1,
+            "schema_version": 2,
             "created_at_utc": utc_now(),
             "policy_version": DATA_POLICY_VERSION,
             "project_binding_sha256": sha256_file(project_paths.project),

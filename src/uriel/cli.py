@@ -42,6 +42,7 @@ from .core import (
 )
 from .data_contracts import (
     DEFAULT_MAX_COLUMNS,
+    DEFAULT_MAX_FIELD_BYTES,
     DEFAULT_MAX_NESTING_DEPTH,
     DEFAULT_MAX_RECORDS,
     DEFAULT_MAX_SOURCE_BYTES,
@@ -50,6 +51,12 @@ from .data_contracts import (
     verify_data_record_file,
 )
 from .data_ingress import import_data_artifact, verify_data_import
+from .data_desk import (
+    diff_data_generations,
+    inspect_data_artifact,
+    reconcile_data_generations,
+    verify_data_generation,
+)
 from .data_readiness import data_readiness_state, make_sort_spec, propose_sort_spec_plan, readiness_check, readiness_status
 from .decisions import DECISION_CLASSES
 from .gate_contract import (
@@ -213,6 +220,7 @@ def parser() -> argparse.ArgumentParser:
     data_plan.add_argument("--max-records", type=int, default=DEFAULT_MAX_RECORDS)
     data_plan.add_argument("--max-columns", type=int, default=DEFAULT_MAX_COLUMNS)
     data_plan.add_argument("--max-nesting-depth", type=int, default=DEFAULT_MAX_NESTING_DEPTH)
+    data_plan.add_argument("--max-field-bytes", type=int, default=DEFAULT_MAX_FIELD_BYTES)
     data_plan.add_argument("--timeout-seconds", type=int, default=DEFAULT_TIMEOUT_SECONDS)
     data_import = data_actions.add_parser("import", help="seal one selected source under a reviewed import plan")
     _root_argument(data_import)
@@ -221,6 +229,41 @@ def parser() -> argparse.ArgumentParser:
     data_verify_import = data_actions.add_parser("verify-import", help="recompute one managed import from its receipt")
     _root_argument(data_verify_import)
     data_verify_import.add_argument("--receipt", required=True, help="project-relative import receipt path")
+    data_inspect = data_actions.add_parser("inspect", help="create a deterministic structural generation from a managed import")
+    _root_argument(data_inspect)
+    data_inspect.add_argument("--receipt", required=True, help="project-relative verified import receipt path")
+    data_inspect.add_argument(
+        "--unit",
+        action="append",
+        default=[],
+        metavar="COLUMN=UNIT",
+        help="record one explicitly user-confirmed unit; repeat as needed",
+    )
+    data_inspect.add_argument(
+        "--semantic-type",
+        action="append",
+        default=[],
+        metavar="COLUMN=TYPE",
+        help="record one explicitly user-confirmed semantic type; repeat as needed",
+    )
+    data_diff = data_actions.add_parser("diff", help="preview conflict-preserving deltas between two generations")
+    _root_argument(data_diff)
+    data_diff.add_argument("--left-generation", required=True)
+    data_diff.add_argument("--right-generation", required=True)
+    data_diff.add_argument("--keys", nargs="+", required=True, help="confirmed column names or stable col- identifiers")
+    data_diff.add_argument(
+        "--include-delta-ledger",
+        action="store_true",
+        help="include every local per-record delta entry in JSON output (may be large or sensitive)",
+    )
+    data_reconcile = data_actions.add_parser("reconcile", help="create a generation that preserves every record and conflict")
+    _root_argument(data_reconcile)
+    data_reconcile.add_argument("--left-generation", required=True)
+    data_reconcile.add_argument("--right-generation", required=True)
+    data_reconcile.add_argument("--keys", nargs="+", required=True, help="confirmed column names or stable col- identifiers")
+    data_verify_generation = data_actions.add_parser("verify-generation", help="recompute generation, profile, raw, and reconciliation bindings")
+    _root_argument(data_verify_generation)
+    data_verify_generation.add_argument("--generation", required=True, help="64-character Data Desk generation ID")
     data_verify = data_actions.add_parser("verify-record", help="verify one project-relative versioned Data Desk record")
     _root_argument(data_verify)
     data_verify.add_argument("--record", required=True, help="project-relative JSON record path")
@@ -466,6 +509,44 @@ def _print_human(command: str, result: Any, args: Optional[argparse.Namespace] =
         if args.data_action == "verify-import":
             print("Managed import: PASS · exact bytes and record bindings verified")
             print("SHA-256: {0}".format(result.get("content_sha256")))
+            print("Gate 0 authority: NOT GRANTED")
+            return
+        if args.data_action == "inspect":
+            print("Data Desk generation: PASS · {0}".format(result.get("generation_id")))
+            print("Records: {0} · columns: {1}".format(result.get("record_count"), result.get("column_count")))
+            profile = result.get("profile", {})
+            print("Leads/candidates: {0}".format(len(profile.get("anomaly_queue", [])) if isinstance(profile, Mapping) else 0))
+            print("User-confirmed annotations: {0}".format(
+                len(profile.get("user_confirmed_annotations", [])) if isinstance(profile, Mapping) else 0
+            ))
+            print("Derived index: {0} · NONAUTHORITATIVE".format(
+                (result.get("derived_index") or {}).get("relative_path")
+            ))
+            print("Gate 0 authority: NOT GRANTED")
+            return
+        if args.data_action == "diff":
+            summary = result.get("summary", {})
+            print("Data Desk diff: DRY_RUN · no writes")
+            print("Added {0} · absent {1} · modified {2} · unchanged {3} · unknown {4}".format(
+                summary.get("added_count"), summary.get("absent_count"), summary.get("modified_count"),
+                summary.get("unchanged_count"), summary.get("unknown_count")))
+            print("Conflicts preserved if reconciled: {0}".format(summary.get("conflict_count")))
+            print("Per-record delta ledger: {0} entries · SHA-256 {1}".format(
+                result.get("delta_entry_count"), result.get("delta_sha256")
+            ))
+            return
+        if args.data_action == "reconcile":
+            print("Data Desk reconciliation: PASS · all input records preserved")
+            print("Generation: {0}".format(result.get("generation_id")))
+            print("Records: {0} · conflicts: {1}".format(result.get("record_count"), result.get("summary", {}).get("conflict_count")))
+            print("Delta ledger: {0} · {1} entries".format(
+                result.get("delta_ledger_relative_path"), result.get("delta_entry_count")
+            ))
+            print("Gate 0 authority: NOT GRANTED")
+            return
+        if args.data_action == "verify-generation":
+            print("Data generation: PASS · {0}".format(result.get("generation_id")))
+            print("Records SHA-256: {0}".format(result.get("records_sha256")))
             print("Gate 0 authority: NOT GRANTED")
             return
         if args.data_action == "verify-record":
@@ -999,12 +1080,37 @@ def dispatch(args: argparse.Namespace) -> Any:
                 max_records=args.max_records,
                 max_columns=args.max_columns,
                 max_nesting_depth=args.max_nesting_depth,
+                max_field_bytes=args.max_field_bytes,
                 timeout_seconds=args.timeout_seconds,
             )
         if args.data_action == "import":
             return import_data_artifact(args.root, args.source, args.plan)
         if args.data_action == "verify-import":
             return verify_data_import(args.root, args.receipt)
+        if args.data_action == "inspect":
+            return inspect_data_artifact(
+                args.root,
+                args.receipt,
+                units=args.unit,
+                semantic_types=args.semantic_type,
+            )
+        if args.data_action == "diff":
+            result = diff_data_generations(
+                args.root, args.left_generation, args.right_generation, args.keys
+            )
+            if not args.include_delta_ledger:
+                result = dict(result)
+                result.pop("delta_ledger", None)
+                result["delta_ledger_included"] = False
+            else:
+                result["delta_ledger_included"] = True
+            return result
+        if args.data_action == "reconcile":
+            return reconcile_data_generations(
+                args.root, args.left_generation, args.right_generation, args.keys
+            )
+        if args.data_action == "verify-generation":
+            return verify_data_generation(args.root, args.generation)
         if args.data_action == "verify-record":
             return verify_data_record_file(args.root, args.record)
         if args.data_action == "propose-sort":

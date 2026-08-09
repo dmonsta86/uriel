@@ -22,20 +22,28 @@ Available now includes:
   verification;
 - assurance-depth APIs, Core-8 localization, and a synthetic Forge Trial
   validator/scorer.
+- an experimental local Evidence Ingress/Data Desk candidate on canonical
+  `main`, with immutable raw intake, structural generations, conflict-preserving
+  reconciliation, and independent deep verification. It is not part of the
+  historical `v1.0.0-rc2` tag.
 
-## Next product lane: local data integrity
+## Active product lane: local data integrity
 
-The next major capability is a local-only Evidence Ingress and Data Desk. It
-will begin with explicitly selected user-owned files and will provide:
+The local-only Evidence Ingress and Data Desk now provide the first executable
+part of this chain for explicitly selected user-owned files:
 
 ```text
 plan → immutable raw artifact → deterministic profile
 → generation/reconciliation → independent verify → Gate 0
 ```
 
-It will preserve source bytes, versions, conflicts, missingness, and
-limitations. It will not silently mutate data, infer scientific authority,
+The lane preserves source bytes, versions, conflicts, missingness, and
+limitations. It does not silently mutate data, infer scientific authority,
 execute active content, or require a cloud service.
+
+The remaining local-data work is to bind verified generations into Gate 0,
+complete the dedicated attack/interruption/benchmark closure package, and
+promote maturity only from the resulting receipts.
 
 ## Following lanes
 

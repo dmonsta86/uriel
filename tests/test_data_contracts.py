@@ -10,18 +10,24 @@ from pathlib import Path
 
 from uriel.core import Refusal, canonical_json, initialize_project
 from uriel.data_contracts import (
+    DATA_DELTA_ENTRY_SCHEMA,
     DATA_GENERATION_SCHEMA,
+    DATA_GENERATION_SCHEMA_V1,
     DATA_IMPORT_PLAN_SCHEMA,
+    DATA_IMPORT_PLAN_SCHEMA_V1,
     DATA_IMPORT_RECEIPT_SCHEMA,
     DATA_POLICY_VERSION,
     DATA_PROFILE_SCHEMA,
+    DATA_PROFILE_SCHEMA_V1,
     DATA_RECONCILIATION_SCHEMA,
+    DATA_RECONCILIATION_SCHEMA_V1,
     DATA_REFUSAL_SCHEMA,
     DATA_SCHEMA_FILES,
     DATA_TRANSFORM_SCHEMA,
     DATA_VERIFICATION_SCHEMA,
     RAW_ARTIFACT_SCHEMA,
     RESOURCE_BUDGET_SCHEMA,
+    RESOURCE_BUDGET_SCHEMA_V1,
     bind_data_record,
     data_contract_catalog,
     load_data_schema,
@@ -36,6 +42,7 @@ H1 = "1" * 64
 H2 = "2" * 64
 H3 = "3" * 64
 NOW = "2026-08-08T00:00:00Z"
+C1 = "col-" + "a" * 16
 
 
 def _valid_records():
@@ -43,7 +50,7 @@ def _valid_records():
     records = [budget]
     records.append(bind_data_record({
         "schema": DATA_IMPORT_PLAN_SCHEMA,
-        "schema_version": 1,
+        "schema_version": 2,
         "created_at_utc": NOW,
         "policy_version": DATA_POLICY_VERSION,
         "project_binding_sha256": H1,
@@ -96,24 +103,60 @@ def _valid_records():
     }))
     records.append(bind_data_record({
         "schema": DATA_GENERATION_SCHEMA,
-        "schema_version": 1,
+        "schema_version": 2,
         "created_at_utc": NOW,
         "generation_id": H1,
-        "parent_generation_id": None,
+        "parent_generation_ids": [],
+        "operation_binding_sha256": None,
+        "format": "CSV",
+        "parser_version": "uriel.data_parser.v1",
+        "parser_decisions": {
+            "representation": "COLUMN_ID_OBJECTS",
+            "source_order_preserved": True,
+            "header_decision": "EXPLICIT_UNIQUE",
+            "format_decision": "DELIMITED_UTF8_COMMA_QUOTE_DOUBLEQUOTE_STRICT_HEADER_ROW_1",
+            "columns": [{"column_id": C1, "name": "id", "position": 0, "duplicate_name": False}],
+        },
+        "user_confirmed_annotations": [],
         "raw_artifact_sha256s": [H2],
         "transform_receipt_sha256s": [],
         "reconciliation_sha256": None,
         "record_count": 2,
+        "column_count": 1,
         "records_sha256": H3,
+        "order_sha256": H2,
+        "records_file_sha256": H1,
+        "records_file_size_bytes": 128,
+        "records_relative_path": ".uriel/data/generations/11/records.jsonl",
+        "profile_relative_path": ".uriel/data/generations/11/profile.json",
+        "profile_sha256": H1,
+        "derived_index_kind": "SQLITE_DERIVED_NONAUTHORITATIVE",
+        "derived_index_relative_path": ".uriel/data/indexes/" + H1 + ".sqlite",
     }))
     records.append(bind_data_record({
         "schema": DATA_PROFILE_SCHEMA,
-        "schema_version": 1,
+        "schema_version": 2,
         "created_at_utc": NOW,
         "generation_id": H1,
+        "format": "CSV",
         "table_count": 1,
         "row_count": 2,
-        "columns": [{"name": "id", "observed_type": "STRING", "null_count": 0, "distinct_count": 2}],
+        "records_sha256": H3,
+        "order_sha256": H2,
+        "header_decision": "EXPLICIT_UNIQUE",
+        "exact_duplicate_row_count": 0,
+        "candidate_keys": [C1],
+        "columns": [{
+            "column_id": C1,
+            "name": "id",
+            "position": 0,
+            "duplicate_name": False,
+            "observed_type": "STRING",
+            "null_count": 0,
+            "distinct_count": 2,
+        }],
+        "user_confirmed_annotations": [],
+        "anomaly_queue": [],
         "limitations": ["Structure only; no scientific interpretation."],
     }))
     records.append(bind_data_record({
@@ -130,17 +173,43 @@ def _valid_records():
         "source_mutated": False,
     }))
     records.append(bind_data_record({
-        "schema": DATA_RECONCILIATION_SCHEMA,
+        "schema": DATA_DELTA_ENTRY_SCHEMA,
         "schema_version": 1,
+        "side": "LEFT",
+        "ordinal": 0,
+        "source_record_sha256": H1,
+        "key_sha256": H2,
+        "classification": "MODIFIED",
+        "counterpart_count": 1,
+        "exact_counterpart_count": 0,
+        "conflict": True,
+        "preserved": True,
+    }))
+    records.append(bind_data_record({
+        "schema": DATA_RECONCILIATION_SCHEMA,
+        "schema_version": 2,
         "created_at_utc": NOW,
         "left_generation_id": H1,
         "right_generation_id": H2,
+        "left_records_sha256": H1,
+        "right_records_sha256": H2,
+        "key_columns": [C1],
         "exact_duplicate_count": 1,
         "candidate_duplicate_count": 0,
         "conflict_count": 1,
         "preserved_conflict_count": 1,
+        "added_count": 0,
+        "absent_count": 0,
+        "modified_count": 1,
+        "unchanged_count": 1,
+        "unknown_count": 0,
         "contradiction_policy": "PRESERVE_ALL",
         "result_generation_id": H3,
+        "result_record_count": 4,
+        "result_records_sha256": H3,
+        "delta_sha256": H1,
+        "delta_entry_count": 4,
+        "delta_ledger_relative_path": ".uriel/data/deltas/" + H1 + ".jsonl",
     }))
     records.append(bind_data_record({
         "schema": DATA_REFUSAL_SCHEMA,
@@ -168,9 +237,9 @@ def _valid_records():
 
 
 class DataContractTests(unittest.TestCase):
-    def test_all_ten_packaged_schemas_validate_bound_examples(self) -> None:
+    def test_all_sixteen_packaged_schemas_validate_bound_examples(self) -> None:
         catalog = data_contract_catalog()
-        self.assertEqual(10, len(catalog))
+        self.assertEqual(16, len(catalog))
         self.assertEqual(set(DATA_SCHEMA_FILES), {row["schema"] for row in catalog})
         for row in catalog:
             self.assertEqual(64, len(row["sha256"]))
@@ -181,6 +250,84 @@ class DataContractTests(unittest.TestCase):
         for record in _valid_records():
             result = validate_data_record(record)
             self.assertTrue(result["valid"], record["schema"])
+
+    def test_published_v1_contracts_remain_record_valid(self) -> None:
+        current_plan = _valid_records()[1]
+        current_budget = current_plan["resource_budget"]
+        legacy_budget_body = {
+            key: value
+            for key, value in current_budget.items()
+            if key not in {"record_sha256", "max_field_bytes"}
+        }
+        legacy_budget_body.update({"schema": RESOURCE_BUDGET_SCHEMA_V1, "schema_version": 1})
+        legacy_budget = bind_data_record(legacy_budget_body)
+        legacy_plan_body = {
+            key: value for key, value in current_plan.items() if key != "record_sha256"
+        }
+        legacy_plan_body.update(
+            {
+                "schema": DATA_IMPORT_PLAN_SCHEMA_V1,
+                "schema_version": 1,
+                "resource_budget": legacy_budget,
+            }
+        )
+        legacy_plan = bind_data_record(legacy_plan_body)
+        legacy_generation = bind_data_record(
+            {
+                "schema": DATA_GENERATION_SCHEMA_V1,
+                "schema_version": 1,
+                "created_at_utc": NOW,
+                "generation_id": H1,
+                "parent_generation_id": None,
+                "raw_artifact_sha256s": [H2],
+                "transform_receipt_sha256s": [],
+                "reconciliation_sha256": None,
+                "record_count": 2,
+                "records_sha256": H3,
+            }
+        )
+        legacy_profile = bind_data_record(
+            {
+                "schema": DATA_PROFILE_SCHEMA_V1,
+                "schema_version": 1,
+                "created_at_utc": NOW,
+                "generation_id": H1,
+                "table_count": 1,
+                "row_count": 2,
+                "columns": [
+                    {
+                        "name": "id",
+                        "observed_type": "STRING",
+                        "null_count": 0,
+                        "distinct_count": 2,
+                    }
+                ],
+                "limitations": ["Legacy structure only."],
+            }
+        )
+        legacy_reconciliation = bind_data_record(
+            {
+                "schema": DATA_RECONCILIATION_SCHEMA_V1,
+                "schema_version": 1,
+                "created_at_utc": NOW,
+                "left_generation_id": H1,
+                "right_generation_id": H2,
+                "exact_duplicate_count": 0,
+                "candidate_duplicate_count": 0,
+                "conflict_count": 0,
+                "preserved_conflict_count": 0,
+                "contradiction_policy": "PRESERVE_ALL",
+                "result_generation_id": None,
+            }
+        )
+        for record in (
+            legacy_budget,
+            legacy_plan,
+            legacy_generation,
+            legacy_profile,
+            legacy_reconciliation,
+        ):
+            self.assertTrue(validate_data_record(record)["valid"], record["schema"])
 
     def test_plan_is_no_write_and_does_not_disclose_source_path(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -202,7 +349,7 @@ class DataContractTests(unittest.TestCase):
     def test_unknown_field_version_missing_field_and_tamper_fail(self) -> None:
         plan = _valid_records()[1]
         unknown = bind_data_record({**plan, "source_path": "C:/private/source.csv"})
-        wrong_version = bind_data_record({**plan, "schema_version": 2})
+        wrong_version = bind_data_record({**plan, "schema_version": 1})
         missing = dict(plan)
         missing.pop("project_binding_sha256")
         missing = bind_data_record(missing)
@@ -216,7 +363,10 @@ class DataContractTests(unittest.TestCase):
     def test_invalid_budget_and_unpreserved_conflict_fail(self) -> None:
         with self.assertRaises(Refusal):
             make_resource_budget(max_source_bytes=0)
-        reconciliation = _valid_records()[7]
+        reconciliation = next(
+            record for record in _valid_records()
+            if record["schema"] == DATA_RECONCILIATION_SCHEMA
+        )
         broken = bind_data_record({**reconciliation, "preserved_conflict_count": 0})
         with self.assertRaises(Refusal) as caught:
             validate_data_record(broken)

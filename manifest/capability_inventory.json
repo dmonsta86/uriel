@@ -1,7 +1,7 @@
 {
   "schema": "uriel.capability_inventory.v1",
   "source": "src/uriel/capability_status.py",
-  "source_fingerprint": "27fa9cd5b73c04e70af75752dc8376006a63037e2f935380aaa153ade6ae4b5b",
+  "source_fingerprint": "157c38b84eec572215b999e42be4dd0e323916fe98214ab036bf43596c69a81c",
   "capabilities": [
     {
       "id": "CAP-CORE-001",
@@ -144,16 +144,25 @@
     {
       "id": "CAP-INGRESS-001",
       "name": "Evidence ingress and Data Desk",
-      "status": "PLANNED",
-      "entry_point": "n/a (planned capability)",
+      "status": "EXPERIMENTAL",
+      "entry_point": "uriel data plan / import / inspect / diff / reconcile / verify-generation",
       "platforms": [
-        "Windows (planned)",
-        "macOS (planned)",
-        "Linux (planned)"
+        "Windows",
+        "macOS",
+        "Linux"
       ],
-      "modules": [],
-      "verification": [],
-      "notes": "Planned safe ingestion and table reconciliation; no shipped ingress or Data Desk module."
+      "modules": [
+        "src/uriel/data_contracts.py",
+        "src/uriel/data_ingress.py",
+        "src/uriel/data_desk.py"
+      ],
+      "verification": [
+        "tests/test_data_contracts.py",
+        "tests/test_data_ingress.py",
+        "tests/test_data_desk.py",
+        "tests/test_cli.py"
+      ],
+      "notes": "Bounded local immutable intake, structural generations, per-record delta ledgers, derived indexes, preserve-all reconciliation, and deep verification; no scientific finding or Gate 0 authority."
     },
     {
       "id": "CAP-FORGE-001",

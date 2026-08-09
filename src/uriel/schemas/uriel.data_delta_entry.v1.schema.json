@@ -1,0 +1,35 @@
+{
+  "$id": "uriel.data_delta_entry.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Uriel Per-Record Data Delta Entry v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "side",
+    "ordinal",
+    "source_record_sha256",
+    "key_sha256",
+    "classification",
+    "counterpart_count",
+    "exact_counterpart_count",
+    "conflict",
+    "preserved",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": {"const": "uriel.data_delta_entry.v1"},
+    "schema_version": {"const": 1},
+    "side": {"enum": ["LEFT", "RIGHT"]},
+    "ordinal": {"type": "integer", "minimum": 0},
+    "source_record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "key_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "classification": {"enum": ["EXACT_DUPLICATE", "CANDIDATE_DUPLICATE", "MODIFIED", "ADDED", "ABSENT", "UNCHANGED", "UNKNOWN"]},
+    "counterpart_count": {"type": "integer", "minimum": 0},
+    "exact_counterpart_count": {"type": "integer", "minimum": 0},
+    "conflict": {"type": "boolean"},
+    "preserved": {"const": true},
+    "record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

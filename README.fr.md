@@ -150,6 +150,8 @@ Pour la version autonome sans installation, consultez
 <!-- URIEL:SECTION:data-readiness:START -->
 ## Préparation des données (Porte 0)
 
+Sur la branche canonique `main`, le flux local expérimental `uriel data` peut planifier et sceller des fichiers CSV, TSV, JSON, JSONL, texte et Markdown en UTF-8 ; créer des profils structurels et des générations immuables ; prévisualiser les écarts ; préserver chaque enregistrement d'entrée pendant la réconciliation ; puis réanalyser et vérifier indépendamment le lien avec les données brutes. Il n'exécute aucune formule, ne devine ni unité ni type sémantique, ne crée aucun résultat scientifique et n'accorde aucune autorité à la Porte 0.
+
 Avant d'analyser des données ou de tirer des conclusions, exécutez les vérifications de préparation des données :
 
 Si la Porte 0 échoue, l'analyse en aval est bloquée jusqu'à ce que l'intégrité des données soit restaurée.
@@ -269,6 +271,7 @@ Commencez par :
 The Forge of Uriel est conçu pour faire respecter l'honnêteté intellectuelle et la lignée des preuves, mais il a des limites définies :
 
 - Uriel ne peut pas inventer de données manquantes ni fournir de mesures de laboratoire.
+- Data Desk rapporte des observations structurelles et lexicales bornées ; ce n'est ni un moteur statistique, ni un validateur sémantique, ni un substitut à l'examen des mesures et méthodes sources.
 - Les lentilles IA sont consultatives et n'ont aucune autorité sur les décisions déterministes des portes.
 - Une Porte ou Bénédiction expérimentale indique que les prédicats enregistrés par Uriel ont réussi pour des artefacts précis. Elle n'établit ni validité des mesures, ni vérité, ni acceptation éditoriale, ni consensus.
 

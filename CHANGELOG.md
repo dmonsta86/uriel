@@ -16,6 +16,20 @@ All notable changes to Uriel are documented here.
   retry, disk/resource checks, and no implied Gate 0 authority.
 - `uriel data verify-import` for independent recomputation of archived plan,
   raw-artifact, import-receipt, and managed-byte bindings.
+- Deterministic Data Desk inspection for bounded UTF-8 CSV, TSV, JSON, JSONL,
+  text, and Markdown, with explicit format/header decisions, stable duplicate
+  column identities, missingness, lexical candidates, duplicate ledgers, and
+  user-confirmed-only unit/semantic annotations.
+- Immutable manifest-last data generations with separate record-multiset and
+  source-order hashes, raw-byte reparsing, recursive lineage verification,
+  no-write generation diffs, per-record canonical delta ledgers, derived
+  generation-bound SQLite indexes, and reconciliation that preserves every
+  input record and contradiction.
+- Explicit v2 Data Desk contracts with published v1 schemas preserved intact;
+  old v1 import plans remain accepted rather than silently reinterpreted.
+- Ordered two-parent reconciliation identity, complete parent/raw/key/delta
+  verification, exact canonical records-file bindings, one-sided duplicate
+  evidence, and hard parser/verifier work ceilings.
 
 ## 1.0.0-rc2 — 2026-08-06
 

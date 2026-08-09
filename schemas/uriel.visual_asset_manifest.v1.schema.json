@@ -1,0 +1,65 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.visual_asset_manifest.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accessibility_review": {
+      "type": "string"
+    },
+    "art_prompt_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "assembly_template_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "final_asset_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "locale": {
+      "type": "string"
+    },
+    "overlay_copy_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "reference_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "schema": {
+      "const": "uriel.visual_asset_manifest.v1"
+    },
+    "status": {
+      "enum": [
+        "PROMPT_READY",
+        "ART_PENDING",
+        "OVERLAY_PENDING",
+        "REVIEWED",
+        "VERIFIED"
+      ]
+    },
+    "translation_status": {
+      "type": "string"
+    },
+    "visual_review": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema",
+    "locale",
+    "reference_sha256",
+    "art_prompt_sha256",
+    "overlay_copy_sha256",
+    "assembly_template_sha256",
+    "status"
+  ],
+  "title": "Uriel Standalone Localized Visual Asset",
+  "type": "object"
+}

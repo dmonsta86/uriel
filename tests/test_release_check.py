@@ -79,6 +79,7 @@ class ReleaseCheckInterruptionTests(unittest.TestCase):
             "scripts/check_i18n.py",
             "scripts/check_localization_integrity.py",
             "scripts/check_capability_status.py",
+            "scripts/check_schema_mirror.py",
             "scripts/check_forge_trial.py",
         }
         self.assertEqual(set(module.PRE_BUILD_CHECKS), required)

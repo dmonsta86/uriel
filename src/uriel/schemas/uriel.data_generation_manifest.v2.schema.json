@@ -1,0 +1,257 @@
+{
+  "$id": "uriel.data_generation_manifest.v2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Uriel Data Generation Manifest v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "created_at_utc",
+    "generation_id",
+    "parent_generation_ids",
+    "format",
+    "parser_version",
+    "parser_decisions",
+    "user_confirmed_annotations",
+    "raw_artifact_sha256s",
+    "transform_receipt_sha256s",
+    "reconciliation_sha256",
+    "record_count",
+    "column_count",
+    "records_sha256",
+    "order_sha256",
+    "records_relative_path",
+    "profile_relative_path",
+    "profile_sha256",
+    "derived_index_kind",
+    "derived_index_relative_path",
+    "record_sha256",
+    "operation_binding_sha256",
+    "records_file_sha256",
+    "records_file_size_bytes"
+  ],
+  "properties": {
+    "schema": {
+      "const": "uriel.data_generation_manifest.v2"
+    },
+    "schema_version": {
+      "const": 2
+    },
+    "created_at_utc": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generation_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "format": {
+      "enum": [
+        "CSV",
+        "TSV",
+        "JSON",
+        "JSONL",
+        "UTF8_TEXT",
+        "MARKDOWN",
+        "RECONCILED"
+      ]
+    },
+    "parser_version": {
+      "const": "uriel.data_parser.v1"
+    },
+    "parser_decisions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "representation",
+        "source_order_preserved",
+        "header_decision",
+        "format_decision",
+        "columns"
+      ],
+      "properties": {
+        "representation": {
+          "const": "COLUMN_ID_OBJECTS"
+        },
+        "source_order_preserved": {
+          "const": true
+        },
+        "header_decision": {
+          "enum": [
+            "EXPLICIT_UNIQUE",
+            "EXPLICIT_DUPLICATE_PRESERVED",
+            "OBJECT_KEYS",
+            "SYNTHETIC_TEXT_COLUMN",
+            "RECONCILED_UNION"
+          ]
+        },
+        "format_decision": {
+          "enum": [
+            "DELIMITED_UTF8_COMMA_QUOTE_DOUBLEQUOTE_STRICT_HEADER_ROW_1",
+            "DELIMITED_UTF8_TAB_QUOTE_DOUBLEQUOTE_STRICT_HEADER_ROW_1",
+            "JSON_UTF8_OBJECT_OR_OBJECT_ARRAY_SORTED_COLUMNS_DUPLICATE_KEYS_REFUSED",
+            "JSONL_UTF8_OBJECT_PER_NONBLANK_LINE_SORTED_COLUMNS_DUPLICATE_KEYS_REFUSED",
+            "UTF8_TEXT_ONE_RECORD_PER_PHYSICAL_LINE",
+            "UTF8_MARKDOWN_ONE_RECORD_PER_PHYSICAL_LINE_NO_RENDER",
+            "PRESERVE_LEFT_ORDER_THEN_RIGHT_ORDER_NO_COERCION"
+          ]
+        },
+        "columns": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "column_id",
+              "name",
+              "position",
+              "duplicate_name"
+            ],
+            "properties": {
+              "column_id": {
+                "type": "string",
+                "pattern": "^col-[0-9a-f]{16}$"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "position": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "duplicate_name": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "user_confirmed_annotations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "column_id",
+          "annotation_kind",
+          "value",
+          "confirmation"
+        ],
+        "properties": {
+          "column_id": {
+            "type": "string",
+            "pattern": "^col-[0-9a-f]{16}$"
+          },
+          "annotation_kind": {
+            "enum": [
+              "UNIT",
+              "SEMANTIC_TYPE"
+            ]
+          },
+          "value": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+          },
+          "confirmation": {
+            "const": "USER_CONFIRMED"
+          }
+        }
+      }
+    },
+    "raw_artifact_sha256s": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "transform_receipt_sha256s": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "reconciliation_sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "record_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "column_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "records_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "order_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "records_relative_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "profile_relative_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "profile_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "derived_index_kind": {
+      "const": "SQLITE_DERIVED_NONAUTHORITATIVE"
+    },
+    "derived_index_relative_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "record_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "parent_generation_ids": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "operation_binding_sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "records_file_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "records_file_size_bytes": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

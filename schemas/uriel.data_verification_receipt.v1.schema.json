@@ -1,0 +1,31 @@
+{
+  "$id": "uriel.data_verification_receipt.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Uriel Independent Data Record Verification Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "created_at_utc",
+    "target_schema",
+    "target_record_sha256",
+    "verifier_version",
+    "decision",
+    "errors",
+    "independent_recompute",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": {"const": "uriel.data_verification_receipt.v1"},
+    "schema_version": {"const": 1},
+    "created_at_utc": {"type": "string", "minLength": 1},
+    "target_schema": {"type": "string", "pattern": "^uriel\\.[a-z0-9_]+\\.v[0-9]+$"},
+    "target_record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "verifier_version": {"type": "string", "minLength": 1},
+    "decision": {"enum": ["PASS", "FAIL"]},
+    "errors": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "independent_recompute": {"const": true},
+    "record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

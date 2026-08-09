@@ -81,7 +81,7 @@ class CliTests(unittest.TestCase):
             self.assertEqual(0, verified.returncode, verified.stderr)
             verification = json.loads(verified.stdout)["result"]
             self.assertTrue(verification["valid"])
-            self.assertEqual("uriel.data_import_plan.v1", verification["schema"])
+            self.assertEqual("uriel.data_import_plan.v2", verification["schema"])
 
     def test_data_import_and_verify_import_consume_saved_cli_plan(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -132,6 +132,87 @@ class CliTests(unittest.TestCase):
             self.assertTrue(verification["verified"])
             self.assertEqual(result["content_sha256"], verification["content_sha256"])
             self.assertFalse(verification["gate_0_authority_granted"])
+
+    def test_data_desk_cli_inspect_diff_reconcile_and_deep_verify(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            root = base / "project"
+            private = base / "private-source-name"
+            private.mkdir()
+            initialized = self._run("init", str(root), "--question", "Can installed-style CLI generations preserve conflicts?")
+            self.assertEqual(0, initialized.returncode, initialized.stderr)
+
+            def generation(name: str, content: str) -> dict:
+                source = private / name
+                source.write_text(content, encoding="utf-8")
+                planned = self._run(
+                    "--json", "data", "plan", "--root", str(root), "--source", str(source), "--label", name
+                )
+                self.assertEqual(0, planned.returncode, planned.stderr)
+                plan_path = root / "artifacts" / (name + ".plan.json")
+                plan_path.write_text(planned.stdout, encoding="utf-8")
+                imported = self._run(
+                    "--json", "data", "import", "--root", str(root), "--source", str(source),
+                    "--plan", plan_path.relative_to(root).as_posix(),
+                )
+                self.assertEqual(0, imported.returncode, imported.stderr)
+                receipt = json.loads(imported.stdout)["result"]["receipt_relative_path"]
+                inspected = self._run(
+                    "--json", "data", "inspect", "--root", str(root), "--receipt", receipt,
+                    "--semantic-type", "id=record identifier",
+                )
+                self.assertEqual(0, inspected.returncode, inspected.stderr)
+                self.assertNotIn(str(source), inspected.stdout)
+                return json.loads(inspected.stdout)["result"]
+
+            left = generation("left.csv", "id,value\n1,a\n2,b\n")
+            right = generation("right.csv", "id,value\n1,a\n2,changed\n3,new\n")
+            preview = self._run(
+                "--json", "data", "diff", "--root", str(root),
+                "--left-generation", left["generation_id"],
+                "--right-generation", right["generation_id"],
+                "--keys", "id",
+            )
+            self.assertEqual(0, preview.returncode, preview.stderr)
+            preview_result = json.loads(preview.stdout)["result"]
+            self.assertFalse(preview_result["writes_performed"])
+            self.assertFalse(preview_result["delta_ledger_included"])
+            self.assertNotIn("delta_ledger", preview_result)
+            self.assertEqual(5, preview_result["delta_entry_count"])
+            self.assertEqual(1, preview_result["summary"]["modified_count"])
+            self.assertEqual(1, preview_result["summary"]["added_count"])
+
+            detailed_preview = self._run(
+                "--json", "data", "diff", "--root", str(root),
+                "--left-generation", left["generation_id"],
+                "--right-generation", right["generation_id"],
+                "--keys", "id", "--include-delta-ledger",
+            )
+            self.assertEqual(0, detailed_preview.returncode, detailed_preview.stderr)
+            detailed = json.loads(detailed_preview.stdout)["result"]
+            self.assertTrue(detailed["delta_ledger_included"])
+            self.assertEqual(5, len(detailed["delta_ledger"]))
+
+            reconciled = self._run(
+                "--json", "data", "reconcile", "--root", str(root),
+                "--left-generation", left["generation_id"],
+                "--right-generation", right["generation_id"],
+                "--keys", "id",
+            )
+            self.assertEqual(0, reconciled.returncode, reconciled.stderr)
+            result = json.loads(reconciled.stdout)["result"]
+            self.assertEqual(5, result["record_count"])
+            self.assertTrue(result["all_input_records_preserved"])
+            self.assertFalse(result["gate_0_authority_granted"])
+
+            verified = self._run(
+                "--json", "data", "verify-generation", "--root", str(root),
+                "--generation", result["generation_id"],
+            )
+            self.assertEqual(0, verified.returncode, verified.stderr)
+            verification = json.loads(verified.stdout)["result"]
+            self.assertTrue(verification["verified"])
+            self.assertFalse(verification["scientific_findings_created"])
 
 
 if __name__ == "__main__":

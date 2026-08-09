@@ -9,7 +9,12 @@ from types import SimpleNamespace
 from unittest import mock
 
 from uriel.core import Refusal, canonical_json, initialize_project
-from uriel.data_contracts import plan_data_import
+from uriel.data_contracts import (
+    DATA_IMPORT_PLAN_SCHEMA_V1,
+    RESOURCE_BUDGET_SCHEMA_V1,
+    bind_data_record,
+    plan_data_import,
+)
 from uriel.data_ingress import import_data_artifact, verify_data_import
 
 
@@ -82,6 +87,36 @@ class DataIngressTests(unittest.TestCase):
             )
             self.assertNotIn(str(source), persisted)
             self.assertNotIn("private-account-name", persisted)
+
+    def test_published_v1_plan_remains_importable(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root, source = self._project_and_source(temporary)
+            current = plan_data_import(root, source, label="legacy-compatible")["plan"]
+            current_budget = current["resource_budget"]
+            legacy_budget = bind_data_record(
+                {
+                    **{
+                        key: value
+                        for key, value in current_budget.items()
+                        if key not in {"record_sha256", "max_field_bytes"}
+                    },
+                    "schema": RESOURCE_BUDGET_SCHEMA_V1,
+                    "schema_version": 1,
+                }
+            )
+            legacy_plan = bind_data_record(
+                {
+                    **{key: value for key, value in current.items() if key != "record_sha256"},
+                    "schema": DATA_IMPORT_PLAN_SCHEMA_V1,
+                    "schema_version": 1,
+                    "resource_budget": legacy_budget,
+                }
+            )
+            target = root / "artifacts" / "legacy-plan.json"
+            target.write_bytes(canonical_json(legacy_plan).encode("utf-8"))
+            imported = import_data_artifact(root, source, target.relative_to(root).as_posix())
+            self.assertEqual("SEALED", imported["status"])
+            self.assertTrue(verify_data_import(root, imported["receipt_relative_path"])["verified"])
 
     def test_changed_encoding_oversize_and_low_disk_fail_without_receipt(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

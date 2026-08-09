@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.forge_trial_fixture_validation.v1.schema.json",
+  "title": "Uriel Forge Trial fixture validation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "case_id",
+    "status",
+    "checks",
+    "seeded_issue_count",
+    "scorecard_total_points",
+    "input_manifest",
+    "answer_key_manifest",
+    "recomputed_clean_summary",
+    "detector_status",
+    "fixture_digest",
+    "errors"
+  ],
+  "properties": {
+    "schema": {
+      "const": "uriel.forge_trial_fixture_validation.v1"
+    },
+    "case_id": {
+      "type": "string"
+    },
+    "status": {
+      "enum": ["PASS", "FAIL"]
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["check_id", "status", "detail"],
+        "properties": {
+          "check_id": {"type": "string"},
+          "status": {"enum": ["PASS", "FAIL"]},
+          "detail": {"type": "string"}
+        }
+      }
+    },
+    "seeded_issue_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "scorecard_total_points": {
+      "type": "integer"
+    },
+    "input_manifest": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "answer_key_manifest": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "recomputed_clean_summary": {
+      "type": ["object", "null"]
+    },
+    "detector_status": {
+      "const": "NOT_RUN"
+    },
+    "fixture_digest": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "errors": {
+      "type": "array",
+      "items": {"type": "string"}
+    }
+  }
+}

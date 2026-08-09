@@ -1,0 +1,35 @@
+{
+  "$id": "uriel.data_reconciliation.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Uriel Data Reconciliation Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "created_at_utc",
+    "left_generation_id",
+    "right_generation_id",
+    "exact_duplicate_count",
+    "candidate_duplicate_count",
+    "conflict_count",
+    "preserved_conflict_count",
+    "contradiction_policy",
+    "result_generation_id",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": {"const": "uriel.data_reconciliation.v1"},
+    "schema_version": {"const": 1},
+    "created_at_utc": {"type": "string", "minLength": 1},
+    "left_generation_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "right_generation_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "exact_duplicate_count": {"type": "integer", "minimum": 0},
+    "candidate_duplicate_count": {"type": "integer", "minimum": 0},
+    "conflict_count": {"type": "integer", "minimum": 0},
+    "preserved_conflict_count": {"type": "integer", "minimum": 0},
+    "contradiction_policy": {"const": "PRESERVE_ALL"},
+    "result_generation_id": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

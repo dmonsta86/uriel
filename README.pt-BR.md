@@ -150,6 +150,8 @@ Para a opção de arquivo único sem instalação, consulte
 <!-- URIEL:SECTION:data-readiness:START -->
 ## Prontidão de Dados (Porta 0)
 
+Na ramificação canônica `main`, o fluxo local experimental `uriel data` pode planejar e selar CSV, TSV, JSON, JSONL, texto e Markdown em UTF-8; criar perfis estruturais e gerações imutáveis; visualizar diferenças; preservar cada registro de entrada durante a reconciliação; e reanalisar e verificar de forma independente o vínculo com os dados brutos. Ele não executa fórmulas, não presume unidades nem tipos semânticos, não cria achados científicos e não concede autoridade à Porta 0.
+
 Antes de analisar dados ou tirar conclusões, execute as verificações de Prontidão de Dados:
 
 Se a Porta 0 falhar, a análise posterior será bloqueada até que a integridade dos dados seja restaurada.
@@ -268,6 +270,7 @@ Comece com:
 O The Forge of Uriel foi construído para impor a honestidade intelectual e a linhagem de evidências, mas possui limites definidos:
 
 - O Uriel não pode inventar dados ausentes nem fornecer medições de laboratório.
+- O Data Desk relata observações estruturais e lexicais delimitadas; não é um mecanismo estatístico, um validador semântico nem substitui a inspeção das medições e dos métodos de origem.
 - As lentes de IA são consultivas e não possuem autoridade sobre as decisões determinísticas das portas.
 - Uma Porta ou Bênção experimental informa que os predicados registrados pelo Uriel passaram para artefatos exatos. Ela não estabelece validade de medição, verdade, aceitação editorial nem consenso.
 

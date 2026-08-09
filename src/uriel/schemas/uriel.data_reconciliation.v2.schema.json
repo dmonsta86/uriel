@@ -1,0 +1,147 @@
+{
+  "$id": "uriel.data_reconciliation.v2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Uriel Data Reconciliation Result v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "created_at_utc",
+    "left_generation_id",
+    "right_generation_id",
+    "left_records_sha256",
+    "right_records_sha256",
+    "key_columns",
+    "exact_duplicate_count",
+    "candidate_duplicate_count",
+    "conflict_count",
+    "preserved_conflict_count",
+    "added_count",
+    "absent_count",
+    "modified_count",
+    "unchanged_count",
+    "unknown_count",
+    "contradiction_policy",
+    "result_generation_id",
+    "result_record_count",
+    "result_records_sha256",
+    "delta_sha256",
+    "delta_entry_count",
+    "delta_ledger_relative_path",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "uriel.data_reconciliation.v2"
+    },
+    "schema_version": {
+      "const": 2
+    },
+    "created_at_utc": {
+      "type": "string",
+      "minLength": 1
+    },
+    "left_generation_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "right_generation_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "left_records_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "right_records_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "key_columns": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^col-[0-9a-f]{16}$"
+      }
+    },
+    "exact_duplicate_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "candidate_duplicate_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "conflict_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "preserved_conflict_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "added_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "absent_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "modified_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "unchanged_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "unknown_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "contradiction_policy": {
+      "const": "PRESERVE_ALL"
+    },
+    "result_generation_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "result_record_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "result_records_sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "delta_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "delta_entry_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "delta_ledger_relative_path": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "record_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

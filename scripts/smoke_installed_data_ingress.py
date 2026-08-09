@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exercise Evidence Ingress through an installed Uriel console command."""
+"""Exercise Evidence Ingress and Data Desk through an installed Uriel command."""
 from __future__ import annotations
 
 import argparse
@@ -110,7 +110,109 @@ def main() -> int:
         if retry_result.get("status") != "ALREADY_IMPORTED" or retry_result.get("copy_performed") is not False:
             raise RuntimeError("installed data import retry was not deterministic and copy-free")
 
-    print("installed Evidence Ingress smoke: PASS")
+        inspected = _run(
+            executable,
+            [
+                "--json",
+                "data",
+                "inspect",
+                "--root",
+                str(root),
+                "--receipt",
+                str(result["receipt_relative_path"]),
+                "--semantic-type",
+                "id=record identifier",
+            ],
+        )
+        first_generation = json.loads(inspected.stdout).get("result", {})
+        if first_generation.get("record_count") != 2 or first_generation.get("gate_0_authority_granted") is not False:
+            raise RuntimeError("installed Data Desk inspection did not create a bounded two-record generation")
+
+        second_source = base / "another-private-source-name" / "records.csv"
+        second_source.parent.mkdir()
+        second_source.write_text("id,value\na,1\nb,changed\nc,3\n", encoding="utf-8")
+        second_plan = _run(
+            executable,
+            ["--json", "data", "plan", "--root", str(root), "--source", str(second_source), "--label", "smoke-records-2"],
+        )
+        second_plan_path = root / "artifacts" / "installed-import-plan-2.json"
+        second_plan_path.write_text(second_plan.stdout, encoding="utf-8")
+        second_import = _run(
+            executable,
+            [
+                "--json", "data", "import", "--root", str(root), "--source", str(second_source),
+                "--plan", "artifacts/installed-import-plan-2.json",
+            ],
+        )
+        second_receipt = json.loads(second_import.stdout).get("result", {}).get("receipt_relative_path")
+        second_inspection = _run(
+            executable,
+            [
+                "--json", "data", "inspect", "--root", str(root), "--receipt", str(second_receipt),
+                "--semantic-type", "id=record identifier",
+            ],
+        )
+        second_generation = json.loads(second_inspection.stdout).get("result", {})
+
+        preview = _run(
+            executable,
+            [
+                "--json", "data", "diff", "--root", str(root),
+                "--left-generation", str(first_generation["generation_id"]),
+                "--right-generation", str(second_generation["generation_id"]),
+                "--keys", "id",
+            ],
+        )
+        preview_result = json.loads(preview.stdout).get("result", {})
+        if preview_result.get("writes_performed") is not False or preview_result.get("summary", {}).get("modified_count") != 1:
+            raise RuntimeError("installed Data Desk diff did not produce the expected no-write delta")
+
+        reconciled = _run(
+            executable,
+            [
+                "--json", "data", "reconcile", "--root", str(root),
+                "--left-generation", str(first_generation["generation_id"]),
+                "--right-generation", str(second_generation["generation_id"]),
+                "--keys", "id",
+            ],
+        )
+        reconciled_result = json.loads(reconciled.stdout).get("result", {})
+        if reconciled_result.get("record_count") != 5 or reconciled_result.get("all_input_records_preserved") is not True:
+            raise RuntimeError("installed Data Desk reconciliation did not preserve all five input records")
+        generation_id = str(reconciled_result["generation_id"])
+
+        generation_verified = _run(
+            executable,
+            ["--json", "data", "verify-generation", "--root", str(root), "--generation", generation_id],
+        )
+        generation_verification = json.loads(generation_verified.stdout).get("result", {})
+        if generation_verification.get("verified") is not True or generation_verification.get("decision") != "PASS":
+            raise RuntimeError("installed Data Desk deep generation verification did not pass")
+
+        repeated_reconciliation = _run(
+            executable,
+            [
+                "--json", "data", "reconcile", "--root", str(root),
+                "--left-generation", str(first_generation["generation_id"]),
+                "--right-generation", str(second_generation["generation_id"]),
+                "--keys", "id",
+            ],
+        )
+        repeated_id = json.loads(repeated_reconciliation.stdout).get("result", {}).get("generation_id")
+        if repeated_id != generation_id:
+            raise RuntimeError("installed Data Desk reconciliation retry changed generation identity")
+
+        combined_output = "".join(
+            completed.stdout
+            for completed in (
+                inspected, second_plan, second_import, second_inspection, preview,
+                reconciled, generation_verified, repeated_reconciliation,
+            )
+        )
+        if str(source) in combined_output or str(second_source) in combined_output or "another-private-source-name" in combined_output:
+            raise RuntimeError("installed Data Desk output disclosed a private source path")
+
+    print("installed Evidence Ingress and Data Desk smoke: PASS")
     return 0
 
 

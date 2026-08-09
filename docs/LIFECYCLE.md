@@ -3,8 +3,9 @@
 This document records the research-lifecycle layer on top of the existing
 deterministic core. The intake, bounded AI-surface, workbench, checkpoint,
 decision, repair, and submission portions are current beta surfaces. Evidence
-Ingress now has a bounded immutable-intake implementation on `main`; Data Desk
-profiling/generations, Paper Builder, and advanced export work remain planned.
+Ingress and the deterministic local Data Desk now have experimental runtime
+paths on `main`; Gate 0 integration, Paper Builder, and advanced export work
+remain planned.
 The checklist at the bottom is the authoritative boundary for this document.
 
 The core promise is unchanged: Uriel certifies only that one exact recorded
@@ -70,15 +71,23 @@ concrete pivot: narrower claim, different outcome or comparison, observational
 study, replication, methods paper, dataset/resource paper, negative result,
 software/tool paper, or review/evidence map.
 
-### Evidence Ingress (bounded local intake) and Data Desk (planned)
+### Evidence Ingress and Data Desk (experimental on `main`)
 
-The target Data Desk will inventory, sort, normalize, hash, and index data with
-immutable generation-based checkpoints, a declarative ephemeral/exclusion
-policy with human reasons, absence-fact delta classification (deletion is a
-fact, not a conclusion about corruption), an exact duplicate ledger, an
-SQLite index, and an independent read-only verifier. Anomaly detection will
-create a review queue of leads, not scientific findings. Scale claims will only
-be made with measured benchmark receipts.
+The current Data Desk handles bounded UTF-8 CSV, TSV, JSON, JSONL, text, and
+Markdown. It makes explicit parser/header decisions, stable positional column
+identities, structural and lexical profiles, separate content/order hashes,
+immutable parent-linked generations, no-write deltas, and reconciliation that
+preserves every left and right record. Every input record receives a canonical
+delta-ledger entry, and every generation has a read-only verified SQLite index
+explicitly marked derived and nonauthoritative. Anomaly queues contain only
+leads and candidates. Units and semantic types are recorded only when the
+operator explicitly supplies a user-confirmed annotation.
+
+The v2 generation identity binds both ordered reconciliation parents and the
+confirmed key/delta operation, while the manifest and SQLite metadata bind the
+exact canonical records-file bytes. Verification also requires the complete
+parent raw-artifact union and refuses forged or ambiguous key columns. Existing
+v1 contracts remain available without being silently upgraded.
 
 The current local-only intake path is:
 
@@ -87,14 +96,22 @@ cd PROJECT
 uriel --json data plan --root . --source FILE > artifacts/import-plan.json
 uriel data import --root . --source FILE --plan artifacts/import-plan.json
 uriel data verify-import --root . --receipt .uriel/data/receipts/import/PLAN_SHA256.json
+uriel data inspect --root . --receipt .uriel/data/receipts/import/PLAN_SHA256.json
+uriel data diff --root . --left-generation LEFT --right-generation RIGHT --keys id
+uriel data reconcile --root . --left-generation LEFT --right-generation RIGHT --keys id
+uriel data verify-generation --root . --generation RESULT
 ```
 
 `data plan` remains no-write and path-private. `data import` requires that exact
 saved plan, streams the selected UTF-8 file once, seals content-addressed bytes,
 and publishes immutable records with the receipt last. `data verify-import`
-recomputes the managed bytes and record bindings. None of these commands marks
-the artifact ready for analysis or grants Gate 0 authority. Deterministic
-profiles, generations, reconciliation, and Gate 0 integration remain planned.
+recomputes the managed bytes and record bindings. `data inspect` reparses the
+sealed bytes into a manifest-last generation; `data diff` writes nothing;
+`data reconcile` preserves both sides; and `data verify-generation` reparses
+leaf artifacts and recursively verifies lineage and delta bindings. None of
+these commands creates a scientific finding, decides record identity, or
+grants Gate 0 authority. Gate 0 integration remains a separate fail-closed
+package.
 
 ### Paper Builder (planned)
 

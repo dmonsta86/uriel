@@ -29,6 +29,7 @@ TRUSTED / DETERMINISTIC
   core.py       confinement, hashing, atomic state, ledger, receipts
   data_contracts.py  local Evidence Ingress contracts and no-write planning
   data_ingress.py  immutable managed raw intake and receipt verification
+  data_desk.py  bounded parsing, structural profiles, generations, reconciliation
   schema.py     structural and reference validation
   audit.py      declared-policy evaluation
   blessing.py   content-addressed package and verifier
@@ -68,6 +69,13 @@ project/
       raw/sha256/<prefix>/<content-sha256>
       records/raw/<record-sha256>.json
       receipts/import/<plan-sha256>.json
+      generations/<generation-id>/
+        records.jsonl
+        profile.json
+        manifest.json
+      reconciliations/<record-sha256>.json
+      deltas/<delta-sha256>.jsonl
+      indexes/<generation-id>.sqlite
     index/files.sqlite
 ```
 
@@ -76,6 +84,17 @@ bytes are addressed by their SHA-256, and the import receipt is published last
 as the authority marker. An interrupted operation may leave verified,
 content-addressed recovery bytes, but it cannot leave an authoritative partial
 receipt. Managed intake does not grant Data Readiness or Gate 0 authority.
+
+Data Desk generation identity binds the parser version and explicit format
+decision, stable column identities, raw-artifact records, record multiset hash,
+source-order hash, the complete ordered parent set, a reconciliation-operation
+binding, and any explicit user-confirmed unit or semantic annotation. Records
+and profiles are written first; the generation manifest is published last. A
+verifier recomputes canonical records and exact records-file bytes, reparses
+each sealed leaf artifact under its archived budget, verifies parent lineages,
+checks the complete raw-artifact union, and recomputes reconciliation deltas.
+Reconciliation appends left records followed by right records and never
+resolves a contradiction by deleting either side.
 
 `.uriel/` is derived, local state and is ignored by default. Publish selected Blessing packages or audit exports deliberately; do not commit secrets or raw restricted data.
 
@@ -86,6 +105,17 @@ receipt. Managed intake does not grant Data Readiness or Gate 0 authority.
   budgets carry their own independently recomputable binding.
 - A no-write import plan exposes a logical label, media, size, and content hash
   while keeping the selected absolute source path private and ephemeral.
+- Structural generations preserve exact records and source order separately;
+  reordering therefore changes `order_sha256` even when the multiset hash is
+  unchanged.
+- Data Desk v2 manifests bind the exact canonical records-file hash and byte
+  length. The derived SQLite metadata repeats that binding and is checked by a
+  bounded row stream rather than treated as authority.
+- Published Data Desk v1 schemas remain available as their original contracts;
+  stronger records use new v2 IDs instead of silently tightening v1.
+- Units and semantic types are empty by default and enter a generation only as
+  explicit `USER_CONFIRMED` annotations. Lexical candidates never become
+  semantic authority.
 - Source records are sorted by case-folded project-relative path.
 - Every record contains path, SHA-256, size, and media type.
 - The source manifest has a digest over all records and a root-binding digest.

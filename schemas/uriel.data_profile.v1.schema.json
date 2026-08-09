@@ -1,0 +1,43 @@
+{
+  "$id": "uriel.data_profile.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Uriel Data Table and Column Profile v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "created_at_utc",
+    "generation_id",
+    "table_count",
+    "row_count",
+    "columns",
+    "limitations",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": {"const": "uriel.data_profile.v1"},
+    "schema_version": {"const": 1},
+    "created_at_utc": {"type": "string", "minLength": 1},
+    "generation_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "table_count": {"type": "integer", "minimum": 1},
+    "row_count": {"type": "integer", "minimum": 0},
+    "columns": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "observed_type", "null_count", "distinct_count"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "observed_type": {"enum": ["STRING", "INTEGER", "NUMBER", "BOOLEAN", "DATETIME", "NULL", "MIXED", "OBJECT", "ARRAY"]},
+          "null_count": {"type": "integer", "minimum": 0},
+          "distinct_count": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "limitations": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

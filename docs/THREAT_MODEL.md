@@ -20,6 +20,15 @@
 8. **Overclaiming:** a certificate is presented as truth, peer review, universal novelty, or venue acceptance.
 9. **Local compromise:** an attacker can rewrite both project files and the local ledger.
 10. **Concurrent mutation:** files change during inventory or workload execution.
+11. **Parser confusion or exhaustion:** spoofed extensions, malformed rows,
+    duplicate JSON keys, deep nesting, huge fields, or numeric tokens consume
+    resources or produce a lossy interpretation.
+12. **Derived-state substitution:** generation records, profiles, delta ledgers,
+    or SQLite indexes no longer correspond to the sealed raw bytes.
+13. **Conflict erasure:** reconciliation silently chooses one contradictory
+    record or hides duplicate identity.
+14. **Formula activation:** inert source text is executed after spreadsheet
+    export or another downstream handoff.
 
 ## Implemented controls
 
@@ -34,10 +43,29 @@
 - hash-bound external review contracts;
 - package membership and standalone verification;
 - explicit non-claims on the certificate and submission material.
+- plan-bound byte/record/column/depth/field/time budgets and truthful-format
+  parser refusals;
+- stable duplicate-column identities, inert formula-like text, and lead/candidate
+  labels rather than scientific findings;
+- manifest-last generations with independent sealed-byte reparsing, recursive
+  parent verification, ordered two-parent operation identity, complete raw
+  lineage, exact records-file bytes, and separate content/order hashes;
+- one hash-bound delta entry per input record, explicit one-sided duplicate
+  evidence, and preserve-all reconciliation;
+- read-only SQLite `integrity_check`, exact generation/file metadata, and a
+  bounded canonical record-sequence comparison for the explicitly
+  nonauthoritative derived index;
+- hard parser, records-file, ledger, index, receipt, lineage-node, and
+  cumulative-work budgets, with repeated parent verification cached per run.
 
 ## Explicit non-controls
 
 Uriel 1.0 does not provide a hardware root of trust, trusted timestamp authority, public transparency log, author identity signature, sandbox, antivirus scanner, secure enclave, remote backup, or protection against an administrator who can rewrite the entire project and every copy of its history.
+
+Data Desk does not sanitize a value for every possible downstream application.
+It flags formula-like text and never executes it, but an exporter or user can
+still create a dangerous spreadsheet later. It also does not establish that a
+declared key, unit, semantic type, measurement, or source method is true.
 
 The QR payload is an identifier for verification, not a secret or digital signature. For public non-repudiation, publish the Blessing digest in an independently controlled signed release, archival repository, transparency log, or institutional record.
 

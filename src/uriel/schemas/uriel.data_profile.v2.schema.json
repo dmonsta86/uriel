@@ -1,0 +1,221 @@
+{
+  "$id": "uriel.data_profile.v2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Uriel Data Table and Column Profile v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "created_at_utc",
+    "generation_id",
+    "format",
+    "table_count",
+    "row_count",
+    "records_sha256",
+    "order_sha256",
+    "header_decision",
+    "exact_duplicate_row_count",
+    "candidate_keys",
+    "columns",
+    "user_confirmed_annotations",
+    "anomaly_queue",
+    "limitations",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "uriel.data_profile.v2"
+    },
+    "schema_version": {
+      "const": 2
+    },
+    "created_at_utc": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generation_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "format": {
+      "enum": [
+        "CSV",
+        "TSV",
+        "JSON",
+        "JSONL",
+        "UTF8_TEXT",
+        "MARKDOWN",
+        "RECONCILED"
+      ]
+    },
+    "table_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "row_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "records_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "order_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "header_decision": {
+      "enum": [
+        "EXPLICIT_UNIQUE",
+        "EXPLICIT_DUPLICATE_PRESERVED",
+        "OBJECT_KEYS",
+        "SYNTHETIC_TEXT_COLUMN",
+        "RECONCILED_UNION"
+      ]
+    },
+    "exact_duplicate_row_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "candidate_keys": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^col-[0-9a-f]{16}$"
+      }
+    },
+    "columns": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "column_id",
+          "name",
+          "position",
+          "duplicate_name",
+          "observed_type",
+          "null_count",
+          "distinct_count"
+        ],
+        "properties": {
+          "column_id": {
+            "type": "string",
+            "pattern": "^col-[0-9a-f]{16}$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "position": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "duplicate_name": {
+            "type": "boolean"
+          },
+          "observed_type": {
+            "enum": [
+              "STRING",
+              "INTEGER",
+              "NUMBER",
+              "BOOLEAN",
+              "DATETIME",
+              "NULL",
+              "MIXED",
+              "OBJECT",
+              "ARRAY"
+            ]
+          },
+          "null_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "distinct_count": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "user_confirmed_annotations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "column_id",
+          "annotation_kind",
+          "value",
+          "confirmation"
+        ],
+        "properties": {
+          "column_id": {
+            "type": "string",
+            "pattern": "^col-[0-9a-f]{16}$"
+          },
+          "annotation_kind": {
+            "enum": [
+              "UNIT",
+              "SEMANTIC_TYPE"
+            ]
+          },
+          "value": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+          },
+          "confirmation": {
+            "const": "USER_CONFIRMED"
+          }
+        }
+      }
+    },
+    "anomaly_queue": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "classification",
+          "code",
+          "message"
+        ],
+        "properties": {
+          "classification": {
+            "enum": [
+              "LEAD",
+              "CANDIDATE"
+            ]
+          },
+          "code": {
+            "type": "string",
+            "pattern": "^[A-Z0-9_]+$"
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "record_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

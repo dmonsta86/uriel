@@ -1,0 +1,51 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.locale_catalog.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "direction": {
+      "enum": [
+        "ltr",
+        "rtl"
+      ]
+    },
+    "fallback": {
+      "type": "string"
+    },
+    "locale": {
+      "type": "string"
+    },
+    "messages": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "schema": {
+      "const": "uriel.locale_catalog.v1"
+    },
+    "source_catalog_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "translation_status": {
+      "enum": [
+        "AI_ASSISTED_DRAFT",
+        "AI_SECOND_PASS_REVIEWED",
+        "NATIVE_REVIEWED",
+        "VERIFIED",
+        "STALE"
+      ]
+    }
+  },
+  "required": [
+    "schema",
+    "locale",
+    "direction",
+    "fallback",
+    "source_catalog_sha256",
+    "messages"
+  ],
+  "title": "Uriel Locale Catalog",
+  "type": "object"
+}

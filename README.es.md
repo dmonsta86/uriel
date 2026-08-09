@@ -150,6 +150,8 @@ Para la ruta de un solo archivo sin instalación, consulta
 <!-- URIEL:SECTION:data-readiness:START -->
 ## Preparación de datos (Puerta 0)
 
+En la rama canónica `main`, el flujo local experimental `uriel data` puede planificar y sellar CSV, TSV, JSON, JSONL, texto y Markdown en UTF-8; crear perfiles y generaciones estructurales inmutables; previsualizar diferencias; preservar cada registro de entrada durante la reconciliación; y volver a analizar y verificar de forma independiente el vínculo con los datos brutos. No ejecuta fórmulas, no adivina unidades ni tipos semánticos, no crea hallazgos científicos y no otorga autoridad de la Puerta 0.
+
 Antes de analizar datos o sacar conclusiones, ejecuta las comprobaciones de Preparación de Datos:
 
 Si la Puerta 0 falla, el análisis posterior se bloquea hasta que se restaure la integridad de los datos.
@@ -268,6 +270,7 @@ Comienza con:
 The Forge of Uriel está construido para hacer cumplir la honestidad intelectual y la linaje de evidencia, pero tiene límites definidos:
 
 - Uriel no puede inventar datos faltantes ni suministrar mediciones de laboratorio.
+- Data Desk informa observaciones estructurales y léxicas acotadas; no es un motor estadístico, un validador semántico ni un sustituto de la inspección de las mediciones y los métodos de origen.
 - Las lentes de IA son consultivas y no tienen autoridad sobre las decisiones deterministas de las puertas.
 - Una Puerta o Bendición experimental informa que los predicados registrados por Uriel se cumplieron para artefactos exactos. No establece validez de medición, verdad, aceptación editorial ni consenso entre pares.
 

@@ -1,0 +1,39 @@
+{
+  "$id": "uriel.data_import_receipt.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Uriel Evidence Ingress Import Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "created_at_utc",
+    "policy_version",
+    "import_plan_sha256",
+    "raw_artifact_sha256",
+    "source_content_sha256",
+    "copied_content_sha256",
+    "source_size_bytes",
+    "bytes_copied",
+    "managed_relative_path",
+    "outcome",
+    "source_mutated",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": {"const": "uriel.data_import_receipt.v1"},
+    "schema_version": {"const": 1},
+    "created_at_utc": {"type": "string", "minLength": 1},
+    "policy_version": {"const": "uriel.data_policy.v1"},
+    "import_plan_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "raw_artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "copied_content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_size_bytes": {"type": "integer", "minimum": 0},
+    "bytes_copied": {"type": "integer", "minimum": 0},
+    "managed_relative_path": {"type": "string", "minLength": 1},
+    "outcome": {"enum": ["COPIED", "REFERENCED"]},
+    "source_mutated": {"const": false},
+    "record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

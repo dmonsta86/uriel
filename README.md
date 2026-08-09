@@ -172,6 +172,13 @@ For the no-install single-file route, see
 <!-- URIEL:SECTION:data-readiness:START -->
 ## Data Readiness (Gate 0)
 
+On canonical `main`, the experimental local `uriel data` workflow can plan and
+seal UTF-8 CSV, TSV, JSON, JSONL, text, and Markdown; create immutable
+structural profiles and generations; preview deltas; preserve every input
+record during reconciliation; and independently reparse and verify the raw
+binding. It executes no formulas, guesses no units or semantic types, creates
+no scientific findings, and grants no Gate 0 authority.
+
 Before analyzing data or drawing conclusions, run Data Readiness checks:
 
 ```text
@@ -294,6 +301,9 @@ Start with:
 The Forge of Uriel is built to enforce intellectual honesty and evidence lineage, but it has defined boundaries:
 
 - Uriel cannot invent missing data or supply lab measurements.
+- Data Desk reports bounded structural and lexical observations. It is not a
+  statistics engine, semantic validator, or substitute for inspecting source
+  measurements and methods.
 - AI lenses are advisory and carry zero authority over deterministic gate decisions.
 - A Gate or experimental Blessing reports that Uriel's recorded predicates passed for exact bound artifacts. It does not establish measurement validity, truth, journal acceptance, or peer consensus.
 

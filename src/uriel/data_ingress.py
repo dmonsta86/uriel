@@ -25,7 +25,7 @@ from .core import (
     utc_now,
 )
 from .data_contracts import (
-    DATA_IMPORT_PLAN_SCHEMA,
+    DATA_IMPORT_PLAN_SCHEMAS,
     DATA_IMPORT_RECEIPT_SCHEMA,
     DATA_POLICY_VERSION,
     MAX_RECORD_FILE_BYTES,
@@ -137,7 +137,7 @@ def _load_import_plan(root: Path, plan_path: str) -> Dict[str, Any]:
         plan = dict(candidate)
     else:
         plan = value
-    if plan.get("schema") != DATA_IMPORT_PLAN_SCHEMA:
+    if plan.get("schema") not in DATA_IMPORT_PLAN_SCHEMAS:
         raise Refusal(
             "A versioned Evidence Ingress import plan is required.",
             code="DATA_PLAN_RECORD_REQUIRED",

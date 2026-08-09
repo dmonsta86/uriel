@@ -1,6 +1,7 @@
 # ADR 0009: Evidence Ingress and Data Desk contract boundary
 
-- **Status**: Accepted
+- **Status**: Accepted for the R1.1/R1.2 boundary; runtime availability is
+  superseded by [ADR 0010](0010-deterministic-data-desk-generations.md)
 - **Date**: 2026-08-08
 - **Scope**: R1.1 contract freeze with the bounded R1.2 managed-intake implementation
 
@@ -48,9 +49,10 @@ The future command shape remains:
 plan -> import -> inspect -> diff -> reconcile -> verify
 ```
 
-`plan`, `import`, import verification, and contract-record verification are
-exposed now. `inspect`, `diff`, `reconcile`, and generation verification remain
-unavailable until their own bounded packages land.
+At the time of this decision, `plan`, `import`, import verification, and
+contract-record verification were exposed while the later commands remained
+unavailable. ADR 0010 records their subsequent bounded implementation; this
+paragraph is historical release-boundary evidence, not current CLI help.
 
 ## Frozen record set
 
@@ -88,8 +90,8 @@ records are referenced rather than cloned.
 
 ## Consequences
 
-This establishes an executable, packaged contract plus bounded immutable local
-intake. It does **not** establish Data Desk profiling, generations,
-reconciliation, Gate 0 integration, broad-format support, or scientific
-authority. The overall Evidence Ingress and Data Desk lifecycle therefore
-remains `PLANNED` until later packages close the complete managed-data path.
+This decision established an executable packaged contract plus bounded
+immutable local intake. It did **not at R1.2** establish Data Desk profiling,
+generations, reconciliation, Gate 0 integration, broad-format support, or
+scientific authority. ADR 0010 supersedes the profiling/generation availability
+statement; Gate 0 and scientific authority remain outside this decision.

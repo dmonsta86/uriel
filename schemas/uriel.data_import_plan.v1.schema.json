@@ -1,0 +1,87 @@
+{
+  "$id": "uriel.data_import_plan.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Uriel Evidence Ingress Import Plan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "created_at_utc",
+    "policy_version",
+    "project_binding_sha256",
+    "operation",
+    "mode",
+    "consent",
+    "source",
+    "resource_budget",
+    "planned_raw_artifact_schema",
+    "writes_performed",
+    "network_permitted",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": {"const": "uriel.data_import_plan.v1"},
+    "schema_version": {"const": 1},
+    "created_at_utc": {"type": "string", "minLength": 1},
+    "policy_version": {"const": "uriel.data_policy.v1"},
+    "project_binding_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "operation": {"const": "MANAGED_COPY"},
+    "mode": {"const": "DRY_RUN"},
+    "consent": {"const": "EXPLICIT_USER_SELECTION"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "logical_label",
+        "content_sha256",
+        "size_bytes",
+        "media_type",
+        "format",
+        "encoding",
+        "access_condition",
+        "location_disclosure"
+      ],
+      "properties": {
+        "logical_label": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+        "content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "size_bytes": {"type": "integer", "minimum": 0},
+        "media_type": {"type": "string", "minLength": 1},
+        "format": {"enum": ["CSV", "TSV", "JSON", "JSONL", "UTF8_TEXT", "MARKDOWN"]},
+        "encoding": {"const": "utf-8"},
+        "access_condition": {"const": "USER_SELECTED_LOCAL_REGULAR_FILE"},
+        "location_disclosure": {"const": "PRIVATE_EPHEMERAL"}
+      }
+    },
+    "resource_budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "schema_version",
+        "policy_version",
+        "max_source_bytes",
+        "max_records",
+        "max_columns",
+        "max_nesting_depth",
+        "timeout_seconds",
+        "record_sha256"
+      ],
+      "properties": {
+        "schema": {"const": "uriel.resource_budget.v1"},
+        "schema_version": {"const": 1},
+        "policy_version": {"const": "uriel.data_policy.v1"},
+        "max_source_bytes": {"type": "integer", "minimum": 1, "maximum": 1099511627776},
+        "max_records": {"type": "integer", "minimum": 1, "maximum": 1000000000},
+        "max_columns": {"type": "integer", "minimum": 1, "maximum": 1000000},
+        "max_nesting_depth": {"type": "integer", "minimum": 1, "maximum": 1024},
+        "timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 86400},
+        "record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "planned_raw_artifact_schema": {"const": "uriel.raw_artifact.v1"},
+    "writes_performed": {"const": false},
+    "network_permitted": {"const": false},
+    "record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

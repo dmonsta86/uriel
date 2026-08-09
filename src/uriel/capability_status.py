@@ -99,12 +99,21 @@ CAPABILITIES: List[Dict[str, Any]] = [
     {
         "id": "CAP-INGRESS-001",
         "name": "Evidence ingress and Data Desk",
-        "status": "PLANNED",
-        "entry_point": "n/a (planned capability)",
-        "platforms": ["Windows (planned)", "macOS (planned)", "Linux (planned)"],
-        "modules": [],
-        "verification": [],
-        "notes": "Planned safe ingestion and table reconciliation; no shipped ingress or Data Desk module.",
+        "status": "EXPERIMENTAL",
+        "entry_point": "uriel data plan / import / inspect / diff / reconcile / verify-generation",
+        "platforms": ["Windows", "macOS", "Linux"],
+        "modules": [
+            "src/uriel/data_contracts.py",
+            "src/uriel/data_ingress.py",
+            "src/uriel/data_desk.py",
+        ],
+        "verification": [
+            "tests/test_data_contracts.py",
+            "tests/test_data_ingress.py",
+            "tests/test_data_desk.py",
+            "tests/test_cli.py",
+        ],
+        "notes": "Bounded local immutable intake, structural generations, per-record delta ledgers, derived indexes, preserve-all reconciliation, and deep verification; no scientific finding or Gate 0 authority.",
     },
     {
         "id": "CAP-FORGE-001",
@@ -254,4 +263,3 @@ def write_capability_status_files(repo_root: Path) -> None:
         target = repo_root / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(content, encoding="utf-8", newline="\n")
-
