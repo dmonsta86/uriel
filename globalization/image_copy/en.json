@@ -1,32 +1,32 @@
 {
-  "anvil": [
-    "TRUTH",
-    "EVIDENCE",
-    "RIGOR",
-    "TRANSPARENCY"
-  ],
-  "challenge": "Will your research withstand the forge?",
-  "data_readiness": "DATA READINESS",
-  "evidence": "EVIDENCE TRACING",
+  "center_microline": "RECORD IDENTITY • DATABASE • PROVENANCE • RECEIPTS",
+  "challenge": "IS YOUR IDEA STRONG ENOUGH TO SURVIVE THE FORGE?",
+  "direction": "ltr",
   "footer": [
-    "OPEN SOURCE",
-    "TRANSPARENT",
+    "OFFLINE-FIRST",
+    "PROVIDER-NEUTRAL",
     "REPRODUCIBLE",
-    "AUDITABLE",
-    "COMMUNITY DRIVEN",
-    "BUILT FOR RESEARCHERS"
+    "AUDITABLE"
   ],
-  "gates": "THREE GATES AUDIT",
+  "language": "English",
+  "left_rail": [
+    "IDEA FORMATION",
+    "READ-ONLY REVIEW",
+    "DATA READINESS",
+    "DETERMINISTIC SORTING"
+  ],
   "locale": "en",
-  "one_sentence": "Uriel Forge is an offline-first research development and assurance toolkit that helps turn rough questions or existing projects into reproducible, submission-ready work—and makes every authoritative conclusion earn its evidence.",
-  "provenance": "PROVENANCE + RECEIPTS",
-  "question_intake": "QUESTION INTAKE",
-  "read_only": "READ-ONLY REVIEW",
-  "repair": "REPAIR PACKETS",
-  "schema": "uriel.localized_image_copy.v1",
-  "sorting": "DETERMINISTIC SORTING",
-  "submission": "SUBMISSION SUPPORT",
-  "subtitle": "Evidence-bound research development and assurance",
-  "supporting": "A fair hearing for the idea. A hard test for the evidence.",
-  "translation_status": "AI_ASSISTED_DRAFT_REQUIRES_REVIEW"
+  "localized_title": "THE FORGE OF URIEL",
+  "official_brand": "THE FORGE OF URIEL",
+  "right_rail": [
+    "CLAIM → EVIDENCE",
+    "COUNTER-EVIDENCE",
+    "THREE GATES",
+    "REPAIR & NEXT MOVE",
+    "PAPER & SUBMISSION"
+  ],
+  "schema": "forge_of_uriel.visual_copy.v2",
+  "subtitle": "OPEN-SOURCE, OFFLINE-FIRST RESEARCH DEVELOPMENT AND HARDENING",
+  "supporting_line": "A fair hearing for the idea. A hard test for the evidence.",
+  "translation_status": "AI_ASSISTED_REQUIRES_NATIVE_REVIEW"
 }

@@ -1,32 +1,32 @@
 {
-  "anvil": [
-    "真実",
-    "証拠",
-    "厳密さ",
-    "透明性"
-  ],
-  "challenge": "あなたの研究は鍛錬に耐えられるか？",
-  "data_readiness": "データ準備",
-  "evidence": "証拠の追跡",
+  "center_microline": "記録の同一性 • データベース • 来歴 • 検証記録",
+  "challenge": "あなたのアイデアは、鍛錬に耐えられるほど強いか？",
+  "direction": "ltr",
   "footer": [
-    "オープンソース",
-    "透明性",
+    "オフライン優先",
+    "プロバイダー中立",
     "再現可能",
-    "監査可能",
-    "コミュニティ主導",
-    "研究のために設計"
+    "監査可能"
   ],
-  "gates": "三つの関門監査",
+  "language": "日本語",
+  "left_rail": [
+    "着想の形成",
+    "読み取り専用レビュー",
+    "データ準備",
+    "決定論的ソート"
+  ],
   "locale": "ja",
-  "one_sentence": "Uriel Forge は、問いの原型や既存プロジェクトを再現可能で投稿可能な研究へ育て、権威ある結論の一つ一つに証拠を求める、オフライン優先の研究開発・保証ツールキットです。",
-  "provenance": "来歴 + 検証記録",
-  "question_intake": "問いの受け入れ",
-  "read_only": "読み取り専用レビュー",
-  "repair": "修復パケット",
-  "schema": "uriel.localized_image_copy.v1",
-  "sorting": "決定論的ソート",
-  "submission": "投稿支援",
-  "subtitle": "証拠に基づく研究開発と保証",
-  "supporting": "着想には公正な検討を。証拠には厳しい検証を。",
-  "translation_status": "AI_SECOND_PASS_REVIEWED"
+  "localized_title": "ウリエルの鍛冶場",
+  "official_brand": "THE FORGE OF URIEL",
+  "right_rail": [
+    "主張 → 証拠",
+    "反証と限界",
+    "三つの関門",
+    "修復と次の一手",
+    "論文と投稿"
+  ],
+  "schema": "forge_of_uriel.visual_copy.v2",
+  "subtitle": "オープンソース、オフライン優先の研究開発・強化ツール",
+  "supporting_line": "着想には公正な検討を。証拠には厳しい検証を。",
+  "translation_status": "AI_ASSISTED_REQUIRES_NATIVE_REVIEW"
 }

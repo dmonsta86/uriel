@@ -1,7 +1,7 @@
 <p align="center">
   <img
     src="docs/assets/i18n/pt-BR/uriel-forge-hero.png"
-    alt="The Forge of Uriel: um pesquisador-ferreiro forja evidências"
+    alt="A Forja de Uriel mostra um pesquisador-ferreiro sem asas, atento e solidário, testando uma ideia entre preparação de dados, ordenação determinística, rastreabilidade das evidências, contraevidências, auditoria, reparo e submissão."
     width="100%"
   >
 </p>
@@ -32,7 +32,7 @@
 
 # The Forge of Uriel
 
-> **Aviso**: Esta documentação e o texto da imagem são traduções revisadas por IA (AI_SECOND_PASS_REVIEWED); a ilustração é uma variante localizada (LOCALIZED). Correções de falantes nativos são bem-vindas.
+> **Aviso**: Esta documentação recebeu uma segunda revisão assistida por IA (AI_SECOND_PASS_REVIEWED). O pôster é uma variante localizada revisada por IA (LOCALIZED_AI_REVIEWED), mas seu texto visível ainda requer revisão de um falante nativo (AI_ASSISTED_REQUIRES_NATIVE_REVIEW). Correções são bem-vindas.
 
 <!-- URIEL:SECTION:mission:START -->
 ### Desenvolvimento e blindagem de pesquisa de código aberto e local

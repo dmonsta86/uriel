@@ -1,7 +1,7 @@
 <p align="center">
   <img
     src="docs/assets/i18n/fr/uriel-forge-hero.png"
-    alt="The Forge of Uriel : un chercheur-forgeron met les preuves à l’épreuve"
+    alt="La Forge d’Uriel montre un chercheur-forgeron sans ailes, vigilant et bienveillant, qui éprouve une idée au milieu de la préparation des données, du traçage des preuves, des contre-preuves, des trois portes, des corrections et de la soumission."
     width="100%"
   >
 </p>
@@ -32,7 +32,7 @@
 
 # The Forge of Uriel
 
-> **Avis** : Cette documentation et le texte de l’image sont des traductions révisées par IA (AI_SECOND_PASS_REVIEWED) ; l’illustration est une variante localisée (LOCALIZED). Les corrections de locuteurs natifs sont les bienvenues.
+> **Avis** : Cette documentation a fait l’objet d’une seconde révision assistée par IA (AI_SECOND_PASS_REVIEWED). L’affiche est une variante localisée révisée par IA (LOCALIZED_AI_REVIEWED), mais son texte visible doit encore être revu par une personne de langue maternelle (AI_ASSISTED_REQUIRES_NATIVE_REVIEW). Les corrections sont les bienvenues.
 
 <!-- URIEL:SECTION:mission:START -->
 ### Développement et consolidation de recherche open-source et local

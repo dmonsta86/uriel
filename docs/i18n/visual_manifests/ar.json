@@ -1,0 +1,52 @@
+{
+  "locale": "ar",
+  "role": "LOCALIZED_EXPLAINER_POSTER",
+  "image_status": "LOCALIZED_AI_REVIEWED",
+  "image_path": "docs/assets/i18n/ar/uriel-forge-hero.png",
+  "image_sha256": "beaa057d0b4818fa31c46e7d5b09f38ef95473ef55d24705edf98bcfc4e07be0",
+  "image_dimensions": [
+    3840,
+    2160
+  ],
+  "alt_text": "يُظهر مِصهَر أوريئيل باحثًا حدّادًا بلا أجنحة، يقظًا ومتعاونًا، يختبر فكرة بحثية وسط رموز جاهزية البيانات والترتيب الحتمي وتتبع الأدلة والأدلة المخالفة والبوابات الثلاث والإصلاح والتقديم والتحقق.",
+  "source_archive_name": "THE_FORGE_OF_URIEL_DESKTOP_VISUALS_V2.zip",
+  "source_archive_sha256": "bf9985e5c96cafdcfef9aa1249fe838a4aceca076fb7a1f4e479301bb460f357",
+  "source_package_manifest_sha256": "e44646af53599ffd828946f082f2dc49cd05349687cbd7194a61fe2797f1da60",
+  "source_member": "01_IMAGES/localized_full_posters/the-forge-of-uriel-ar.png",
+  "source_sha256": "570736a07a961d0d4960674643c7eb29eccc3a8204abfddabe062d083023a1c2",
+  "source_dimensions": [
+    1672,
+    941
+  ],
+  "source_kind": "GENERATED_FULL_POSTER",
+  "visual_review_method": "INDEPENDENT_AI_VISUAL_REVIEW",
+  "visual_reviewed_at_utc": "2026-08-09T06:50:44Z",
+  "reference_score": 94,
+  "score": {
+    "composition_parity": 14,
+    "character_expression": 14,
+    "research_story": 19,
+    "detail_density": 9,
+    "lighting_materials": 9,
+    "cultural_subtlety": 9,
+    "text_safe_composition": 4,
+    "accessibility_contrast": 4,
+    "brand_continuity": 5,
+    "negative_constraints": 5,
+    "overall": 92
+  },
+  "visual_gate": "PASS",
+  "visible_text_status": "AI_ASSISTED_REQUIRES_NATIVE_REVIEW",
+  "native_language_reviewers": [],
+  "authority": "NONE",
+  "publication_mode": "DETERMINISTIC_3840X2160_NORMALIZATION",
+  "deterministic_typography": false,
+  "image_prompt_path": "globalization/image_prompts/ar.md",
+  "image_prompt_sha256": "8d6b8477cb4283792da8d5763a009b981ef85314d0fce7017fd0d86975f60211",
+  "image_prompt_role": "ART_ONLY_REGENERATION_INPUT_NOT_EXACT_SOURCE_PROMPT",
+  "image_copy_path": "globalization/image_copy/ar.json",
+  "image_copy_sha256": "6b534add528d9c6fefd17c8ff184ba644359f968a003e6498b002b06ef37f5ad",
+  "image_renderer_path": "scripts/render_localized_heroes.py",
+  "image_renderer_sha256": "73165bda1a30e94dbd46bf20650ded05ffee98502a984851d638f08abf22dbf1",
+  "schema": "uriel.localized_asset.v2"
+}

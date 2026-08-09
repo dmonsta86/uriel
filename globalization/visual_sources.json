@@ -1,0 +1,203 @@
+{
+  "schema": "uriel.visual_source_registry.v1",
+  "source_archive": {
+    "name": "THE_FORGE_OF_URIEL_DESKTOP_VISUALS_V2.zip",
+    "sha256": "bf9985e5c96cafdcfef9aa1249fe838a4aceca076fb7a1f4e479301bb460f357",
+    "package_schema": "forge_of_uriel.desktop_visuals.v2",
+    "package_manifest_sha256": "e44646af53599ffd828946f082f2dc49cd05349687cbd7194a61fe2797f1da60",
+    "manifest_verification": "PASS",
+    "declared_payloads": 72,
+    "undeclared_payloads": 0
+  },
+  "review": {
+    "method": "INDEPENDENT_AI_VISUAL_REVIEW",
+    "reviewed_at_utc": "2026-08-09T06:50:44Z",
+    "reference_score": 94,
+    "language_review_boundary": "AI_ASSISTED_REQUIRES_NATIVE_REVIEW",
+    "authority": "NONE"
+  },
+  "english_reference": {
+    "member": "01_IMAGES/english_reference/the-forge-of-uriel-english-gold-standard.png",
+    "sha256": "0012a2e35149cb6efcfb6e1f503c8cd750d03af27eae417e2fa849bb64ad038e",
+    "alt_text": "The Forge of Uriel shown as a vigilant wingless scholar-smith testing a research idea at an anvil, surrounded by idea formation, Data Readiness, deterministic sorting, evidence tracing, counter-evidence, integrity gates, repair, submission, and verification receipts.",
+    "dimensions": [
+      1672,
+      941
+    ],
+    "score": {
+      "composition_parity": 14,
+      "character_expression": 15,
+      "research_story": 17,
+      "detail_density": 10,
+      "lighting_materials": 10,
+      "cultural_subtlety": 9,
+      "text_safe_composition": 5,
+      "accessibility_contrast": 4,
+      "brand_continuity": 5,
+      "negative_constraints": 5,
+      "overall": 94
+    }
+  },
+  "locales": [
+    {
+      "locale": "en",
+      "member": "01_IMAGES/localized_full_posters/the-forge-of-uriel-en.png",
+      "sha256": "eae92aafd5b30811a4a5684a3c0c0e3175813a7094ad8a21a7673f3814930055",
+      "alt_text": "The Forge of Uriel shown as a vigilant wingless scholar-smith testing a research idea at an anvil, surrounded by idea formation, Data Readiness, deterministic sorting, evidence tracing, counter-evidence, integrity gates, repair, submission, and verification receipts.",
+      "dimensions": [1672, 941],
+      "score": {
+        "composition_parity": 14,
+        "character_expression": 14,
+        "research_story": 19,
+        "detail_density": 10,
+        "lighting_materials": 10,
+        "cultural_subtlety": 9,
+        "text_safe_composition": 5,
+        "accessibility_contrast": 4,
+        "brand_continuity": 5,
+        "negative_constraints": 5,
+        "overall": 95
+      }
+    },
+    {
+      "locale": "es",
+      "member": "01_IMAGES/localized_full_posters/the-forge-of-uriel-es.png",
+      "sha256": "d52601fb2f19408f25e8980ad8b9fa1156eda0616c0f3897a1784485a1439aaf",
+      "alt_text": "La Forja de Uriel presenta a un investigador-herrero sin alas, atento y dispuesto a ayudar, que somete una idea a una prueba rigurosa entre símbolos de preparación de datos, ordenamiento, evidencia, contraevidencia, auditoría, reparación y presentación.",
+      "dimensions": [1672, 941],
+      "score": {
+        "composition_parity": 14,
+        "character_expression": 14,
+        "research_story": 19,
+        "detail_density": 10,
+        "lighting_materials": 9,
+        "cultural_subtlety": 9,
+        "text_safe_composition": 5,
+        "accessibility_contrast": 4,
+        "brand_continuity": 5,
+        "negative_constraints": 5,
+        "overall": 94
+      }
+    },
+    {
+      "locale": "fr",
+      "member": "01_IMAGES/localized_full_posters/the-forge-of-uriel-fr.png",
+      "sha256": "c7327a88f7f7b1eedb91422138cfd809a878afb0020d3d0a26b9c15cf25fa82f",
+      "alt_text": "La Forge d’Uriel montre un chercheur-forgeron sans ailes, vigilant et bienveillant, qui éprouve une idée au milieu de la préparation des données, du traçage des preuves, des contre-preuves, des trois portes, des corrections et de la soumission.",
+      "dimensions": [1672, 941],
+      "score": {
+        "composition_parity": 14,
+        "character_expression": 14,
+        "research_story": 19,
+        "detail_density": 10,
+        "lighting_materials": 9,
+        "cultural_subtlety": 9,
+        "text_safe_composition": 5,
+        "accessibility_contrast": 4,
+        "brand_continuity": 5,
+        "negative_constraints": 5,
+        "overall": 94
+      }
+    },
+    {
+      "locale": "pt-BR",
+      "member": "01_IMAGES/localized_full_posters/the-forge-of-uriel-pt-BR.png",
+      "sha256": "eae448c3d1344b8ed3d949c44b7bdfa3ef93bf0ac2f6f1bf494d82c50c558c18",
+      "alt_text": "A Forja de Uriel mostra um pesquisador-ferreiro sem asas, atento e solidário, testando uma ideia entre preparação de dados, ordenação determinística, rastreabilidade das evidências, contraevidências, auditoria, reparo e submissão.",
+      "dimensions": [1672, 941],
+      "score": {
+        "composition_parity": 14,
+        "character_expression": 14,
+        "research_story": 19,
+        "detail_density": 10,
+        "lighting_materials": 9,
+        "cultural_subtlety": 9,
+        "text_safe_composition": 5,
+        "accessibility_contrast": 4,
+        "brand_continuity": 5,
+        "negative_constraints": 5,
+        "overall": 94
+      }
+    },
+    {
+      "locale": "zh-Hans",
+      "member": "01_IMAGES/localized_full_posters/the-forge-of-uriel-zh-Hans.png",
+      "sha256": "8624efcb2b8b6bf38b3988782e2b17ed76e0dd0c8e97be10e67d5fa353ed7a57",
+      "alt_text": "乌列尔之炉描绘一位无翼、沉着而警觉的学者型锻造师，在铁砧前检验研究想法，周围呈现数据就绪、确定性排序、证据追踪、反证、三道关卡、修复、投稿与溯源凭证。",
+      "dimensions": [1672, 941],
+      "score": {
+        "composition_parity": 14,
+        "character_expression": 14,
+        "research_story": 19,
+        "detail_density": 10,
+        "lighting_materials": 9,
+        "cultural_subtlety": 9,
+        "text_safe_composition": 5,
+        "accessibility_contrast": 4,
+        "brand_continuity": 5,
+        "negative_constraints": 5,
+        "overall": 94
+      }
+    },
+    {
+      "locale": "ar",
+      "member": "01_IMAGES/localized_full_posters/the-forge-of-uriel-ar.png",
+      "sha256": "570736a07a961d0d4960674643c7eb29eccc3a8204abfddabe062d083023a1c2",
+      "alt_text": "يُظهر مِصهَر أوريئيل باحثًا حدّادًا بلا أجنحة، يقظًا ومتعاونًا، يختبر فكرة بحثية وسط رموز جاهزية البيانات والترتيب الحتمي وتتبع الأدلة والأدلة المخالفة والبوابات الثلاث والإصلاح والتقديم والتحقق.",
+      "dimensions": [1672, 941],
+      "score": {
+        "composition_parity": 14,
+        "character_expression": 14,
+        "research_story": 19,
+        "detail_density": 9,
+        "lighting_materials": 9,
+        "cultural_subtlety": 9,
+        "text_safe_composition": 4,
+        "accessibility_contrast": 4,
+        "brand_continuity": 5,
+        "negative_constraints": 5,
+        "overall": 92
+      }
+    },
+    {
+      "locale": "hi",
+      "member": "01_IMAGES/localized_full_posters/the-forge-of-uriel-hi.png",
+      "sha256": "a4fe433366dd38b2d8d770f1379d3480cf58b2a44557514f4893c273a0aa5208",
+      "alt_text": "उरिएल की भट्ठी में एक बिना पंखों वाला, सजग और सहयोगी विद्वान-लोहार शोध विचार को परखता है; आसपास डेटा तैयारी, निर्धारक क्रमबद्धता, प्रमाण अनुरेखण, विरोधी प्रमाण, तीन द्वार, सुधार, प्रस्तुति और सत्यापन रसीदें दिखाई देती हैं।",
+      "dimensions": [1672, 941],
+      "score": {
+        "composition_parity": 14,
+        "character_expression": 14,
+        "research_story": 19,
+        "detail_density": 9,
+        "lighting_materials": 9,
+        "cultural_subtlety": 9,
+        "text_safe_composition": 4,
+        "accessibility_contrast": 4,
+        "brand_continuity": 5,
+        "negative_constraints": 5,
+        "overall": 92
+      }
+    },
+    {
+      "locale": "ja",
+      "member": "01_IMAGES/localized_full_posters/the-forge-of-uriel-ja.png",
+      "sha256": "32955c16ab018bcce043fa23262b46940a8bafb9fd5c7d96b10fbb2b42afc6e6",
+      "alt_text": "ウリエルの鍛冶場では、翼のない落ち着いた研究者兼鍛冶師が研究アイデアを鍛え、データ準備、決定論的ソート、証拠追跡、反証、三つの関門、修復、投稿、来歴の記録が周囲に示されている。",
+      "dimensions": [1672, 941],
+      "score": {
+        "composition_parity": 14,
+        "character_expression": 14,
+        "research_story": 19,
+        "detail_density": 10,
+        "lighting_materials": 9,
+        "cultural_subtlety": 9,
+        "text_safe_composition": 5,
+        "accessibility_contrast": 4,
+        "brand_continuity": 5,
+        "negative_constraints": 5,
+        "overall": 94
+      }
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "locale": "en",
+  "role": "GOLD_REFERENCE",
+  "image_status": "GOLD_REFERENCE",
+  "image_path": "docs/assets/the-forge-of-uriel/hero.png",
+  "image_sha256": "0012a2e35149cb6efcfb6e1f503c8cd750d03af27eae417e2fa849bb64ad038e",
+  "image_dimensions": [
+    1672,
+    941
+  ],
+  "alt_text": "The Forge of Uriel shown as a vigilant wingless scholar-smith testing a research idea at an anvil, surrounded by idea formation, Data Readiness, deterministic sorting, evidence tracing, counter-evidence, integrity gates, repair, submission, and verification receipts.",
+  "source_archive_name": "THE_FORGE_OF_URIEL_DESKTOP_VISUALS_V2.zip",
+  "source_archive_sha256": "bf9985e5c96cafdcfef9aa1249fe838a4aceca076fb7a1f4e479301bb460f357",
+  "source_package_manifest_sha256": "e44646af53599ffd828946f082f2dc49cd05349687cbd7194a61fe2797f1da60",
+  "source_member": "01_IMAGES/english_reference/the-forge-of-uriel-english-gold-standard.png",
+  "source_sha256": "0012a2e35149cb6efcfb6e1f503c8cd750d03af27eae417e2fa849bb64ad038e",
+  "source_dimensions": [
+    1672,
+    941
+  ],
+  "source_kind": "LOCKED_ENGLISH_REFERENCE",
+  "visual_review_method": "INDEPENDENT_AI_VISUAL_REVIEW",
+  "visual_reviewed_at_utc": "2026-08-09T06:50:44Z",
+  "reference_score": 94,
+  "score": {
+    "composition_parity": 14,
+    "character_expression": 15,
+    "research_story": 17,
+    "detail_density": 10,
+    "lighting_materials": 10,
+    "cultural_subtlety": 9,
+    "text_safe_composition": 5,
+    "accessibility_contrast": 4,
+    "brand_continuity": 5,
+    "negative_constraints": 5,
+    "overall": 94
+  },
+  "visual_gate": "PASS",
+  "visible_text_status": "REFERENCE_COPY",
+  "native_language_reviewers": [],
+  "authority": "NONE",
+  "publication_mode": "LOCKED_REFERENCE_BYTES",
+  "deterministic_typography": false,
+  "schema": "uriel.localized_asset.v2"
+}

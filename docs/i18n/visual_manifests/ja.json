@@ -1,0 +1,52 @@
+{
+  "locale": "ja",
+  "role": "LOCALIZED_EXPLAINER_POSTER",
+  "image_status": "LOCALIZED_AI_REVIEWED",
+  "image_path": "docs/assets/i18n/ja/uriel-forge-hero.png",
+  "image_sha256": "9a8e44c2a63470dda181e4c164b7cdb4766e0b0e47daf039dcde65b7519b37be",
+  "image_dimensions": [
+    3840,
+    2160
+  ],
+  "alt_text": "ウリエルの鍛冶場では、翼のない落ち着いた研究者兼鍛冶師が研究アイデアを鍛え、データ準備、決定論的ソート、証拠追跡、反証、三つの関門、修復、投稿、来歴の記録が周囲に示されている。",
+  "source_archive_name": "THE_FORGE_OF_URIEL_DESKTOP_VISUALS_V2.zip",
+  "source_archive_sha256": "bf9985e5c96cafdcfef9aa1249fe838a4aceca076fb7a1f4e479301bb460f357",
+  "source_package_manifest_sha256": "e44646af53599ffd828946f082f2dc49cd05349687cbd7194a61fe2797f1da60",
+  "source_member": "01_IMAGES/localized_full_posters/the-forge-of-uriel-ja.png",
+  "source_sha256": "32955c16ab018bcce043fa23262b46940a8bafb9fd5c7d96b10fbb2b42afc6e6",
+  "source_dimensions": [
+    1672,
+    941
+  ],
+  "source_kind": "GENERATED_FULL_POSTER",
+  "visual_review_method": "INDEPENDENT_AI_VISUAL_REVIEW",
+  "visual_reviewed_at_utc": "2026-08-09T06:50:44Z",
+  "reference_score": 94,
+  "score": {
+    "composition_parity": 14,
+    "character_expression": 14,
+    "research_story": 19,
+    "detail_density": 10,
+    "lighting_materials": 9,
+    "cultural_subtlety": 9,
+    "text_safe_composition": 5,
+    "accessibility_contrast": 4,
+    "brand_continuity": 5,
+    "negative_constraints": 5,
+    "overall": 94
+  },
+  "visual_gate": "PASS",
+  "visible_text_status": "AI_ASSISTED_REQUIRES_NATIVE_REVIEW",
+  "native_language_reviewers": [],
+  "authority": "NONE",
+  "publication_mode": "DETERMINISTIC_3840X2160_NORMALIZATION",
+  "deterministic_typography": false,
+  "image_prompt_path": "globalization/image_prompts/ja.md",
+  "image_prompt_sha256": "a902cc39d8ec91a297072bae8a84f512aa388bdc79d868f8161a8c804d6bab75",
+  "image_prompt_role": "ART_ONLY_REGENERATION_INPUT_NOT_EXACT_SOURCE_PROMPT",
+  "image_copy_path": "globalization/image_copy/ja.json",
+  "image_copy_sha256": "e15aa41c6f006a84447ae3e825337001a8b16e4f00efe8b2078ef26ff9e2d1d0",
+  "image_renderer_path": "scripts/render_localized_heroes.py",
+  "image_renderer_sha256": "73165bda1a30e94dbd46bf20650ded05ffee98502a984851d638f08abf22dbf1",
+  "schema": "uriel.localized_asset.v2"
+}

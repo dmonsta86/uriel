@@ -54,6 +54,16 @@ All notable changes to Uriel are documented here.
   bounded sanitized-export manifests, with frozen lifecycle compatibility,
   authority-neutral references, path/privacy exclusions, and contract tests.
   No operational Forge engine or CLI is claimed.
+- Distinct Core-8 README visuals with the English gold reference preserved and
+  seven localized explainer posters published at 3840 × 2160 after independent
+  100-point visual review. Generated visible text remains explicitly
+  `AI_ASSISTED_REQUIRES_NATIVE_REVIEW`; no native approval is implied.
+- Hash-bound visual-source and localized-asset v2 manifests covering source
+  archive/member hashes, dimensions, exact alt text, review scores, prompt/copy
+  provenance, renderer identity, publication hashes, and zero authority.
+- A confined, offline, no-implicit-bulk visual renderer with required source
+  SHA-256 pins, atomic final publication, strict JSON, PNG/path/resource gates,
+  and focused mutation tests for localization integrity.
 
 ## 1.0.0-rc2 — 2026-08-06
 

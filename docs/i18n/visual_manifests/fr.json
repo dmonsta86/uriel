@@ -1,0 +1,52 @@
+{
+  "locale": "fr",
+  "role": "LOCALIZED_EXPLAINER_POSTER",
+  "image_status": "LOCALIZED_AI_REVIEWED",
+  "image_path": "docs/assets/i18n/fr/uriel-forge-hero.png",
+  "image_sha256": "91109b7d43bb675bb331609c67b493672552f9894211461f85a8af71ee3873b4",
+  "image_dimensions": [
+    3840,
+    2160
+  ],
+  "alt_text": "La Forge d’Uriel montre un chercheur-forgeron sans ailes, vigilant et bienveillant, qui éprouve une idée au milieu de la préparation des données, du traçage des preuves, des contre-preuves, des trois portes, des corrections et de la soumission.",
+  "source_archive_name": "THE_FORGE_OF_URIEL_DESKTOP_VISUALS_V2.zip",
+  "source_archive_sha256": "bf9985e5c96cafdcfef9aa1249fe838a4aceca076fb7a1f4e479301bb460f357",
+  "source_package_manifest_sha256": "e44646af53599ffd828946f082f2dc49cd05349687cbd7194a61fe2797f1da60",
+  "source_member": "01_IMAGES/localized_full_posters/the-forge-of-uriel-fr.png",
+  "source_sha256": "c7327a88f7f7b1eedb91422138cfd809a878afb0020d3d0a26b9c15cf25fa82f",
+  "source_dimensions": [
+    1672,
+    941
+  ],
+  "source_kind": "GENERATED_FULL_POSTER",
+  "visual_review_method": "INDEPENDENT_AI_VISUAL_REVIEW",
+  "visual_reviewed_at_utc": "2026-08-09T06:50:44Z",
+  "reference_score": 94,
+  "score": {
+    "composition_parity": 14,
+    "character_expression": 14,
+    "research_story": 19,
+    "detail_density": 10,
+    "lighting_materials": 9,
+    "cultural_subtlety": 9,
+    "text_safe_composition": 5,
+    "accessibility_contrast": 4,
+    "brand_continuity": 5,
+    "negative_constraints": 5,
+    "overall": 94
+  },
+  "visual_gate": "PASS",
+  "visible_text_status": "AI_ASSISTED_REQUIRES_NATIVE_REVIEW",
+  "native_language_reviewers": [],
+  "authority": "NONE",
+  "publication_mode": "DETERMINISTIC_3840X2160_NORMALIZATION",
+  "deterministic_typography": false,
+  "image_prompt_path": "globalization/image_prompts/fr.md",
+  "image_prompt_sha256": "250db53cf2e49ec622f62f4ff590497c3d4fb2dec05da9eda5ce6c91487e2d36",
+  "image_prompt_role": "ART_ONLY_REGENERATION_INPUT_NOT_EXACT_SOURCE_PROMPT",
+  "image_copy_path": "globalization/image_copy/fr.json",
+  "image_copy_sha256": "d30562e5b6bd734e94f09b4619975fb882b89d26a68b9466440dd0e11a6fc3a2",
+  "image_renderer_path": "scripts/render_localized_heroes.py",
+  "image_renderer_sha256": "73165bda1a30e94dbd46bf20650ded05ffee98502a984851d638f08abf22dbf1",
+  "schema": "uriel.localized_asset.v2"
+}

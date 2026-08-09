@@ -1,32 +1,32 @@
 {
-  "anvil": [
-    "VÉRITÉ",
-    "PREUVES",
-    "RIGUEUR",
-    "TRANSPARENCE"
-  ],
-  "challenge": "Votre recherche résistera-t-elle à la forge ?",
-  "data_readiness": "PRÉPARATION DES DONNÉES",
-  "evidence": "TRAÇABILITÉ DES PREUVES",
+  "center_microline": "IDENTITÉ DES ENREGISTREMENTS • BASE DE DONNÉES • PROVENANCE • REÇUS",
+  "challenge": "VOTRE IDÉE EST-ELLE ASSEZ SOLIDE POUR RÉSISTER À LA FORGE ?",
+  "direction": "ltr",
   "footer": [
-    "OPEN SOURCE",
-    "TRANSPARENT",
+    "HORS LIGNE D’ABORD",
+    "NEUTRE ENVERS LES FOURNISSEURS",
     "REPRODUCTIBLE",
-    "AUDITABLE",
-    "PORTÉ PAR LA COMMUNAUTÉ",
-    "CONÇU POUR LA RECHERCHE"
+    "AUDITABLE"
   ],
-  "gates": "AUDIT DES TROIS PORTES",
+  "language": "Français",
+  "left_rail": [
+    "FORMATION DE L’IDÉE",
+    "EXAMEN EN LECTURE SEULE",
+    "PRÉPARATION DES DONNÉES",
+    "TRI DÉTERMINISTE"
+  ],
   "locale": "fr",
-  "one_sentence": "Uriel Forge est une boîte à outils hors ligne par défaut pour développer et assurer la recherche, transformer une question initiale ou un projet existant en travail reproductible et prêt à soumettre, et obliger chaque conclusion autoritative à mériter ses preuves.",
-  "provenance": "PROVENANCE + REÇUS",
-  "question_intake": "FORMULATION DE LA QUESTION",
-  "read_only": "EXAMEN EN LECTURE SEULE",
-  "repair": "DOSSIERS DE CORRECTION",
-  "schema": "uriel.localized_image_copy.v1",
-  "sorting": "TRI DÉTERMINISTE",
-  "submission": "AIDE À LA SOUMISSION",
-  "subtitle": "Développement et assurance de la recherche fondés sur les preuves",
-  "supporting": "Une écoute équitable pour l’idée. Une épreuve rigoureuse pour les preuves.",
-  "translation_status": "AI_SECOND_PASS_REVIEWED"
+  "localized_title": "LA FORGE D’URIEL",
+  "official_brand": "THE FORGE OF URIEL",
+  "right_rail": [
+    "AFFIRMATION → PREUVES",
+    "CONTRE-PREUVES",
+    "TROIS PORTES",
+    "CORRECTION ET SUITE",
+    "ARTICLE ET SOUMISSION"
+  ],
+  "schema": "forge_of_uriel.visual_copy.v2",
+  "subtitle": "DÉVELOPPEMENT ET RENFORCEMENT DE LA RECHERCHE, OPEN SOURCE ET HORS LIGNE",
+  "supporting_line": "Une écoute équitable pour l’idée. Une épreuve rigoureuse pour les preuves.",
+  "translation_status": "AI_ASSISTED_REQUIRES_NATIVE_REVIEW"
 }

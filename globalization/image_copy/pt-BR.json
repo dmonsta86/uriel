@@ -1,32 +1,32 @@
 {
-  "anvil": [
-    "VERDADE",
-    "EVIDÊNCIA",
-    "RIGOR",
-    "TRANSPARÊNCIA"
-  ],
-  "challenge": "Sua pesquisa resistirá à forja?",
-  "data_readiness": "PREPARAÇÃO DOS DADOS",
-  "evidence": "RASTREABILIDADE DAS EVIDÊNCIAS",
+  "center_microline": "IDENTIDADE DOS REGISTROS • BANCO DE DADOS • PROVENIÊNCIA • COMPROVANTES",
+  "challenge": "SUA IDEIA É FORTE O BASTANTE PARA SOBREVIVER À FORJA?",
+  "direction": "ltr",
   "footer": [
-    "CÓDIGO ABERTO",
-    "TRANSPARENTE",
+    "OFFLINE POR PADRÃO",
+    "NEUTRO ENTRE PROVEDORES",
     "REPRODUTÍVEL",
-    "AUDITÁVEL",
-    "FEITO COM A COMUNIDADE",
-    "CRIADO PARA PESQUISA"
+    "AUDITÁVEL"
   ],
-  "gates": "AUDITORIA DOS TRÊS PORTÕES",
+  "language": "Português (Brasil)",
+  "left_rail": [
+    "FORMAÇÃO DA IDEIA",
+    "REVISÃO SOMENTE LEITURA",
+    "PREPARAÇÃO DOS DADOS",
+    "ORDENAÇÃO DETERMINÍSTICA"
+  ],
   "locale": "pt-BR",
-  "one_sentence": "Uriel Forge é uma ferramenta offline por padrão para desenvolvimento e garantia da pesquisa, ajudando a transformar perguntas iniciais ou projetos existentes em trabalho reproduzível e pronto para submissão, fazendo cada conclusão autorizada merecer suas evidências.",
-  "provenance": "PROVENIÊNCIA + COMPROVANTES",
-  "question_intake": "ENTRADA DA PERGUNTA",
-  "read_only": "REVISÃO SOMENTE LEITURA",
-  "repair": "PACOTES DE CORREÇÃO",
-  "schema": "uriel.localized_image_copy.v1",
-  "sorting": "ORDENAÇÃO DETERMINÍSTICA",
-  "submission": "APOIO À SUBMISSÃO",
-  "subtitle": "Desenvolvimento e garantia da pesquisa com base em evidências",
-  "supporting": "Uma avaliação justa para a ideia. Um teste rigoroso para as evidências.",
-  "translation_status": "AI_SECOND_PASS_REVIEWED"
+  "localized_title": "A FORJA DE URIEL",
+  "official_brand": "THE FORGE OF URIEL",
+  "right_rail": [
+    "AFIRMAÇÃO → EVIDÊNCIA",
+    "CONTRAEVIDÊNCIA",
+    "TRÊS PORTÕES",
+    "REPARO E PRÓXIMO PASSO",
+    "ARTIGO E SUBMISSÃO"
+  ],
+  "schema": "forge_of_uriel.visual_copy.v2",
+  "subtitle": "DESENVOLVIMENTO E FORTALECIMENTO DA PESQUISA, ABERTO E OFFLINE",
+  "supporting_line": "Uma avaliação justa para a ideia. Um teste rigoroso para as evidências.",
+  "translation_status": "AI_ASSISTED_REQUIRES_NATIVE_REVIEW"
 }

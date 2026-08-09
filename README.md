@@ -1,7 +1,7 @@
 <p align="center">
   <img
     src="docs/assets/the-forge-of-uriel/hero.png"
-    alt="The Forge of Uriel: a vigilant scholar-smith tests a research idea at an anvil, surrounded by data readiness, evidence tracing, integrity gates, revision records, and provenance receipts."
+    alt="The Forge of Uriel shown as a vigilant wingless scholar-smith testing a research idea at an anvil, surrounded by idea formation, Data Readiness, deterministic sorting, evidence tracing, counter-evidence, integrity gates, repair, submission, and verification receipts."
     width="100%"
   >
 </p>

@@ -1,69 +1,135 @@
-# Uriel Forge hero prompt — العربية
+Create one complete, standalone 16:9 hero poster for **The Forge of Uriel**.
 
-## Art generation prompt
+## Gold-standard reference lock
 
+Use the supplied English reference image as a strict quality and composition
+benchmark—not merely as loose inspiration.
 
-Use the approved English Uriel Forge hero image as a visual reference.
+Match or exceed its:
 
-Create a locale-specific ART-ONLY variation for العربية (ar).
+- cinematic finish;
+- information density;
+- environmental richness;
+- Uriel character quality;
+- lighting and material realism;
+- research-workflow coverage;
+- seriousness and credibility.
 
-The central subject is an original fictional adult male guardian-smith named
-Uriel: wingless, armored, dignified, intellectually focused, and striking an
-anvil in a serious research workshop. He may feel angelic in bearing, but he
-must not depict a religious person or sacred figure.
+Do not simplify the composition for this locale.
 
-Keep the same camera angle, central pose, anvil, forge sparks, dark graphite
-background, warm copper/amber light, research diagrams, data/database motifs,
-paper/manuscript symbols, and professional open-source product atmosphere.
+## Central figure
 
-Locale adaptation:
-Middle Eastern or North African male scholar-smith with subtle geometric brasswork and historical scientific-manuscript motifs; no prophet, mosque, crescent, sacred calligraphy, or one-country stereotype.
+Uriel is an original fictional adult man: wingless, armored without looking
+militaristic, and equally a scholar, investigator, and master smith.
 
-Reserve clean blank text panels in the same locations as the English reference.
-DO NOT render words, letters, pseudo-writing, sacred calligraphy, or UI copy.
-Exact translated text will be overlaid later from a deterministic template.
+He stands at the central anvil in a research workshop, completing one measured,
+controlled hammer strike while examining an evidence record.
 
-Required visual ideas:
-- question intake
-- read-only review
-- data readiness
-- deterministic sorting and database structure
-- evidence tracing
-- Three Gates audit
-- repair packets
-- submission support
-- provenance and verification receipts
+His expression is exact:
 
-Keep the result serious, precise, humane, and challenging rather than
-aggressive. No gore, battle, religious iconography, wings, halo, national flag,
-stereotyped costume, provider logo, watermark, or unreadable microtext.
+- one eyebrow subtly raised;
+- warm, vigilant, intellectually alert eyes;
+- quiet recognition of a possible weakness;
+- reserved encouragement;
+- visible willingness to help;
+- wisdom without superiority.
 
-Aspect ratio: 16:9.
-High-resolution, README hero quality.
+He must not look smug, angry, judgmental, comic, mystical, theatrical, or like
+a generic superhero.
 
+The emotional message is:
 
-## Deterministic overlay source
+> I see something worth examining. Show me the evidence, and we will make the
+> idea stronger.
 
-```text
-globalization/image_copy/ar.json
-```
+## Complete research story
 
-## Output path after approval
+This must be a full product poster, not a portrait and not a decorative fantasy
+scene.
 
-```text
-docs/assets/i18n/ar/uriel-forge-hero.png
-```
+Show all of these as distinct, visually meaningful parts of one coherent
+workflow:
 
-## Review
+1. a rough research idea preserved in its original form;
+2. charitable question development and competing interpretations;
+3. read-only review of an existing project;
+4. Gate 0 / Data Readiness;
+5. record identity and duplicate control;
+6. deterministic sorting, normalization, and database structure;
+7. claim-to-evidence tracing down to source records;
+8. visible counter-evidence, null results, limitations, and uncertainty;
+9. the Three Gates of research integrity;
+10. a repair roadmap and strongest next move;
+11. manuscript, reviewer response, and submission preparation;
+12. manifests, content hashes, provenance, and verification receipts.
 
-Check:
+Use abstract, fictional research material only. Do not show a real paper, real
+participant data, or a fake scientific result.
 
-```text
-no stereotype
-no sacred/religious symbol
-male wingless guardian-smith
-same brand composition
-blank text panels
-appropriate locale design cues
-accessible contrast
-```
+## Composition
+
+- panoramic 16:9 editorial layout;
+- Uriel and the anvil form the visual center;
+- left side shows idea intake, safe review, data readiness, and sorting;
+- right side shows evidence tracing, counter-evidence, gates, repair, and
+  submission;
+- background contains detailed but ordered workshop shelves, measurement
+  instruments, manuscript folios, database grids, source chains, and receipts;
+- foreground has controlled sparks and warm forge light;
+- retain generous text-safe areas for deterministic overlays;
+- every background detail should reinforce a product capability.
+
+## Materials and atmosphere
+
+Use cinematic painterly realism with:
+
+- dark graphite and iron;
+- aged bronze and copper;
+- restrained amber and gold forge light;
+- parchment, ink, etched metal, glass, wood, and precision instruments;
+- disciplined contrast;
+- realistic anatomy and hands;
+- premium open-source research-product presentation.
+
+The tone is somber, sincere, curious, and quietly challenging.
+
+## Locale adaptation
+
+Create a pan-Arabic, Middle Eastern and North African scientific-craft workshop with the same richness and seriousness as English. Use restrained geometric brasswork, dark wood, stone, precision scales, astrolabe-like measurement forms, manuscript illumination logic without sacred text, and deep blue or green accents. Uriel remains an original humane investigator. Avoid mosques, crescents, prophets, holy calligraphy, desert clichés, oil wealth imagery, flags, or one-country dress.
+
+The locale treatment must remain subtle. It should feel made for the audience,
+not dressed in a stereotype.
+
+## Art-only requirement
+
+Do not render:
+
+- words;
+- letters;
+- numbers;
+- fake equations;
+- pseudo-writing;
+- logos;
+- URLs;
+- watermarks;
+- UI text.
+
+Create clean, deliberate text-safe panels. Exact localized typography will be
+added from the accompanying JSON.
+
+## Negative constraints
+
+No wings, halo, deity, prophet, saint, sacred architecture, sacred calligraphy,
+national flag, caricature, costume cliché, colonial trope, battle scene, weapon
+pose, gore, anime exaggeration, cartoon rendering, steampunk clutter, provider
+branding, fake scientific conclusion, or unreadable microtext.
+
+## Output
+
+- 3840 × 2160 preferred;
+- 1920 × 1080 minimum;
+- 16:9;
+- complete standalone poster;
+- high detail;
+- accessible contrast;
+- quality equal to or better than the supplied English reference.

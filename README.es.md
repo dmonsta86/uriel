@@ -1,7 +1,7 @@
 <p align="center">
   <img
     src="docs/assets/i18n/es/uriel-forge-hero.png"
-    alt="The Forge of Uriel: un investigador-herrero forja evidencias"
+    alt="La Forja de Uriel presenta a un investigador-herrero sin alas, atento y dispuesto a ayudar, que somete una idea a una prueba rigurosa entre símbolos de preparación de datos, ordenamiento, evidencia, contraevidencia, auditoría, reparación y presentación."
     width="100%"
   >
 </p>
@@ -32,7 +32,7 @@
 
 # The Forge of Uriel
 
-> **Aviso**: Esta documentación y el texto de la imagen son traducciones revisadas por IA (AI_SECOND_PASS_REVIEWED); la ilustración es una variante localizada (LOCALIZED). Se agradecen las correcciones de hablantes nativos.
+> **Aviso**: Esta documentación tiene una segunda revisión asistida por IA (AI_SECOND_PASS_REVIEWED). El póster es una variante localizada revisada por IA (LOCALIZED_AI_REVIEWED), pero su texto visible aún requiere revisión de un hablante nativo (AI_ASSISTED_REQUIRES_NATIVE_REVIEW). Se agradecen las correcciones.
 
 <!-- URIEL:SECTION:mission:START -->
 ### Desarrollo y blindaje de investigación de código abierto y local

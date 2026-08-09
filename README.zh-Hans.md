@@ -1,7 +1,7 @@
 <p align="center">
   <img
     src="docs/assets/i18n/zh-Hans/uriel-forge-hero.png"
-    alt="The Forge of Uriel：研究锻造者正在锻造证据"
+    alt="乌列尔之炉描绘一位无翼、沉着而警觉的学者型锻造师，在铁砧前检验研究想法，周围呈现数据就绪、确定性排序、证据追踪、反证、三道关卡、修复、投稿与溯源凭证。"
     width="100%"
   >
 </p>
@@ -32,7 +32,7 @@
 
 # The Forge of Uriel
 
-> **说明**：本文档及图片文字均为 AI 二次复核翻译（AI_SECOND_PASS_REVIEWED）；插图为本地化版本（LOCALIZED）。欢迎母语者提出修正。
+> **说明**：本文档已完成 AI 辅助二次复核（AI_SECOND_PASS_REVIEWED）。海报为经 AI 复核的本地化版本（LOCALIZED_AI_REVIEWED），但其中可见文字仍需母语者复核（AI_ASSISTED_REQUIRES_NATIVE_REVIEW）。欢迎提出修正。
 
 <!-- URIEL:SECTION:mission:START -->
 ### 开源、离线优先的科研开发与强化工具包

@@ -1,7 +1,7 @@
 <p align="center">
   <img
     src="docs/assets/i18n/ja/uriel-forge-hero.png"
-    alt="The Forge of Uriel：研究者である鍛冶師が証拠を鍛える様子"
+    alt="ウリエルの鍛冶場では、翼のない落ち着いた研究者兼鍛冶師が研究アイデアを鍛え、データ準備、決定論的ソート、証拠追跡、反証、三つの関門、修復、投稿、来歴の記録が周囲に示されている。"
     width="100%"
   >
 </p>
@@ -32,7 +32,7 @@
 
 # The Forge of Uriel
 
-> **注記**：本文書と画像内テキストは AI による二次レビュー済みの翻訳（AI_SECOND_PASS_REVIEWED）で、イラストはローカライズ版（LOCALIZED）です。ネイティブスピーカーによる修正を歓迎します。
+> **注記**：本文書は AI 支援による二次レビュー済みです（AI_SECOND_PASS_REVIEWED）。ポスターは AI レビュー済みのローカライズ版（LOCALIZED_AI_REVIEWED）ですが、画像内の可視テキストには母語話者による確認が必要です（AI_ASSISTED_REQUIRES_NATIVE_REVIEW）。修正を歓迎します。
 
 <!-- URIEL:SECTION:mission:START -->
 ### オープンソース・オフラインファーストの研究開発および強化ツールキット
