@@ -78,6 +78,9 @@
 - source-binding and legacy burst inputs have file-count, per-file, total-byte,
   packet-count, output, and wall-time ceilings; AI task capabilities explicitly
   deny network, shell, packet writes, and project writes.
+- the release gate validates an implementation-bound synthetic Data Desk
+  measurement and runs the generation/readiness/burst/Gate 0 chain through a
+  fresh wheel; it enforces evidence presence and integrity, not a speed target.
 
 ## Explicit non-controls
 

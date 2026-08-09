@@ -4,8 +4,8 @@ This document records the research-lifecycle layer on top of the existing
 deterministic core. The intake, bounded AI-surface, workbench, checkpoint,
 decision, repair, and submission portions are current beta surfaces. Evidence
 Ingress and the deterministic local Data Desk now have experimental runtime
-paths on `main`; Gate 0 integration, Paper Builder, and advanced export work
-remain planned.
+paths on `main`, including an exact generation-bound Gate 0 bridge. Paper
+Builder and advanced export work remain planned.
 The checklist at the bottom is the authoritative boundary for this document.
 
 The core promise is unchanged: Uriel certifies only that one exact recorded
@@ -100,6 +100,9 @@ uriel data inspect --root . --receipt .uriel/data/receipts/import/PLAN_SHA256.js
 uriel data diff --root . --left-generation LEFT --right-generation RIGHT --keys id
 uriel data reconcile --root . --left-generation LEFT --right-generation RIGHT --keys id
 uriel data verify-generation --root . --generation RESULT
+uriel readiness init-sort-spec --root . --generation RESULT --keys id
+uriel readiness check --root . --generation RESULT --sort-spec SORT_SPEC
+uriel readiness status --root . --generation RESULT
 ```
 
 `data plan` remains no-write and path-private. `data import` requires that exact
@@ -108,10 +111,13 @@ and publishes immutable records with the receipt last. `data verify-import`
 recomputes the managed bytes and record bindings. `data inspect` reparses the
 sealed bytes into a manifest-last generation; `data diff` writes nothing;
 `data reconcile` preserves both sides; and `data verify-generation` reparses
-leaf artifacts and recursively verifies lineage and delta bindings. None of
-these commands creates a scientific finding, decides record identity, or
-grants Gate 0 authority. Gate 0 integration remains a separate fail-closed
-package.
+leaf artifacts and recursively verifies lineage and delta bindings. The
+`uriel data` commands alone create no scientific finding, decide no record
+identity, and grant no Gate 0 authority. The separate readiness commands bind
+an explicit identity-only SortSpec to one exact verified generation, recompute
+the v2 check matrix, and activate only a hash-bound PASS receipt; strict audit,
+independent verification, and Blessing issuance fail closed on stale or
+mismatched state.
 
 ### Paper Builder (planned)
 
@@ -324,6 +330,6 @@ works without any AI provider.
 - [x] Phase 3 — submission lifecycle core
 - [x] Phase 4 — bounded minimum-prompt and free-AI workflow
 - [x] Phase 5 — workbench, decisions, and publication authority
-- [ ] Phase 6 — Data Desk
+- [x] Phase 6 — experimental Data Desk and generation-bound Gate 0 bridge
 - [ ] Phase 7 — Paper Builder and exports
 - [x] Phase 8 — release, portability, and security baseline (broader independent review remains)

@@ -1,7 +1,7 @@
 {
   "schema": "uriel.capability_inventory.v1",
   "source": "src/uriel/capability_status.py",
-  "source_fingerprint": "625f6ebdbfd339b397cd81b0bffec3a20827d70296c564a881c410e4ff3784e5",
+  "source_fingerprint": "e7b6a00b7ce03bd7ebffd1fe67354b523fbc65eda562a37c444841db93c680dd",
   "capabilities": [
     {
       "id": "CAP-CORE-001",
@@ -168,9 +168,13 @@
         "tests/test_data_contracts.py",
         "tests/test_data_ingress.py",
         "tests/test_data_desk.py",
-        "tests/test_cli.py"
+        "tests/test_cli.py",
+        "tests/test_generation_readiness.py",
+        "tests/test_surfaces.py",
+        "tests/test_data_desk_benchmark.py",
+        "scripts/smoke_installed_data_ingress.py"
       ],
-      "notes": "Bounded local immutable intake, structural generations, per-record delta ledgers, derived indexes, preserve-all reconciliation, and deep verification; no scientific finding or Gate 0 authority."
+      "notes": "Bounded local immutable intake, structural generations, preserve-all reconciliation, and deep verification, with a measured synthetic receipt and installed-wheel exercise. Data commands alone grant no scientific or Gate 0 authority; only the separate exact v2 readiness lane can pass the bound generation into Gate 0."
     },
     {
       "id": "CAP-FORGE-001",

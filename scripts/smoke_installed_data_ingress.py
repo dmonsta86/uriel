@@ -16,6 +16,7 @@ def _run(executable: Path, arguments: List[str]) -> subprocess.CompletedProcess[
         text=True,
         capture_output=True,
         check=False,
+        timeout=120,
     )
     if completed.returncode:
         raise RuntimeError(
@@ -23,6 +24,23 @@ def _run(executable: Path, arguments: List[str]) -> subprocess.CompletedProcess[
                 completed.returncode,
                 completed.stdout,
                 completed.stderr,
+            )
+        )
+    return completed
+
+
+def _run_refusal(executable: Path, arguments: List[str]) -> subprocess.CompletedProcess[str]:
+    completed = subprocess.run(
+        [str(executable), *arguments],
+        text=True,
+        capture_output=True,
+        check=False,
+        timeout=120,
+    )
+    if completed.returncode == 0:
+        raise RuntimeError(
+            "installed command unexpectedly succeeded: {0}\n{1}".format(
+                " ".join(arguments), completed.stdout
             )
         )
     return completed
@@ -202,11 +220,122 @@ def main() -> int:
         if repeated_id != generation_id:
             raise RuntimeError("installed Data Desk reconciliation retry changed generation identity")
 
+        sort_spec_run = _run(
+            executable,
+            [
+                "--json", "readiness", "init-sort-spec", "--root", str(root),
+                "--generation", str(first_generation["generation_id"]), "--keys", "id",
+            ],
+        )
+        sort_spec = json.loads(sort_spec_run.stdout).get("result", {})
+        readiness_run = _run(
+            executable,
+            [
+                "--json", "readiness", "check", "--root", str(root),
+                "--generation", str(first_generation["generation_id"]),
+                "--sort-spec", str(sort_spec["path"]),
+            ],
+        )
+        readiness = json.loads(readiness_run.stdout).get("result", {})
+        if readiness.get("receipt", {}).get("decision") != "PASS":
+            raise RuntimeError("installed generation readiness did not pass")
+        repeated_readiness_run = _run(
+            executable,
+            [
+                "--json", "readiness", "check", "--root", str(root),
+                "--generation", str(first_generation["generation_id"]),
+                "--sort-spec", str(sort_spec["path"]),
+            ],
+        )
+        repeated_readiness = json.loads(repeated_readiness_run.stdout).get("result", {})
+        if repeated_readiness.get("receipt_sha256") != readiness.get("receipt_sha256"):
+            raise RuntimeError("installed readiness repeat changed receipt identity")
+        readiness_status_run = _run(
+            executable,
+            [
+                "--json", "readiness", "status", "--root", str(root),
+                "--generation", str(first_generation["generation_id"]),
+            ],
+        )
+        readiness_state = json.loads(readiness_status_run.stdout).get("result", {})
+        if readiness_state.get("decision") != "PASS" or readiness_state.get("receipt_sha256") != readiness.get("receipt_sha256"):
+            raise RuntimeError("installed active readiness selection did not bind the PASS receipt")
+
+        burst_run = _run(
+            executable,
+            [
+                "--json", "burst", "init", "--root", str(root),
+                "--generation", str(first_generation["generation_id"]),
+                "--columns", "id", "value", "--row-index", "0", "--row-index", "1",
+                "--row-limit", "2", "--readiness-sort-spec", str(sort_spec["path"]),
+                "--readiness-receipt", str(readiness["path"]),
+                "--next-task", "Check only the selected rows for transcription consistency.",
+                "--budget-bytes", "4096", "--redact",
+            ],
+        )
+        burst = json.loads(burst_run.stdout).get("result", {})
+        if burst.get("verify", {}).get("verified") is not True or burst.get("selected_records") != 2:
+            raise RuntimeError("installed bounded generation burst did not verify")
+        capabilities = burst.get("state", {}).get("task_capabilities", {})
+        if any(capabilities.get(name) != "DENIED" for name in ("network", "shell", "project_writes", "packet_writes")):
+            raise RuntimeError("installed generation burst did not deny external tool authority")
+        burst_verify_run = _run(
+            executable,
+            ["--json", "burst", "verify", "--packet", str(burst["packet"])],
+        )
+        if json.loads(burst_verify_run.stdout).get("result", {}).get("verified") is not True:
+            raise RuntimeError("installed independent burst verification did not pass")
+
+        audit_recheck = _run(
+            executable,
+            [
+                "--json", "audit", "recheck", "--root", str(root),
+                "--profile", "submission", "--generation", str(first_generation["generation_id"]),
+                "--sort-spec", str(sort_spec["path"]),
+                "--readiness-receipt", str(readiness["path"]),
+            ],
+        )
+        gate_zero = json.loads(audit_recheck.stdout).get("result", {}).get("gates", {}).get("gates", [{}])[0]
+        if gate_zero.get("gate") != 0 or gate_zero.get("decision") != "PASS":
+            raise RuntimeError("installed strict audit did not consume exact generation readiness")
+
+        stale_source = base / "stale-private-source-name" / "records.csv"
+        stale_source.parent.mkdir()
+        stale_source.write_text("id,value\nx,1\n", encoding="utf-8")
+        stale_plan_run = _run(
+            executable,
+            [
+                "--json", "data", "plan", "--root", str(root),
+                "--source", str(stale_source), "--label", "stale-smoke",
+            ],
+        )
+        stale_plan_path = root / "artifacts" / "installed-stale-plan.json"
+        stale_plan_path.write_text(stale_plan_run.stdout, encoding="utf-8")
+        stale_source.write_text("id,value\nx,changed\n", encoding="utf-8")
+        stale_refusal = _run_refusal(
+            executable,
+            [
+                "--json", "data", "import", "--root", str(root),
+                "--source", str(stale_source), "--plan", "artifacts/installed-stale-plan.json",
+            ],
+        )
+        stale_envelope = json.loads(stale_refusal.stdout)
+        if (
+            stale_refusal.returncode != 2
+            or stale_envelope.get("status") != "REFUSED"
+            or stale_envelope.get("error", {}).get("code") != "DATA_PLAN_STALE"
+        ):
+            raise RuntimeError("installed stale-plan path did not fail with DATA_PLAN_STALE")
+        if "stale-private-source-name" in stale_refusal.stdout + stale_refusal.stderr:
+            raise RuntimeError("installed stale-plan refusal disclosed the private source path")
+
         combined_output = "".join(
             completed.stdout
             for completed in (
                 inspected, second_plan, second_import, second_inspection, preview,
                 reconciled, generation_verified, repeated_reconciliation,
+                sort_spec_run, readiness_run, repeated_readiness_run,
+                readiness_status_run, burst_run, burst_verify_run, audit_recheck,
             )
         )
         if str(source) in combined_output or str(second_source) in combined_output or "another-private-source-name" in combined_output:

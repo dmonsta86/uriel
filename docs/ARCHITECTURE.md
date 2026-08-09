@@ -107,6 +107,13 @@ independent verifier, and Blessing issuance recompute that exact tuple; no v2
 authority path selects by modification time. Historical receipts remain
 immutable evidence but are not active authority.
 
+Release evidence exercises plan, import, inspect, diff, reconcile, deep
+generation verification, readiness, bounded redacted burst construction, and
+strict Gate 0 recheck through a freshly installed wheel. The tracked Data Desk
+benchmark receipt binds one deterministic 10,000-row synthetic fixture to the
+exact measured implementation. It records observations, not a throughput,
+capacity, latency-SLA, hardware, or real-data guarantee.
+
 `.uriel/` is derived, local state and is ignored by default. Publish selected Blessing packages or audit exports deliberately; do not commit secrets or raw restricted data.
 
 ## Determinism and content binding

@@ -32,7 +32,12 @@ Run the deterministic suite:
 python scripts/release_check.py --full --command-timeout 600
 ```
 
-The check compiles the source, runs the standard-library tests and privacy sweep, builds the wheel, source distribution, and portable archive, creates checksums, installs the wheel into a fresh environment, checks both entry points and dependencies, and verifies packaged schemas.
+The check compiles the source, runs the standard-library tests and privacy
+sweep, validates the implementation-bound synthetic Data Desk receipt, builds
+the wheel, source distribution, and portable archive, creates checksums,
+installs the wheel into a fresh environment, exercises the installed Data Desk
+through readiness, a bounded redacted burst, and strict Gate 0, checks both
+entry points and dependencies, and verifies packaged schemas.
 
 Expected ending:
 

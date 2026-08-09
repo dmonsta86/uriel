@@ -41,9 +41,12 @@ The lane preserves source bytes, versions, conflicts, missingness, and
 limitations. It does not silently mutate data, infer scientific authority,
 execute active content, or require a cloud service.
 
-The remaining local-data work is to bind verified generations into Gate 0,
-complete the dedicated attack/interruption/benchmark closure package, and
-promote maturity only from the resulting receipts.
+The generation-to-Gate-0 bridge is implemented with an explicit v2 SortSpec,
+deterministic readiness receipt, and one hash-bound active selection. Current
+closure work exercises that chain through a clean installed wheel and tracks
+one implementation-bound 10,000-row synthetic measurement. Data Desk remains
+`EXPERIMENTAL`; broader platform, domain, usability, and adversarial evidence
+must accumulate before any maturity promotion.
 
 ## Following lanes
 

@@ -30,6 +30,7 @@ PRE_BUILD_CHECKS = (
     "scripts/check_capability_status.py",
     "scripts/check_schema_mirror.py",
     "scripts/check_forge_trial.py",
+    "scripts/check_data_desk_benchmark.py",
 )
 
 

@@ -39,6 +39,11 @@ All notable changes to Uriel are documented here.
 - Cryptographically chained burst history, reparse-point-safe packet writes,
   independently rehashed gate/verifier receipts, and explicit read-only AI,
   input-work, output-size, and wall-time ceilings.
+- Fresh-wheel exercise of the exact Data Desk generation, readiness, bounded
+  redacted burst, independent packet verification, and strict Gate 0 chain,
+  including deterministic retry, stale-plan refusal, and path non-disclosure.
+- An implementation-bound 10,000-row synthetic Data Desk measurement receipt
+  and release checker with an explicit no-throughput/no-capacity claim boundary.
 
 ## 1.0.0-rc2 — 2026-08-06
 

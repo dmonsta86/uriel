@@ -124,8 +124,12 @@ CAPABILITIES: List[Dict[str, Any]] = [
             "tests/test_data_ingress.py",
             "tests/test_data_desk.py",
             "tests/test_cli.py",
+            "tests/test_generation_readiness.py",
+            "tests/test_surfaces.py",
+            "tests/test_data_desk_benchmark.py",
+            "scripts/smoke_installed_data_ingress.py",
         ],
-        "notes": "Bounded local immutable intake, structural generations, per-record delta ledgers, derived indexes, preserve-all reconciliation, and deep verification; no scientific finding or Gate 0 authority.",
+        "notes": "Bounded local immutable intake, structural generations, preserve-all reconciliation, and deep verification, with a measured synthetic receipt and installed-wheel exercise. Data commands alone grant no scientific or Gate 0 authority; only the separate exact v2 readiness lane can pass the bound generation into Gate 0.",
     },
     {
         "id": "CAP-FORGE-001",

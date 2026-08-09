@@ -1,0 +1,43 @@
+{
+  "benchmark_id": "synthetic-tabular-10000-v1",
+  "claim_boundary": "One synthetic local observation; not a throughput, capacity, latency-SLA, hardware-equivalence, or real-dataset claim.",
+  "fixture": {
+    "bytes": 212996,
+    "columns": 4,
+    "kind": "deterministic synthetic CSV",
+    "rows": 10000,
+    "sha256": "b1fcbca43e7b16caa90e49d88ad58745e45eddaa3b50fabe736eb157ce83df7c"
+  },
+  "implementation": {
+    "binding_sha256": "18a64d88685242504cc579718d7170a4ae29513c236ea4f2d82a352eec777d88",
+    "files": {
+      "scripts/benchmark_data_desk.py": "391a3b711f13c262b3da91bae2cddf44db6b9663916a5dd97d8ea490194394aa",
+      "src/uriel/data_contracts.py": "46787fd7c3264b0eef0d9c26858d93fd743f6d9764df0587b2390deda49e4b56",
+      "src/uriel/data_desk.py": "a9c295566dd0051e62e53e73c631fdd1abf1681fd62f0efa1b52b8c8c17dd9b3",
+      "src/uriel/data_ingress.py": "769b98bb571a50b1fec875df391c9f73cd93e5b4a5fe8455917687469590de99"
+    }
+  },
+  "measured_at_utc": "2026-08-09T04:24:54.845334Z",
+  "operations_ms": {
+    "import_ms": 66.133,
+    "inspect_ms": 5705.767,
+    "plan_ms": 14.623,
+    "repeat_inspect_ms": 3866.161,
+    "verify_ms": 2685.441
+  },
+  "peak_traced_python_bytes": 20700013,
+  "result": {
+    "deterministic_repeat": true,
+    "generation_id": "3de2b4b95688f7793e540ebfd4d02aa81c78936820d2dda1800f8201a54e5395",
+    "record_count": 10000,
+    "verification_decision": "PASS"
+  },
+  "runtime": {
+    "architecture": "AMD64",
+    "platform": "Windows",
+    "python": "3.14.5"
+  },
+  "schema": "uriel.data_desk_benchmark_receipt.v1",
+  "schema_version": 1,
+  "uriel_version": "1.0.0rc2"
+}

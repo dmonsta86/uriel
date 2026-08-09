@@ -34,8 +34,10 @@ Data Desk accepts only one explicitly selected UTF-8 CSV, TSV, JSON, JSONL,
 text, or Markdown file per import. It does not recurse through directories,
 extract archives, render Markdown, execute spreadsheet formulas, infer an
 encoding, or fetch network content. Parsed records are retained in memory for
-profiling after delimited rows are consumed incrementally; no large-scale claim
-is made without a measured benchmark receipt.
+profiling after delimited rows are consumed incrementally. The tracked
+`synthetic-tabular-10000-v1` receipt records one local 10,000-row, four-column
+observation bound to the measured implementation. It is not a throughput,
+maximum-capacity, latency-SLA, hardware-equivalence, or real-dataset claim.
 
 Current hard Data Desk parser ceilings are 512 MiB per managed source, 256 MiB
 for one in-memory JSON document, 2,000,000 parsed records, 100,000 columns,
