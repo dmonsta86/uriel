@@ -30,6 +30,15 @@ from .core import (
     sha256_text,
     utc_now,
 )
+from .generation_readiness import (
+    current_generation_readiness_status,
+    generation_readiness_check,
+    generation_readiness_status,
+    generation_receipt_inventory,
+    make_generation_sort_spec,
+    require_generation_readiness,
+    verify_generation_readiness_receipt,
+)
 
 SORT_SPEC_SCHEMA = "uriel.sort_spec.v1"
 READINESS_SCHEMA = "uriel.data_readiness.v1"
@@ -234,8 +243,25 @@ def readiness_check(
     *,
     dataset: Optional[str] = None,
     analysis_plan: Optional[str] = None,
+    generation: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Execute the Gate 0 check matrix and write a Data Readiness Receipt."""
+    if generation is not None:
+        if dataset is not None:
+            raise Refusal(
+                "Choose either a legacy dataset path or a Data Desk generation, not both.",
+                code="READINESS_INPUT_AMBIGUOUS",
+            )
+        if analysis_plan is not None:
+            raise Refusal(
+                "A v2 analysis plan is sealed in its SortSpec; create a new SortSpec to change it.",
+                code="READINESS_ANALYSIS_PLAN_IN_SORT_SPEC",
+            )
+        result = generation_readiness_check(root, generation, sort_spec_path)
+        result["embargo_sentence"] = (
+            None if result["receipt"].get("decision") == "PASS" else EMBARGO_SENTENCE
+        )
+        return result
     root_path = canonical_root(root)
     paths = paths_for(root_path)
     readiness_dir = guard_path(root_path, paths.state / "readiness")
@@ -396,8 +422,57 @@ def readiness_check(
     }
 
 
-def readiness_status(root: Union[Path, str], *, dataset: Optional[str] = None) -> Dict[str, Any]:
+def readiness_status(
+    root: Union[Path, str],
+    *,
+    dataset: Optional[str] = None,
+    generation: Optional[str] = None,
+    sort_spec_path: Optional[Union[str, Path]] = None,
+    receipt_path: Optional[Union[str, Path]] = None,
+) -> Dict[str, Any]:
     """Latest receipt plus staleness against the current source generation."""
+    if generation is not None:
+        if dataset is not None:
+            raise Refusal(
+                "Choose either a legacy dataset path or a Data Desk generation, not both.",
+                code="READINESS_INPUT_AMBIGUOUS",
+            )
+        status = generation_readiness_status(
+            root,
+            generation,
+            sort_spec_path=sort_spec_path,
+            receipt_path=receipt_path,
+        )
+        status["embargo_sentence"] = (
+            None if status.get("decision") == "PASS" else EMBARGO_SENTENCE
+        )
+        return status
+    if dataset is None and sort_spec_path is None and receipt_path is None:
+        active_status = current_generation_readiness_status(root)
+        if active_status.get("exists"):
+            active_status["embargo_sentence"] = (
+                None if active_status.get("decision") == "PASS" else EMBARGO_SENTENCE
+            )
+            return active_status
+        generation_receipts = generation_receipt_inventory(root)
+        if len(generation_receipts) == 1:
+            row = generation_receipts[0]
+            status = generation_readiness_status(
+                root,
+                row["generation_id"],
+                receipt_path=row["path"],
+            )
+            status["embargo_sentence"] = (
+                None if status.get("decision") == "PASS" else EMBARGO_SENTENCE
+            )
+            return status
+        if len(generation_receipts) > 1:
+            return {
+                "exists": True,
+                "decision": "AMBIGUOUS",
+                "candidates": generation_receipts,
+                "embargo_sentence": EMBARGO_SENTENCE,
+            }
     root_path = canonical_root(root)
     paths = paths_for(root_path)
     readiness_dir = guard_path(root_path, paths.state / "readiness")

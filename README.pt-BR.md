@@ -150,15 +150,19 @@ Para a opção de arquivo único sem instalação, consulte
 <!-- URIEL:SECTION:data-readiness:START -->
 ## Prontidão de Dados (Porta 0)
 
-Na ramificação canônica `main`, o fluxo local experimental `uriel data` pode planejar e selar CSV, TSV, JSON, JSONL, texto e Markdown em UTF-8; criar perfis estruturais e gerações imutáveis; visualizar diferenças; preservar cada registro de entrada durante a reconciliação; e reanalisar e verificar de forma independente o vínculo com os dados brutos. Ele não executa fórmulas, não presume unidades nem tipos semânticos, não cria achados científicos e não concede autoridade à Porta 0.
+Na ramificação canônica `main`, o fluxo local experimental `uriel data` pode planejar e selar CSV, TSV, JSON, JSONL, texto e Markdown em UTF-8; criar perfis estruturais e gerações imutáveis; visualizar diferenças; preservar cada registro durante a reconciliação; e reanalisar e verificar de forma independente o vínculo com os dados brutos. Ele não executa fórmulas, não presume unidades nem tipos semânticos, não cria achados científicos e não concede autoridade à Porta 0. A Porta 0 só começa depois que você declara explicitamente a identidade dos registros para uma geração exata.
 
-Antes de analisar dados ou tirar conclusões, execute as verificações de Prontidão de Dados:
-
-Se a Porta 0 falhar, a análise posterior será bloqueada até que a integridade dos dados seja restaurada.
+Depois que `uriel data inspect` retornar o identificador da geração, crie e verifique o SortSpec vinculado a ela:
 
 ```text
-uriel readiness
+uriel readiness init-sort-spec --root ../my-study --generation <GENERATION_ID> --keys id
+uriel readiness check --root ../my-study --generation <GENERATION_ID>
+uriel readiness status --root ../my-study --generation <GENERATION_ID>
 ```
+
+O recibo v2 vincula a linhagem bruta, as versões do analisador e da política, os identificadores estáveis de colunas, a ordem, as regras de duplicatas e nulos, a reconciliação, o plano de análise e o SortSpec ativo exato. Estado ausente, obsoleto, adulterado ou ambíguo bloqueia a análise posterior. Se houver mais de um SortSpec, selecione explicitamente o caminho exato.
+
+Pacotes de geração voltados à IA exigem um recibo PASS e linhas e colunas necessárias à tarefa. Eles são limitados a 1.000 linhas e 1 MiB, aceitam redação de valores e não têm autoridade sobre portas, publicação, achados ou Blessings. Cada pacote declara modo consultivo somente leitura: rede, shell e gravações no pacote ou projeto são negados, e a saída solicitada é limitada a 128 KiB e 15 minutos.
 
 ---
 

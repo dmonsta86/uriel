@@ -150,15 +150,19 @@ uriel verify --root ../my-study
 <!-- URIEL:SECTION:data-readiness:START -->
 ## データ準備状態 (ゲート 0)
 
-正規の `main` ブランチでは、実験的なローカル `uriel data` ワークフローにより、UTF-8 の CSV、TSV、JSON、JSONL、テキスト、Markdown を計画して封印し、不変の構造プロファイルとデータ世代を作成し、差分をプレビューし、照合時にすべての入力レコードを保持し、元データとの結び付きを独立に再解析・検証できます。数式は実行せず、単位や意味型を推測せず、科学的知見を生成せず、ゲート 0 の権限も付与しません。
+正規の `main` ブランチでは、実験的なローカル `uriel data` ワークフローにより、UTF-8 の CSV、TSV、JSON、JSONL、テキスト、Markdown を計画して封印し、不変の構造プロファイルとデータ世代を作成し、差分をプレビューし、照合時にすべてのレコードを保持し、元データとの結び付きを独立に再解析・検証できます。数式は実行せず、単位や意味型を推測せず、科学的知見を生成せず、ゲート 0 の権限も付与しません。ゲート 0 は、1 つの正確な世代についてレコード識別子を明示的に宣言した後にのみ開始します。
 
-データを分析したり結論を出したりする前に、データ準備状態チェックを実行します：
-
-ゲート 0 が失敗した場合、データの完全性が回復するまでダウンストリーム分析はブロックされます。
+`uriel data inspect` が世代 ID を返したら、その世代に結び付いた SortSpec を作成して検査します：
 
 ```text
-uriel readiness
+uriel readiness init-sort-spec --root ../my-study --generation <GENERATION_ID> --keys id
+uriel readiness check --root ../my-study --generation <GENERATION_ID>
+uriel readiness status --root ../my-study --generation <GENERATION_ID>
 ```
+
+v2 レシートは、元データの系譜、パーサーとポリシーの版、安定した列 ID、順序、重複・null 規則、照合、分析計画、および正確なアクティブ SortSpec を結び付けます。欠落、古さ、改変、曖昧さがある状態では下流分析をブロックします。SortSpec が複数ある場合は、正確なパスを明示的に選択してください。
+
+AI 向け世代パケットには PASS レシートと、タスクに必要な行・列の指定が必要です。上限は 1,000 行と 1 MiB で、値の秘匿に対応し、ゲート、公開、知見、Blessing に対する権限はありません。各パケットは助言専用の読み取りモードを宣言し、ネットワーク、shell、パケット書き込み、プロジェクト書き込みを禁止し、要求出力を 128 KiB・15 分以内に制限します。
 
 ---
 

@@ -47,6 +47,9 @@ DATA_REFUSAL_SCHEMA = "uriel.data_refusal.v1"
 RESOURCE_BUDGET_SCHEMA_V1 = "uriel.resource_budget.v1"
 RESOURCE_BUDGET_SCHEMA = "uriel.resource_budget.v2"
 DATA_VERIFICATION_SCHEMA = "uriel.data_verification_receipt.v1"
+GENERATION_SORT_SPEC_SCHEMA = "uriel.sort_spec.v2"
+GENERATION_READINESS_SCHEMA = "uriel.data_readiness.v2"
+GENERATION_READINESS_SELECTION_SCHEMA = "uriel.data_readiness_selection.v1"
 
 DATA_IMPORT_PLAN_SCHEMAS = frozenset({DATA_IMPORT_PLAN_SCHEMA_V1, DATA_IMPORT_PLAN_SCHEMA})
 
@@ -67,6 +70,9 @@ DATA_SCHEMA_FILES: Mapping[str, str] = {
     RESOURCE_BUDGET_SCHEMA_V1: "uriel.resource_budget.v1.schema.json",
     RESOURCE_BUDGET_SCHEMA: "uriel.resource_budget.v2.schema.json",
     DATA_VERIFICATION_SCHEMA: "uriel.data_verification_receipt.v1.schema.json",
+    GENERATION_SORT_SPEC_SCHEMA: "uriel.sort_spec.v2.schema.json",
+    GENERATION_READINESS_SCHEMA: "uriel.data_readiness.v2.schema.json",
+    GENERATION_READINESS_SELECTION_SCHEMA: "uriel.data_readiness_selection.v1.schema.json",
 }
 
 SUPPORTED_LOCAL_FORMATS: Mapping[str, Tuple[str, str]] = {
@@ -354,6 +360,48 @@ def validate_data_record(record: Mapping[str, Any]) -> Dict[str, Any]:
     elif schema_id == DATA_VERIFICATION_SCHEMA:
         if record.get("decision") == "PASS" and record.get("errors"):
             errors.append("$: a PASS verification receipt cannot contain errors")
+    elif schema_id == GENERATION_SORT_SPEC_SCHEMA:
+        columns = record.get("columns", [])
+        column_ids = [row.get("column_id") for row in columns if isinstance(row, Mapping)]
+        positions = [row.get("position") for row in columns if isinstance(row, Mapping)]
+        primary = list(record.get("primary_keys", []))
+        tie_break = list(record.get("tie_break_keys", []))
+        if len(column_ids) != len(set(column_ids)):
+            errors.append("$/columns: stable column IDs must be unique")
+        if positions != list(range(len(columns))):
+            errors.append("$/columns: positions must be contiguous source order")
+        if record.get("record_identity") != primary:
+            errors.append("$/record_identity: must exactly equal primary_keys")
+        if any(item not in set(column_ids) for item in primary + tie_break):
+            errors.append("$: primary and tie-break keys must reference declared stable columns")
+        if set(primary) & set(tie_break):
+            errors.append("$: primary and tie-break keys must not overlap")
+        has_plan_path = record.get("analysis_plan_relative_path") is not None
+        has_plan_hash = record.get("analysis_plan_sha256") is not None
+        if has_plan_path != has_plan_hash:
+            errors.append("$: analysis plan path and hash must be present or absent together")
+    elif schema_id == GENERATION_READINESS_SCHEMA:
+        checks = record.get("checks", [])
+        check_ids = [row.get("check_id") for row in checks if isinstance(row, Mapping)]
+        statuses = [row.get("status") for row in checks if isinstance(row, Mapping)]
+        passed = sum(1 for value in statuses if value == "PASS")
+        failed = sum(1 for value in statuses if value == "FAIL")
+        blocked = sum(1 for value in statuses if value == "BLOCKED")
+        if record.get("executed_check_count") != len(checks):
+            errors.append("$/executed_check_count: must equal the check matrix length")
+        if len(check_ids) != len(set(check_ids)):
+            errors.append("$/checks: every mandatory check ID must appear exactly once")
+        if record.get("passed_check_count") != passed:
+            errors.append("$/passed_check_count: does not match checks")
+        if record.get("failed_check_count") != failed:
+            errors.append("$/failed_check_count: does not match checks")
+        if record.get("blocked_check_count") != blocked:
+            errors.append("$/blocked_check_count: does not match checks")
+        if record.get("unresolved_blocker_count") != failed + blocked:
+            errors.append("$/unresolved_blocker_count: must equal failed plus blocked checks")
+        expected_decision = "BLOCKED" if blocked else ("FAIL" if failed else "PASS")
+        if record.get("decision") != expected_decision:
+            errors.append("$/decision: does not match the recomputed check counts")
 
     if errors:
         raise Refusal(

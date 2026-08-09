@@ -66,6 +66,10 @@ _MAX_IMPORT_RECEIPT_INDEX_BYTES = 256 * 1024 * 1024
 _MAX_LINEAGE_GENERATIONS = 256
 _MAX_LINEAGE_RECORD_WORK = 10_000_000
 _MAX_LINEAGE_BYTE_WORK = 4 * 1024 * 1024 * 1024
+MAX_AI_SURFACE_ROWS = 1_000
+MAX_AI_SURFACE_BYTES = 1024 * 1024
+MAX_AI_SURFACE_SOURCE_BYTES = 128 * 1024 * 1024
+MAX_AI_SURFACE_SOURCE_RECORDS = 250_000
 _FORMAT_DECISIONS = {
     "CSV": "DELIMITED_UTF8_COMMA_QUOTE_DOUBLEQUOTE_STRICT_HEADER_ROW_1",
     "TSV": "DELIMITED_UTF8_TAB_QUOTE_DOUBLEQUOTE_STRICT_HEADER_ROW_1",
@@ -2042,6 +2046,162 @@ def _verify_data_generation_once(
         "manifest": manifest,
         "profile": profile,
         "derived_index": derived_index,
+        "gate_0_authority_granted": False,
+        "scientific_findings_created": False,
+    }
+
+
+def project_verified_data_generation(
+    root: Union[str, Path],
+    generation_id: str,
+    *,
+    columns: Sequence[str],
+    row_indices: Sequence[int],
+    row_limit: int,
+    byte_limit: int,
+    redact: bool = False,
+) -> Dict[str, Any]:
+    """Build one explicit, bounded, read-only projection of verified records.
+
+    This helper grants no readiness or publication authority.  Callers that
+    expose records to an AI or analysis path must separately require an exact
+    PASS Data Readiness receipt before calling it.
+    """
+
+    paths = paths_for(root)
+    if not isinstance(row_limit, int) or isinstance(row_limit, bool) or not 1 <= row_limit <= MAX_AI_SURFACE_ROWS:
+        raise Refusal(
+            "The AI surface row limit is outside the hard safety budget.",
+            code="DATA_SURFACE_ROW_BUDGET",
+            details={"minimum": 1, "maximum": MAX_AI_SURFACE_ROWS},
+        )
+    if not isinstance(byte_limit, int) or isinstance(byte_limit, bool) or not 1 <= byte_limit <= MAX_AI_SURFACE_BYTES:
+        raise Refusal(
+            "The AI surface byte limit is outside the hard safety budget.",
+            code="DATA_SURFACE_BYTE_BUDGET",
+            details={"minimum": 1, "maximum": MAX_AI_SURFACE_BYTES},
+        )
+    requested_rows = list(row_indices)
+    if not requested_rows:
+        raise Refusal(
+            "Generation surfaces require explicit zero-based row indices.",
+            code="DATA_SURFACE_ROWS_REQUIRED",
+            repairs=["Select only the exact rows required for the declared task."],
+        )
+    if len(requested_rows) > row_limit or len(requested_rows) != len(set(requested_rows)):
+        raise Refusal(
+            "The explicit row selection is duplicated or exceeds its declared limit.",
+            code="DATA_SURFACE_ROW_BUDGET",
+        )
+    if any(not isinstance(index, int) or isinstance(index, bool) or index < 0 for index in requested_rows):
+        raise Refusal("Row indices must be unique nonnegative integers.", code="DATA_SURFACE_ROW_INVALID")
+
+    if not re.fullmatch(r"[0-9a-f]{64}", generation_id):
+        raise Refusal("A 64-character generation ID is required.", code="DATA_GENERATION_ID_INVALID")
+    manifest_path, records_path, _profile_path = _generation_paths(paths.root, generation_id)
+    _, preflight_manifest = _load_json_record(
+        paths.root, manifest_path.relative_to(paths.root).as_posix()
+    )
+    validate_data_record(preflight_manifest)
+    records_target = guard_path(paths.root, records_path, must_exist=True)
+    records_size = records_target.stat().st_size
+    record_count = preflight_manifest.get("record_count")
+    if records_size > MAX_AI_SURFACE_SOURCE_BYTES or (
+        not isinstance(record_count, int)
+        or isinstance(record_count, bool)
+        or record_count > MAX_AI_SURFACE_SOURCE_RECORDS
+    ):
+        raise Refusal(
+            "The generation exceeds the bounded work ceiling for an AI surface.",
+            code="DATA_SURFACE_SOURCE_BUDGET",
+            details={
+                "records_file_bytes": records_size,
+                "max_source_bytes": MAX_AI_SURFACE_SOURCE_BYTES,
+                "record_count": record_count,
+                "max_source_records": MAX_AI_SURFACE_SOURCE_RECORDS,
+            },
+            repairs=[
+                "Create a smaller, independently sealed generation for the task.",
+                "Use a separately reviewed streaming projection adapter.",
+                "Do not raise the ceiling without installed adversity and memory tests.",
+            ],
+        )
+
+    verify_data_generation(paths.root, generation_id)
+    manifest, records, profile, _records_file = _load_generation_records(paths.root, generation_id)
+    if any(index >= len(records) for index in requested_rows):
+        raise Refusal(
+            "A selected row index is outside the verified generation.",
+            code="DATA_SURFACE_ROW_INVALID",
+            details={"record_count": len(records)},
+        )
+    column_ids = _resolve_key_columns(profile, columns)
+    by_id = {
+        str(row["column_id"]): row
+        for row in profile["columns"]
+        if isinstance(row, Mapping)
+    }
+    selected_columns = [
+        {
+            "column_id": column_id,
+            "name": by_id[column_id]["name"],
+            "position": by_id[column_id]["position"],
+            "duplicate_name": by_id[column_id]["duplicate_name"],
+        }
+        for column_id in column_ids
+    ]
+    projected: List[Dict[str, Any]] = []
+    used = 0
+    for index in requested_rows:
+        source_record = records[index]
+        row: Dict[str, Any] = {
+            "source_row_index": index,
+            "record_sha256": sha256_text(canonical_json(source_record)),
+            "selected_column_ids": column_ids,
+        }
+        if redact:
+            row["values_redacted"] = True
+        else:
+            row["values"] = {
+                column_id: source_record.get(column_id)
+                for column_id in column_ids
+            }
+            row["values_redacted"] = False
+        rendered = canonical_json(row).encode("utf-8")
+        if used + len(rendered) > byte_limit:
+            raise Refusal(
+                "The exact requested projection does not fit its declared byte limit.",
+                code="DATA_SURFACE_BYTE_BUDGET",
+                details={
+                    "byte_limit": byte_limit,
+                    "bytes_before_row": used,
+                    "rejected_row_index": index,
+                    "rejected_row_bytes": len(rendered),
+                },
+                repairs=[
+                    "Select fewer rows or columns.",
+                    "Use redaction when values are not required for the task.",
+                    "Raise the byte limit only within Uriel's one-megabyte hard ceiling.",
+                ],
+            )
+        projected.append(row)
+        used += len(rendered)
+    return {
+        "schema": "uriel.data_projection.v1",
+        "generation_id": generation_id,
+        "generation_manifest_sha256": manifest["record_sha256"],
+        "source_records_sha256": manifest["records_sha256"],
+        "source_order_sha256": manifest["order_sha256"],
+        "selected_columns": selected_columns,
+        "selected_row_indices": requested_rows,
+        "row_limit": row_limit,
+        "byte_limit": byte_limit,
+        "row_count": len(projected),
+        "byte_count": used,
+        "redacted": bool(redact),
+        "records": projected,
+        "records_sha256": sha256_text(canonical_json(projected)),
+        "no_authority": True,
         "gate_0_authority_granted": False,
         "scientific_findings_created": False,
     }

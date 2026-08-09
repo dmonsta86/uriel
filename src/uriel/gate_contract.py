@@ -10,15 +10,28 @@ from __future__ import annotations
 import csv
 import io
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple, Union
 
-from .core import Refusal, atomic_write_json, canonical_json, canonical_root, guard_path, paths_for, sha256_text, utc_now
+from .core import (
+    Refusal,
+    atomic_write_json,
+    canonical_json,
+    canonical_root,
+    guard_path,
+    is_reparse_or_link,
+    paths_for,
+    sha256_text,
+    utc_now,
+)
 from .data_readiness import REQUIRED_CHECKS, readiness_status
 
 GATE_DECISION_SCHEMA = "uriel.gate_decision.v1"
 GATE_FINDING_SCHEMA = "uriel.gate_finding.v1"
+MAX_GATE_DECISION_FILES = 4_096
+_HEX64 = re.compile(r"^[0-9a-f]{64}$")
 
 # Section 3: required machine-readable decision statuses.
 PASS = "PASS"
@@ -171,7 +184,20 @@ def _validate_statuses(checks: Sequence[Mapping[str, Any]]) -> None:
 def _validate_check_ids(gate: int, checks: Sequence[Mapping[str, Any]]) -> List[str]:
     """Return the check IDs present in the gate spec but missing from the run."""
     required = GATE_SPECS[gate][1]
-    seen = set(str(check.get("check_id")) for check in checks)
+    identifiers = [str(check.get("check_id")) for check in checks]
+    seen = set(identifiers)
+    if len(identifiers) != len(seen):
+        raise Refusal(
+            "A strict gate decision contains a duplicate check ID.",
+            code="GATE_DUPLICATE_CHECK",
+        )
+    unknown = sorted(seen - set(required))
+    if unknown:
+        raise Refusal(
+            "A strict gate decision contains a check outside the frozen gate specification.",
+            code="GATE_UNKNOWN_CHECK",
+            details={"gate": gate, "unknown_check_ids": unknown},
+        )
     return [check_id for check_id in required if check_id not in seen]
 
 
@@ -266,25 +292,106 @@ def _decision_core(record: Mapping[str, Any]) -> Dict[str, Any]:
         "schema": record.get("schema"),
         "schema_version": record.get("schema_version"),
         "gate": record.get("gate"),
+        "gate_name": record.get("gate_name"),
         "decision": record.get("decision"),
         "policy": record.get("policy"),
+        "required_check_count": record.get("required_check_count"),
+        "executed_check_count": record.get("executed_check_count"),
+        "passed_check_count": record.get("passed_check_count"),
+        "failed_check_count": record.get("failed_check_count"),
+        "blocked_check_count": record.get("blocked_check_count"),
+        "not_applicable_count": record.get("not_applicable_count"),
+        "unresolved_blocker_count": record.get("unresolved_blocker_count"),
         "binding_digest": record.get("binding_digest"),
-        "check_statuses": [check.get("status") for check in record.get("checks", [])],
+        "independent_verifier_sha256": record.get("independent_verifier_sha256"),
+        "checks": [dict(check) for check in record.get("checks", [])],
     }
 
 
 def decision_sha256(record: Mapping[str, Any]) -> str:
-    return str(record.get("decision_sha256"))
+    return sha256_text(canonical_json(_decision_core(record)))
+
+
+def _validated_gate_record(
+    record: Mapping[str, Any],
+    *,
+    path: Optional[Path] = None,
+) -> Dict[str, Any]:
+    """Recompute one persisted gate record; never trust its PASS text or hash."""
+    if not isinstance(record, Mapping):
+        raise Refusal("A gate decision is not a JSON object.", code="GATE_DECISION_TAMPERED")
+    gate = record.get("gate")
+    checks = record.get("checks")
+    binding = record.get("binding_digest")
+    verifier = record.get("independent_verifier_sha256")
+    if (
+        not isinstance(gate, int)
+        or isinstance(gate, bool)
+        or gate not in GATE_SPECS
+        or not isinstance(checks, list)
+        or any(not isinstance(check, Mapping) for check in checks)
+        or not isinstance(binding, str)
+        or _HEX64.fullmatch(binding) is None
+        or (verifier is not None and (not isinstance(verifier, str) or _HEX64.fullmatch(verifier) is None))
+        or record.get("schema") != GATE_DECISION_SCHEMA
+        or record.get("schema_version") != 1
+        or record.get("policy") != "uriel-strict-blessing-1.0.0"
+        or not isinstance(record.get("created_at_utc"), str)
+    ):
+        raise Refusal(
+            "A gate decision has an invalid sealed structure.",
+            code="GATE_DECISION_TAMPERED",
+            details={"path": str(path) if path else None},
+        )
+    try:
+        recomputed = decide_gate(
+            gate,
+            checks,
+            binding_digest=binding,
+            independent_verifier_sha256=verifier,
+        )
+    except Refusal as exc:
+        raise Refusal(
+            "A gate decision cannot be reproduced from its sealed checks.",
+            code="GATE_DECISION_TAMPERED",
+            details={"path": str(path) if path else None, "reason": exc.code},
+        ) from exc
+    substantive_fields = set(_decision_core(recomputed))
+    if any(record.get(field) != recomputed.get(field) for field in substantive_fields):
+        raise Refusal(
+            "A gate decision's fields disagree with deterministic recomputation.",
+            code="GATE_DECISION_TAMPERED",
+            details={"path": str(path) if path else None},
+        )
+    declared = record.get("decision_sha256")
+    expected = decision_sha256(record)
+    if not isinstance(declared, str) or _HEX64.fullmatch(declared) is None or declared != expected:
+        raise Refusal(
+            "A gate decision's content identity is invalid.",
+            code="GATE_DECISION_TAMPERED",
+            details={"path": str(path) if path else None},
+        )
+    if path is not None and path.name != "gate-{0}.json".format(declared):
+        raise Refusal(
+            "A gate decision filename and content identity disagree.",
+            code="GATE_DECISION_TAMPERED",
+            details={"path": str(path)},
+        )
+    return dict(record)
 
 
 def write_gate_decision(root: Union[str, Path], record: Mapping[str, Any]) -> Path:
     """Immutable content-addressed gate decision under .uriel/gates/."""
     root_path = canonical_root(root)
     paths = paths_for(root_path)
-    store = paths.state / "gates"
-    digest = str(record.get("decision_sha256"))
-    if not digest:
-        raise Refusal("Gate decision has no decision_sha256.", code="GATE_DECISION_NOT_SEALED")
+    store = guard_path(root_path, paths.state / "gates")
+    guard_path(root_path, store.parent, must_exist=True)
+    store.mkdir(parents=False, exist_ok=True)
+    guard_path(root_path, store, must_exist=True)
+    if is_reparse_or_link(store):
+        raise Refusal("The gate decision store may not be a link.", code="GATE_DECISION_TAMPERED")
+    validated = _validated_gate_record(record)
+    digest = str(validated["decision_sha256"])
     destination = store / "gate-{0}.json".format(digest)
     if destination.exists():
         try:
@@ -295,10 +402,9 @@ def write_gate_decision(root: Union[str, Path], record: Mapping[str, Any]) -> Pa
                 code="GATE_DECISION_TAMPERED",
                 details={"path": str(destination), "error": str(exc)},
             ) from exc
-        if existing.get("decision_sha256") != digest:
-            raise Refusal("A conflicting gate decision already exists.", code="GATE_DECISION_COLLISION")
+        _validated_gate_record(existing, path=destination)
         return destination
-    atomic_write_json(destination, record)
+    atomic_write_json(destination, validated)
     return destination
 
 
@@ -308,16 +414,33 @@ def load_gate_decisions(root: Union[str, Path]) -> List[Dict[str, Any]]:
     store = paths.state / "gates"
     if not store.exists():
         return []
+    guard_path(root_path, store, must_exist=True)
+    if is_reparse_or_link(store):
+        raise Refusal("The gate decision store may not be a link.", code="GATE_DECISION_TAMPERED")
+    candidates = sorted(store.glob("gate-*.json"))
+    if len(candidates) > MAX_GATE_DECISION_FILES:
+        raise Refusal(
+            "The gate decision store exceeds its bounded history ceiling.",
+            code="GATE_DECISION_BUDGET",
+            details={"count": len(candidates), "maximum": MAX_GATE_DECISION_FILES},
+        )
     records: List[Tuple[Dict[str, Any], int]] = []
-    for path in sorted(store.glob("gate-*.json")):
+    for path in candidates:
         try:
+            guard_path(root_path, path, must_exist=True)
+            if is_reparse_or_link(path):
+                raise Refusal("A gate decision may not be a link.", code="GATE_DECISION_TAMPERED")
             record = json.loads(path.read_text(encoding="utf-8"))
             mtime = path.stat().st_mtime_ns
-        except (OSError, json.JSONDecodeError):
-            continue
-        if not isinstance(record, Mapping) or "decision_sha256" not in record or "gate" not in record:
-            continue
-        records.append((record, mtime))
+        except Refusal:
+            raise
+        except (OSError, json.JSONDecodeError) as exc:
+            raise Refusal(
+                "A gate decision file is unreadable.",
+                code="GATE_DECISION_TAMPERED",
+                details={"path": str(path)},
+            ) from exc
+        records.append((_validated_gate_record(record, path=path), mtime))
     latest_by_gate: Dict[int, Dict[str, Any]] = {}
     for record, mtime in sorted(records, key=lambda pair: (str(pair[0].get("created_at_utc", "")), pair[1])):
         gate = int(record.get("gate"))
@@ -342,7 +465,14 @@ def gate_state_summary(root: Union[str, Path]) -> Dict[str, Any]:
     }
 
 
-def gate_0_from_readiness(root: Union[str, Path], *, binding_digest: Optional[str] = None) -> Dict[str, Any]:
+def gate_0_from_readiness(
+    root: Union[str, Path],
+    *,
+    binding_digest: Optional[str] = None,
+    generation_id: Optional[str] = None,
+    sort_spec_path: Optional[Union[str, Path]] = None,
+    receipt_path: Optional[Union[str, Path]] = None,
+) -> Dict[str, Any]:
     """Derive the Gate 0 decision record from the Data Readiness receipt store.
 
     No substantive gate may pass while the exact generation lacks a valid
@@ -354,17 +484,24 @@ def gate_0_from_readiness(root: Union[str, Path], *, binding_digest: Optional[st
     paths = paths_for(root_path)
     readiness_dir = guard_path(root_path, paths.state / "readiness")
     dataset: Optional[str] = None
-    if readiness_dir.is_dir():
+    if generation_id is None and readiness_dir.is_dir():
         candidates = sorted(readiness_dir.glob("sortspec-*.json"), key=lambda p: (p.stat().st_mtime_ns, p.name))
         if candidates:
             try:
                 spec = json.loads(candidates[-1].read_text(encoding="utf-8"))
             except (OSError, ValueError):
                 spec = {}
-            dataset = str(spec.get("dataset_path", "")).strip() or None
-    status = readiness_status(root, dataset=dataset)
+            if spec.get("schema") == "uriel.sort_spec.v1":
+                dataset = str(spec.get("dataset_path", "")).strip() or None
+    status = readiness_status(
+        root,
+        dataset=dataset,
+        generation=generation_id,
+        sort_spec_path=sort_spec_path,
+        receipt_path=receipt_path,
+    )
     receipt = status.get("receipt")
-    if not status.get("exists") or receipt is None:
+    if not status.get("exists"):
         decision = "FAIL_DATA_NOT_READY"
         evidence = ["No Data Readiness receipt exists for this generation."]
         failing_status = "FAIL_DATA_NOT_READY"
@@ -372,38 +509,63 @@ def gate_0_from_readiness(root: Union[str, Path], *, binding_digest: Optional[st
         decision = "FAIL_STALE"
         evidence = ["The data generation changed after the receipt was written."]
         failing_status = "FAIL_STALE"
+    elif status.get("decision") == "TAMPERED":
+        decision = "FAIL_TAMPERED"
+        evidence = ["The exact generation or readiness receipt failed integrity verification."]
+        failing_status = "FAIL_TAMPERED"
+    elif status.get("decision") == "AMBIGUOUS":
+        decision = "BLOCKED_AMBIGUOUS_IDENTITY"
+        evidence = ["Multiple generation receipts match; select one exact generation and SortSpec."]
+        failing_status = "BLOCKED_AMBIGUOUS_IDENTITY"
+    elif receipt is None:
+        decision = "FAIL_DATA_NOT_READY"
+        evidence = ["No independently verified Data Readiness receipt is available."]
+        failing_status = "FAIL_DATA_NOT_READY"
     elif status.get("decision") != "PASS":
         decision = "FAIL_DATA_NOT_READY"
         evidence = ["The Data Readiness receipt decision is {0}.".format(status.get("decision"))]
         failing_status = "FAIL_DATA_NOT_READY"
     else:
         decision = PASS
-        evidence = ["Data Readiness receipt {0} is PASS for the exact generation.".format(
-            receipt.get("receipt_sha256"))]
+        evidence = [
+            "Data Readiness receipt {0} is PASS for the exact generation.".format(
+                status.get("receipt_sha256")
+            )
+        ]
         failing_status = "FAIL_DATA_NOT_READY"
     binding = binding_digest or (receipt.get("binding_digest") if isinstance(receipt, Mapping) else "")
-    checks = [
-        _check("source_identity", PASS if decision == PASS else failing_status, evidence),
-        _check("record_identity", PASS if decision == PASS else failing_status, evidence),
-        _check("schema", PASS if decision == PASS else failing_status, evidence),
-        _check("encoding", PASS if decision == PASS else failing_status, evidence),
-        _check("type_normalization", PASS if decision == PASS else failing_status, evidence),
-        _check("datetime_normalization", PASS if decision == PASS else failing_status, evidence),
-        _check("numeric_locale", PASS if decision == PASS else failing_status, evidence),
-        _check("category_normalization", PASS if decision == PASS else failing_status, evidence),
-        _check("duplicate_handling", PASS if decision == PASS else failing_status, evidence),
-        _check("join_keys_and_cardinality", PASS if decision == PASS else failing_status, evidence),
-        _check("missingness", PASS if decision == PASS else failing_status, evidence),
-        _check("exclusions", PASS if decision == PASS else failing_status, evidence),
-        _check("transformations", PASS if decision == PASS else failing_status, evidence),
-        _check("stable_deterministic_sorting", PASS if decision == PASS else failing_status, evidence),
-        _check("tie_break_rules", PASS if decision == PASS else failing_status, evidence),
-        _check("null_ordering", PASS if decision == PASS else failing_status, evidence),
-        _check("order_invariance", PASS if decision == PASS else failing_status, evidence),
-        _check("row_reconciliation", PASS if decision == PASS else failing_status, evidence),
-        _check("cross_platform_fixture_equivalence", PASS if decision == PASS else failing_status, evidence),
-        _check("rebuild_hash_equality", PASS if decision == PASS else failing_status, evidence),
-        _check("analysis_plan_binding", PASS if decision == PASS else failing_status, evidence),
-        _check("independent_verification", PASS if decision == PASS else failing_status, evidence),
-    ]
+    receipt_checks = receipt.get("checks") if isinstance(receipt, Mapping) else None
+    checks = []
+    if decision == PASS and isinstance(receipt_checks, list):
+        by_id = {
+            str(row.get("check_id")): row
+            for row in receipt_checks
+            if isinstance(row, Mapping)
+        }
+        for check_id in REQUIRED_CHECKS:
+            row = by_id.get(check_id, {})
+            readiness_check_status = str(row.get("status", ""))
+            if readiness_check_status == "PASS":
+                gate_status = PASS
+            elif readiness_check_status == "BLOCKED":
+                gate_status = "BLOCKED_AMBIGUOUS_IDENTITY"
+            else:
+                gate_status = "FAIL_DATA_NOT_READY"
+            checks.append(
+                _check(
+                    check_id,
+                    gate_status,
+                    [
+                        "Generation readiness receipt {0}; evidence {1}.".format(
+                            status.get("receipt_sha256"),
+                            json.dumps(row.get("evidence", {}), ensure_ascii=False, sort_keys=True),
+                        )
+                    ],
+                )
+            )
+    else:
+        checks = [
+            _check(check_id, PASS if decision == PASS else failing_status, evidence)
+            for check_id in REQUIRED_CHECKS
+        ]
     return decide_gate(0, checks, binding_digest=binding)

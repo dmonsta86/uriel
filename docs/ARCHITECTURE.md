@@ -76,6 +76,10 @@ project/
       reconciliations/<record-sha256>.json
       deltas/<delta-sha256>.jsonl
       indexes/<generation-id>.sqlite
+    readiness/
+      sortspec-<record-sha256>.json
+      receipt-<record-sha256>.json
+      CURRENT.json
     index/files.sqlite
 ```
 
@@ -96,6 +100,13 @@ checks the complete raw-artifact union, and recomputes reconciliation deltas.
 Reconciliation appends left records followed by right records and never
 resolves a contradiction by deleting either side.
 
+Generation-bound Gate 0 uses content-addressed v2 SortSpecs and readiness
+receipts. `CURRENT.json` is an atomically replaceable, itself hash-bound selector
+for the one active generation/SortSpec/receipt tuple. Gate 0, strict gates, the
+independent verifier, and Blessing issuance recompute that exact tuple; no v2
+authority path selects by modification time. Historical receipts remain
+immutable evidence but are not active authority.
+
 `.uriel/` is derived, local state and is ignored by default. Publish selected Blessing packages or audit exports deliberately; do not commit secrets or raw restricted data.
 
 ## Determinism and content binding
@@ -113,6 +124,9 @@ resolves a contradiction by deleting either side.
   bounded row stream rather than treated as authority.
 - Published Data Desk v1 schemas remain available as their original contracts;
   stronger records use new v2 IDs instead of silently tightening v1.
+- The active readiness selector hash participates in the full project binding;
+  switching between existing receipts therefore invalidates dependent strict
+  decisions and verifier receipts without deleting history.
 - Units and semantic types are empty by default and enter a generation only as
   explicit `USER_CONFIRMED` annotations. Lexical candidates never become
   semantic authority.

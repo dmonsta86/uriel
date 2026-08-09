@@ -177,15 +177,28 @@ seal UTF-8 CSV, TSV, JSON, JSONL, text, and Markdown; create immutable
 structural profiles and generations; preview deltas; preserve every input
 record during reconciliation; and independently reparse and verify the raw
 binding. It executes no formulas, guesses no units or semantic types, creates
-no scientific findings, and grants no Gate 0 authority.
+no scientific findings, and grants no Gate 0 authority. Gate 0 begins only
+after you explicitly declare record identity for one exact generation.
 
-Before analyzing data or drawing conclusions, run Data Readiness checks:
+After `uriel data inspect` returns a generation ID, create and check its
+generation-bound SortSpec:
 
 ```text
-uriel readiness
+uriel readiness init-sort-spec --root ../my-study --generation <GENERATION_ID> --keys id
+uriel readiness check --root ../my-study --generation <GENERATION_ID>
+uriel readiness status --root ../my-study --generation <GENERATION_ID>
 ```
 
-Gate 0 verifies dataset identity, ordering, normalization, missing value policies, and reconciliation. If Gate 0 fails, downstream analysis is blocked until data integrity is restored.
+The v2 receipt binds the raw lineage, parser and policy versions, stable column
+IDs, ordering, duplicate/null rules, reconciliation, analysis plan, and exact
+active SortSpec. Missing, stale, tampered, or ambiguous state blocks downstream
+analysis. If more than one SortSpec exists, select its exact path explicitly.
+
+AI-facing generation bursts require a PASS receipt plus task-specific rows and
+columns. They are capped at 1,000 rows and 1 MiB, support redaction, and carry
+no gate, publication, finding, or Blessing authority. Every packet declares
+advisory read-only operation: network, shell, packet writes, and project writes
+are denied; requested output is capped at 128 KiB and 15 minutes.
 
 ---
 

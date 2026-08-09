@@ -133,6 +133,88 @@ class CliTests(unittest.TestCase):
             self.assertEqual(result["content_sha256"], verification["content_sha256"])
             self.assertFalse(verification["gate_0_authority_granted"])
 
+    def test_generation_readiness_cli_uses_exact_active_receipt(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            root = base / "project"
+            source = base / "private" / "records.csv"
+            source.parent.mkdir()
+            source.write_text("id,value\na,1\nb,2\n", encoding="utf-8")
+            initialized = self._run("init", str(root), "--question", "Can exact generation readiness pass?")
+            self.assertEqual(0, initialized.returncode, initialized.stderr)
+
+            planned = self._run(
+                "--json", "data", "plan", "--root", str(root), "--source", str(source), "--label", "records"
+            )
+            self.assertEqual(0, planned.returncode, planned.stderr)
+            plan_path = root / "artifacts" / "plan.json"
+            plan_path.write_text(planned.stdout, encoding="utf-8")
+            imported = self._run(
+                "--json", "data", "import", "--root", str(root), "--source", str(source),
+                "--plan", "artifacts/plan.json",
+            )
+            self.assertEqual(0, imported.returncode, imported.stderr)
+            receipt_path = json.loads(imported.stdout)["result"]["receipt_relative_path"]
+            inspected = self._run(
+                "--json", "data", "inspect", "--root", str(root), "--receipt", receipt_path,
+            )
+            self.assertEqual(0, inspected.returncode, inspected.stderr)
+            generation_id = json.loads(inspected.stdout)["result"]["generation_id"]
+
+            initialized_spec = self._run(
+                "--json", "readiness", "init-sort-spec", "--root", str(root),
+                "--generation", generation_id, "--keys", "id",
+            )
+            self.assertEqual(0, initialized_spec.returncode, initialized_spec.stderr)
+            spec = json.loads(initialized_spec.stdout)["result"]
+            checked = self._run(
+                "--json", "readiness", "check", "--root", str(root),
+                "--generation", generation_id, "--sort-spec", spec["path"],
+            )
+            self.assertEqual(0, checked.returncode, checked.stderr)
+            check = json.loads(checked.stdout)["result"]
+            self.assertEqual("PASS", check["receipt"]["decision"])
+
+            status = self._run(
+                "--json", "readiness", "status", "--root", str(root),
+                "--generation", generation_id,
+            )
+            self.assertEqual(0, status.returncode, status.stderr)
+            active = json.loads(status.stdout)["result"]
+            self.assertEqual("PASS", active["decision"])
+            self.assertEqual(check["receipt_sha256"], active["receipt_sha256"])
+            self.assertEqual(
+                check["receipt_sha256"], active["active_selection"]["readiness_receipt_sha256"]
+            )
+            self.assertTrue((root / ".uriel" / "readiness" / "CURRENT.json").is_file())
+
+            burst = self._run(
+                "--json", "burst", "init", "--root", str(root),
+                "--generation", generation_id, "--columns", "id", "value",
+                "--row-index", "0", "--row-index", "1", "--row-limit", "2",
+                "--readiness-sort-spec", spec["path"],
+                "--readiness-receipt", check["path"],
+                "--next-task", "Check only the selected rows for transcription consistency.",
+                "--budget-bytes", "4096", "--redact",
+            )
+            self.assertEqual(0, burst.returncode, burst.stderr)
+            packet = json.loads(burst.stdout)["result"]
+            self.assertTrue(packet["verify"]["verified"])
+            self.assertEqual(2, packet["selected_records"])
+            surface = json.loads((Path(packet["packet"]) / "AI_SURFACE.json").read_text(encoding="utf-8"))
+            self.assertTrue(surface["no_authority"])
+            self.assertEqual("VALUES_REDACTED_METADATA_AND_HASHES_ONLY", surface["redaction_policy"])
+            self.assertEqual(check["receipt_sha256"], surface["acceptance_receipt"])
+
+            recheck = self._run(
+                "--json", "audit", "recheck", "--root", str(root),
+                "--profile", "submission", "--generation", generation_id,
+                "--sort-spec", spec["path"], "--readiness-receipt", check["path"],
+            )
+            self.assertEqual(0, recheck.returncode, recheck.stderr)
+            gate_zero = json.loads(recheck.stdout)["result"]["gates"]["gates"][0]
+            self.assertEqual("PASS", gate_zero["decision"])
+
     def test_data_desk_cli_inspect_diff_reconcile_and_deep_verify(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             base = Path(temporary)

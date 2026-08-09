@@ -21,10 +21,10 @@ from .core import (
     append_ledger,
     atomic_write,
     atomic_write_json,
-    build_manifest,
     canonical_json,
     canonical_root,
     guard_path,
+    load_current_manifest,
     paths_for,
     read_json,
     safe_relative_path,
@@ -43,7 +43,15 @@ from .gate_contract import (
     write_gate_decision,
 )
 from .gate_failures import AUDIT_TO_FAILURE, classify_failure
-from .independent_verify import compute_binding_digest, independent_verify, latest_verifier
+from .generation_readiness import current_generation_readiness_selection
+from .independent_verify import (
+    SOURCE_VERIFY_MAX_FILES,
+    SOURCE_VERIFY_MAX_FILE_BYTES,
+    SOURCE_VERIFY_MAX_TOTAL_BYTES,
+    compute_binding_digest,
+    independent_verify,
+    latest_verifier,
+)
 from .qr import qr_svg
 from .repair_packet import verify_repair_packet
 
@@ -320,7 +328,13 @@ def _evaluate_check(gate: int, check_id: str, flat_findings: List[Any], root_pat
     }
 
 
-def strict_gates_from_audit(root: Union[str, Path]) -> List[Dict[str, Any]]:
+def strict_gates_from_audit(
+    root: Union[str, Path],
+    *,
+    generation_id: Optional[str] = None,
+    sort_spec_path: Optional[Union[str, Path]] = None,
+    receipt_path: Optional[Union[str, Path]] = None,
+) -> List[Dict[str, Any]]:
     """Run the deterministic audit and project its findings onto the mandatory
     check lists, producing authoritative gate decisions for Gates 1-3.
 
@@ -329,11 +343,20 @@ def strict_gates_from_audit(root: Union[str, Path]) -> List[Dict[str, Any]]:
     """
     root_path = canonical_root(root)
     paths = paths_for(root_path)
+    # The audit seals its source manifest.  Compute the authoritative binding
+    # only after that deterministic preparation so every gate binds the same
+    # post-audit generation observed by the verifier.
+    report = audit_project(paths.root, profile="submission")
     binding = compute_binding_digest(root_path)
     digest = binding["binding_digest"]
-    gate0 = gate_0_from_readiness(root_path, binding_digest=digest)
+    gate0 = gate_0_from_readiness(
+        root_path,
+        binding_digest=digest,
+        generation_id=generation_id,
+        sort_spec_path=sort_spec_path,
+        receipt_path=receipt_path,
+    )
     decisions: List[Dict[str, Any]] = [gate0]
-    report = audit_project(paths.root, profile="submission")
     for gate_number, (name, check_ids) in GATE_SPECS.items():
         if gate_number == 0:
             continue
@@ -425,9 +448,21 @@ def _check_owns(finding: Any, check_id: str) -> bool:
     return False
 
 
-def run_strict_gates(root: Union[str, Path], *, persist: bool = True) -> Dict[str, Any]:
+def run_strict_gates(
+    root: Union[str, Path],
+    *,
+    persist: bool = True,
+    generation_id: Optional[str] = None,
+    sort_spec_path: Optional[Union[str, Path]] = None,
+    receipt_path: Optional[Union[str, Path]] = None,
+) -> Dict[str, Any]:
     """Compute and (optionally) persist all four strict gate decisions."""
-    decisions = strict_gates_from_audit(root)
+    decisions = strict_gates_from_audit(
+        root,
+        generation_id=generation_id,
+        sort_spec_path=sort_spec_path,
+        receipt_path=receipt_path,
+    )
     if persist:
         for decision in decisions:
             write_gate_decision(root, decision)
@@ -442,9 +477,18 @@ def _all_gates_pass(decisions: Sequence[Mapping[str, Any]]) -> bool:
 def blessing_eligibility(root: Union[str, Path]) -> Dict[str, Any]:
     """Report why issuance is blocked.  Never creates a certificate."""
     root_path = canonical_root(root)
-    decisions = {int(record.get("gate")): record for record in load_gate_decisions(root_path)}
-    missing_gates = [number for number in GATE_SPECS if number not in decisions]
     blockers: List[str] = []
+    try:
+        binding = compute_binding_digest(root_path)
+    except (Refusal, IntegrityError, OSError, ValueError) as exc:
+        binding = {}
+        blockers.append("The live project binding failed closed: {0}".format(exc))
+    try:
+        decisions = {int(record["gate"]): record for record in load_gate_decisions(root_path)}
+    except (Refusal, OSError, ValueError) as exc:
+        decisions = {}
+        blockers.append("The gate decision store failed closed: {0}".format(exc))
+    missing_gates = [number for number in GATE_SPECS if number not in decisions]
     for number in GATE_SPECS:
         record = decisions.get(number)
         if record is None:
@@ -453,25 +497,36 @@ def blessing_eligibility(root: Union[str, Path]) -> Dict[str, Any]:
         if str(record.get("decision")) != "PASS":
             blockers.append("Gate {0} ({1}) decision is {2}.".format(
                 number, GATE_NAMES[number], record.get("decision")))
+        elif binding and record.get("binding_digest") != binding.get("binding_digest"):
+            blockers.append(
+                "Gate {0} ({1}) binds a different project generation.".format(
+                    number, GATE_NAMES[number]
+                )
+            )
     if missing_gates:
         blockers.append("Missing gate decisions: {0}.".format(", ".join(str(g) for g in missing_gates)))
     unresolved = sum(int(record.get("unresolved_blocker_count", 0)) for record in decisions.values())
     if unresolved:
         blockers.append("{0} unresolved blockers across the gate decisions.".format(unresolved))
-    verifier = latest_verifier(root_path)
+    try:
+        verifier = latest_verifier(root_path)
+    except (Refusal, OSError, ValueError) as exc:
+        verifier = None
+        blockers.append("The verifier receipt store failed closed: {0}".format(exc))
     if verifier is None or verifier.get("decision") != "PASS":
         blockers.append("The independent verifier has no PASS receipt for the current binding.")
     else:
-        binding = compute_binding_digest(root_path)
-        if verifier.get("recomputed_binding_digest") != binding["binding_digest"]:
+        if not binding or verifier.get("recomputed_binding_digest") != binding.get("binding_digest"):
             blockers.append("The latest verifier receipt binds a different project generation.")
+        elif verifier.get("binding") != binding:
+            blockers.append("The latest verifier receipt's embedded binding is not the live binding.")
     eligible = not blockers
     return {
         "eligible": eligible,
         "blockers": blockers,
         "gates": {str(number): (decisions.get(number, {}).get("decision") if decisions.get(number) else "not_run")
                   for number in GATE_SPECS},
-        "binding_digest": compute_binding_digest(root_path)["binding_digest"],
+        "binding_digest": binding.get("binding_digest"),
         "verifier_decision": verifier.get("decision") if verifier else "not_run",
     }
 
@@ -534,8 +589,14 @@ def issue_strict_blessing(root: Union[str, Path]) -> Dict[str, Any]:
             code="STRICT_VERIFIER_FAILED",
             details={"errors": verifier.get("errors")},
         )
-    source = build_manifest(paths.root, persist=True)
-    source_check = verify_source_manifest(paths.root, source)
+    source = load_current_manifest(paths.root)
+    source_check = verify_source_manifest(
+        paths.root,
+        source,
+        max_files=SOURCE_VERIFY_MAX_FILES,
+        max_total_bytes=SOURCE_VERIFY_MAX_TOTAL_BYTES,
+        max_file_bytes=SOURCE_VERIFY_MAX_FILE_BYTES,
+    )
     if not source_check.get("verified"):
         raise IntegrityError("The source changed before Blessing issuance.", code="STRICT_SOURCE_CHANGED")
     project = read_json(paths.project)
@@ -635,17 +696,27 @@ def issue_strict_blessing(root: Union[str, Path]) -> Dict[str, Any]:
 
 
 def _latest_readiness_receipt(root: Path) -> str:
+    active = current_generation_readiness_selection(root, verify=True)
+    if active.get("exists"):
+        return str(active["selection"]["readiness_receipt_sha256"])
     receipt_dir = root / ".uriel" / "readiness"
     if not receipt_dir.exists():
         return ""
-    candidates = sorted(receipt_dir.glob("receipt-*.json"))
+    candidates = sorted(
+        receipt_dir.glob("receipt-*.json"),
+        key=lambda path: (path.stat().st_mtime_ns, path.name),
+    )
     if not candidates:
         return ""
     try:
         receipt = json.loads(candidates[-1].read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return ""
-    return str(receipt.get("receipt_sha256", ""))
+    return str(
+        receipt.get("receipt_sha256")
+        or receipt.get("record_sha256")
+        or candidates[-1].name[len("receipt-") : -len(".json")]
+    )
 
 
 def _latest_audit_id(decisions: Sequence[Mapping[str, Any]]) -> str:

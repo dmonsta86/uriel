@@ -111,13 +111,25 @@ class GateContractTests(unittest.TestCase):
         self.assertNotEqual(first["decision_sha256"], changed["decision_sha256"])
 
     def test_decision_write_is_immutable(self):
-        result = decide_gate(1, _full_checks(GATE1_CHECKS), binding_digest="b")
+        result = decide_gate(1, _full_checks(GATE1_CHECKS), binding_digest="b" * 64)
         path = write_gate_decision(self.root, result)
         path.write_bytes(b"not json")
-        self.assertEqual(load_gate_decisions(self.root), [])
+        with self.assertRaises(Refusal) as load_context:
+            load_gate_decisions(self.root)
+        self.assertEqual(load_context.exception.code, "GATE_DECISION_TAMPERED")
         with self.assertRaises(Refusal) as context:
             write_gate_decision(self.root, result)
         self.assertEqual(context.exception.code, "GATE_DECISION_TAMPERED")
+
+    def test_forged_pass_gate_record_fails_closed(self):
+        result = decide_gate(1, _full_checks(GATE1_CHECKS), binding_digest="c" * 64)
+        path = write_gate_decision(self.root, result)
+        forged = json.loads(path.read_text(encoding="utf-8"))
+        forged["checks"][0]["status"] = "FAIL_REFUTED"
+        path.write_text(json.dumps(forged, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+        with self.assertRaises(Refusal) as caught:
+            load_gate_decisions(self.root)
+        self.assertEqual("GATE_DECISION_TAMPERED", caught.exception.code)
 
     def test_gate_0_blocks_before_readiness(self):
         record = gate_0_from_readiness(self.root)

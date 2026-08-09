@@ -10,6 +10,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from uriel.core import Refusal, initialize_project, run_workload
 from uriel.data_readiness import make_sort_spec, propose_sort_spec_plan, readiness_check, readiness_status
@@ -161,6 +162,27 @@ class StrictBlessingTests(unittest.TestCase):
         (self.root / "analysis.py").write_text("tampered\n", encoding="utf-8")
         result = independent_verify(self.root)
         self.assertEqual(result["decision"], "FAIL")
+
+    def test_forged_verifier_receipt_cannot_enable_blessing(self) -> None:
+        self._make_eligible()
+        verifier_dir = self.root / ".uriel" / "verifier"
+        receipt_path = next(verifier_dir.glob("verifier-receipt-*.json"))
+        forged = json.loads(receipt_path.read_text(encoding="utf-8"))
+        forged["binding"]["source_manifest_verified"] = False
+        receipt_path.write_text(
+            json.dumps(forged, sort_keys=True, indent=2) + "\n", encoding="utf-8"
+        )
+        eligibility = blessing_eligibility(self.root)
+        self.assertFalse(eligibility["eligible"])
+        self.assertTrue(any("verifier receipt store failed closed" in row.lower() for row in eligibility["blockers"]))
+
+    def test_verifier_source_work_ceiling_fails_closed(self) -> None:
+        oversized = self.root / "artifacts" / "work-budget.bin"
+        oversized.write_bytes(b"0123456789abcdef")
+        with patch("uriel.independent_verify.SOURCE_VERIFY_MAX_FILE_BYTES", 8):
+            result = independent_verify(self.root)
+        self.assertEqual("FAIL", result["decision"])
+        self.assertTrue(any("work ceiling" in row.lower() or "per-file ceiling" in row.lower() for row in result["errors"]))
 
     def test_package_tamper_is_detected(self) -> None:
         self._make_eligible()

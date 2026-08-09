@@ -30,6 +30,15 @@ All notable changes to Uriel are documented here.
 - Ordered two-parent reconciliation identity, complete parent/raw/key/delta
   verification, exact canonical records-file bindings, one-sided duplicate
   evidence, and hard parser/verifier work ceilings.
+- Generation-bound v2 SortSpecs, deterministic 22-check readiness receipts,
+  and a hash-bound active selector shared by Gate 0, strict gates, independent
+  verification, and Blessing issuance, with stale/tamper fail-closed behavior.
+- Explicit generation AI projections and burst packets with required rows,
+  columns, allowed task, redaction policy, hashes, no-authority declarations,
+  and hard 1,000-row/1-MiB exposure ceilings.
+- Cryptographically chained burst history, reparse-point-safe packet writes,
+  independently rehashed gate/verifier receipts, and explicit read-only AI,
+  input-work, output-size, and wall-time ceilings.
 
 ## 1.0.0-rc2 — 2026-08-06
 

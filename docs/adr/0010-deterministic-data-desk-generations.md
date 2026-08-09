@@ -83,8 +83,9 @@ ceilings in addition to each plan's lower declared limits.
 
 ## Consequences and limits
 
-- A structurally verified generation still has no Gate 0 or scientific
-  authority. Gate 0 integration is a separate fail-closed change.
+- A structurally verified generation alone still has no Gate 0 or scientific
+  authority. [ADR 0011](0011-generation-bound-gate-zero.md) records the later
+  explicit, fail-closed readiness bridge.
 - Data Desk is intentionally not a statistics package, unit inference engine,
   scientific validator, spreadsheet renderer, or automatic normalizer.
 - Reconciliation key selection is an explicit user decision. Ambiguous or

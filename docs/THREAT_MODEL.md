@@ -29,6 +29,11 @@
     record or hides duplicate identity.
 14. **Formula activation:** inert source text is executed after spreadsheet
     export or another downstream handoff.
+15. **Readiness selector confusion:** a stale or merely newest receipt is used
+    instead of the exact generation and SortSpec approved for Gate 0.
+16. **AI overexposure or authority injection:** an advisory model receives
+    unnecessary records, consumes an unbounded context, or writes output that
+    is mistaken for generation, gate, publication, or Blessing authority.
 
 ## Implemented controls
 
@@ -57,6 +62,22 @@
   nonauthoritative derived index;
 - hard parser, records-file, ledger, index, receipt, lineage-node, and
   cumulative-work budgets, with repeated parent verification cached per run.
+- deterministic v2 SortSpecs and readiness receipts plus one hash-bound active
+  selector; missing, stale, damaged, or mismatched selection state fails closed
+  and no v2 authority decision uses modification time;
+- generation AI surfaces require an active PASS receipt, an allowed task,
+  explicit rows and columns, a maximum of 1,000 rows and 1 MiB, hashes, a
+  redaction policy, and an explicit no-authority declaration.
+- burst packets cap task, file, selected-record, and complete serialized sizes;
+  checksum member names cannot traverse, required members are enforced, and a
+  parent packet must pass integrity and semantic verification before its state
+  is carried forward; child packets bind the parent's checksum-manifest hash;
+- writes refuse project-local links and reparse points before creating packet
+  files; gate and verifier stores rehash filenames, sealed content, checks, and
+  exact bindings before any PASS can be consumed;
+- source-binding and legacy burst inputs have file-count, per-file, total-byte,
+  packet-count, output, and wall-time ceilings; AI task capabilities explicitly
+  deny network, shell, packet writes, and project writes.
 
 ## Explicit non-controls
 
@@ -66,6 +87,12 @@ Data Desk does not sanitize a value for every possible downstream application.
 It flags formula-like text and never executes it, but an exporter or user can
 still create a dangerous spreadsheet later. It also does not establish that a
 declared key, unit, semantic type, measurement, or source method is true.
+
+The AI-surface limits reduce accidental exposure and runaway context, but they
+do not determine whether selected values are legally or ethically shareable.
+The operator remains responsible for consent, provider retention terms, and
+choosing redaction before any packet leaves the local machine. Uriel does not
+send a generation packet to a provider by itself.
 
 The QR payload is an identifier for verification, not a secret or digital signature. For public non-repudiation, publish the Blessing digest in an independently controlled signed release, archival repository, transparency log, or institutional record.
 

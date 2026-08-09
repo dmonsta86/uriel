@@ -1,11 +1,11 @@
 {
-  "source_commit": "3459258c8fac60c37622a6e888d8fb24f0e9027c",
-  "source_readme_sha256": "bfcd126c8922e6edfc644b4d32a75fc3250aef764d816d5ce8d0aed95dca3005",
+  "source_commit": "02391088a6772d6699ee989d718576a6dc936d60",
+  "source_readme_sha256": "3364846338a1b3660683b8f254069cc4dffd25c8591445a43ba38b54cf9a13ad",
   "locale": "pt-BR",
   "translation_status": "AI_SECOND_PASS_REVIEWED",
   "reviewers": [],
   "readme_path": "README.pt-BR.md",
-  "readme_sha256": "9a75f46b9fed6478870867d74b1f876f86f685dd26596b210068cf7cc94fb0ef",
+  "readme_sha256": "1045b3f0b0991d77111a90e08687c9a298b6d7e51a71f72b48496e75dd49b1e2",
   "image_status": "LOCALIZED",
   "image_path": "docs/assets/i18n/pt-BR/uriel-forge-hero.png",
   "image_sha256": "ddb5138b34cc857e7142f0fac9227cd40a7009487c872c68d1dc79151c7c780d",
@@ -15,6 +15,6 @@
   "image_copy_sha256": "026ed5ec02bfeeb097550208f4fa4a26591b5d99fbbf296ab19a7f5c2ceb6de2",
   "image_renderer_path": "scripts/render_localized_heroes.py",
   "image_renderer_sha256": "233315ad2e5e5f9013d6563622a03f2d483039bf1cfce4bd136f8041cef54ef3",
-  "verified_at_utc": "2026-08-09T01:29:47Z",
+  "verified_at_utc": "2026-08-09T04:17:10Z",
   "schema": "uriel.translation_manifest.v1"
 }

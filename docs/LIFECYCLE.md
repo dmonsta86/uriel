@@ -275,6 +275,13 @@ now — a fact, not a conclusion.
   content hashes, an allowed task, a no-authority declaration, and an
   acceptance receipt. An AI surface cannot write scientific authority or
   issue a Blessing.
+- Generation surfaces require explicit unique row indices and stable columns,
+  an active independently verified Gate 0 receipt, and stay below hard ceilings
+  of 1,000 rows and 1 MiB. These are safety maxima, not recommended context
+  targets; select less whenever the task permits.
+- Burst construction also caps task text at 16 KiB, legacy file selection at
+  100 explicit files, and the complete serialized packet at 1 MiB plus 128 KiB.
+  Parent packets must verify before their state can be carried forward.
 - Free/rate-limited models get resumable burst context packets
   (`burst-001/`, `burst-002/`, ...) so the user never has to summarize a
   previous session. Each burst carries state, source manifest, selected

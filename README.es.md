@@ -150,15 +150,19 @@ Para la ruta de un solo archivo sin instalación, consulta
 <!-- URIEL:SECTION:data-readiness:START -->
 ## Preparación de datos (Puerta 0)
 
-En la rama canónica `main`, el flujo local experimental `uriel data` puede planificar y sellar CSV, TSV, JSON, JSONL, texto y Markdown en UTF-8; crear perfiles y generaciones estructurales inmutables; previsualizar diferencias; preservar cada registro de entrada durante la reconciliación; y volver a analizar y verificar de forma independiente el vínculo con los datos brutos. No ejecuta fórmulas, no adivina unidades ni tipos semánticos, no crea hallazgos científicos y no otorga autoridad de la Puerta 0.
+En la rama canónica `main`, el flujo local experimental `uriel data` puede planificar y sellar CSV, TSV, JSON, JSONL, texto y Markdown en UTF-8; crear perfiles y generaciones estructurales inmutables; previsualizar diferencias; preservar cada registro durante la reconciliación; y volver a analizar y verificar de forma independiente el vínculo con los datos brutos. No ejecuta fórmulas, no adivina unidades ni tipos semánticos, no crea hallazgos científicos y no otorga autoridad de la Puerta 0. La Puerta 0 comienza solo cuando declaras explícitamente la identidad de los registros para una generación exacta.
 
-Antes de analizar datos o sacar conclusiones, ejecuta las comprobaciones de Preparación de Datos:
-
-Si la Puerta 0 falla, el análisis posterior se bloquea hasta que se restaure la integridad de los datos.
+Después de que `uriel data inspect` devuelva el identificador de generación, crea y comprueba su SortSpec vinculado a esa generación:
 
 ```text
-uriel readiness
+uriel readiness init-sort-spec --root ../my-study --generation <GENERATION_ID> --keys id
+uriel readiness check --root ../my-study --generation <GENERATION_ID>
+uriel readiness status --root ../my-study --generation <GENERATION_ID>
 ```
+
+El recibo v2 vincula el linaje bruto, las versiones del analizador y de la política, los identificadores estables de columnas, el orden, las reglas de duplicados y nulos, la reconciliación, el plan de análisis y el SortSpec activo exacto. Un estado ausente, obsoleto, alterado o ambiguo bloquea el análisis posterior. Si existe más de un SortSpec, selecciona explícitamente su ruta exacta.
+
+Los paquetes de generación destinados a IA requieren un recibo PASS y filas y columnas específicas para la tarea. Tienen límites de 1.000 filas y 1 MiB, permiten redactar valores y no poseen autoridad sobre puertas, publicación, hallazgos ni Blessings. Cada paquete declara un modo consultivo de solo lectura: prohíbe red, shell y escrituras en el paquete o proyecto, y limita la salida solicitada a 128 KiB y 15 minutos.
 
 ---
 

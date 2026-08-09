@@ -57,6 +57,38 @@ JSONL generations, including the exact records-file hash and byte length. The
 index is nonauthoritative and disposable. None of plan,
 import, inspect, diff, reconcile, or generation verification grants Gate 0.
 
+Generation-bound Gate 0 additionally requires one explicit v2 SortSpec and an
+active, independently recomputed v2 readiness receipt. Record identity is never
+guessed. The v2 readiness lane performs identity-only normalization, refuses
+silent exclusions and `keep_first`, preserves duplicates, and uses an explicit
+record-hash tie-break. Changing a raw artifact, generation lineage, parser,
+policy, normalizer, SortSpec, or bound analysis plan invalidates the active
+receipt. Historical receipts remain preserved but cannot become authority
+without being selected by a fresh readiness check.
+
+AI-facing generation bursts are local packet builders, not inference clients.
+They require task-specific rows and columns, cap selection at 1,000 rows and
+1 MiB, and can redact values to metadata and hashes. Those ceilings limit
+exposure; they are not a promise that a maximum-size packet is affordable,
+useful, private under a provider's terms, or appropriate for sensitive data.
+Burst task text is additionally capped at 16 KiB, legacy selection at 100
+explicit files, and the complete serialized packet at 1 MiB plus 128 KiB.
+Legacy source work is refused above 16 MiB per file or 64 MiB total. A chain is
+limited to 100 packets; each child binds the SHA-256 identity of its verified
+parent. Packet capabilities deny network, shell, packet writes, and project
+writes, and request at most 128 KiB of output or 15 minutes of wall time. These
+last two limits are instructions that the consuming model host must enforce.
+Uriel verifies required membership, checksums, path-safe member names, declared
+budgets, no-authority fields, and parent continuity before carrying burst
+state forward. It does not upload a packet or call a model.
+No AI output can mark readiness, pass a gate, change publication authority, or
+issue a Blessing.
+
+Strict source-binding verification refuses more than 10,000 source files,
+512 MiB total, or 256 MiB for one file. AI projections additionally refuse a
+source generation above 250,000 records or 128 MiB because the current verified
+projection implementation reparses the complete sealed generation.
+
 ## Certificate design
 
 Version 1 uses SHA-256 content addressing, not public-key author signatures. The standalone verifier checks internal package integrity. Live verification additionally checks the local source state and ledger. Public trust should combine Uriel with signed Git tags/releases and an independent archive.

@@ -148,15 +148,19 @@ uriel verify --root ../my-study
 <!-- URIEL:SECTION:data-readiness:START -->
 ## 数据就绪性 (关卡 0)
 
-在规范的 `main` 分支上，实验性的本地 `uriel data` 工作流可以规划并封存 UTF-8 编码的 CSV、TSV、JSON、JSONL、文本和 Markdown；创建不可变的结构化剖析与数据代；预览差异；在对账时保留每条输入记录；并独立重新解析和验证原始数据绑定。它不会执行公式、猜测单位或语义类型、生成科学发现，也不会授予关卡 0 权限。
+在规范的 `main` 分支上，实验性的本地 `uriel data` 工作流可以规划并封存 UTF-8 编码的 CSV、TSV、JSON、JSONL、文本和 Markdown；创建不可变的结构化剖析与数据代；预览差异；在对账时保留每条记录；并独立重新解析和验证原始数据绑定。它不会执行公式、猜测单位或语义类型、生成科学发现，也不会授予关卡 0 权限。只有在你为某个精确数据代明确声明记录身份后，关卡 0 才会开始。
 
-在分析数据或得出结论前，运行数据就绪性检查：
-
-若关卡 0 未通过，下游分析将被阻断，直至数据完整性得到恢复。
+当 `uriel data inspect` 返回数据代 ID 后，创建并检查与该数据代绑定的 SortSpec：
 
 ```text
-uriel readiness
+uriel readiness init-sort-spec --root ../my-study --generation <GENERATION_ID> --keys id
+uriel readiness check --root ../my-study --generation <GENERATION_ID>
+uriel readiness status --root ../my-study --generation <GENERATION_ID>
 ```
+
+v2 收据会绑定原始数据血缘、解析器和策略版本、稳定列 ID、顺序、重复值和空值规则、对账、分析计划以及精确的当前 SortSpec。状态缺失、过期、遭到篡改或含糊时，下游分析会被阻断。如果存在多个 SortSpec，请明确选择其精确路径。
+
+面向 AI 的数据代数据包必须具有 PASS 收据，并明确指定任务所需的行和列。其上限为 1,000 行和 1 MiB，支持隐藏数值，且不具有任何关卡、发布、发现或 Blessing 权限。每个数据包都声明仅供建议、只读使用：禁止网络、shell、数据包写入和项目写入，并将请求的输出限制为 128 KiB 和 15 分钟。
 
 ---
 

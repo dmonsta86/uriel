@@ -57,7 +57,14 @@ from .data_desk import (
     reconcile_data_generations,
     verify_data_generation,
 )
-from .data_readiness import data_readiness_state, make_sort_spec, propose_sort_spec_plan, readiness_check, readiness_status
+from .data_readiness import (
+    data_readiness_state,
+    make_generation_sort_spec,
+    make_sort_spec,
+    propose_sort_spec_plan,
+    readiness_check,
+    readiness_status,
+)
 from .decisions import DECISION_CLASSES
 from .gate_contract import (
     gate_0_from_readiness,
@@ -195,7 +202,9 @@ def parser() -> argparse.ArgumentParser:
     readiness_actions = readiness.add_subparsers(dest="readiness_action", required=True)
     rd_init = readiness_actions.add_parser("init-sort-spec", help="generate a versioned SortSpec (identity must be declared)")
     _root_argument(rd_init)
-    rd_init.add_argument("--dataset", required=True)
+    rd_init_input = rd_init.add_mutually_exclusive_group(required=True)
+    rd_init_input.add_argument("--dataset", help="legacy project-relative CSV, TSV, or JSONL path")
+    rd_init_input.add_argument("--generation", help="exact 64-character Data Desk generation ID")
     rd_init.add_argument("--keys", nargs="+", default=[])
     rd_init.add_argument("--tie-break", nargs="+", default=[])
     rd_init.add_argument("--nulls", choices=("nulls_first", "nulls_last", "nulls_error"), default="nulls_last")
@@ -205,10 +214,14 @@ def parser() -> argparse.ArgumentParser:
     _root_argument(rd_check)
     rd_check.add_argument("--sort-spec", default="")
     rd_check.add_argument("--dataset", default="")
+    rd_check.add_argument("--generation", default="", help="exact Data Desk generation ID")
     rd_check.add_argument("--analysis-plan", default="")
     rd_status = readiness_actions.add_parser("status", help="latest receipt and staleness against current data")
     _root_argument(rd_status)
     rd_status.add_argument("--dataset", default="")
+    rd_status.add_argument("--generation", default="", help="exact Data Desk generation ID")
+    rd_status.add_argument("--sort-spec", default="", help="exact generation-bound SortSpec path")
+    rd_status.add_argument("--receipt", default="", help="exact generation-bound readiness receipt path")
 
     data = commands.add_parser("data", help="local Evidence Ingress contracts and Data Readiness proposals")
     data_actions = data.add_subparsers(dest="data_action", required=True)
@@ -308,6 +321,12 @@ def parser() -> argparse.ArgumentParser:
     burst_init_cmd = burst_actions.add_parser("init", help="create the next bounded burst packet")
     _root_argument(burst_init_cmd)
     burst_init_cmd.add_argument("--records", nargs="+", default=[], help="project-relative record files to include")
+    burst_init_cmd.add_argument("--generation", default="", help="exact ready Data Desk generation ID")
+    burst_init_cmd.add_argument("--columns", nargs="+", default=[], help="explicit task-needed column names or stable IDs")
+    burst_init_cmd.add_argument("--row-index", action="append", type=int, default=[], help="explicit zero-based generation row; repeat as needed")
+    burst_init_cmd.add_argument("--row-limit", type=int, default=100, help="hard selected-row ceiling (maximum 1000)")
+    burst_init_cmd.add_argument("--readiness-sort-spec", default="", help="exact generation-bound SortSpec path")
+    burst_init_cmd.add_argument("--readiness-receipt", default="", help="exact PASS readiness receipt path")
     burst_init_cmd.add_argument("--next-task", required=True)
     burst_init_cmd.add_argument("--budget-bytes", type=int, default=32000)
     burst_init_cmd.add_argument("--redact", action="store_true", help="expose metadata and hashes only")
@@ -360,6 +379,9 @@ def parser() -> argparse.ArgumentParser:
     audit_recheck = audit_actions.add_parser("recheck", help="re-run strict Gates 0-3 and report eligibility")
     _root_argument(audit_recheck)
     audit_recheck.add_argument("--profile", choices=PROFILES, default="standard")
+    audit_recheck.add_argument("--generation", default="", help="exact Data Desk generation ID")
+    audit_recheck.add_argument("--sort-spec", default="", help="exact generation-bound SortSpec path")
+    audit_recheck.add_argument("--readiness-receipt", default="", help="exact generation-bound readiness receipt path")
 
     blessing = commands.add_parser("blessing", help="issue a Blessing after a submission-profile PASS, or inspect strict eligibility")
     _root_argument(blessing)
@@ -807,7 +829,11 @@ def _print_human(command: str, result: Any, args: Optional[argparse.Namespace] =
             receipt = result.get("receipt", {})
             print("Data Readiness: {0} · receipt {1}".format(
                 receipt.get("decision"), result.get("receipt_sha256")))
-            failed = [check["check"] for check in result.get("checks", []) if check["status"] == "FAIL"]
+            failed = [
+                str(check.get("check") or check.get("check_id"))
+                for check in result.get("checks", [])
+                if check["status"] == "FAIL"
+            ]
             print("Checks: {0} executed · {1} failed".format(
                 receipt.get("executed_check_count"), receipt.get("failed_check_count")))
             if failed:
@@ -954,9 +980,22 @@ def _audit_repair(root: str, profile: str) -> Dict[str, Any]:
     return {"packet": packet, "blocker_count": len(blockers)}
 
 
-def _audit_recheck(root: str, profile: str) -> Dict[str, Any]:
+def _audit_recheck(
+    root: str,
+    profile: str,
+    *,
+    generation: Optional[str] = None,
+    sort_spec: Optional[str] = None,
+    readiness_receipt: Optional[str] = None,
+) -> Dict[str, Any]:
     """Re-run strict Gates 0-3 (persisting decisions) and report eligibility."""
-    gates = run_strict_gates(root, persist=True)
+    gates = run_strict_gates(
+        root,
+        persist=True,
+        generation_id=generation,
+        sort_spec_path=sort_spec,
+        receipt_path=readiness_receipt,
+    )
     eligibility = blessing_eligibility(root)
     return {"gates": gates, "eligibility": eligibility}
 
@@ -1013,6 +1052,12 @@ def dispatch(args: argparse.Namespace) -> Any:
                 next_task=args.next_task,
                 budget_bytes=args.budget_bytes,
                 redact=args.redact,
+                generation_id=args.generation or None,
+                generation_columns=args.columns,
+                row_indices=args.row_index,
+                row_limit=args.row_limit,
+                readiness_sort_spec=args.readiness_sort_spec or None,
+                readiness_receipt=args.readiness_receipt or None,
             )
         if args.burst_action == "verify":
             return verify_burst(args.packet_dir)
@@ -1052,6 +1097,16 @@ def dispatch(args: argparse.Namespace) -> Any:
             return inplace_verify(args.root)
     if command == "readiness":
         if args.readiness_action == "init-sort-spec":
+            if args.generation:
+                return make_generation_sort_spec(
+                    args.root,
+                    args.generation,
+                    keys=args.keys,
+                    tie_break=args.tie_break,
+                    nulls=args.nulls,
+                    duplicate_policy=args.dup_policy,
+                    analysis_plan=args.analysis_plan or None,
+                )
             return make_sort_spec(
                 args.root,
                 args.dataset,
@@ -1067,9 +1122,16 @@ def dispatch(args: argparse.Namespace) -> Any:
                 args.sort_spec or None,
                 dataset=args.dataset or None,
                 analysis_plan=args.analysis_plan or None,
+                generation=args.generation or None,
             )
         if args.readiness_action == "status":
-            return readiness_status(args.root, dataset=args.dataset or None)
+            return readiness_status(
+                args.root,
+                dataset=args.dataset or None,
+                generation=args.generation or None,
+                sort_spec_path=args.sort_spec or None,
+                receipt_path=args.receipt or None,
+            )
     if command == "data":
         if args.data_action == "plan":
             return plan_data_import(
@@ -1156,7 +1218,13 @@ def dispatch(args: argparse.Namespace) -> Any:
         if args.audit_action == "repair-plan":
             return _audit_repair(args.root, args.profile)
         if args.audit_action == "recheck":
-            return _audit_recheck(args.root, args.profile)
+            return _audit_recheck(
+                args.root,
+                args.profile,
+                generation=args.generation or None,
+                sort_spec=args.sort_spec or None,
+                readiness_receipt=args.readiness_receipt or None,
+            )
     if command == "blessing":
         if args.blessing_action is None:
             # Bare 'uriel blessing' prints help and eligibility; it NEVER creates a certificate.

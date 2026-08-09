@@ -13,6 +13,9 @@ from uriel.data_contracts import (
     DATA_DELTA_ENTRY_SCHEMA,
     DATA_GENERATION_SCHEMA,
     DATA_GENERATION_SCHEMA_V1,
+    GENERATION_READINESS_SCHEMA,
+    GENERATION_READINESS_SELECTION_SCHEMA,
+    GENERATION_SORT_SPEC_SCHEMA,
     DATA_IMPORT_PLAN_SCHEMA,
     DATA_IMPORT_PLAN_SCHEMA_V1,
     DATA_IMPORT_RECEIPT_SCHEMA,
@@ -35,6 +38,11 @@ from uriel.data_contracts import (
     plan_data_import,
     validate_data_record,
     verify_data_record_file,
+)
+from uriel.generation_readiness import (
+    READINESS_NORMALIZER_VERSION,
+    READINESS_POLICY_VERSION,
+    REQUIRED_CHECKS,
 )
 
 
@@ -233,13 +241,86 @@ def _valid_records():
         "errors": [],
         "independent_recompute": True,
     }))
+    records.append(bind_data_record({
+        "schema": GENERATION_SORT_SPEC_SCHEMA,
+        "schema_version": 2,
+        "policy_version": READINESS_POLICY_VERSION,
+        "data_policy_version": DATA_POLICY_VERSION,
+        "normalizer_version": READINESS_NORMALIZER_VERSION,
+        "generation_id": H1,
+        "generation_manifest_sha256": H2,
+        "parser_version": "uriel.data_parser.v1",
+        "source_records_sha256": H1,
+        "source_order_sha256": H2,
+        "records_file_sha256": H3,
+        "raw_artifact_sha256s": [H1],
+        "parent_generation_ids": [],
+        "operation_binding_sha256": None,
+        "columns": [{"column_id": C1, "name": "id", "position": 0, "duplicate_name": False}],
+        "record_identity": [C1],
+        "primary_keys": [C1],
+        "tie_break_keys": [],
+        "implicit_final_tie_break": "record_sha256",
+        "null_ordering": "nulls_last",
+        "normalization_rules": ["identity_no_coercion"],
+        "duplicate_policy": "block",
+        "join_policy": "row_position_join_forbidden_conflicts_preserved",
+        "canonical_serialization": "uriel_canonical_json_utf8_lf",
+        "order_invariance_tests": ["reverse_input_reproduces_canonical_order"],
+        "cross_platform_status": "deterministic_utf8_lf_no_locale",
+        "exclusions": [],
+        "analysis_plan_relative_path": None,
+        "analysis_plan_sha256": None,
+    }))
+    records.append(bind_data_record({
+        "schema": GENERATION_READINESS_SCHEMA,
+        "schema_version": 2,
+        "policy_version": READINESS_POLICY_VERSION,
+        "data_policy_version": DATA_POLICY_VERSION,
+        "normalizer_version": READINESS_NORMALIZER_VERSION,
+        "generation_id": H1,
+        "generation_manifest_sha256": H2,
+        "parser_version": "uriel.data_parser.v1",
+        "parent_generation_ids": [],
+        "operation_binding_sha256": None,
+        "raw_artifact_sha256s": [H1],
+        "records_sha256": H1,
+        "source_order_sha256": H2,
+        "records_file_sha256": H3,
+        "normalized_generation": H3,
+        "sort_spec_sha256": H2,
+        "analysis_plan_sha256": None,
+        "required_check_count": 22,
+        "executed_check_count": 22,
+        "passed_check_count": 22,
+        "failed_check_count": 0,
+        "blocked_check_count": 0,
+        "unresolved_blocker_count": 0,
+        "not_applicable_count": 0,
+        "decision": "PASS",
+        "binding_digest": H1,
+        "checks": [
+            {"check_id": check_id, "status": "PASS", "evidence": {"fixture": True}}
+            for check_id in REQUIRED_CHECKS
+        ],
+        "independent_generation_verification": "PASS",
+        "no_authority_from_ai": True,
+    }))
+    records.append(bind_data_record({
+        "schema": GENERATION_READINESS_SELECTION_SCHEMA,
+        "schema_version": 1,
+        "generation_id": H1,
+        "sort_spec_sha256": H2,
+        "readiness_receipt_sha256": H3,
+        "readiness_binding_digest": H1,
+    }))
     return records
 
 
 class DataContractTests(unittest.TestCase):
-    def test_all_sixteen_packaged_schemas_validate_bound_examples(self) -> None:
+    def test_all_nineteen_packaged_schemas_validate_bound_examples(self) -> None:
         catalog = data_contract_catalog()
-        self.assertEqual(16, len(catalog))
+        self.assertEqual(19, len(catalog))
         self.assertEqual(set(DATA_SCHEMA_FILES), {row["schema"] for row in catalog})
         for row in catalog:
             self.assertEqual(64, len(row["sha256"]))
@@ -371,6 +452,23 @@ class DataContractTests(unittest.TestCase):
         with self.assertRaises(Refusal) as caught:
             validate_data_record(broken)
         self.assertIn("preserved", str(caught.exception.details.get("errors")))
+
+    def test_generation_readiness_requires_each_check_id_exactly_once(self) -> None:
+        readiness = next(
+            record
+            for record in _valid_records()
+            if record["schema"] == GENERATION_READINESS_SCHEMA
+        )
+        checks = copy.deepcopy(readiness["checks"])
+        checks[-1] = {
+            "check_id": checks[0]["check_id"],
+            "status": "PASS",
+            "evidence": {"fixture": "duplicate-id-with-distinct-evidence"},
+        }
+        broken = bind_data_record({**readiness, "checks": checks})
+        with self.assertRaises(Refusal) as caught:
+            validate_data_record(broken)
+        self.assertIn("exactly once", str(caught.exception.details.get("errors")))
 
     def test_unsafe_source_types_and_unsupported_formats_refuse(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

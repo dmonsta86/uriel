@@ -929,8 +929,17 @@ def build_manifest(root: Union[Path, str], *, persist: bool = True) -> Dict[str,
 def verify_source_manifest(
     root: Union[Path, str],
     manifest: Optional[Mapping[str, Any]] = None,
+    *,
+    max_files: Optional[int] = None,
+    max_total_bytes: Optional[int] = None,
+    max_file_bytes: Optional[int] = None,
 ) -> Dict[str, Any]:
-    """Verify schema, digest, membership, metadata, and every recorded byte."""
+    """Verify schema, digest, membership, metadata, and every recorded byte.
+
+    Optional work ceilings let high-assurance callers fail closed before
+    hashing an unexpectedly large source tree.  They do not weaken membership
+    verification: exceeding any ceiling is a refusal, never a partial PASS.
+    """
 
     paths = paths_for(root)
     expected = dict(manifest or load_current_manifest(paths.root))
@@ -948,6 +957,25 @@ def verify_source_manifest(
     if not isinstance(rows, list):
         rows = []
         errors.append({"code": "MANIFEST_RECORDS", "message": "source manifest records must be an array"})
+    for name, value in (
+        ("max_files", max_files),
+        ("max_total_bytes", max_total_bytes),
+        ("max_file_bytes", max_file_bytes),
+    ):
+        if value is not None and (
+            not isinstance(value, int) or isinstance(value, bool) or value < 1
+        ):
+            raise Refusal(
+                "A source-verification work ceiling is invalid.",
+                code="SOURCE_VERIFY_BUDGET_INVALID",
+                details={"field": name, "value": value},
+            )
+    if max_files is not None and len(rows) > max_files:
+        raise Refusal(
+            "The sealed source manifest exceeds the verifier file-count ceiling.",
+            code="SOURCE_VERIFY_BUDGET",
+            details={"record_count": len(rows), "max_files": max_files},
+        )
     if expected.get("record_count") != len(rows):
         errors.append({"code": "MANIFEST_COUNT", "message": "source manifest record count mismatch"})
     if expected.get("records_sha256") != sha256_text(canonical_json(rows)):
@@ -969,7 +997,44 @@ def verify_source_manifest(
             continue
         by_path[rel] = row
 
-    actual_paths = {path.relative_to(paths.root).as_posix(): path for path in iter_project_files(paths.root)}
+    actual_paths: Dict[str, Path] = {}
+    actual_total_bytes = 0
+    for path in iter_project_files(paths.root):
+        if max_files is not None and len(actual_paths) >= max_files:
+            raise Refusal(
+                "The live source tree exceeds the verifier file-count ceiling.",
+                code="SOURCE_VERIFY_BUDGET",
+                details={"max_files": max_files},
+            )
+        try:
+            size = path.stat().st_size
+        except OSError as exc:
+            raise Refusal(
+                "A live source file could not be sized safely.",
+                code="SOURCE_VERIFY_BUDGET",
+                details={"path": str(path.relative_to(paths.root))},
+            ) from exc
+        if max_file_bytes is not None and size > max_file_bytes:
+            raise Refusal(
+                "A live source file exceeds the verifier per-file ceiling.",
+                code="SOURCE_VERIFY_BUDGET",
+                details={
+                    "path": path.relative_to(paths.root).as_posix(),
+                    "size_bytes": size,
+                    "max_file_bytes": max_file_bytes,
+                },
+            )
+        actual_total_bytes += size
+        if max_total_bytes is not None and actual_total_bytes > max_total_bytes:
+            raise Refusal(
+                "The live source tree exceeds the verifier total-byte ceiling.",
+                code="SOURCE_VERIFY_BUDGET",
+                details={
+                    "observed_bytes": actual_total_bytes,
+                    "max_total_bytes": max_total_bytes,
+                },
+            )
+        actual_paths[path.relative_to(paths.root).as_posix()] = path
     for rel in sorted(set(by_path) - set(actual_paths)):
         errors.append({"code": "SOURCE_MISSING", "message": "recorded source file is missing", "path": rel})
     for rel in sorted(set(actual_paths) - set(by_path)):

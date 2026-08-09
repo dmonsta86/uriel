@@ -1,0 +1,123 @@
+{
+  "$id": "uriel.sort_spec.v2",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Uriel generation-bound SortSpec v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "policy_version",
+    "data_policy_version",
+    "normalizer_version",
+    "generation_id",
+    "generation_manifest_sha256",
+    "parser_version",
+    "source_records_sha256",
+    "source_order_sha256",
+    "records_file_sha256",
+    "raw_artifact_sha256s",
+    "parent_generation_ids",
+    "operation_binding_sha256",
+    "columns",
+    "record_identity",
+    "primary_keys",
+    "tie_break_keys",
+    "implicit_final_tie_break",
+    "null_ordering",
+    "normalization_rules",
+    "duplicate_policy",
+    "join_policy",
+    "canonical_serialization",
+    "order_invariance_tests",
+    "cross_platform_status",
+    "exclusions",
+    "analysis_plan_relative_path",
+    "analysis_plan_sha256",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": { "const": "uriel.sort_spec.v2" },
+    "schema_version": { "const": 2 },
+    "policy_version": { "const": "uriel.data_readiness_policy.v2" },
+    "data_policy_version": { "const": "uriel.data_policy.v1" },
+    "normalizer_version": { "const": "uriel.data_readiness_normalizer.v1" },
+    "generation_id": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "generation_manifest_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "parser_version": { "const": "uriel.data_parser.v1" },
+    "source_records_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "source_order_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "records_file_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "raw_artifact_sha256s": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+    },
+    "parent_generation_ids": {
+      "type": "array",
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+    },
+    "operation_binding_sha256": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "columns": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["column_id", "name", "position", "duplicate_name"],
+        "properties": {
+          "column_id": { "type": "string", "pattern": "^col-[0-9a-f]{16}$" },
+          "name": { "type": "string", "minLength": 1 },
+          "position": { "type": "integer", "minimum": 0 },
+          "duplicate_name": { "type": "boolean" }
+        }
+      }
+    },
+    "record_identity": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^col-[0-9a-f]{16}$" }
+    },
+    "primary_keys": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^col-[0-9a-f]{16}$" }
+    },
+    "tie_break_keys": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^col-[0-9a-f]{16}$" }
+    },
+    "implicit_final_tie_break": { "const": "record_sha256" },
+    "null_ordering": { "enum": ["nulls_first", "nulls_last", "nulls_error"] },
+    "normalization_rules": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": { "const": "identity_no_coercion" }
+    },
+    "duplicate_policy": { "enum": ["block", "exact"] },
+    "join_policy": { "const": "row_position_join_forbidden_conflicts_preserved" },
+    "canonical_serialization": { "const": "uriel_canonical_json_utf8_lf" },
+    "order_invariance_tests": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": { "const": "reverse_input_reproduces_canonical_order" }
+    },
+    "cross_platform_status": { "const": "deterministic_utf8_lf_no_locale" },
+    "exclusions": { "type": "array", "maxItems": 0 },
+    "analysis_plan_relative_path": { "type": ["string", "null"], "minLength": 1 },
+    "analysis_plan_sha256": { "type": ["string", "null"], "pattern": "^[0-9a-f]{64}$" },
+    "record_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

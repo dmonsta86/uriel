@@ -1,7 +1,7 @@
 {
   "schema": "uriel.capability_inventory.v1",
   "source": "src/uriel/capability_status.py",
-  "source_fingerprint": "157c38b84eec572215b999e42be4dd0e323916fe98214ab036bf43596c69a81c",
+  "source_fingerprint": "625f6ebdbfd339b397cd81b0bffec3a20827d70296c564a881c410e4ff3784e5",
   "capabilities": [
     {
       "id": "CAP-CORE-001",
@@ -27,19 +27,27 @@
       "id": "CAP-READINESS-001",
       "name": "Data Readiness and Gate 0",
       "status": "BETA",
-      "entry_point": "uriel readiness",
+      "entry_point": "uriel readiness init-sort-spec / check / status",
       "platforms": [
         "Windows",
         "macOS",
         "Linux"
       ],
       "modules": [
-        "src/uriel/data_readiness.py"
+        "src/uriel/data_readiness.py",
+        "src/uriel/generation_readiness.py",
+        "src/uriel/gate_contract.py",
+        "src/uriel/independent_verify.py",
+        "src/uriel/surfaces.py"
       ],
       "verification": [
-        "tests/test_data_readiness.py"
+        "tests/test_data_readiness.py",
+        "tests/test_generation_readiness.py",
+        "tests/test_gate_contract.py",
+        "tests/test_surfaces.py",
+        "tests/test_strict_contract_mandatory.py"
       ],
-      "notes": "Dataset identity, sorting, normalization, reconciliation, staleness, and order-invariance checks."
+      "notes": "Exact active-generation identity, deterministic v2 SortSpecs and readiness receipts, stale/tamper invalidation, strict Gate 0 interlock, and bounded no-authority AI projections."
     },
     {
       "id": "CAP-GATES-001",

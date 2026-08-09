@@ -453,6 +453,48 @@ class MandatoryRegressionTests(unittest.TestCase):
                 mutated = next(d for d in strict_gates_from_audit(root) if d["gate"] == 2)["decision"]
             self.assertNotEqual(mutated, real)
 
+    # Mutation guard: bypassing Gate 0 changes substantive decisions, proving
+    # the readiness interlock is exercised rather than decorative.
+    def test_mutation_bypassing_gate_zero_changes_substantive_decisions(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            make_passing_project(root)
+            _refresh_fixture_receipt(root)
+            real = strict_gates_from_audit(root)
+            real_by_gate = {row["gate"]: row for row in real}
+            self.assertNotEqual("PASS", real_by_gate[0]["decision"])
+            self.assertTrue(all(
+                row["status"] == "FAIL_DATA_NOT_READY"
+                for gate in (1, 2, 3)
+                for row in real_by_gate[gate]["checks"]
+            ))
+
+            def bypass_gate_zero(_root, **kwargs):
+                return decide_gate(
+                    0,
+                    [
+                        {
+                            "check_id": check_id,
+                            "status": "PASS",
+                            "evidence": ["mutation: readiness interlock bypassed"],
+                        }
+                        for check_id in GATE_SPECS[0][1]
+                    ],
+                    binding_digest=kwargs.get("binding_digest"),
+                )
+
+            with mock.patch(
+                "uriel.strict_blessing.gate_0_from_readiness",
+                side_effect=bypass_gate_zero,
+            ):
+                mutated = strict_gates_from_audit(root)
+            mutated_by_gate = {row["gate"]: row for row in mutated}
+            self.assertEqual("PASS", mutated_by_gate[0]["decision"])
+            self.assertTrue(any(
+                mutated_by_gate[gate]["decision"] != real_by_gate[gate]["decision"]
+                for gate in (1, 2, 3)
+            ))
+
     # Mutation spot check: every AUDIT_TO_FAILURE code is exercised by a decision path.
     def test_mutation_all_failure_codes_produce_statuses(self) -> None:
         for code, status in AUDIT_TO_FAILURE.items():

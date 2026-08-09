@@ -1,0 +1,25 @@
+{
+  "$id": "uriel.data_readiness_selection.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Uriel active generation-readiness selection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "generation_id",
+    "sort_spec_sha256",
+    "readiness_receipt_sha256",
+    "readiness_binding_digest",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": { "const": "uriel.data_readiness_selection.v1" },
+    "schema_version": { "const": 1 },
+    "generation_id": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "sort_spec_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "readiness_receipt_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "readiness_binding_digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "record_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

@@ -150,15 +150,19 @@ Pour la version autonome sans installation, consultez
 <!-- URIEL:SECTION:data-readiness:START -->
 ## Préparation des données (Porte 0)
 
-Sur la branche canonique `main`, le flux local expérimental `uriel data` peut planifier et sceller des fichiers CSV, TSV, JSON, JSONL, texte et Markdown en UTF-8 ; créer des profils structurels et des générations immuables ; prévisualiser les écarts ; préserver chaque enregistrement d'entrée pendant la réconciliation ; puis réanalyser et vérifier indépendamment le lien avec les données brutes. Il n'exécute aucune formule, ne devine ni unité ni type sémantique, ne crée aucun résultat scientifique et n'accorde aucune autorité à la Porte 0.
+Sur la branche canonique `main`, le flux local expérimental `uriel data` peut planifier et sceller des fichiers CSV, TSV, JSON, JSONL, texte et Markdown en UTF-8 ; créer des profils structurels et des générations immuables ; prévisualiser les écarts ; préserver chaque enregistrement pendant la réconciliation ; puis réanalyser et vérifier indépendamment le lien avec les données brutes. Il n'exécute aucune formule, ne devine ni unité ni type sémantique, ne crée aucun résultat scientifique et n'accorde aucune autorité à la Porte 0. La Porte 0 ne commence qu'après la déclaration explicite de l'identité des enregistrements pour une génération exacte.
 
-Avant d'analyser des données ou de tirer des conclusions, exécutez les vérifications de préparation des données :
-
-Si la Porte 0 échoue, l'analyse en aval est bloquée jusqu'à ce que l'intégrité des données soit restaurée.
+Après que `uriel data inspect` a renvoyé l'identifiant de génération, créez et vérifiez son SortSpec lié à cette génération :
 
 ```text
-uriel readiness
+uriel readiness init-sort-spec --root ../my-study --generation <GENERATION_ID> --keys id
+uriel readiness check --root ../my-study --generation <GENERATION_ID>
+uriel readiness status --root ../my-study --generation <GENERATION_ID>
 ```
+
+Le reçu v2 lie la lignée brute, les versions de l'analyseur et de la politique, les identifiants de colonnes stables, l'ordre, les règles relatives aux doublons et aux valeurs nulles, la réconciliation, le plan d'analyse et le SortSpec actif exact. Un état absent, périmé, altéré ou ambigu bloque l'analyse en aval. Si plusieurs SortSpecs existent, sélectionnez explicitement le chemin exact.
+
+Les paquets de génération destinés à l'IA exigent un reçu PASS ainsi que les lignes et colonnes nécessaires à la tâche. Ils sont limités à 1 000 lignes et 1 Mio, prennent en charge la rédaction des valeurs et n'ont aucune autorité sur les portes, la publication, les résultats ou les Blessings. Chaque paquet impose un mode consultatif en lecture seule : réseau, shell et écritures dans le paquet ou le projet sont interdits, avec une sortie demandée limitée à 128 Kio et 15 minutes.
 
 ---
 
