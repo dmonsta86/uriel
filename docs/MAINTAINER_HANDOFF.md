@@ -27,6 +27,84 @@ The current `main` commit is a post-tag maintenance revision. The existing
 `v1.0.0-rc2` tag remains immutable; no release claim should combine its assets
 with later `main` changes until a new exact candidate is reviewed and tagged.
 
+## Cross-project field lesson
+
+An operator-authorized research run outside this repository exposed several
+domain-neutral practices that Uriel should absorb into future Forge Method and
+trial work. This is a methodological steer, not evidence that Uriel currently
+implements or validates the practices, and it imports no other project's
+identity, subject matter, sources, conclusions, private artifacts, or value
+premises.
+
+The highest-value practices are:
+
+- **typed claim separation:** keep observations, derived inferences,
+  assumptions, authority rules, boundary claims, and conclusions distinct;
+- **missing-numerator discipline:** record an unavailable target quantity as
+  unknown with a reason instead of silently replacing it with zero, a broad
+  proxy, or an unjustified extrapolation;
+- **denominator, clock, and applicability binding:** keep numerator,
+  denominator, unit, eligible population, timing convention, place, period,
+  coverage, and uncertainty attached to each quantitative claim;
+- **category isolation:** a rationale established for an exceptional subset
+  cannot justify the remainder without a separate premise;
+- **boundary stress testing:** test cases immediately before and after a
+  proposed threshold, and distinguish an administratively clear line from an
+  intrinsic change in the thing being studied;
+- **counterfactual discipline:** do not convert an administrative reason code,
+  stated intention, or observed association into an outcome actually caused or
+  prevented;
+- **competing-premise bundles:** construct the strongest serious argument paths
+  and expose the first empirical, normative, or authority premise where they
+  diverge;
+- **Dialectical Reset:** strip loaded framing, independently reconstruct the
+  strongest serious case for each rival position from first principles as if
+  each advocate were genuinely convinced, and only then compare objections,
+  hidden premises, and discriminating evidence; and
+- **cross-artifact reconciliation:** require the narrative, claim records,
+  source ledger, quantitative snapshot, decision record, and tests to agree.
+
+The proposed Dialectical Reset protocol is stricter than recording one generic
+alternative explanation:
+
+1. Produce a neutral, provenance-bound restatement without deleting material
+   context, definitions, or uncertainty.
+2. Build position A's strongest evidence/premise graph, value and authority
+   bridges, falsifiers, and weakest link before exposing it to position B.
+3. Build position B independently under the same evidence and burden rules;
+   neither side inherits the other's framing or gets to answer a caricature.
+4. Locate the first empirical, logical, definitional, boundary, normative, or
+   authority premise where the graphs diverge.
+5. Reconstruct both positions after their strongest mutual objections and name
+   the evidence or test most likely to discriminate between them.
+6. Do not manufacture parity. Fabricated evidence, category errors,
+   unfalsifiable escape clauses, and undeclared value or authority premises
+   remain visible as failures rather than receiving false balance.
+
+Suggested Uriel mapping:
+
+1. **Gate 1** should expose claim type, category scope, threshold meaning, and
+   any conclusion that crosses from observation into value or authority
+   without an explicit bridge.
+2. **Gate 2** should test denominator and timing compatibility, preserve true
+   missingness, distinguish direct measurements from proxies or modeled
+   estimates, and require derived arithmetic to expose its inputs.
+3. **Gate 3** should test exception-to-general-rule spillover, competing
+   premise bundles, Dialectical Reset reconstruction, near-boundary
+   counterexamples, counterfactual overreach, and less-harmful mechanisms that
+   could satisfy the same function.
+
+The best next implementation proof is a small domain-neutral Forge Trial
+extension containing seeded cases for: `null` treated as zero; a broad proxy
+substituted for a narrow endpoint; incompatible denominators compared; an
+exception used as blanket justification; an administrative code described as
+a prevented outcome; a conclusion that changes when its hidden premise is made
+explicit; asymmetric burdens of proof; loaded rival framing; and manufactured
+false equivalence. Detection behavior, reconstruction fidelity, premise
+divergence, and framing symmetry must be measured before any corresponding
+capability is promoted. Until then, retain this as a candidate method and do
+not describe it as shipped automation.
+
 ## Latest verified local checks
 
 The current checkout has passed:
