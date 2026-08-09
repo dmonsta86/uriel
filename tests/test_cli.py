@@ -83,6 +83,56 @@ class CliTests(unittest.TestCase):
             self.assertTrue(verification["valid"])
             self.assertEqual("uriel.data_import_plan.v1", verification["schema"])
 
+    def test_data_import_and_verify_import_consume_saved_cli_plan(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            root = base / "project"
+            source = base / "private-source" / "records.csv"
+            source.parent.mkdir()
+            source.write_text("id,value\na,1\nb,2\n", encoding="utf-8")
+            initialized = self._run("init", str(root), "--question", "Can exact bytes be sealed?")
+            self.assertEqual(0, initialized.returncode, initialized.stderr)
+
+            planned = self._run(
+                "--json", "data", "plan", "--root", str(root), "--source", str(source), "--label", "cli-records"
+            )
+            self.assertEqual(0, planned.returncode, planned.stderr)
+            plan_path = root / "artifacts" / "cli-import-plan.json"
+            plan_path.write_text(planned.stdout, encoding="utf-8")
+
+            imported = self._run(
+                "--json",
+                "data",
+                "import",
+                "--root",
+                str(root),
+                "--source",
+                str(source),
+                "--plan",
+                "artifacts/cli-import-plan.json",
+            )
+            self.assertEqual(0, imported.returncode, imported.stderr)
+            self.assertNotIn(str(source), imported.stdout)
+            result = json.loads(imported.stdout)["result"]
+            self.assertEqual("SEALED", result["status"])
+            self.assertEqual("COPIED", result["outcome"])
+            self.assertFalse(result["gate_0_authority_granted"])
+
+            verified = self._run(
+                "--json",
+                "data",
+                "verify-import",
+                "--root",
+                str(root),
+                "--receipt",
+                result["receipt_relative_path"],
+            )
+            self.assertEqual(0, verified.returncode, verified.stderr)
+            verification = json.loads(verified.stdout)["result"]
+            self.assertTrue(verification["verified"])
+            self.assertEqual(result["content_sha256"], verification["content_sha256"])
+            self.assertFalse(verification["gate_0_authority_granted"])
+
 
 if __name__ == "__main__":
     unittest.main()

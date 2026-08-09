@@ -423,6 +423,15 @@ def execute(args: argparse.Namespace, root: Path, report: Path) -> int:
                 "assert required <= actual, sorted(required-actual); print('packaged schemas: PASS')"
             )
             checked([str(python), "-c", schema_check], env=clean_environment)
+            checked(
+                [
+                    str(python),
+                    "scripts/smoke_installed_data_ingress.py",
+                    "--executable",
+                    str(executable),
+                ],
+                env=clean_environment,
+            )
 
     portable = root / "dist" / "uriel.pyz"
     log.extend(["", "RESULT: PASS", "portable_sha256: " + sha(portable)])

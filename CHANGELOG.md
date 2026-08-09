@@ -11,6 +11,11 @@ All notable changes to Uriel are documented here.
   reconciliation, refusals, resource budgets, and independent verification.
 - `uriel data plan` as a path-private, budgeted, no-write local-file dry run,
   plus `uriel data verify-record` for exact schema/version/hash verification.
+- Immutable, content-addressed local intake through `uriel data import`, with
+  receipt-last authority, exact-byte deduplication, path redaction, deterministic
+  retry, disk/resource checks, and no implied Gate 0 authority.
+- `uriel data verify-import` for independent recomputation of archived plan,
+  raw-artifact, import-receipt, and managed-byte bindings.
 
 ## 1.0.0-rc2 — 2026-08-06
 

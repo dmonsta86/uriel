@@ -15,7 +15,7 @@ import stat
 import time
 from importlib import resources
 from pathlib import Path
-from typing import Any, Dict, List, Mapping, Optional, Tuple, Union
+from typing import Any, BinaryIO, Dict, List, Mapping, Optional, Tuple, Union
 
 from .core import (
     Refusal,
@@ -256,8 +256,11 @@ def validate_data_record(record: Mapping[str, Any]) -> Dict[str, Any]:
     elif schema_id == DATA_IMPORT_RECEIPT_SCHEMA:
         if record.get("source_content_sha256") != record.get("copied_content_sha256"):
             errors.append("$: copied content hash must equal the selected source hash")
-        if record.get("source_size_bytes") != record.get("bytes_copied"):
-            errors.append("$: copied byte count must equal the selected source size")
+        if record.get("outcome") == "COPIED":
+            if record.get("source_size_bytes") != record.get("bytes_copied"):
+                errors.append("$: a copied artifact must report the selected source size as bytes_copied")
+        elif record.get("outcome") == "REFERENCED" and record.get("bytes_copied") != 0:
+            errors.append("$: a referenced artifact must report zero newly copied bytes")
     elif schema_id == DATA_RECONCILIATION_SCHEMA:
         if record.get("preserved_conflict_count") != record.get("conflict_count"):
             errors.append("$: every conflicting record must remain preserved")
@@ -345,9 +348,19 @@ def _path_contains_indirection(path: Path) -> bool:
     return False
 
 
-def _inspect_selected_source(
-    source: Union[str, Path], max_source_bytes: int, timeout_seconds: int
+def inspect_selected_source(
+    source: Union[str, Path],
+    max_source_bytes: int,
+    timeout_seconds: int,
+    destination: Optional[BinaryIO] = None,
 ) -> Dict[str, Any]:
+    """Stream and validate one selected UTF-8 source, optionally copying bytes.
+
+    The source is opened once without following the selected leaf, hashed while
+    it is decoded, and checked for identity drift before and after the stream.
+    A supplied destination receives the exact blocks included in the digest.
+    """
+
     raw_source = os.fspath(source)
     if raw_source.startswith(("\\\\", "//")) or "://" in raw_source:
         raise Refusal(
@@ -429,6 +442,8 @@ def _inspect_selected_source(
                     )
                 digest.update(block)
                 decoder.decode(block)
+                if destination is not None:
+                    destination.write(block)
             decoder.decode(b"", final=True)
     except UnicodeDecodeError as exc:
         raise Refusal(
@@ -482,7 +497,7 @@ def plan_data_import(
         max_nesting_depth=max_nesting_depth,
         timeout_seconds=timeout_seconds,
     )
-    source_observation = _inspect_selected_source(source, max_source_bytes, timeout_seconds)
+    source_observation = inspect_selected_source(source, max_source_bytes, timeout_seconds)
     logical_label = label or "source-{0}".format(source_observation["content_sha256"][:12])
     if _LABEL_PATTERN.fullmatch(logical_label) is None:
         raise Refusal(
@@ -527,7 +542,7 @@ def plan_data_import(
         "validation": validation,
         "writes_performed": False,
         "source_path_disclosed": False,
-        "next_step": "Review the plan; managed copy is not implemented in this contract package.",
+        "next_step": "Save the exact plan record, review it, then run `uriel data import` with the same selected source.",
     }
 
 

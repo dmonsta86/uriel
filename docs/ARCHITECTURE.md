@@ -28,6 +28,7 @@ A Rust rewrite could eventually reduce startup/runtime variability and produce n
 TRUSTED / DETERMINISTIC
   core.py       confinement, hashing, atomic state, ledger, receipts
   data_contracts.py  local Evidence Ingress contracts and no-write planning
+  data_ingress.py  immutable managed raw intake and receipt verification
   schema.py     structural and reference validation
   audit.py      declared-policy evaluation
   blessing.py   content-addressed package and verifier
@@ -62,12 +63,19 @@ project/
     reviews/
     review-inbox/
     capability-requests/
+    data/
+      plans/<plan-sha256>.json
+      raw/sha256/<prefix>/<content-sha256>
+      records/raw/<record-sha256>.json
+      receipts/import/<plan-sha256>.json
     index/files.sqlite
 ```
 
-The reserved `.uriel/data/` managed store is not created by the R1.1 contract
-preview. A later package may create it only after explicit plan review and must
-keep immutable raw artifacts separate from derived generations.
+The `.uriel/data/` store is created only by an explicit managed import. Raw
+bytes are addressed by their SHA-256, and the import receipt is published last
+as the authority marker. An interrupted operation may leave verified,
+content-addressed recovery bytes, but it cannot leave an authoritative partial
+receipt. Managed intake does not grant Data Readiness or Gate 0 authority.
 
 `.uriel/` is derived, local state and is ignored by default. Publish selected Blessing packages or audit exports deliberately; do not commit secrets or raw restricted data.
 

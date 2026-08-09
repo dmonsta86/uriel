@@ -49,6 +49,7 @@ from .data_contracts import (
     plan_data_import,
     verify_data_record_file,
 )
+from .data_ingress import import_data_artifact, verify_data_import
 from .data_readiness import data_readiness_state, make_sort_spec, propose_sort_spec_plan, readiness_check, readiness_status
 from .decisions import DECISION_CLASSES
 from .gate_contract import (
@@ -213,6 +214,13 @@ def parser() -> argparse.ArgumentParser:
     data_plan.add_argument("--max-columns", type=int, default=DEFAULT_MAX_COLUMNS)
     data_plan.add_argument("--max-nesting-depth", type=int, default=DEFAULT_MAX_NESTING_DEPTH)
     data_plan.add_argument("--timeout-seconds", type=int, default=DEFAULT_TIMEOUT_SECONDS)
+    data_import = data_actions.add_parser("import", help="seal one selected source under a reviewed import plan")
+    _root_argument(data_import)
+    data_import.add_argument("--source", required=True, help="the same explicit local regular file reviewed by the plan")
+    data_import.add_argument("--plan", required=True, help="project-relative raw plan or saved `--json data plan` result")
+    data_verify_import = data_actions.add_parser("verify-import", help="recompute one managed import from its receipt")
+    _root_argument(data_verify_import)
+    data_verify_import.add_argument("--receipt", required=True, help="project-relative import receipt path")
     data_verify = data_actions.add_parser("verify-record", help="verify one project-relative versioned Data Desk record")
     _root_argument(data_verify)
     data_verify.add_argument("--record", required=True, help="project-relative JSON record path")
@@ -447,7 +455,18 @@ def _print_human(command: str, result: Any, args: Optional[argparse.Namespace] =
             print("Source: {0} · {1} · {2} bytes".format(
                 source.get("logical_label"), source.get("format"), source.get("size_bytes")))
             print("SHA-256: {0}".format(source.get("content_sha256")))
-            print("Source location remained private; managed copy is not implemented in this package.")
+            print("Source location remained private. Save and review this exact plan before import.")
+            return
+        if args.data_action == "import":
+            print("Evidence Ingress import: {0} · {1}".format(result.get("status"), result.get("outcome")))
+            print("Managed artifact: {0}".format(result.get("managed_relative_path")))
+            print("Receipt: {0}".format(result.get("receipt_relative_path")))
+            print("Gate 0 authority: NOT GRANTED · run Data Readiness separately")
+            return
+        if args.data_action == "verify-import":
+            print("Managed import: PASS · exact bytes and record bindings verified")
+            print("SHA-256: {0}".format(result.get("content_sha256")))
+            print("Gate 0 authority: NOT GRANTED")
             return
         if args.data_action == "verify-record":
             print("Data record: PASS · {0}".format(result.get("schema")))
@@ -982,6 +1001,10 @@ def dispatch(args: argparse.Namespace) -> Any:
                 max_nesting_depth=args.max_nesting_depth,
                 timeout_seconds=args.timeout_seconds,
             )
+        if args.data_action == "import":
+            return import_data_artifact(args.root, args.source, args.plan)
+        if args.data_action == "verify-import":
+            return verify_data_import(args.root, args.receipt)
         if args.data_action == "verify-record":
             return verify_data_record_file(args.root, args.record)
         if args.data_action == "propose-sort":

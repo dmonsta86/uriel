@@ -2,9 +2,10 @@
 
 This document records the research-lifecycle layer on top of the existing
 deterministic core. The intake, bounded AI-surface, workbench, checkpoint,
-decision, repair, and submission portions are current beta surfaces. Data Desk,
-Paper Builder, and advanced export work remain planned; the checklist at the
-bottom is the authoritative boundary for this document.
+decision, repair, and submission portions are current beta surfaces. Evidence
+Ingress now has a bounded immutable-intake implementation on `main`; Data Desk
+profiling/generations, Paper Builder, and advanced export work remain planned.
+The checklist at the bottom is the authoritative boundary for this document.
 
 The core promise is unchanged: Uriel certifies only that one exact recorded
 project state passed a named, inspectable policy. The lifecycle layer helps a
@@ -69,7 +70,7 @@ concrete pivot: narrower claim, different outcome or comparison, observational
 study, replication, methods paper, dataset/resource paper, negative result,
 software/tool paper, or review/evidence map.
 
-### Data Desk (planned next capability)
+### Evidence Ingress (bounded local intake) and Data Desk (planned)
 
 The target Data Desk will inventory, sort, normalize, hash, and index data with
 immutable generation-based checkpoints, a declarative ephemeral/exclusion
@@ -77,9 +78,23 @@ policy with human reasons, absence-fact delta classification (deletion is a
 fact, not a conclusion about corruption), an exact duplicate ledger, an
 SQLite index, and an independent read-only verifier. Anomaly detection will
 create a review queue of leads, not scientific findings. Scale claims will only
-be made with measured benchmark receipts. The current `uriel data plan` and
-`uriel data verify-record` surfaces are contract-only, no-write previews; no
-managed import, profile, generation, or reconciliation capability is claimed.
+be made with measured benchmark receipts.
+
+The current local-only intake path is:
+
+```text
+cd PROJECT
+uriel --json data plan --root . --source FILE > artifacts/import-plan.json
+uriel data import --root . --source FILE --plan artifacts/import-plan.json
+uriel data verify-import --root . --receipt .uriel/data/receipts/import/PLAN_SHA256.json
+```
+
+`data plan` remains no-write and path-private. `data import` requires that exact
+saved plan, streams the selected UTF-8 file once, seals content-addressed bytes,
+and publishes immutable records with the receipt last. `data verify-import`
+recomputes the managed bytes and record bindings. None of these commands marks
+the artifact ready for analysis or grants Gate 0 authority. Deterministic
+profiles, generations, reconciliation, and Gate 0 integration remain planned.
 
 ### Paper Builder (planned)
 

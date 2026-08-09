@@ -2,7 +2,7 @@
 
 - **Status**: Accepted
 - **Date**: 2026-08-08
-- **Scope**: R1.1 contract freeze; no managed import
+- **Scope**: R1.1 contract freeze with the bounded R1.2 managed-intake implementation
 
 ## Context
 
@@ -22,16 +22,23 @@ The public subsystem names are **Evidence Ingress** for explicit source
 selection and immutable managed copying, and **Data Desk** for inspection,
 generation, diff, and reconciliation.
 
-R1.1 adds two contract-only commands to the existing group:
+R1.1 established two contract commands; R1.2 adds managed intake and its
+read-only verifier to the same group:
 
 ```text
 uriel data plan --root PROJECT --source FILE
+uriel data import --root PROJECT --source FILE --plan PROJECT_RELATIVE_JSON
+uriel data verify-import --root PROJECT --receipt PROJECT_RELATIVE_JSON
 uriel data verify-record --root PROJECT --record PROJECT_RELATIVE_JSON
 ```
 
 `data plan` inspects exactly one explicitly selected regular file, enforces a
 declared resource budget, verifies UTF-8, hashes the bytes, and emits a
 path-free dry-run plan. It writes nothing and permits no network access.
+`data import` requires the exact saved plan and selected source, streams the
+source once, atomically publishes content-addressed bytes, preserves logical
+label relations, and writes its import receipt last. `data verify-import`
+recomputes the plan, raw-record, receipt, and managed-byte bindings.
 `data verify-record` validates an exact schema/version, rejects unknown fields,
 recomputes the record hash, and refuses project-path escape.
 
@@ -41,9 +48,9 @@ The future command shape remains:
 plan -> import -> inspect -> diff -> reconcile -> verify
 ```
 
-Only `plan` and contract-record verification are exposed now. `import`,
-`inspect`, `diff`, `reconcile`, and generation verification remain unavailable
-until their own bounded packages land.
+`plan`, `import`, import verification, and contract-record verification are
+exposed now. `inspect`, `diff`, `reconcile`, and generation verification remain
+unavailable until their own bounded packages land.
 
 ## Frozen record set
 
@@ -81,8 +88,8 @@ records are referenced rather than cloned.
 
 ## Consequences
 
-This establishes an executable, packaged contract and a real no-write consumer
-path. It does **not** establish managed ingress, Data Desk profiling,
+This establishes an executable, packaged contract plus bounded immutable local
+intake. It does **not** establish Data Desk profiling, generations,
 reconciliation, Gate 0 integration, broad-format support, or scientific
-authority. The overall Evidence Ingress and Data Desk capability therefore
-remains `PLANNED` until later packages provide a usable managed-data lifecycle.
+authority. The overall Evidence Ingress and Data Desk lifecycle therefore
+remains `PLANNED` until later packages close the complete managed-data path.
