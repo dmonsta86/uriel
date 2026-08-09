@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 
 from uriel.core import Refusal, atomic_write_json, build_manifest, initialize_project, paths_for, sha256_file
-from uriel.reviews import import_review, review_template
+from uriel.reviews import MAX_REVIEW_FILE_BYTES, import_review, review_template, validate_review
 
 
 class ReviewTests(unittest.TestCase):
@@ -54,6 +54,34 @@ class ReviewTests(unittest.TestCase):
             atomic_write_json(inbox, value)
             with self.assertRaises(Refusal):
                 import_review(root, inbox)
+
+    def test_unknown_review_or_finding_fields_fail_closed(self) -> None:
+        value = review_template(
+            task="clarity",
+            source_manifest_sha256="a" * 64,
+            project_manifest_sha256="b" * 64,
+        )
+        value["hidden_extra"] = "not part of the published contract"
+        value["findings"][0]["hidden_extra"] = "not part of the published contract"
+        errors = validate_review(value)
+        self.assertTrue(any(error["path"] == "/" for error in errors))
+        self.assertTrue(any(error["path"] == "/findings/0" for error in errors))
+
+    def test_nonobject_review_roots_return_structured_errors(self) -> None:
+        for value in ([{}], None, "x"):
+            errors = validate_review(value)
+            self.assertEqual([{"path": "/", "message": "must be one JSON object"}], errors)
+
+    def test_oversized_review_is_refused_before_json_parse(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            initialize_project(root, title="Review", question="Bound output?")
+            inbox = paths_for(root).state / "review-inbox" / "oversized.json"
+            inbox.parent.mkdir(parents=True, exist_ok=True)
+            inbox.write_bytes(b"{" + b" " * MAX_REVIEW_FILE_BYTES + b"}")
+            with self.assertRaises(Refusal) as blocked:
+                import_review(root, inbox)
+            self.assertEqual("EXTERNAL_REVIEW_TOO_LARGE", blocked.exception.code)
 
 
 if __name__ == "__main__":

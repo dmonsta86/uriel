@@ -1,6 +1,6 @@
 # Zero-cost research handoff
 
-Paste the output of `uriel prompt TASK --provider chatgpt-web --show` into an authorized web model. Ask it to return only the JSON contract. Then:
+Paste the output of `uriel prompt TASK --provider generic-web --acknowledge-external --show` into an authorized web model. Ask it to return only the JSON contract. Then:
 
 1. verify every locator against the underlying source;
 2. preserve permissible source bytes or an access receipt;

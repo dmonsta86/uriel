@@ -99,6 +99,25 @@ CAPABILITIES: List[Dict[str, Any]] = [
         "notes": "Exploratory assurance chains, evidence-strength records, and decision artifacts; no dedicated CLI contract yet.",
     },
     {
+        "id": "CAP-AI-HANDOFF-001",
+        "name": "Bounded advisory AI handoff and review import",
+        "status": "EXPERIMENTAL",
+        "entry_point": "uriel prompt / uriel assist / uriel review-import",
+        "platforms": ["Windows", "macOS", "Linux"],
+        "modules": [
+            "src/uriel/prompts.py",
+            "src/uriel/adapters.py",
+            "src/uriel/reviews.py",
+        ],
+        "verification": [
+            "tests/test_ai_hardening.py",
+            "tests/test_reviews.py",
+            "tests/test_cli.py",
+            "scripts/smoke_installed_ai_handoff.py",
+        ],
+        "notes": "Metadata-only nonpublic defaults, 128-KiB prompt/review ceilings, exact hash-bound import, and an explicitly acknowledged bounded external-process adapter. The adapter is not an OS sandbox and no AI output has gate, publication, or Blessing authority.",
+    },
+    {
         "id": "CAP-TRIALS-001",
         "name": "Synthetic Forge Trial fixture and adjudicated scorer",
         "status": "BETA",

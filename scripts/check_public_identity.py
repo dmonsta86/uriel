@@ -17,6 +17,8 @@ PUBLIC_PREFIXES = (
     "docs/",
     "examples/",
     "installer/",
+    "prompts/",
+    "src/uriel/",
     "templates/",
     "src/uriel/templates/",
 )
@@ -34,13 +36,26 @@ DISALLOWED_PATTERNS = {
     "cursor": re.compile(r"\bcursor(?:\.com)?\b", re.IGNORECASE),
     "aider": re.compile(r"\baider\b", re.IGNORECASE),
     "cline": re.compile(r"\bcline\b", re.IGNORECASE),
+    "unsupported-chatgpt-web-provider": re.compile(r"\bchatgpt-web\b", re.IGNORECASE),
+    "corrupted-web-provider": re.compile(r"\bweb\s+AI\s+session-web\b", re.IGNORECASE),
 }
 
-ALLOWED_NAMED_RECOMMENDATION = "GPT-5.6 Sol with ultra mode"
-ALLOWED_RECOMMENDATION_FILES = {
-    "README.md",
-    "docs/AI_USAGE_AND_PRIVACY.md",
+NAMED_RECOMMENDATION_PATTERN = re.compile(
+    r"\b(?:GPT-5\.6\s+Sol|Sol\s+(?:Pro|Medium|High|Extra\s+High)|Sol\s+5\.6)\b",
+    re.IGNORECASE,
+)
+PRIVATE_PUBLIC_PATTERNS = {
+    "internal research id": re.compile(r"\b(?:canonical|project)\s+215\b", re.IGNORECASE),
+    "private repository folder": re.compile(r"\bScientific-Institutions\b", re.IGNORECASE),
+    "private control packet": re.compile(r"\b(?:_SORT_CONTROL|URIEL_LUNA_ROADMAP)\b", re.IGNORECASE),
+    "local user profile": re.compile(r"[A-Za-z]:\\Users\\(?!Example\\)[^\\\s`]+", re.IGNORECASE),
 }
+OBSOLETE_ASSETS = (
+    "docs/assets/uriel-banner.png",
+    "docs/assets/uriel-forge-banner.png",
+)
+FORBIDDEN_TRACKED_NAMES = {".DS_Store", "Thumbs.db", "desktop.ini"}
+FORBIDDEN_TRACKED_SUFFIXES = {".bak", ".bundle", ".log", ".orig", ".pyc", ".pyo", ".rej", ".swp", ".tmp"}
 
 REQUIRED_README_PHRASES = (
     "The Forge of Uriel",
@@ -71,7 +86,15 @@ def tracked_files() -> list[Path]:
 
 def is_public(path: Path) -> bool:
     rel = path.relative_to(ROOT).as_posix()
-    return any(rel == prefix or rel.startswith(prefix) for prefix in PUBLIC_PREFIXES)
+    return bool(re.fullmatch(r"README(?:\.[A-Za-z0-9-]+)?\.md", rel)) or any(
+        rel == prefix or rel.startswith(prefix) for prefix in PUBLIC_PREFIXES
+    )
+
+
+def recommendation_allowed(relative: str) -> bool:
+    return relative == "docs/AI_USAGE_AND_PRIVACY.md" or bool(
+        re.fullmatch(r"README(?:\.[A-Za-z0-9-]+)?\.md", relative)
+    )
 
 
 def main() -> int:
@@ -92,12 +115,16 @@ def main() -> int:
             if pattern.search(text):
                 errors.append(f"{rel}: disallowed public provider/tool name: {label}")
 
-        if ALLOWED_NAMED_RECOMMENDATION in text:
+        if NAMED_RECOMMENDATION_PATTERN.search(text):
             recommendation_occurrences.append(rel)
-            if rel not in ALLOWED_RECOMMENDATION_FILES:
+            if not recommendation_allowed(rel):
                 errors.append(
                     f"{rel}: named recommendation is outside the explicit allowlist"
                 )
+
+        for label, pattern in PRIVATE_PUBLIC_PATTERNS.items():
+            if pattern.search(text):
+                errors.append(f"{rel}: public file contains {label}")
 
         for marker in FORBIDDEN_PLACEHOLDERS:
             if marker in text:
@@ -122,12 +149,35 @@ def main() -> int:
         rel = path.relative_to(ROOT).as_posix()
         if rel == ".opencode" or rel.startswith(".opencode/"):
             errors.append(f"{rel}: provider-specific project configuration is tracked")
+        if path.name in FORBIDDEN_TRACKED_NAMES or path.suffix.casefold() in FORBIDDEN_TRACKED_SUFFIXES:
+            errors.append(f"{rel}: backup/cache/log residue must not be tracked")
 
-    if len(recommendation_occurrences) > 2:
-        errors.append(
-            "named recommendation appears in too many public files: "
-            + ", ".join(sorted(recommendation_occurrences))
-        )
+    for relative in OBSOLETE_ASSETS:
+        if (ROOT / relative).exists():
+            errors.append(f"{relative}: obsolete duplicate public asset is still present")
+
+    asset_manifest = ROOT / "docs" / "design" / "ASSET_MANIFEST.md"
+    if not asset_manifest.is_file():
+        errors.append("docs/design/ASSET_MANIFEST.md: missing")
+    else:
+        asset_text = asset_manifest.read_text(encoding="utf-8")
+        declared = re.findall(r"`((?:docs/assets|docs/design/visual-prompts)/[^`]+)`", asset_text)
+        if not declared:
+            errors.append("docs/design/ASSET_MANIFEST.md: no repository-relative assets declared")
+        for relative in declared:
+            if not (ROOT / relative).is_file():
+                errors.append(f"docs/design/ASSET_MANIFEST.md: missing declared path {relative}")
+        actual = {
+            path.relative_to(ROOT).as_posix()
+            for directory in (ROOT / "docs" / "assets", ROOT / "docs" / "design" / "visual-prompts")
+            for path in directory.rglob("*")
+            if path.is_file()
+        }
+        declared_set = set(declared)
+        for relative in sorted(actual - declared_set):
+            errors.append(f"docs/design/ASSET_MANIFEST.md: tracked public asset is undeclared: {relative}")
+        for relative in sorted(declared_set - actual):
+            errors.append(f"docs/design/ASSET_MANIFEST.md: declared public asset is not in the asset surface: {relative}")
 
     if errors:
         print("PUBLIC IDENTITY CHECK: FAIL")

@@ -1,32 +1,52 @@
-# Asset manifest
+# Public asset manifest
 
-## Images
+Every path below is repository-relative and checked by the public-identity
+gate. The active README image for each locale is also hash-bound by
+`docs/i18n/manifests/*.json`.
 
-- `images/01_uriel_forge_forging_ideas_through_evidence.png`
-  - Recommended main hero image.
-  - Theme: strongest all-around poster for public README / social preview.
+## Active hero images
 
-- `images/02_uriel_forge_the_evidence_workshop.png`
-  - Variant emphasizing the workshop / research process.
+- `docs/assets/the-forge-of-uriel/hero.png`
+- `docs/assets/i18n/ar/uriel-forge-hero.png`
+- `docs/assets/i18n/es/uriel-forge-hero.png`
+- `docs/assets/i18n/fr/uriel-forge-hero.png`
+- `docs/assets/i18n/hi/uriel-forge-hero.png`
+- `docs/assets/i18n/ja/uriel-forge-hero.png`
+- `docs/assets/i18n/pt-BR/uriel-forge-hero.png`
+- `docs/assets/i18n/zh-Hans/uriel-forge-hero.png`
 
-- `images/03_uriel_forge_the_evidence_foundry.png`
-  - Variant emphasizing the foundry / systems / process engine feeling.
+## Locale source art
 
-- `images/04_uriel_forge_the_evidence_blacksmith.png`
-  - Variant emphasizing the blacksmith / disciplined verification metaphor.
+- `docs/assets/i18n/ar/uriel-forge-hero-art.png`
+- `docs/assets/i18n/es/uriel-forge-hero-art.png`
+- `docs/assets/i18n/fr/uriel-forge-hero-art.png`
+- `docs/assets/i18n/hi/uriel-forge-hero-art.png`
+- `docs/assets/i18n/ja/uriel-forge-hero-art.png`
+- `docs/assets/i18n/pt-BR/uriel-forge-hero-art.png`
+- `docs/assets/i18n/zh-Hans/uriel-forge-hero-art.png`
 
-## Prompt files
+## Design variants retained for reuse
 
-- `prompts/variants/*.txt`
-  - Regeneration prompts for each specific image flavor.
+- `docs/assets/the-forge-of-uriel/variants/hero-evidence-variant.png`
+- `docs/assets/the-forge-of-uriel/variants/hero-research-variant.png`
+- `docs/assets/variants/01_uriel_forge_forging_ideas_through_evidence.png`
+- `docs/assets/variants/02_uriel_forge_the_evidence_workshop.png`
+- `docs/assets/variants/03_uriel_forge_the_evidence_foundry.png`
+- `docs/assets/variants/04_uriel_forge_the_evidence_blacksmith.png`
 
-- `prompts/localized/*.txt`
-  - Locale-oriented prompts for future translated visual variants.
+## Reproduction prompts
 
-## Integration files
+- `docs/design/visual-prompts/01_PRIMARY_HERO_PROMPT.txt`
+- `docs/design/visual-prompts/02_EVIDENCE_VARIANT_PROMPT.txt`
+- `docs/design/visual-prompts/03_RESEARCH_VARIANT_PROMPT.txt`
+- `docs/design/visual-prompts/localized/ar.txt`
+- `docs/design/visual-prompts/localized/en.txt`
+- `docs/design/visual-prompts/localized/es.txt`
+- `docs/design/visual-prompts/localized/fr.txt`
+- `docs/design/visual-prompts/localized/hi.txt`
+- `docs/design/visual-prompts/localized/ja.txt`
+- `docs/design/visual-prompts/localized/pt-BR.txt`
+- `docs/design/visual-prompts/localized/zh-Hans.txt`
 
-- `INTEGRATION_PROMPT.md`
-  - One-shot repository integration prompt.
-
-- `templates/uriel_forge_standalone_overlay.svg`
-  - Helper overlay template for deterministic text layout if desired.
+The historical root-level banner aliases were byte-identical to the active
+English hero and are intentionally not part of the public asset surface.

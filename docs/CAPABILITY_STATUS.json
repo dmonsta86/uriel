@@ -1,7 +1,7 @@
 {
   "schema": "uriel.capability_inventory.v1",
   "source": "src/uriel/capability_status.py",
-  "source_fingerprint": "e7b6a00b7ce03bd7ebffd1fe67354b523fbc65eda562a37c444841db93c680dd",
+  "source_fingerprint": "1a7821bfcca51196ea9b18d792cb7f1bcc69f721a6b2c008e559a28759b69ee8",
   "capabilities": [
     {
       "id": "CAP-CORE-001",
@@ -130,6 +130,29 @@
         "tests/test_assurance_depth.py"
       ],
       "notes": "Exploratory assurance chains, evidence-strength records, and decision artifacts; no dedicated CLI contract yet."
+    },
+    {
+      "id": "CAP-AI-HANDOFF-001",
+      "name": "Bounded advisory AI handoff and review import",
+      "status": "EXPERIMENTAL",
+      "entry_point": "uriel prompt / uriel assist / uriel review-import",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "modules": [
+        "src/uriel/prompts.py",
+        "src/uriel/adapters.py",
+        "src/uriel/reviews.py"
+      ],
+      "verification": [
+        "tests/test_ai_hardening.py",
+        "tests/test_reviews.py",
+        "tests/test_cli.py",
+        "scripts/smoke_installed_ai_handoff.py"
+      ],
+      "notes": "Metadata-only nonpublic defaults, 128-KiB prompt/review ceilings, exact hash-bound import, and an explicitly acknowledged bounded external-process adapter. The adapter is not an OS sandbox and no AI output has gate, publication, or Blessing authority."
     },
     {
       "id": "CAP-TRIALS-001",

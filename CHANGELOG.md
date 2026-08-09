@@ -44,6 +44,12 @@ All notable changes to Uriel are documented here.
   including deterministic retry, stale-plan refusal, and path non-disclosure.
 - An implementation-bound 10,000-row synthetic Data Desk measurement receipt
   and release checker with an explicit no-throughput/no-capacity claim boundary.
+- Allowlist-based nonpublic prompt projection, 128-KiB prompt/review ceilings,
+  exact external-review membership checks, and no implicit sensitive export for
+  a merely labeled local model.
+- Explicitly acknowledged external-agent execution with project-policy checks,
+  validated/passed model identity, isolated temporary working directory,
+  minimized environment, no shell, bounded capture, and process-tree timeout.
 
 ## 1.0.0-rc2 — 2026-08-06
 
@@ -63,7 +69,7 @@ existing `v1.0.0-rc2` tag is not moved.
 - Checks for clarity, framing, evidence provenance, directness, contradictions, assumptions, controls, omissions, uncertainty, ethics, reproducibility, and common fallacy patterns.
 - Constructive blocker records with exactly three repair paths and durable reminders.
 - Content-addressed Blessing packages with SVG/text certificate, QR payload, submission drafts, and standalone verifier.
-- Provider-neutral prompt export, hash-bound review import, default-deny capability requests, and optional compatible external agent adapter.
+- Provider-neutral prompt export, hash-bound review import, default-deny capability requests, and optional external-agent adapter.
 - Portable zipapp build and multi-platform CI.
 - Browser-authenticated GitHub publishing helpers and a no-terminal GitHub Desktop path.
 - Tag-triggered GitHub release automation for wheel, source distribution, portable archive, and checksums.

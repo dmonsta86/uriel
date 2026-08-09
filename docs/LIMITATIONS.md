@@ -86,6 +86,17 @@ state forward. It does not upload a packet or call a model.
 No AI output can mark readiness, pass a gate, change publication authority, or
 issue a Blessing.
 
+Prompt export first refuses a project manifest above 1 MiB. General review
+prompts and imported external-review JSON are each limited to 128 KiB. A
+nonpublic prompt is metadata-only unless sensitive inclusion is
+explicit; the result may be too sparse for useful semantic review, which is the
+intended safe failure. `uriel assist` requires explicit external acknowledgement
+and stops at 15 minutes or 128 KiB of combined output. It uses no shell, an
+isolated temporary working directory, and a minimized environment, but it is
+not a sandbox: the selected executable retains the user's OS permissions and
+may use network transport. Instruction-level denials of browsing, project
+writes, and model tools must not be described as technical enforcement.
+
 Strict source-binding verification refuses more than 10,000 source files,
 512 MiB total, or 256 MiB for one file. AI projections additionally refuse a
 source generation above 250,000 records or 128 MiB because the current verified

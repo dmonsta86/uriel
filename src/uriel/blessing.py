@@ -265,7 +265,7 @@ Uriel does not assert that these venues are current, suitable, reputable, afford
 - current submission portal and deadlines;
 - indexing and publisher identity to avoid a similarly named predatory venue.
 
-For zero-cost help, run `uriel prompt submission-review --provider chatgpt-web` and independently verify every current venue fact it returns.
+For optional help, run `uriel prompt submission-review --provider generic-web --acknowledge-external` and independently verify every current venue fact it returns.
 """.format(
         field=field,
         venues="\n".join("- " + item for item in venues) if venues else "- No venue declared yet.",

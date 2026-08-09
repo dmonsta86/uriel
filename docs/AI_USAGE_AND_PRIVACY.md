@@ -30,6 +30,26 @@ read-only capabilities: no network, shell, packet writes, or project writes,
 with requested output limited to 128 KiB and 15 minutes. Uriel records and
 verifies that contract; the model host remains responsible for enforcement.
 
+`uriel prompt` also creates local files only. Prompt export refuses a source
+project manifest above 1 MiB before prompt serialization, and a complete prompt
+is refused above 128 KiB. For a nonpublic project, its default export is a narrow
+metadata/count projection: all project free text, identifiers, paths, methods,
+ethics/disclosure details, submission details, redaction notes, and unknown
+future fields are omitted. Selecting `--provider local` does not automatically
+include that material; `--include-sensitive` must be explicit. Inspect every
+prompt before moving it anywhere.
+
+`uriel assist` is the only included AI-specific path that starts an external model process.
+It requires `--acknowledge-external`, honors `privacy.external_ai`, passes the
+validated model identifier explicitly, invokes no shell, uses an isolated
+temporary working directory, and does not forward ambient credential-like
+environment variables. It stops the process tree at 15 minutes or 128 KiB of
+combined stdout/stderr. Imported review JSON is also capped at 128 KiB and must
+contain only the published contract fields. The adapter is not an OS sandbox:
+the chosen executable may perform provider transport and can still exercise
+the user's operating-system permissions. Use a real sandbox or do not run it
+when that residual authority is unacceptable.
+
 ## Authority boundary
 
 An AI may propose and draft.
@@ -49,7 +69,7 @@ A compatible local model may be used on suitable hardware.
 
 Local operation can reduce external exposure, but “local” does not remove the
 need for project isolation, bounded context, model provenance, resource limits,
-and prompt-injection defenses.
+prompt-injection defenses, and an explicit decision to include sensitive text.
 
 ## Web AI
 

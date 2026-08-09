@@ -37,13 +37,21 @@ TRUSTED / DETERMINISTIC
 
 OPTIONAL / UNTRUSTED INPUT
   prompts.py    bounded export
-  adapters.py   compatible external agent process invocation
+  adapters.py   bounded external-agent process invocation
   reviews.py    contract validation and content binding
   humans        source interpretation, methods, ethics, judgment
   providers     search/model output, never self-authenticating
 ```
 
 An imported review can add findings or candidate locators. Its existence cannot pass a Gate. It must match the current source and project hashes, and its proposed evidence must still be registered and independently inspected.
+
+Nonpublic prompt export is an allowlisted metadata/count projection; it never
+copies the full manifest and then tries to redact a list of known fields. Prompt
+and review output are each hard-capped at 128 KiB. The optional `assist` adapter
+requires explicit acknowledgement and project-policy approval, passes the
+validated model selector, uses no shell, starts from an isolated temporary
+directory, and minimizes inherited environment variables. These are
+accident-reduction controls, not an OS sandbox or a network firewall.
 
 ## State layout
 

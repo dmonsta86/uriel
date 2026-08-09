@@ -40,17 +40,15 @@ Free endpoints can be excellent for public, bounded tasks and can make serious r
 
 Use bursts: one claim or source per session, preserve the response, verify locally, and import only the structured review record.
 
-## ChatGPT and OpenAI API
+## Provider terms are live policy
 
-For personal ChatGPT work, review **Settings → Data Controls**, including “Improve the model for everyone,” and consider Temporary Chat for appropriate non-sensitive use. Those controls do not turn a consumer chat into an approved environment for regulated or institutionally restricted data.
-
-For the OpenAI API, current official documentation states that abuse-monitoring logs may be retained for up to 30 days by default and that Zero Data Retention or Modified Abuse Monitoring requires eligibility and approval; endpoint-specific application state rules still matter. Check the current documentation before every sensitive deployment.
-
-Official references checked 2026-08-06:
-
-- https://help.openai.com/en/articles/7730893-data-controls-faq
-- https://developers.openai.com/api/docs/guides/your-data
-- https://openai.com/enterprise-privacy/
+Before every sensitive deployment, consult the chosen provider's current
+official data controls, retention terms, training-use terms, endpoint-specific
+state behavior, account-tier controls, and institutional agreement. Record the
+review date and authorization outside the public project. A model name,
+consumer privacy toggle, temporary-chat feature, or old documentation snapshot
+does not establish that a deployment is approved for regulated or restricted
+material. Uriel deliberately does not freeze retention periods in this guide.
 
 ## External AI Agents & Adapters
 

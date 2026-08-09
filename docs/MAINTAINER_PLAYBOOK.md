@@ -20,7 +20,7 @@ tree is clean and the worktree is the expected canonical path.
 
 ## 2. Keep maintenance scope explicit
 
-For this canonical 215 checkout, make one coherent accepted maintenance change
+For this canonical checkout, make one coherent accepted maintenance change
 on `main` and commit it locally. A human may authorize a separate review branch
 for a specific public pull request, but that branch is never a second canonical
 copy and is not an automatic step for a continuation agent.

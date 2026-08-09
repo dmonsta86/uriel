@@ -434,6 +434,15 @@ def execute(args: argparse.Namespace, root: Path, report: Path) -> int:
                 ],
                 env=clean_environment,
             )
+            checked(
+                [
+                    str(python),
+                    "scripts/smoke_installed_ai_handoff.py",
+                    "--executable",
+                    str(executable),
+                ],
+                env=clean_environment,
+            )
 
     portable = root / "dist" / "uriel.pyz"
     log.extend(["", "RESULT: PASS", "portable_sha256: " + sha(portable)])

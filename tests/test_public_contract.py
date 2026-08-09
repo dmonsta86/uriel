@@ -73,7 +73,7 @@ class PublicContractTests(unittest.TestCase):
             for secret in (
                 "RESEARCH_LIFECYCLE_UPGRADE_KIT",
                 "LOCAL_AI_MASTER_IMPLEMENTATION_PROMPT",
-                "C:" + "\\Users\\" + "Taller",
+                "C:" + "\\Users\\" + "Example",
                 "uriel-work-20260806",
             ):
                 self.assertNotIn(secret, text, f"{relative.name}: {secret}")

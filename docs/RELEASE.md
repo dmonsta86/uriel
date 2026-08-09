@@ -10,7 +10,7 @@ git status
 git worktree list
 ```
 
-The canonical 215 product line is this `main` worktree. Do not create a second
+The canonical product line is this `main` worktree. Do not create a second
 canonical copy or move the existing `v1.0.0-rc2` tag. If a remote update is
 needed, inspect the local relation and obtain operator approval before fetching
 or pulling. Do not continue from a dirty or unexpected worktree.
@@ -37,7 +37,8 @@ sweep, validates the implementation-bound synthetic Data Desk receipt, builds
 the wheel, source distribution, and portable archive, creates checksums,
 installs the wheel into a fresh environment, exercises the installed Data Desk
 through readiness, a bounded redacted burst, and strict Gate 0, checks both
-entry points and dependencies, and verifies packaged schemas.
+entry points and dependencies, verifies packaged schemas, and exercises
+installed nonpublic prompt redaction plus prompt/review budget refusals.
 
 Expected ending:
 

@@ -1,6 +1,7 @@
 # Getting started for free
 
-Last verified: **2026-08-06**. Model names, free pools, prices, and privacy terms change; confirm current official pages before use.
+Model names, free pools, prices, and privacy terms change; confirm current
+official pages before use. Uriel does not depend on any such offer.
 
 ## Route A — no AI, no account, no network
 
@@ -74,7 +75,11 @@ For small usage pools:
 
 ## Higher-capability final review
 
-For users who already have access, the suggested final adversarial pass is **GPT-5.6 Sol Pro** for the highest-capability single-model ChatGPT review, **GPT-5.6 Sol with `ultra` mode** where coordinated multi-agent work is available, **Extra High** for the highest standard Sol reasoning slider in ChatGPT, or **`max` reasoning** where the API/Codex surface exposes it. This is a capability recommendation, not an endorsement or requirement.
+For a final adversarial pass, use the strongest authorized model already
+available to you on one compact, redacted packet. The single maintainer-tested
+optional configuration is documented in `AI_USAGE_AND_PRIVACY.md`; it is not
+an endorsement, requirement, privacy guarantee, or substitute for a human
+domain reviewer.
 
 Do not spend premium usage reformatting JSON or extracting obvious values. Reserve it for:
 

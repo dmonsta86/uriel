@@ -1,7 +1,8 @@
 # Maintainer handoff and durable continuation point
 
-Checked locally on **2026-08-08** at canonical `main` HEAD
-`14ba9606e8989a710356132fa0366c4a16bfa962`.
+This document is versioned with the repository. Treat the commit containing
+this file—not a self-referential hash in prose—as its exact baseline, and
+verify local `HEAD` against the intended remote before publishing.
 
 This file is the shortest authoritative continuation point for a human or coding agent. The larger design rationale lives in `README.md`, `docs/ARCHITECTURE.md`, `docs/THREAT_MODEL.md`, `docs/LIMITATIONS.md`, and `AGENTS.md`.
 
@@ -20,7 +21,7 @@ Uriel `1.0.0rc2` is the current release-candidate code line with:
 - content-addressed Blessing packages, printable SVG/text certificates, QR payloads, and a standalone verifier;
 - beta research lifecycle, workbench, repair, checkpoint, decision, and submission surfaces;
 - experimental assurance-depth APIs and a sealed synthetic Forge Trial validator/scorer;
-- PowerShell and POSIX launchers, compatible external agent integration, CI, release, issue, security, and contribution assets.
+- PowerShell and POSIX launchers, bounded external-agent integration, CI, release, issue, security, and contribution assets.
 
 The current `main` commit is a post-tag maintenance revision. The existing
 `v1.0.0-rc2` tag remains immutable; no release claim should combine its assets
@@ -60,7 +61,7 @@ jobs passed for the candidate commit.
 3. Enable private vulnerability reporting in repository settings if the operator chooses to do so.
 4. Create a new exact release-candidate tag only after review; never move the existing `v1.0.0-rc2` tag.
 5. Open public issues for an independent threat-model review, a research-domain pilot, and false-positive/false-negative fixtures after operator approval.
-6. Implement the local Evidence Ingress/Data Desk lane while preserving the planned capability label until executable evidence closes it.
+6. Exercise the experimental Evidence Ingress/Data Desk lane with real domain fixtures and preserve its honest capability label until broader evidence supports promotion.
 7. Keep grant, funding, and account-specific application drafts outside the public repository; publish only accurate acknowledgments or disclosures after an award.
 
 ## Rules a continuation agent must not violate
@@ -74,7 +75,7 @@ jobs passed for the candidate commit.
 - Do not add private paths, credentials, unpublished research content, identities, or adoption claims.
 - Preserve Python 3.9 compatibility and zero runtime dependencies unless a documented major-version decision changes that boundary.
 
-## Copy-paste continuation prompt for compatible AI, web AI session, or another coding agent
+## Copy-paste continuation prompt for a compatible AI, web model session, or coding agent
 
 ```text
 You are maintaining the Uriel open-source repository. Work directly in the extracted repository and do not redesign it from scratch.
@@ -89,7 +90,7 @@ Read, in order:
 7. docs/RELEASE_CHECKLIST.md
 
 Non-negotiable constraints:
-- The canonical product line is project 215 in the `Scientific-Institutions` repository on `main`; do not create a second canonical copy.
+- Treat the current repository's `main` worktree as canonical; do not create a second canonical copy.
 - Python 3.9+ and zero runtime dependencies.
 - Offline deterministic core; optional AI remains outside the trust boundary.
 - No telemetry, silent network access, auto-sharing, or mandatory account.

@@ -2,7 +2,10 @@
 
 ## No endorsement
 
-Uriel may document practical model options, but it does not endorse compatible external agent, OpenAI, web AI session, a local-model package, or any other provider. Availability, quality, pricing, retention, training use, jurisdiction, security controls, and terms can change after this document is written.
+Uriel may document practical model categories, but it does not endorse any
+agent, model, provider, hosting company, or data policy. Availability, quality,
+pricing, retention, training use, jurisdiction, security controls, and terms
+can change after this document is written.
 
 Before using any external service, verify its current official terms and your project authorization.
 
@@ -40,4 +43,7 @@ Do not send a whole repository merely because a model accepts large context. Exp
 
 ## Free services and training use
 
-A zero-price model can be funded through data collection or evaluation. Treat “free” as a price label, not a privacy guarantee. compatible external agent's current free-model page explicitly warns that data collected during several free periods—including web AI session V4 Flash Free—may be used to improve the model. Never upload sensitive project content merely to avoid payment.
+A zero-price model can be funded through data collection or evaluation. Treat
+“free” as a price label, not a privacy guarantee. Read the selected provider's
+current official terms and never upload sensitive project content merely to
+avoid payment.

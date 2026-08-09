@@ -1,6 +1,8 @@
 # Free and low-cost AI quick start
 
-_Checked against official provider pages on 2026-08-06. Availability, identifiers, quotas, prices, privacy terms, and retention policies can change. Run current model-list commands and read current terms before sending work._
+Availability, identifiers, quotas, prices, privacy terms, and retention policies
+can change. Read the chosen provider's current official terms before sending
+work; this repository intentionally does not snapshot price or quota claims.
 
 Uriel Core does not need AI. Use AI only where semantic search, field mapping, quotation checking, or adversarial interpretation adds value. Model output is a lead or critique, never evidence by itself.
 
@@ -31,7 +33,9 @@ Generate a provider-neutral review prompt:
 python uriel.pyz prompt --root my-project clarity --provider generic --show
 ```
 
-Attach the generated prompt file to your local or external agent session. Raw output is preserved locally. Only a valid, current-hash-bound JSON review is imported into project state.
+Attach the generated prompt file to your local or external agent session and
+preserve its raw output locally yourself. Uriel imports only a valid,
+current-hash-bound JSON review into project state.
 
 ### Make a small free pool useful
 
@@ -51,34 +55,45 @@ This is often more reliable than handing an entire unfinished field to one giant
 Generate a prompt and paste it into any web chat you are authorized to use:
 
 ```console
-uriel prompt --root my-project primary-evidence --provider web AI session-web --show
+uriel prompt --root my-project primary-evidence --provider generic-web --acknowledge-external --show
 uriel prompt --root my-project adversarial-review --provider sol-mode --show
 ```
 
 The prompt contains a review contract and privacy warning. For confidential, unpublished, personal, regulated, contract-restricted, or export-controlled material, use a verified local deployment or an institutionally approved service instead.
 
-## Route D — low-cost compatible external agent Go
+## Route D — explicitly authorized external process
 
-compatible external agent currently advertises Go at **$5 for the first month and $10/month afterward**, with usage limits and the ability to continue on free models after the paid pool is reached. Treat the price and limits as current information, not a permanent promise.
+`uriel assist` is an optional adapter for a compatible `agent` executable. It
+requires `--acknowledge-external`, passes one validated `provider/model`
+identifier, uses no shell, starts in an isolated temporary working directory,
+does not forward ambient credential-like environment variables, and stops at
+15 minutes or 128 KiB of combined output. It is not an operating-system
+sandbox; the selected executable may still perform provider transport under
+the operator's authority.
 
-This can be useful for short release bursts, but Uriel never requires it.
+```console
+uriel assist --root my-project adversarial-review --model provider/model --acknowledge-external
+```
 
 ## Strong final-pass recommendation
 
-For the hardest repository-wide or manuscript-wide challenge, prefer the highest model you already have legitimate access to:
-
-1. **GPT-5.6 Sol + `ultra` mode**, where available, for coordinated multi-agent work;
-2. **GPT-5.6 Sol Pro** for the highest-capability single-model option in ChatGPT;
-3. **GPT-5.6 Sol at Extra High** for the highest standard Sol reasoning slider in ChatGPT;
-4. **GPT-5.6 Sol with `max` reasoning** where the API/Codex surface exposes it;
-5. a capable free/cheap model in several narrow passes;
-6. a human domain expert using the same review contract.
-
-“Sol 5.6 ULTRA” is best described precisely as **GPT-5.6 Sol used with OpenAI’s `ultra` mode**. `ultra` is a multi-agent mode, not a separate truth guarantee. The final authority remains the inspectable artifact, reproducible run, and accountable human interpretation.
+For the hardest repository-wide or manuscript-wide challenge, use the strongest
+authorized model already available to you for one compact adversarial packet,
+then use an independent human domain reviewer. The maintainer-tested optional
+configuration is documented once in `AI_USAGE_AND_PRIVACY.md`; it is not a
+dependency or truth guarantee. Final authority remains the inspectable
+artifact, reproducible run, and accountable human interpretation.
 
 ## Privacy-safe defaults in this repository
 
-`compatible external agent.json` sets sharing to `disabled`. The included `uriel-reviewer` agent denies editing and shell execution. Web access requires approval. These are guardrails, not a substitute for reading the provider’s current policy.
+Uriel's bounded prompt path redacts nonpublic projects through a narrow
+metadata-only allowlist unless sensitive content is explicitly requested. The
+external-process adapter requires acknowledgement, applies project external-AI
+policy, validates the model identifier, isolates its working directory, does
+not invoke a shell, minimizes its environment, caps prompt/output/time, and
+imports only an exact hash-bound review contract. These controls reduce
+accidental exposure; they do not sandbox the executable or replace current
+provider-policy review.
 
 ## What Uriel will tell you needs AI or a human
 

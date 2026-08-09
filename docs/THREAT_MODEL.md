@@ -81,6 +81,10 @@
 - the release gate validates an implementation-bound synthetic Data Desk
   measurement and runs the generation/readiness/burst/Gate 0 chain through a
   fresh wheel; it enforces evidence presence and integrity, not a speed target.
+- nonpublic review prompts use an allowlisted metadata projection, prompt and
+  imported-review bytes are capped, and external-agent invocation requires
+  explicit acknowledgement plus project policy, an isolated working directory,
+  a minimized environment, no shell, exact model identity, and bounded capture.
 
 ## Explicit non-controls
 
@@ -96,6 +100,12 @@ do not determine whether selected values are legally or ethically shareable.
 The operator remains responsible for consent, provider retention terms, and
 choosing redaction before any packet leaves the local machine. Uriel does not
 send a generation packet to a provider by itself.
+
+The optional `uriel assist` command does start an operator-selected external
+process and may therefore cause provider transport. Its temporary working
+directory, minimized environment, instructions, timeout, and output cap are not
+an operating-system sandbox, credential firewall, or technical network denial.
+Do not use it when the executable itself is not trusted and authorized.
 
 The QR payload is an identifier for verification, not a secret or digital signature. For public non-repudiation, publish the Blessing digest in an independently controlled signed release, archival repository, transparency log, or institutional record.
 
