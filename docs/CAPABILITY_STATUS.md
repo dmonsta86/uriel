@@ -1,6 +1,6 @@
 # The Forge of Uriel Capability Status
 
-Catalog fingerprint: `1a7821bfcca51196ea9b18d792cb7f1bcc69f721a6b2c008e559a28759b69ee8`
+Catalog fingerprint: `c42714e8cbd1113263c500a54e6ca1f99e5514e801185ecd10cc326e8eaadf63`
 
 Status meanings:
 
@@ -20,6 +20,6 @@ Status meanings:
 | Bounded advisory AI handoff and review import | `EXPERIMENTAL` | `uriel prompt / uriel assist / uriel review-import` | Windows, macOS, Linux | `src/uriel/prompts.py`, `src/uriel/adapters.py`, `src/uriel/reviews.py`, `tests/test_ai_hardening.py`, `tests/test_reviews.py`, `tests/test_cli.py`, `scripts/smoke_installed_ai_handoff.py` | Metadata-only nonpublic defaults, 128-KiB prompt/review ceilings, exact hash-bound import, and an explicitly acknowledged bounded external-process adapter. The adapter is not an OS sandbox and no AI output has gate, publication, or Blessing authority. |
 | Synthetic Forge Trial fixture and adjudicated scorer | `BETA` | `python scripts/check_forge_trial.py` | Windows, macOS, Linux | `src/uriel/forge_trials.py`, `tests/test_forge_trials.py` | Validates the sealed synthetic fixture and scores supplied adjudicated findings; it does not claim a detector was run. |
 | Evidence ingress and Data Desk | `EXPERIMENTAL` | `uriel data plan / import / inspect / diff / reconcile / verify-generation` | Windows, macOS, Linux | `src/uriel/data_contracts.py`, `src/uriel/data_ingress.py`, `src/uriel/data_desk.py`, `tests/test_data_contracts.py`, `tests/test_data_ingress.py`, `tests/test_data_desk.py`, `tests/test_cli.py`, `tests/test_generation_readiness.py`, `tests/test_surfaces.py`, `tests/test_data_desk_benchmark.py`, `scripts/smoke_installed_data_ingress.py` | Bounded local immutable intake, structural generations, preserve-all reconciliation, and deep verification, with a measured synthetic receipt and installed-wheel exercise. Data commands alone grant no scientific or Gate 0 authority; only the separate exact v2 readiness lane can pass the bound generation into Gate 0. |
-| Operational Forge Method closure engine | `PLANNED` | `n/a (planned capability)` | Windows (planned), macOS (planned), Linux (planned) | — | The Forge of Uriel is the public identity; a general automatic milestone-closure engine is not implemented. |
+| Operational Forge Method closure engine | `PLANNED` | `n/a (planned capability)` | Windows (planned), macOS (planned), Linux (planned) | — | The Forge of Uriel is the public identity. Additive v1 run and sanitized-export contracts are frozen and compatibility-tested, but no Forge persistence, transition, verification, export, or automatic milestone-closure engine is implemented. |
 | Built-in local-model adapter | `PLANNED` | `n/a (planned capability)` | Windows (planned), macOS (planned), Linux (planned) | — | External and local models can consume bounded prompts today; Uriel does not ship an inference provider. |
 | Desktop GUI and native installer | `PLANNED` | `n/a (planned capability)` | Windows (planned), macOS (planned), Linux (planned) | — | The supported product is currently CLI/Python-first. |

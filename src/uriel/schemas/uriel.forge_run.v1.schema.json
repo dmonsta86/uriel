@@ -1,0 +1,1023 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.forge_run.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Uriel Forge immutable run snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "x-uriel-record-digest": {
+    "algorithm": "sha256",
+    "canonicalization": "uriel.canonical_json.v1",
+    "excluded_fields": [
+      "record_sha256"
+    ]
+  },
+  "x-uriel-max-record-bytes": 4194304,
+  "x-uriel-state-transitions": {
+    "DRAFT": [
+      "SCOPED",
+      "BLOCKED",
+      "FAILED",
+      "STALE",
+      "SUPERSEDED",
+      "ABORTED"
+    ],
+    "SCOPED": [
+      "AUDITED",
+      "BLOCKED",
+      "FAILED",
+      "STALE",
+      "SUPERSEDED",
+      "ABORTED"
+    ],
+    "AUDITED": [
+      "IMPLEMENTING",
+      "BLOCKED",
+      "FAILED",
+      "STALE",
+      "SUPERSEDED",
+      "ABORTED"
+    ],
+    "IMPLEMENTING": [
+      "VERIFYING",
+      "BLOCKED",
+      "FAILED",
+      "STALE",
+      "SUPERSEDED",
+      "ABORTED"
+    ],
+    "VERIFYING": [
+      "IMPLEMENTING",
+      "READY_FOR_INDEPENDENT_VERIFY",
+      "BLOCKED",
+      "FAILED",
+      "STALE",
+      "SUPERSEDED",
+      "ABORTED"
+    ],
+    "READY_FOR_INDEPENDENT_VERIFY": [
+      "IMPLEMENTING",
+      "VERIFYING",
+      "COMPLETE",
+      "COMPLETE_WITH_DEFERRED_SOFT_GATES",
+      "BLOCKED",
+      "FAILED",
+      "STALE",
+      "SUPERSEDED",
+      "ABORTED"
+    ],
+    "COMPLETE": [
+      "STALE",
+      "SUPERSEDED"
+    ],
+    "COMPLETE_WITH_DEFERRED_SOFT_GATES": [
+      "STALE",
+      "SUPERSEDED"
+    ],
+    "BLOCKED": [
+      "SCOPED",
+      "AUDITED",
+      "IMPLEMENTING",
+      "VERIFYING",
+      "READY_FOR_INDEPENDENT_VERIFY",
+      "FAILED",
+      "STALE",
+      "SUPERSEDED",
+      "ABORTED"
+    ],
+    "FAILED": [],
+    "STALE": [],
+    "SUPERSEDED": [],
+    "ABORTED": []
+  },
+  "$defs": {
+    "hex64": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "boundedText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "projectId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{7,127}$"
+    },
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?![.]{1,2}(?:/|$))(?!.*(?:/)[.]{1,2}(?:/|$))(?!.*\\\\)(?!.*:)[^/\\x00-\\x1f\\x7f]+(?:/[^/\\x00-\\x1f\\x7f]+)*$"
+    },
+    "refId": {
+      "type": "string",
+      "pattern": "^ref-[A-Za-z0-9._-]{1,80}$"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "SCOPED",
+        "AUDITED",
+        "IMPLEMENTING",
+        "VERIFYING",
+        "READY_FOR_INDEPENDENT_VERIFY",
+        "COMPLETE",
+        "COMPLETE_WITH_DEFERRED_SOFT_GATES",
+        "BLOCKED",
+        "FAILED",
+        "STALE",
+        "SUPERSEDED",
+        "ABORTED"
+      ]
+    }
+  },
+  "required": [
+    "schema",
+    "schema_version",
+    "run_id",
+    "project_id",
+    "revision",
+    "parent_record_sha256",
+    "created_at_utc",
+    "mission",
+    "non_goals",
+    "requirements",
+    "binding",
+    "state",
+    "event",
+    "refs",
+    "work_packages",
+    "manifest",
+    "indexes",
+    "result",
+    "authority_scope",
+    "upstream_authority_effect",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "uriel.forge_run.v1"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^forge-[0-9a-f]{16}$"
+    },
+    "project_id": {
+      "$ref": "#/$defs/projectId"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000
+    },
+    "parent_record_sha256": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/hex64"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "created_at_utc": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 64,
+      "format": "date-time"
+    },
+    "mission": {
+      "$ref": "#/$defs/boundedText"
+    },
+    "non_goals": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/boundedText"
+      },
+      "maxItems": 32,
+      "uniqueItems": true
+    },
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "requirement_id",
+          "statement",
+          "acceptance_condition",
+          "source_kind",
+          "source_sha256"
+        ],
+        "properties": {
+          "requirement_id": {
+            "type": "string",
+            "pattern": "^req-[A-Za-z0-9._-]{1,64}$"
+          },
+          "statement": {
+            "$ref": "#/$defs/boundedText"
+          },
+          "acceptance_condition": {
+            "$ref": "#/$defs/boundedText"
+          },
+          "source_kind": {
+            "type": "string",
+            "enum": [
+              "OPERATOR",
+              "PROJECT_MANIFEST",
+              "WORKBENCH",
+              "EXTERNAL_ARTIFACT"
+            ]
+          },
+          "source_sha256": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/hex64"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "minItems": 1,
+      "maxItems": 256,
+      "uniqueItems": true
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "project_manifest_sha256",
+        "source_manifest_sha256",
+        "project_binding_digest",
+        "workbench_generation_id",
+        "data_generation_ids",
+        "readiness_selection_sha256"
+      ],
+      "properties": {
+        "project_manifest_sha256": {
+          "$ref": "#/$defs/hex64"
+        },
+        "source_manifest_sha256": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/hex64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "project_binding_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/hex64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "workbench_generation_id": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_generation_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/hex64"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "readiness_selection_sha256": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/hex64"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "state": {
+      "$ref": "#/$defs/state"
+    },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "event_id",
+        "event_kind",
+        "created_at_utc",
+        "initiator",
+        "from_state",
+        "to_state",
+        "rationale",
+        "changed_work_package_ids",
+        "changed_ref_ids"
+      ],
+      "properties": {
+        "event_id": {
+          "type": "string",
+          "pattern": "^forge-event-[0-9a-f]{16}$"
+        },
+        "event_kind": {
+          "type": "string",
+          "enum": [
+            "BASELINE",
+            "SCOPE",
+            "AUDIT",
+            "IMPLEMENTATION",
+            "VERIFICATION",
+            "INDEPENDENT_VERIFICATION",
+            "REFERENCE_UPDATE",
+            "WORK_PACKAGE_UPDATE",
+            "BLOCK",
+            "FAIL",
+            "STALE",
+            "SUPERSEDE",
+            "ABORT",
+            "CLOSE"
+          ]
+        },
+        "created_at_utc": {
+          "type": "string",
+          "minLength": 20,
+          "maxLength": 64,
+          "format": "date-time"
+        },
+        "initiator": {
+          "type": "string",
+          "enum": [
+            "OPERATOR_REQUEST",
+            "URIEL_DETERMINISTIC_CORE"
+          ]
+        },
+        "from_state": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/state"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "to_state": {
+          "$ref": "#/$defs/state"
+        },
+        "rationale": {
+          "$ref": "#/$defs/boundedText"
+        },
+        "changed_work_package_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^wp-[0-9a-f]{16}$"
+          },
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "changed_ref_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/refId"
+          },
+          "maxItems": 512,
+          "uniqueItems": true
+        }
+      }
+    },
+    "refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ref_id",
+          "role",
+          "record_schema",
+          "path",
+          "sha256",
+          "size_bytes",
+          "media_type",
+          "record_id",
+          "disclosure"
+        ],
+        "properties": {
+          "ref_id": {
+            "$ref": "#/$defs/refId"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "PROJECT_MANIFEST",
+              "SOURCE_MANIFEST",
+              "WORKBENCH_GENERATION",
+              "DATA_GENERATION",
+              "READINESS_SELECTION",
+              "AUDIT",
+              "GATE_DECISION",
+              "GAP_REGISTER",
+              "TEST_PLAN",
+              "TEST_RECEIPT",
+              "DECISION",
+              "DEFERRAL",
+              "PUBLICATION_AUTHORITY",
+              "PACKET_MANIFEST",
+              "VERIFIER_RECEIPT",
+              "BLESSING",
+              "EVIDENCE",
+              "RESULT",
+              "RESUME_PACKET"
+            ]
+          },
+          "record_schema": {
+            "oneOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^uriel\\.[a-z0-9_.]+\\.v[0-9]+$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "path": {
+            "$ref": "#/$defs/relativePath"
+          },
+          "sha256": {
+            "$ref": "#/$defs/hex64"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1073741824
+          },
+          "media_type": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9.+_-]*/[A-Za-z0-9][A-Za-z0-9.+_-]*$"
+          },
+          "record_id": {
+            "oneOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "disclosure": {
+            "type": "string",
+            "enum": [
+              "PRIVATE",
+              "SANITIZABLE_METADATA",
+              "PUBLIC"
+            ]
+          }
+        }
+      },
+      "maxItems": 2048,
+      "uniqueItems": true
+    },
+    "work_packages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "work_package_id",
+          "objective",
+          "non_goals",
+          "depends_on",
+          "requirement_ids",
+          "input_ref_ids",
+          "acceptance_ref_ids",
+          "completion_condition",
+          "status"
+        ],
+        "properties": {
+          "work_package_id": {
+            "type": "string",
+            "pattern": "^wp-[0-9a-f]{16}$"
+          },
+          "objective": {
+            "$ref": "#/$defs/boundedText"
+          },
+          "non_goals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/boundedText"
+            },
+            "maxItems": 16,
+            "uniqueItems": true
+          },
+          "depends_on": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^wp-[0-9a-f]{16}$"
+            },
+            "maxItems": 64,
+            "uniqueItems": true
+          },
+          "requirement_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^req-[A-Za-z0-9._-]{1,64}$"
+            },
+            "minItems": 1,
+            "maxItems": 256,
+            "uniqueItems": true
+          },
+          "input_ref_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/refId"
+            },
+            "maxItems": 512,
+            "uniqueItems": true
+          },
+          "acceptance_ref_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/refId"
+            },
+            "minItems": 1,
+            "maxItems": 256,
+            "uniqueItems": true
+          },
+          "completion_condition": {
+            "$ref": "#/$defs/boundedText"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PROPOSED",
+              "READY",
+              "IN_PROGRESS",
+              "VERIFYING",
+              "COMPLETE",
+              "BLOCKED",
+              "DEFERRED",
+              "SUPERSEDED"
+            ]
+          }
+        }
+      },
+      "maxItems": 256,
+      "uniqueItems": true
+    },
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requirement_count",
+        "ref_count",
+        "work_package_count",
+        "requirements_sha256",
+        "refs_sha256",
+        "work_packages_sha256",
+        "event_sha256"
+      ],
+      "properties": {
+        "requirement_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 256
+        },
+        "ref_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2048
+        },
+        "work_package_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 256
+        },
+        "requirements_sha256": {
+          "$ref": "#/$defs/hex64"
+        },
+        "refs_sha256": {
+          "$ref": "#/$defs/hex64"
+        },
+        "work_packages_sha256": {
+          "$ref": "#/$defs/hex64"
+        },
+        "event_sha256": {
+          "$ref": "#/$defs/hex64"
+        }
+      }
+    },
+    "indexes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gate_ref_ids",
+        "blocker_ref_ids",
+        "test_receipt_ref_ids",
+        "decision_ref_ids",
+        "evidence_ref_ids",
+        "closure_ref_ids",
+        "next_ref_ids",
+        "resume_packet_ref_id"
+      ],
+      "properties": {
+        "gate_ref_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/refId"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "blocker_ref_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/refId"
+          },
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "test_receipt_ref_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/refId"
+          },
+          "maxItems": 512,
+          "uniqueItems": true
+        },
+        "decision_ref_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/refId"
+          },
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "evidence_ref_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/refId"
+          },
+          "maxItems": 1024,
+          "uniqueItems": true
+        },
+        "closure_ref_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/refId"
+          },
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "next_ref_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/refId"
+          },
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "resume_packet_ref_id": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/refId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "summary",
+        "closure_ref_ids"
+      ],
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "FORGE_COMPLETE",
+            "FORGE_COMPLETE_WITH_DEFERRED_SOFT_GATES",
+            "FORGE_BLOCKED",
+            "FORGE_FAILED",
+            "FORGE_STALE",
+            "FORGE_ABORTED"
+          ]
+        },
+        "summary": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/boundedText"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "closure_ref_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/refId"
+          },
+          "maxItems": 256,
+          "uniqueItems": true
+        }
+      }
+    },
+    "authority_scope": {
+      "const": "FORGE_WORKFLOW_ONLY"
+    },
+    "upstream_authority_effect": {
+      "const": "NONE"
+    },
+    "record_sha256": {
+      "$ref": "#/$defs/hex64"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "revision": {
+            "const": 0
+          }
+        },
+        "required": [
+          "revision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "parent_record_sha256": {
+            "type": "null"
+          },
+          "state": {
+            "const": "DRAFT"
+          },
+          "event": {
+            "properties": {
+              "event_kind": {
+                "const": "BASELINE"
+              },
+              "from_state": {
+                "type": "null"
+              },
+              "to_state": {
+                "const": "DRAFT"
+              }
+            }
+          },
+          "result": {
+            "properties": {
+              "outcome": {
+                "const": "OPEN"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "revision": {
+            "minimum": 1
+          }
+        },
+        "required": [
+          "revision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "parent_record_sha256": {
+            "$ref": "#/$defs/hex64"
+          },
+          "event": {
+            "properties": {
+              "event_kind": {
+                "not": {
+                  "const": "BASELINE"
+                }
+              },
+              "from_state": {
+                "$ref": "#/$defs/state"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "enum": [
+              "DRAFT",
+              "SCOPED",
+              "AUDITED",
+              "IMPLEMENTING",
+              "VERIFYING",
+              "READY_FOR_INDEPENDENT_VERIFY"
+            ]
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "outcome": {
+                "const": "OPEN"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "const": "COMPLETE"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "outcome": {
+                "const": "FORGE_COMPLETE"
+              },
+              "closure_ref_ids": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "const": "COMPLETE_WITH_DEFERRED_SOFT_GATES"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "outcome": {
+                "const": "FORGE_COMPLETE_WITH_DEFERRED_SOFT_GATES"
+              },
+              "closure_ref_ids": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "const": "BLOCKED"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "outcome": {
+                "const": "FORGE_BLOCKED"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "const": "FAILED"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "outcome": {
+                "const": "FORGE_FAILED"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "enum": [
+              "STALE",
+              "SUPERSEDED"
+            ]
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "outcome": {
+                "const": "FORGE_STALE"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "const": "ABORTED"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "properties": {
+              "outcome": {
+                "const": "FORGE_ABORTED"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

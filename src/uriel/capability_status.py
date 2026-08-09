@@ -158,7 +158,7 @@ CAPABILITIES: List[Dict[str, Any]] = [
         "platforms": ["Windows (planned)", "macOS (planned)", "Linux (planned)"],
         "modules": [],
         "verification": [],
-        "notes": "The Forge of Uriel is the public identity; a general automatic milestone-closure engine is not implemented.",
+        "notes": "The Forge of Uriel is the public identity. Additive v1 run and sanitized-export contracts are frozen and compatibility-tested, but no Forge persistence, transition, verification, export, or automatic milestone-closure engine is implemented.",
     },
     {
         "id": "CAP-LOCAL-AI-001",

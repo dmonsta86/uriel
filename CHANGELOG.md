@@ -50,6 +50,10 @@ All notable changes to Uriel are documented here.
 - Explicitly acknowledged external-agent execution with project-policy checks,
   validated/passed model identity, isolated temporary working directory,
   minimized environment, no shell, bounded capture, and process-tree timeout.
+- Additive, closed v1 contracts for immutable private Forge run snapshots and
+  bounded sanitized-export manifests, with frozen lifecycle compatibility,
+  authority-neutral references, path/privacy exclusions, and contract tests.
+  No operational Forge engine or CLI is claimed.
 
 ## 1.0.0-rc2 — 2026-08-06
 

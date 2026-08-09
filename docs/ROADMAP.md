@@ -26,6 +26,9 @@ Available now includes:
   `main`, with immutable raw intake, structural generations, conflict-preserving
   reconciliation, and independent deep verification. It is not part of the
   historical `v1.0.0-rc2` tag.
+- additive v1 compatibility contracts for a future private Forge run and
+  sanitized portable export. These schemas do not implement the planned Forge
+  engine, CLI, state transitions, exporter, or verifier.
 
 ## Active product lane: local data integrity
 
@@ -54,7 +57,8 @@ must accumulate before any maturity promotion.
    adapters with resource, provenance, license, prompt-injection, and SSRF
    controls.
 2. An operational Forge closure layer for bounded milestones, blockers,
-   evidence, independent verification, and resumable next moves.
+   evidence, independent verification, and resumable next moves. Its additive
+   run/export contracts are frozen; runtime behavior remains planned.
 3. A restrained optional presentation detail: when Gate 0 and all three gates
    are current green and the exact Blessing verifies, the record may display
    “Blessing issued — this idea has earned its wings.” This is not a fifth gate,

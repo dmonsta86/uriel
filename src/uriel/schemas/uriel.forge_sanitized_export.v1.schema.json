@@ -1,0 +1,256 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.forge_sanitized_export.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Uriel Forge sanitized export manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "x-uriel-record-digest": {
+    "algorithm": "sha256",
+    "canonicalization": "uriel.canonical_json.v1",
+    "excluded_fields": [
+      "record_sha256"
+    ]
+  },
+  "x-uriel-max-record-bytes": 1048576,
+  "x-uriel-forbidden-export-fields": [
+    "project_id",
+    "run_id",
+    "source_path",
+    "absolute_path",
+    "operator_name",
+    "author_name",
+    "email",
+    "credential",
+    "private_url",
+    "evidence_body"
+  ],
+  "$defs": {
+    "hex64": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "boundedText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "projectId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{7,127}$"
+    },
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?![.]{1,2}(?:/|$))(?!.*(?:/)[.]{1,2}(?:/|$))(?!.*\\\\)(?!.*:)[^/\\x00-\\x1f\\x7f]+(?:/[^/\\x00-\\x1f\\x7f]+)*$"
+    },
+    "refId": {
+      "type": "string",
+      "pattern": "^ref-[A-Za-z0-9._-]{1,80}$"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "SCOPED",
+        "AUDITED",
+        "IMPLEMENTING",
+        "VERIFYING",
+        "READY_FOR_INDEPENDENT_VERIFY",
+        "COMPLETE",
+        "COMPLETE_WITH_DEFERRED_SOFT_GATES",
+        "BLOCKED",
+        "FAILED",
+        "STALE",
+        "SUPERSEDED",
+        "ABORTED"
+      ]
+    }
+  },
+  "required": [
+    "schema",
+    "schema_version",
+    "export_id",
+    "created_at_utc",
+    "source_run_sha256",
+    "project_alias",
+    "run_alias",
+    "disclosure_profile",
+    "entries",
+    "entry_count",
+    "total_bytes",
+    "entries_root_sha256",
+    "sanitization",
+    "authority_scope",
+    "upstream_authority_effect",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "uriel.forge_sanitized_export.v1"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "export_id": {
+      "type": "string",
+      "pattern": "^forge-export-[0-9a-f]{16}$"
+    },
+    "created_at_utc": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 64,
+      "format": "date-time"
+    },
+    "source_run_sha256": {
+      "$ref": "#/$defs/hex64"
+    },
+    "project_alias": {
+      "type": "string",
+      "pattern": "^project-[0-9a-f]{16}$"
+    },
+    "run_alias": {
+      "type": "string",
+      "pattern": "^run-[0-9a-f]{16}$"
+    },
+    "disclosure_profile": {
+      "const": "SANITIZED_REFERENCES_ONLY"
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "export_path",
+          "sha256",
+          "size_bytes",
+          "media_type",
+          "role",
+          "source_ref_alias",
+          "body_policy",
+          "link_export_paths"
+        ],
+        "properties": {
+          "export_path": {
+            "$ref": "#/$defs/relativePath"
+          },
+          "sha256": {
+            "$ref": "#/$defs/hex64"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 16777216
+          },
+          "media_type": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9.+_-]*/[A-Za-z0-9][A-Za-z0-9.+_-]*$"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "FORGE_SUMMARY",
+              "SANITIZED_REFERENCE",
+              "PUBLIC_RECORD",
+              "VERIFICATION_RECEIPT"
+            ]
+          },
+          "source_ref_alias": {
+            "oneOf": [
+              {
+                "type": "string",
+                "pattern": "^source-[0-9a-f]{16}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "body_policy": {
+            "type": "string",
+            "enum": [
+              "METADATA_ONLY",
+              "SANITIZED_SUMMARY",
+              "PUBLIC_RECORD"
+            ]
+          },
+          "link_export_paths": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/relativePath"
+            },
+            "maxItems": 128,
+            "uniqueItems": true
+          }
+        }
+      },
+      "maxItems": 512,
+      "uniqueItems": true
+    },
+    "entry_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 512
+    },
+    "total_bytes": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 16777216
+    },
+    "entries_root_sha256": {
+      "$ref": "#/$defs/hex64"
+    },
+    "sanitization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identities_replaced_with_aliases",
+        "absolute_and_private_paths_removed",
+        "credentials_removed",
+        "private_urls_removed",
+        "restricted_evidence_bodies_removed",
+        "unrelated_project_names_removed",
+        "links_verified",
+        "hashes_verified"
+      ],
+      "properties": {
+        "identities_replaced_with_aliases": {
+          "const": true
+        },
+        "absolute_and_private_paths_removed": {
+          "const": true
+        },
+        "credentials_removed": {
+          "const": true
+        },
+        "private_urls_removed": {
+          "const": true
+        },
+        "restricted_evidence_bodies_removed": {
+          "const": true
+        },
+        "unrelated_project_names_removed": {
+          "const": true
+        },
+        "links_verified": {
+          "const": true
+        },
+        "hashes_verified": {
+          "const": true
+        }
+      }
+    },
+    "authority_scope": {
+      "const": "PORTABLE_SANITIZED_EXPORT_ONLY"
+    },
+    "upstream_authority_effect": {
+      "const": "NONE"
+    },
+    "record_sha256": {
+      "$ref": "#/$defs/hex64"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
   "schema": "uriel.capability_inventory.v1",
   "source": "src/uriel/capability_status.py",
-  "source_fingerprint": "1a7821bfcca51196ea9b18d792cb7f1bcc69f721a6b2c008e559a28759b69ee8",
+  "source_fingerprint": "c42714e8cbd1113263c500a54e6ca1f99e5514e801185ecd10cc326e8eaadf63",
   "capabilities": [
     {
       "id": "CAP-CORE-001",
@@ -211,7 +211,7 @@
       ],
       "modules": [],
       "verification": [],
-      "notes": "The Forge of Uriel is the public identity; a general automatic milestone-closure engine is not implemented."
+      "notes": "The Forge of Uriel is the public identity. Additive v1 run and sanitized-export contracts are frozen and compatibility-tested, but no Forge persistence, transition, verification, export, or automatic milestone-closure engine is implemented."
     },
     {
       "id": "CAP-LOCAL-AI-001",

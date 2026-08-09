@@ -124,6 +124,28 @@ capacity, latency-SLA, hardware, or real-data guarantee.
 
 `.uriel/` is derived, local state and is ignored by default. Publish selected Blessing packages or audit exports deliberately; do not commit secrets or raw restricted data.
 
+## Planned Forge contract boundary
+
+ADR 0012 freezes additive `uriel.forge_run.v1` and
+`uriel.forge_sanitized_export.v1` contracts before any Forge engine exists. A
+private run is one immutable coordination snapshot with nested mission,
+requirements, lineage event, work packages, indexes, and component hashes.
+Existing project, generation, readiness, audit, gate, gap, decision,
+publication, packet, verifier, and Blessing records remain authoritative and
+appear only as typed, hashed references.
+
+A future private layout may use `.uriel/forge/runs/<run-id>/`, which remains
+ignored local state. Raw snapshots are never portable exports. The separate
+sanitized-export manifest permits aliases and bounded file metadata only and
+requires identities, private paths, credentials, private URLs, restricted
+evidence bodies, and unrelated project names to be removed before links and
+hashes are rechecked. Neither contract grants gate, publication, verifier, or
+Blessing authority.
+
+The contracts do not provide a Forge CLI, state writer, persistence engine,
+verifier, exporter, model adapter, or network path. Those remain planned and
+must use the same deterministic core and confinement rules if implemented.
+
 ## Determinism and content binding
 
 - Canonical JSON sorts keys and uses stable separators.
