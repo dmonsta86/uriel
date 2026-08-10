@@ -9,26 +9,26 @@
     "sha256": "b1fcbca43e7b16caa90e49d88ad58745e45eddaa3b50fabe736eb157ce83df7c"
   },
   "implementation": {
-    "binding_sha256": "18a64d88685242504cc579718d7170a4ae29513c236ea4f2d82a352eec777d88",
+    "binding_sha256": "2f25cab51e2546ee722ed050f831a9dd6335622fa507cac79ce1d4c9c4c03aa6",
     "files": {
       "scripts/benchmark_data_desk.py": "391a3b711f13c262b3da91bae2cddf44db6b9663916a5dd97d8ea490194394aa",
-      "src/uriel/data_contracts.py": "46787fd7c3264b0eef0d9c26858d93fd743f6d9764df0587b2390deda49e4b56",
-      "src/uriel/data_desk.py": "a9c295566dd0051e62e53e73c631fdd1abf1681fd62f0efa1b52b8c8c17dd9b3",
-      "src/uriel/data_ingress.py": "769b98bb571a50b1fec875df391c9f73cd93e5b4a5fe8455917687469590de99"
+      "src/uriel/data_contracts.py": "8d60b991c46ff190d5ef2efd3d9a987140974acd7fbdc7d230ff94e1d1a58759",
+      "src/uriel/data_desk.py": "465a91b20dd65ac47a82c5cb1ce4b43d65f5afa7450ac397b11ace9119a993af",
+      "src/uriel/data_ingress.py": "eaa8dbcebece8dde8949bffd4c2f1c722557be3b70d4ff3454582ed269a62256"
     }
   },
-  "measured_at_utc": "2026-08-09T04:24:54.845334Z",
+  "measured_at_utc": "2026-08-10T14:53:42.780141Z",
   "operations_ms": {
-    "import_ms": 66.133,
-    "inspect_ms": 5705.767,
-    "plan_ms": 14.623,
-    "repeat_inspect_ms": 3866.161,
-    "verify_ms": 2685.441
+    "import_ms": 116.644,
+    "inspect_ms": 8957.264,
+    "plan_ms": 49.424,
+    "repeat_inspect_ms": 4543.974,
+    "verify_ms": 4031.608
   },
-  "peak_traced_python_bytes": 20700013,
+  "peak_traced_python_bytes": 20699022,
   "result": {
     "deterministic_repeat": true,
-    "generation_id": "3de2b4b95688f7793e540ebfd4d02aa81c78936820d2dda1800f8201a54e5395",
+    "generation_id": "bd8f20bdb6c52112fa08bb53035a7e99b3bec8ca4f523383f8910c28d71e2854",
     "record_count": 10000,
     "verification_decision": "PASS"
   },

@@ -47,6 +47,6 @@
   "image_copy_path": "globalization/image_copy/ar.json",
   "image_copy_sha256": "6b534add528d9c6fefd17c8ff184ba644359f968a003e6498b002b06ef37f5ad",
   "image_renderer_path": "scripts/render_localized_heroes.py",
-  "image_renderer_sha256": "73165bda1a30e94dbd46bf20650ded05ffee98502a984851d638f08abf22dbf1",
+  "image_renderer_sha256": "ec8adffef244a4922cc6ca71daef91f1363b0f5d60d2a755c0354ea2376d43d7",
   "schema": "uriel.localized_asset.v2"
 }

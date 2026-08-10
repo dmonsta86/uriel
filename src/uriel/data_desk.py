@@ -1878,6 +1878,22 @@ def _verify_data_generation_once(
         ).relative_to(paths.root).as_posix(),
         "index_role": manifest["derived_index_kind"] == "SQLITE_DERIVED_NONAUTHORITATIVE",
     }
+    authoritative_file_failures = sorted(
+        name
+        for name in ("records_file_sha256", "records_file_size")
+        if not checks[name]
+    )
+    if authoritative_file_failures:
+        raise Refusal(
+            "Generation records no longer match the authoritative manifest binding.",
+            code="DATA_GENERATION_RECORDS_INVALID",
+            details={"failed_checks": authoritative_file_failures},
+            repairs=[
+                "Preserve the changed generation and compare it with a verified project backup.",
+                "Restore the exact immutable records file; never edit a generation in place.",
+                "Recreate a new generation from independently verified source artifacts.",
+            ],
+        )
     expected_profile = _build_profile(
         generation_id,
         manifest["created_at_utc"],

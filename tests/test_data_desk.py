@@ -311,8 +311,8 @@ class DataDeskTests(unittest.TestCase):
             delta_path.write_bytes(delta_bytes)
 
             records_path = root / verified["manifest"]["records_relative_path"]
-            original = records_path.read_text(encoding="utf-8")
-            records_path.write_text(original.replace('"a"', '"tampered"', 1), encoding="utf-8")
+            original = records_path.read_bytes()
+            records_path.write_bytes(original.replace(b'"a"', b'"z"', 1))
             with self.assertRaises(Refusal) as tampered:
                 verify_data_generation(root, reconciled["generation_id"])
             self.assertEqual("DATA_GENERATION_RECORDS_INVALID", tampered.exception.code)

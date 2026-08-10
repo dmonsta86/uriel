@@ -464,15 +464,37 @@ def _same_file_identity(before: os.stat_result, opened: os.stat_result) -> bool:
     )
 
 
-def _path_contains_indirection(path: Path) -> bool:
-    """Return true when any lexical source-path component is a link/reparse point."""
+def _path_contains_indirection(
+    path: Path,
+    link_peer: Optional[Union[str, Path]] = None,
+) -> bool:
+    """Return true for indirection at or below the selected path boundary.
+
+    ``link_peer`` supplies a second caller-selected path, normally the project
+    root as the caller spelled it. Components above the two paths' lexical
+    common ancestor are platform path aliases rather than source-local
+    indirection (for example macOS ``/var`` -> ``/private/var``). Leaf and
+    source-local parent links remain refused, while the open/fstat/lstat
+    identity checks below still protect the full source stream from races.
+    """
 
     absolute = Path(os.path.abspath(str(path)))
-    parts = absolute.parts
-    if not parts:
+    if not absolute.parts:
         return True
-    current = Path(parts[0])
-    for part in parts[1:]:
+    current = Path(absolute.anchor)
+    remaining = absolute.parts[1:]
+    if link_peer is not None:
+        peer = Path(link_peer).expanduser()
+        if not peer.is_absolute():
+            peer = Path.cwd() / peer
+        peer = Path(os.path.abspath(str(peer)))
+        try:
+            current = Path(os.path.commonpath([str(absolute), str(peer)]))
+            remaining = absolute.relative_to(current).parts
+        except ValueError:
+            current = Path(absolute.anchor)
+            remaining = absolute.parts[1:]
+    for part in remaining:
         current = current / part
         try:
             observed = os.lstat(str(current))
@@ -490,6 +512,7 @@ def inspect_selected_source(
     max_source_bytes: int,
     timeout_seconds: int,
     destination: Optional[BinaryIO] = None,
+    link_peer: Optional[Union[str, Path]] = None,
 ) -> Dict[str, Any]:
     """Stream and validate one selected UTF-8 source, optionally copying bytes.
 
@@ -505,7 +528,7 @@ def inspect_selected_source(
             code="DATA_NETWORK_PATH_REFUSED",
         )
     path = Path(raw_source).expanduser()
-    if _path_contains_indirection(path):
+    if _path_contains_indirection(path, link_peer):
         raise Refusal(
             "Evidence Ingress refused a link or reparse point in the selected source path.",
             code="DATA_SOURCE_TYPE_REFUSED",
@@ -626,6 +649,10 @@ def plan_data_import(
 ) -> Dict[str, Any]:
     """Create a no-write plan for one explicit local regular file."""
 
+    lexical_root = Path(root).expanduser()
+    if not lexical_root.is_absolute():
+        lexical_root = Path.cwd() / lexical_root
+    lexical_root = Path(os.path.abspath(str(lexical_root)))
     root_path = canonical_root(root)
     project_paths = paths_for(root_path)
     budget = make_resource_budget(
@@ -636,7 +663,12 @@ def plan_data_import(
         max_field_bytes=max_field_bytes,
         timeout_seconds=timeout_seconds,
     )
-    source_observation = inspect_selected_source(source, max_source_bytes, timeout_seconds)
+    source_observation = inspect_selected_source(
+        source,
+        max_source_bytes,
+        timeout_seconds,
+        link_peer=lexical_root,
+    )
     logical_label = label or "source-{0}".format(source_observation["content_sha256"][:12])
     if _LABEL_PATTERN.fullmatch(logical_label) is None:
         raise Refusal(

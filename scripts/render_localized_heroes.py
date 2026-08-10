@@ -133,6 +133,19 @@ def confined_candidate(raw_name: str) -> Path:
         raise FileNotFoundError(f"candidate is missing or not a file: {lexical}")
 
     root_resolved = ROOT.resolve(strict=True)
+    try:
+        common = os.path.commonpath([str(ROOT), str(lexical)])
+    except ValueError as exc:
+        raise ValueError("candidate is outside the repository") from exc
+    if os.path.normcase(common) != os.path.normcase(str(ROOT)):
+        raise ValueError("candidate is outside the repository")
+
+    resolved = lexical.resolve(strict=True)
+    try:
+        resolved.relative_to(root_resolved)
+    except ValueError as exc:
+        raise ValueError("candidate is outside the repository") from exc
+
     current = lexical
     while True:
         if is_reparse_or_link(current):
@@ -143,11 +156,6 @@ def confined_candidate(raw_name: str) -> Path:
             raise ValueError("candidate is outside the repository")
         current = current.parent
 
-    resolved = lexical.resolve(strict=True)
-    try:
-        resolved.relative_to(root_resolved)
-    except ValueError as exc:
-        raise ValueError("candidate is outside the repository") from exc
     return resolved
 
 

@@ -211,6 +211,34 @@ class DataIngressTests(unittest.TestCase):
                 import_data_artifact(root, source, plan_path)
             self.assertEqual("DATA_SOURCE_TYPE_REFUSED", linked.exception.code)
 
+    @unittest.skipIf(not hasattr(os, "symlink"), "symlinks unavailable")
+    def test_shared_ancestor_alias_preserves_safe_plan_and_import(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            real_parent = base / "real-parent"
+            real_parent.mkdir()
+            alias_parent = base / "alias-parent"
+            try:
+                os.symlink(str(real_parent), str(alias_parent), target_is_directory=True)
+            except OSError:
+                self.skipTest("directory symlink creation unavailable for this account")
+
+            root = alias_parent / "project"
+            source = alias_parent / "records.csv"
+            source.write_text("id,value\na,1\n", encoding="utf-8")
+            initialize_project(root, title="Ingress alias", question="Can safe aliases be normalized?")
+            plan = plan_data_import(root, source, label="alias-source")["plan"]
+            plan_target = root / "artifacts" / "alias-plan.json"
+            plan_target.write_text(canonical_json(plan), encoding="utf-8")
+
+            imported = import_data_artifact(
+                root,
+                source,
+                plan_target.relative_to(root).as_posix(),
+            )
+            self.assertEqual("SEALED", imported["status"])
+            self.assertTrue(verify_data_import(root, imported["receipt_relative_path"])["verified"])
+
 
 if __name__ == "__main__":
     unittest.main()

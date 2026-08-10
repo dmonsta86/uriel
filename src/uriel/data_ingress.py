@@ -251,6 +251,7 @@ def _copy_source_to_content_address(
     root: Path,
     source_path: Union[str, Path],
     plan: Mapping[str, Any],
+    source_link_peer: Union[str, Path],
 ) -> Tuple[Path, Dict[str, Any], bool]:
     source = plan["source"]
     budget = plan["resource_budget"]
@@ -265,6 +266,7 @@ def _copy_source_to_content_address(
             source_path,
             int(budget["max_source_bytes"]),
             int(budget["timeout_seconds"]),
+            link_peer=source_link_peer,
         )
         _assert_observation_matches(plan, observation)
         return relative, observation, False
@@ -296,6 +298,7 @@ def _copy_source_to_content_address(
                 int(budget["max_source_bytes"]),
                 int(budget["timeout_seconds"]),
                 destination=handle,
+                link_peer=source_link_peer,
             )
             handle.flush()
             os.fsync(handle.fileno())
@@ -344,6 +347,10 @@ def import_data_artifact(
 ) -> Dict[str, Any]:
     """Seal one explicitly selected source under a reviewed import plan."""
 
+    lexical_root = Path(root).expanduser()
+    if not lexical_root.is_absolute():
+        lexical_root = Path.cwd() / lexical_root
+    lexical_root = Path(os.path.abspath(str(lexical_root)))
     paths = paths_for(root)
     plan = _load_import_plan(paths.root, plan_path)
     plan_sha256 = str(plan["record_sha256"])
@@ -377,7 +384,12 @@ def import_data_artifact(
             ],
         )
 
-    managed_relative, observation, copied = _copy_source_to_content_address(paths.root, source, plan)
+    managed_relative, observation, copied = _copy_source_to_content_address(
+        paths.root,
+        source,
+        plan,
+        lexical_root,
+    )
     source_record = plan["source"]
     raw_record = bind_data_record(
         {
