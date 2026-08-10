@@ -1,0 +1,73 @@
+{
+  "$id": "uriel.scholarly_source.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Uriel Scholarly Source v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "policy_version",
+    "source_id",
+    "mode",
+    "scheme",
+    "hostname",
+    "port",
+    "method",
+    "path",
+    "query_parameter_names",
+    "allowed_statuses",
+    "allowed_media_types",
+    "license_status",
+    "retention_policy",
+    "terms_review_status",
+    "live_enabled",
+    "redirects_enabled",
+    "authentication_enabled",
+    "cookies_enabled",
+    "response_parsing_enabled",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": {"const": "uriel.scholarly_source.v1"},
+    "schema_version": {"const": 1},
+    "policy_version": {"const": "uriel.scholarly_acquisition_policy.v1"},
+    "source_id": {"const": "mock.scholarly-metadata.v1"},
+    "mode": {"const": "TEST_ONLY_LOCAL_MOCK"},
+    "scheme": {"const": "https"},
+    "hostname": {"const": "mock.invalid"},
+    "port": {"const": 443},
+    "method": {"const": "GET"},
+    "path": {"const": "/v1/works"},
+    "query_parameter_names": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {"enum": ["max_results", "terms", "year_from", "year_to"]}
+    },
+    "allowed_statuses": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "uniqueItems": true,
+      "items": {"const": 200}
+    },
+    "allowed_media_types": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "uniqueItems": true,
+      "items": {"const": "application/json"}
+    },
+    "license_status": {"const": "TEST_FIXTURE_NO_EXTERNAL_RIGHTS_CLAIM"},
+    "retention_policy": {"const": "PROJECT_LOCAL_OPERATOR_CONTROLLED"},
+    "terms_review_status": {"const": "NOT_APPLICABLE_LOCAL_MOCK"},
+    "live_enabled": {"const": false},
+    "redirects_enabled": {"const": false},
+    "authentication_enabled": {"const": false},
+    "cookies_enabled": {"const": false},
+    "response_parsing_enabled": {"const": false},
+    "record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

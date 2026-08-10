@@ -1,6 +1,6 @@
 # The Forge of Uriel Capability Status
 
-Catalog fingerprint: `c42714e8cbd1113263c500a54e6ca1f99e5514e801185ecd10cc326e8eaadf63`
+Catalog fingerprint: `7b2a0b98f1aac74a0ce75cc67dbb335b8c587c0f5117edcf34f207032742bc47`
 
 Status meanings:
 
@@ -21,5 +21,6 @@ Status meanings:
 | Synthetic Forge Trial fixture and adjudicated scorer | `BETA` | `python scripts/check_forge_trial.py` | Windows, macOS, Linux | `src/uriel/forge_trials.py`, `tests/test_forge_trials.py` | Validates the sealed synthetic fixture and scores supplied adjudicated findings; it does not claim a detector was run. |
 | Evidence ingress and Data Desk | `EXPERIMENTAL` | `uriel data plan / import / inspect / diff / reconcile / verify-generation` | Windows, macOS, Linux | `src/uriel/data_contracts.py`, `src/uriel/data_ingress.py`, `src/uriel/data_desk.py`, `tests/test_data_contracts.py`, `tests/test_data_ingress.py`, `tests/test_data_desk.py`, `tests/test_cli.py`, `tests/test_generation_readiness.py`, `tests/test_surfaces.py`, `tests/test_data_desk_benchmark.py`, `scripts/smoke_installed_data_ingress.py` | Bounded local immutable intake, structural generations, preserve-all reconciliation, and deep verification, with a measured synthetic receipt and installed-wheel exercise. Data commands alone grant no scientific or Gate 0 authority; only the separate exact v2 readiness lane can pass the bound generation into Gate 0. |
 | Operational Forge Method closure engine | `PLANNED` | `n/a (planned capability)` | Windows (planned), macOS (planned), Linux (planned) | — | The Forge of Uriel is the public identity. Additive v1 run and sanitized-export contracts are frozen and compatibility-tested, but no Forge persistence, transition, verification, export, or automatic milestone-closure engine is implemented. |
+| Scholarly acquisition firewall and local-mock quarantine | `EXPERIMENTAL` | `uriel data acquire-mock / verify-acquisition` | Windows, macOS, Linux | `src/uriel/scholarly_acquisition.py`, `src/uriel/data_contracts.py`, `src/uriel/cli.py`, `tests/test_scholarly_acquisition.py`, `tests/test_cli.py`, `scripts/smoke_installed_data_ingress.py` | Disabled by default. Exercises fixed registry, structured-query, budget, policy-trace, raw-byte quarantine, receipt-last storage, and offline verification boundaries against one confined local fixture. It ships no live source adapter, DNS, socket, HTTP, browser, proxy, credential, parser, or network path and grants no readiness, Gate, publication, or Blessing authority. |
 | Built-in local-model adapter | `PLANNED` | `n/a (planned capability)` | Windows (planned), macOS (planned), Linux (planned) | — | External and local models can consume bounded prompts today; Uriel does not ship an inference provider. |
 | Desktop GUI and native installer | `PLANNED` | `n/a (planned capability)` | Windows (planned), macOS (planned), Linux (planned) | — | The supported product is currently CLI/Python-first. |

@@ -318,9 +318,9 @@ def _valid_records():
 
 
 class DataContractTests(unittest.TestCase):
-    def test_all_nineteen_packaged_schemas_validate_bound_examples(self) -> None:
+    def test_all_twenty_seven_packaged_schemas_are_closed_and_hashed(self) -> None:
         catalog = data_contract_catalog()
-        self.assertEqual(19, len(catalog))
+        self.assertEqual(27, len(catalog))
         self.assertEqual(set(DATA_SCHEMA_FILES), {row["schema"] for row in catalog})
         for row in catalog:
             self.assertEqual(64, len(row["sha256"]))
@@ -452,6 +452,13 @@ class DataContractTests(unittest.TestCase):
         with self.assertRaises(Refusal) as caught:
             validate_data_record(broken)
         self.assertIn("preserved", str(caught.exception.details.get("errors")))
+
+    def test_schema_const_values_are_json_type_strict(self) -> None:
+        plan = _valid_records()[1]
+        forged = bind_data_record({**plan, "network_permitted": 0})
+        with self.assertRaises(Refusal) as caught:
+            validate_data_record(forged)
+        self.assertIn("must equal False", str(caught.exception.details.get("errors")))
 
     def test_generation_readiness_requires_each_check_id_exactly_once(self) -> None:
         readiness = next(

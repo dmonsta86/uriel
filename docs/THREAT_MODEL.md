@@ -34,6 +34,9 @@
 16. **AI overexposure or authority injection:** an advisory model receives
     unnecessary records, consumes an unbounded context, or writes output that
     is mistaken for generation, gate, publication, or Blessing authority.
+17. **Acquisition boundary confusion:** a hostile host, address, redirect,
+    header, compressed body, oversized response, prompt-like payload, or stale
+    record is treated as trusted evidence or is allowed to expand authority.
 
 ## Implemented controls
 
@@ -85,6 +88,13 @@
   imported-review bytes are capped, and external-agent invocation requires
   explicit acknowledgement plus project policy, an isolated working directory,
   a minimized environment, no shell, exact model identity, and bounded capture.
+- scholarly acquisition is disabled by default and R2.1 ships only a fixed
+  local-mock registry and exact injected transport. Structured fields build a
+  component request with no free-form URL; simulated host/address pinning,
+  response status, headers, content length/type/encoding, timeout, retry,
+  concurrency, disk, and cumulative-byte checks fail closed. Raw bytes remain
+  opaque in content-addressed quarantine, receipt publication is last, and a
+  separate offline verifier rehashes all records and bytes.
 
 ## Explicit non-controls
 
@@ -100,6 +110,12 @@ do not determine whether selected values are legally or ethically shareable.
 The operator remains responsible for consent, provider retention terms, and
 choosing redaction before any packet leaves the local machine. Uriel does not
 send a generation packet to a provider by itself.
+
+The scholarly local mock is not an operating-system network firewall and does
+not prove a future live fetcher safe. It performs no real DNS or connection,
+does not review provider terms or licenses, does not parse metadata, and cannot
+protect against an unrelated process launched outside this module. No live
+source adapter is shipped.
 
 The optional `uriel assist` command does start an operator-selected external
 process and may therefore cause provider transport. Its temporary working

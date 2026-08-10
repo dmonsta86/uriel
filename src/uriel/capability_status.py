@@ -161,6 +161,24 @@ CAPABILITIES: List[Dict[str, Any]] = [
         "notes": "The Forge of Uriel is the public identity. Additive v1 run and sanitized-export contracts are frozen and compatibility-tested, but no Forge persistence, transition, verification, export, or automatic milestone-closure engine is implemented.",
     },
     {
+        "id": "CAP-SCHOLARLY-001",
+        "name": "Scholarly acquisition firewall and local-mock quarantine",
+        "status": "EXPERIMENTAL",
+        "entry_point": "uriel data acquire-mock / verify-acquisition",
+        "platforms": ["Windows", "macOS", "Linux"],
+        "modules": [
+            "src/uriel/scholarly_acquisition.py",
+            "src/uriel/data_contracts.py",
+            "src/uriel/cli.py",
+        ],
+        "verification": [
+            "tests/test_scholarly_acquisition.py",
+            "tests/test_cli.py",
+            "scripts/smoke_installed_data_ingress.py",
+        ],
+        "notes": "Disabled by default. Exercises fixed registry, structured-query, budget, policy-trace, raw-byte quarantine, receipt-last storage, and offline verification boundaries against one confined local fixture. It ships no live source adapter, DNS, socket, HTTP, browser, proxy, credential, parser, or network path and grants no readiness, Gate, publication, or Blessing authority.",
+    },
+    {
         "id": "CAP-LOCAL-AI-001",
         "name": "Built-in local-model adapter",
         "status": "PLANNED",

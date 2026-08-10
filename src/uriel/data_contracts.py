@@ -50,6 +50,14 @@ DATA_VERIFICATION_SCHEMA = "uriel.data_verification_receipt.v1"
 GENERATION_SORT_SPEC_SCHEMA = "uriel.sort_spec.v2"
 GENERATION_READINESS_SCHEMA = "uriel.data_readiness.v2"
 GENERATION_READINESS_SELECTION_SCHEMA = "uriel.data_readiness_selection.v1"
+SCHOLARLY_REGISTRY_SCHEMA = "uriel.scholarly_source_registry.v1"
+SCHOLARLY_SOURCE_SCHEMA = "uriel.scholarly_source.v1"
+SCHOLARLY_QUERY_SCHEMA = "uriel.scholarly_query.v1"
+SCHOLARLY_BUDGET_SCHEMA = "uriel.scholarly_budget.v1"
+SCHOLARLY_ADAPTER_SCHEMA = "uriel.scholarly_adapter.v1"
+SCHOLARLY_PLAN_SCHEMA = "uriel.scholarly_plan.v1"
+SCHOLARLY_QUARANTINE_SCHEMA = "uriel.scholarly_quarantine.v1"
+SCHOLARLY_RECEIPT_SCHEMA = "uriel.scholarly_receipt.v1"
 
 DATA_IMPORT_PLAN_SCHEMAS = frozenset({DATA_IMPORT_PLAN_SCHEMA_V1, DATA_IMPORT_PLAN_SCHEMA})
 
@@ -73,6 +81,14 @@ DATA_SCHEMA_FILES: Mapping[str, str] = {
     GENERATION_SORT_SPEC_SCHEMA: "uriel.sort_spec.v2.schema.json",
     GENERATION_READINESS_SCHEMA: "uriel.data_readiness.v2.schema.json",
     GENERATION_READINESS_SELECTION_SCHEMA: "uriel.data_readiness_selection.v1.schema.json",
+    SCHOLARLY_REGISTRY_SCHEMA: "uriel.scholarly_source_registry.v1.schema.json",
+    SCHOLARLY_SOURCE_SCHEMA: "uriel.scholarly_source.v1.schema.json",
+    SCHOLARLY_QUERY_SCHEMA: "uriel.scholarly_query.v1.schema.json",
+    SCHOLARLY_BUDGET_SCHEMA: "uriel.scholarly_budget.v1.schema.json",
+    SCHOLARLY_ADAPTER_SCHEMA: "uriel.scholarly_adapter.v1.schema.json",
+    SCHOLARLY_PLAN_SCHEMA: "uriel.scholarly_plan.v1.schema.json",
+    SCHOLARLY_QUARANTINE_SCHEMA: "uriel.scholarly_quarantine.v1.schema.json",
+    SCHOLARLY_RECEIPT_SCHEMA: "uriel.scholarly_receipt.v1.schema.json",
 }
 
 SUPPORTED_LOCAL_FORMATS: Mapping[str, Tuple[str, str]] = {
@@ -171,6 +187,39 @@ def _type_matches(value: Any, expected: str) -> bool:
     return False
 
 
+def _json_equal(left: Any, right: Any) -> bool:
+    """Compare JSON values without Python's bool/int equality aliasing."""
+
+    if isinstance(left, bool) or isinstance(right, bool):
+        return isinstance(left, bool) and isinstance(right, bool) and left == right
+    if left is None or right is None:
+        return left is None and right is None
+    if (
+        isinstance(left, (int, float))
+        and not isinstance(left, bool)
+        and isinstance(right, (int, float))
+        and not isinstance(right, bool)
+    ):
+        return left == right
+    if isinstance(left, str) or isinstance(right, str):
+        return isinstance(left, str) and isinstance(right, str) and left == right
+    if isinstance(left, list) or isinstance(right, list):
+        return (
+            isinstance(left, list)
+            and isinstance(right, list)
+            and len(left) == len(right)
+            and all(_json_equal(a, b) for a, b in zip(left, right))
+        )
+    if isinstance(left, Mapping) or isinstance(right, Mapping):
+        return (
+            isinstance(left, Mapping)
+            and isinstance(right, Mapping)
+            and set(left) == set(right)
+            and all(_json_equal(left[key], right[key]) for key in left)
+        )
+    return False
+
+
 def _validate_schema_node(value: Any, rule: Mapping[str, Any], pointer: str, errors: List[str]) -> None:
     expected = rule.get("type")
     if expected is not None:
@@ -179,9 +228,9 @@ def _validate_schema_node(value: Any, rule: Mapping[str, Any], pointer: str, err
             errors.append("{0}: expected {1}".format(pointer, " or ".join(str(item) for item in allowed)))
             return
 
-    if "const" in rule and value != rule["const"]:
+    if "const" in rule and not _json_equal(value, rule["const"]):
         errors.append("{0}: must equal {1!r}".format(pointer, rule["const"]))
-    if "enum" in rule and value not in rule["enum"]:
+    if "enum" in rule and not any(_json_equal(value, item) for item in rule["enum"]):
         errors.append("{0}: unsupported value {1!r}".format(pointer, value))
 
     if isinstance(value, Mapping):
@@ -402,6 +451,70 @@ def validate_data_record(record: Mapping[str, Any]) -> Dict[str, Any]:
         expected_decision = "BLOCKED" if blocked else ("FAIL" if failed else "PASS")
         if record.get("decision") != expected_decision:
             errors.append("$/decision: does not match the recomputed check counts")
+    elif schema_id == SCHOLARLY_QUERY_SCHEMA:
+        terms = record.get("terms")
+        if isinstance(terms, list):
+            for index, term in enumerate(terms):
+                if isinstance(term, str) and (
+                    not term
+                    or term != term.strip()
+                    or any(ord(character) < 32 or ord(character) == 127 for character in term)
+                ):
+                    errors.append(
+                        "$/terms/{0}: must be nonblank, already trimmed, and contain no control characters".format(index)
+                    )
+        year_from = record.get("year_from")
+        year_to = record.get("year_to")
+        if isinstance(year_from, int) and isinstance(year_to, int) and year_from > year_to:
+            errors.append("$: year_from cannot be later than year_to")
+    elif schema_id == SCHOLARLY_BUDGET_SCHEMA:
+        total_timeout = record.get("total_timeout_ms")
+        if isinstance(total_timeout, int) and not isinstance(total_timeout, bool):
+            for field in ("connect_timeout_ms", "read_timeout_ms"):
+                phase_timeout = record.get(field)
+                if (
+                    isinstance(phase_timeout, int)
+                    and not isinstance(phase_timeout, bool)
+                    and phase_timeout > total_timeout
+                ):
+                    errors.append("$/{0}: must not exceed total_timeout_ms".format(field))
+        response_ceiling = record.get("max_response_bytes")
+        quarantine_ceiling = record.get("max_quarantine_bytes")
+        if (
+            isinstance(response_ceiling, int)
+            and not isinstance(response_ceiling, bool)
+            and isinstance(quarantine_ceiling, int)
+            and not isinstance(quarantine_ceiling, bool)
+            and quarantine_ceiling > response_ceiling
+        ):
+            errors.append("$/max_quarantine_bytes: must not exceed max_response_bytes")
+    elif schema_id == SCHOLARLY_PLAN_SCHEMA:
+        request = record.get("request_descriptor")
+        if isinstance(request, Mapping):
+            request_hash = sha256_text(canonical_json(request))
+            if record.get("request_descriptor_sha256") != request_hash:
+                errors.append("$/request_descriptor_sha256: does not bind the request descriptor")
+            parameters = request.get("query_parameters", [])
+            if isinstance(parameters, list):
+                names = [row.get("name") for row in parameters if isinstance(row, Mapping)]
+                if len(names) != len(set(names)):
+                    errors.append("$/request_descriptor/query_parameters: names must be unique")
+    elif schema_id == SCHOLARLY_QUARANTINE_SCHEMA:
+        expected_path = ".uriel/acquisition/quarantine/sha256/{0}/{1}".format(
+            str(record.get("body_content_sha256", ""))[:2],
+            record.get("body_content_sha256"),
+        )
+        if record.get("managed_relative_path") != expected_path:
+            errors.append("$/managed_relative_path: must bind the quarantined body hash")
+    elif schema_id == SCHOLARLY_RECEIPT_SCHEMA:
+        trace = record.get("mock_trace")
+        if isinstance(trace, Mapping):
+            if trace.get("body_content_sha256") != record.get("body_content_sha256"):
+                errors.append("$/mock_trace/body_content_sha256: must match the receipt body hash")
+            if trace.get("body_size_bytes") != record.get("body_size_bytes"):
+                errors.append("$/mock_trace/body_size_bytes: must match the receipt body size")
+        if record.get("quarantine_complete") is not True:
+            errors.append("$/quarantine_complete: a success receipt requires complete quarantine")
 
     if errors:
         raise Refusal(

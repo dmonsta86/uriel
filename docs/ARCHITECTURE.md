@@ -30,6 +30,7 @@ TRUSTED / DETERMINISTIC
   data_contracts.py  local Evidence Ingress contracts and no-write planning
   data_ingress.py  immutable managed raw intake and receipt verification
   data_desk.py  bounded parsing, structural profiles, generations, reconciliation
+  scholarly_acquisition.py  disabled local-mock policy, quarantine, offline verify
   schema.py     structural and reference validation
   audit.py      declared-policy evaluation
   blessing.py   content-addressed package and verifier
@@ -84,6 +85,11 @@ project/
       reconciliations/<record-sha256>.json
       deltas/<delta-sha256>.jsonl
       indexes/<generation-id>.sqlite
+    acquisition/
+      records/<kind>/<record-sha256>.json
+      plans/<record-sha256>.json
+      quarantine/sha256/<prefix>/<content-sha256>
+      receipts/<record-sha256>.json
     readiness/
       sortspec-<record-sha256>.json
       receipt-<record-sha256>.json
@@ -123,6 +129,27 @@ exact measured implementation. It records observations, not a throughput,
 capacity, latency-SLA, hardware, or real-data guarantee.
 
 `.uriel/` is derived, local state and is ignored by default. Publish selected Blessing packages or audit exports deliberately; do not commit secrets or raw restricted data.
+
+## Scholarly acquisition firewall boundary
+
+ADR 0013 freezes a separate scholarly-acquisition trust boundary. The shipped
+R2.1 path is disabled by default and accepts only a fixed test-only registry,
+bounded structured query fields, an exact injected `LocalMockTransport`, and
+one regular-file fixture beneath that same project's `sources/` directory. It imports no DNS, socket, HTTP,
+browser, subprocess, proxy, credential, cookie, JavaScript, or decompression
+facility. The request is represented as validated components rather than a
+free-form URL.
+
+The mock transcript exercises host, simulated global-address pinning, status,
+header, content-type, length, compression, timeout, retry, concurrency, disk,
+and cumulative-byte policy. This proves deterministic policy behavior, not
+that a future live network worker is isolated. Response bytes are kept opaque,
+written to a content-addressed quarantine, rehashed, and referenced by a
+receipt published last. A separate verifier reopens every bound record and the
+raw bytes without invoking the transport. No acquisition record grants Data
+Readiness, Gate, publication, Blessing, or Earned Wings authority. Moving
+quarantined bytes into Data Desk remains a separate explicit Evidence Ingress
+decision.
 
 ## Planned Forge contract boundary
 

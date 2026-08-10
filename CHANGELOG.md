@@ -6,6 +6,18 @@ All notable changes to Uriel are documented here.
 
 ### Added
 
+- Eight closed, content-addressed R2.1 scholarly-acquisition contracts covering
+  fixed source registry, source policy, structured query, cumulative budget,
+  adapter boundary, plan, raw-byte quarantine, and receipt.
+- `uriel data acquire-mock` and `verify-acquisition` as an explicitly
+  acknowledged local-only firewall exercise with no live networking, no
+  free-form URL, receipt-last immutable storage, and separate offline
+  verification.
+- Adversity coverage for simulated SSRF/rebinding, redirects, authentication
+  and cookies, malformed or duplicate headers, content type/length/encoding,
+  cumulative response size, timeout, retries, concurrency, low disk,
+  indirection, interruption, binary/prompt-injection bytes, strict JSON, and
+  record/quarantine tampering.
 - Versioned R1.1 Evidence Ingress/Data Desk contracts for import planning,
   immutable raw artifacts, generations, profiles, transformations,
   reconciliation, refusals, resource budgets, and independent verification.

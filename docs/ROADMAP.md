@@ -29,6 +29,10 @@ Available now includes:
 - additive v1 compatibility contracts for a future private Forge run and
   sanitized portable export. These schemas do not implement the planned Forge
   engine, CLI, state transitions, exporter, or verifier.
+- an experimental, disabled-by-default scholarly-acquisition firewall exercised
+  only with one confined local fixture. It provides fixed registry/query/budget
+  contracts, raw-byte quarantine, receipt-last storage, and offline
+  verification, but no live network adapter.
 
 ## Active product lane: local data integrity
 
@@ -51,11 +55,26 @@ one implementation-bound 10,000-row synthetic measurement. Data Desk remains
 `EXPERIMENTAL`; broader platform, domain, usability, and adversarial evidence
 must accumulate before any maturity promotion.
 
+## Active product lane: scholarly firewall foundation
+
+R2.1 now implements and adversity-tests the no-network foundation:
+
+```text
+fixed test registry -> structured query -> bound budget and request
+-> exact local mock -> raw-byte quarantine -> offline verify
+```
+
+This lane is `EXPERIMENTAL`. It is useful for hardening the contract and
+consumer path before network code exists. Simulated SSRF, redirect, header,
+size, timeout, retry, disk, prompt-injection, and tamper checks are not a claim
+that real DNS/TLS/HTTP transport has shipped or been secured.
+
 ## Following lanes
 
-1. Safe scholarly acquisition through explicit, disabled-by-default source
-   adapters with resource, provenance, license, prompt-injection, and SSRF
-   controls.
+1. One official structured-metadata adapter, only after source terms, rate and
+   fairness policy, contact identity, license, retention, versioning, bulk
+   alternative, socket isolation, and independent threat review are explicit.
+   Live canaries must remain opt-in and tiny; CI stays local.
 2. An operational Forge closure layer for bounded milestones, blockers,
    evidence, independent verification, and resumable next moves. Its additive
    run/export contracts are frozen; runtime behavior remains planned.

@@ -101,6 +101,12 @@ from .prompts import build_prompt
 from .repair_packet import build_repair_packet, verify_repair_packet
 from .reviews import REVIEW_TASKS, import_review, list_reviews, review_template
 from .schema import validate_project
+from .scholarly_acquisition import (
+    LocalMockTransport,
+    execute_scholarly_mock,
+    plan_scholarly_mock,
+    verify_scholarly_mock,
+)
 from .seed import seed_project, write_seed_brief
 from .strict_blessing import (
     blessing_eligibility,
@@ -239,6 +245,41 @@ def parser() -> argparse.ArgumentParser:
     _root_argument(data_import)
     data_import.add_argument("--source", required=True, help="the same explicit local regular file reviewed by the plan")
     data_import.add_argument("--plan", required=True, help="project-relative raw plan or saved `--json data plan` result")
+    data_acquire_mock = data_actions.add_parser(
+        "acquire-mock",
+        help="exercise the disabled scholarly firewall with one confined local fixture",
+    )
+    _root_argument(data_acquire_mock)
+    data_acquire_mock.add_argument(
+        "--fixture",
+        required=True,
+        help="one regular file beneath project sources/ used as opaque mock response bytes",
+    )
+    data_acquire_mock.add_argument(
+        "--term",
+        action="append",
+        required=True,
+        dest="terms",
+        help="one structured search term; repeat as needed",
+    )
+    data_acquire_mock.add_argument("--year-from", type=int, default=None)
+    data_acquire_mock.add_argument("--year-to", type=int, default=None)
+    data_acquire_mock.add_argument("--max-results", type=int, default=25)
+    data_acquire_mock.add_argument(
+        "--acknowledge-local-mock",
+        action="store_true",
+        help="confirm this is a local policy exercise, not live scholarly acquisition",
+    )
+    data_verify_acquisition = data_actions.add_parser(
+        "verify-acquisition",
+        help="offline-recompute one local-mock acquisition receipt",
+    )
+    _root_argument(data_verify_acquisition)
+    data_verify_acquisition.add_argument(
+        "--receipt",
+        required=True,
+        help="project-relative scholarly local-mock receipt",
+    )
     data_verify_import = data_actions.add_parser("verify-import", help="recompute one managed import from its receipt")
     _root_argument(data_verify_import)
     data_verify_import.add_argument("--receipt", required=True, help="project-relative import receipt path")
@@ -527,6 +568,17 @@ def _print_human(command: str, result: Any, args: Optional[argparse.Namespace] =
             print("Managed artifact: {0}".format(result.get("managed_relative_path")))
             print("Receipt: {0}".format(result.get("receipt_relative_path")))
             print("Gate 0 authority: NOT GRANTED · run Data Readiness separately")
+            return
+        if args.data_action == "acquire-mock":
+            print("Scholarly firewall: {0} - LOCAL MOCK ONLY - no network".format(result.get("status")))
+            print("Quarantine: {0}".format(result.get("managed_relative_path")))
+            print("Receipt: {0}".format(result.get("receipt_relative_path")))
+            print("Raw bytes remain unparsed. Readiness, Gates, publication, and Blessing authority: NOT GRANTED")
+            return
+        if args.data_action == "verify-acquisition":
+            print("Scholarly local-mock receipt: PASS - offline bindings and quarantine verified")
+            print("SHA-256: {0}".format(result.get("body_content_sha256")))
+            print("Transport invoked: NO - authority: NOT GRANTED")
             return
         if args.data_action == "verify-import":
             print("Managed import: PASS · exact bytes and record bindings verified")
@@ -1147,6 +1199,23 @@ def dispatch(args: argparse.Namespace) -> Any:
             )
         if args.data_action == "import":
             return import_data_artifact(args.root, args.source, args.plan)
+        if args.data_action == "acquire-mock":
+            bundle = plan_scholarly_mock(
+                args.root,
+                args.terms,
+                year_from=args.year_from,
+                year_to=args.year_to,
+                max_results=args.max_results,
+                acknowledge_local_mock=args.acknowledge_local_mock,
+            )
+            transport = LocalMockTransport(
+                args.root,
+                args.fixture,
+                expected_request_sha256=bundle["plan"]["request_descriptor_sha256"],
+            )
+            return execute_scholarly_mock(args.root, bundle, transport)
+        if args.data_action == "verify-acquisition":
+            return verify_scholarly_mock(args.root, args.receipt)
         if args.data_action == "verify-import":
             return verify_data_import(args.root, args.receipt)
         if args.data_action == "inspect":

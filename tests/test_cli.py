@@ -215,6 +215,88 @@ class CliTests(unittest.TestCase):
             gate_zero = json.loads(recheck.stdout)["result"]["gates"]["gates"][0]
             self.assertEqual("PASS", gate_zero["decision"])
 
+    def test_scholarly_local_mock_cli_is_disabled_then_offline_verifiable(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary) / "project"
+            initialized = self._run(
+                "init",
+                str(root),
+                "--question",
+                "Can the scholarly firewall stay offline?",
+            )
+            self.assertEqual(0, initialized.returncode, initialized.stderr)
+            fixture = root / "sources" / "mock-response.bin"
+            fixture.write_bytes(b'{"items":[{"id":"mock-1"}]}')
+
+            refused = self._run(
+                "--json",
+                "data",
+                "acquire-mock",
+                "--root",
+                str(root),
+                "--fixture",
+                "sources/mock-response.bin",
+                "--term",
+                "replication",
+            )
+            self.assertEqual(2, refused.returncode)
+            refusal = json.loads(refused.stdout)
+            self.assertEqual("SCHOLARLY_ACQUISITION_DISABLED", refusal["error"]["code"])
+            self.assertFalse((root / ".uriel" / "acquisition").exists())
+
+            missing = self._run(
+                "--json",
+                "data",
+                "acquire-mock",
+                "--root",
+                str(root),
+                "--fixture",
+                "sources/private-missing-fixture.bin",
+                "--term",
+                "replication",
+                "--acknowledge-local-mock",
+            )
+            self.assertEqual(2, missing.returncode)
+            self.assertNotIn(str(root), missing.stdout)
+            self.assertNotIn("private-missing-fixture.bin", missing.stdout)
+
+            acquired = self._run(
+                "--json",
+                "data",
+                "acquire-mock",
+                "--root",
+                str(root),
+                "--fixture",
+                "sources/mock-response.bin",
+                "--term",
+                "replication",
+                "--term",
+                "evidence integrity",
+                "--acknowledge-local-mock",
+            )
+            self.assertEqual(0, acquired.returncode, acquired.stderr)
+            self.assertNotIn(str(fixture), acquired.stdout)
+            result = json.loads(acquired.stdout)["result"]
+            self.assertEqual("PASS_LOCAL_MOCK", result["decision"])
+            self.assertEqual(0, result["network_calls"])
+            self.assertFalse(result["parsed"])
+            self.assertFalse(result["authority_granted"])
+
+            verified = self._run(
+                "--json",
+                "data",
+                "verify-acquisition",
+                "--root",
+                str(root),
+                "--receipt",
+                result["receipt_relative_path"],
+            )
+            self.assertEqual(0, verified.returncode, verified.stderr)
+            verification = json.loads(verified.stdout)["result"]
+            self.assertTrue(verification["verified"])
+            self.assertFalse(verification["transport_invoked"])
+            self.assertFalse(verification["authority_granted"])
+
     def test_data_desk_cli_inspect_diff_reconcile_and_deep_verify(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             base = Path(temporary)

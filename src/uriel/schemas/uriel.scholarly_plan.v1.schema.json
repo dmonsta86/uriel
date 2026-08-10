@@ -1,0 +1,79 @@
+{
+  "$id": "uriel.scholarly_plan.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Uriel Scholarly Acquisition Plan v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "created_at_utc",
+    "policy_version",
+    "project_binding_sha256",
+    "registry_record_sha256",
+    "source_record_sha256",
+    "query_record_sha256",
+    "budget_record_sha256",
+    "adapter_record_sha256",
+    "source_id",
+    "request_descriptor",
+    "request_descriptor_sha256",
+    "consent",
+    "mode",
+    "network_permitted",
+    "writes_performed",
+    "planned_quarantine_schema",
+    "planned_receipt_schema",
+    "authority",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": {"const": "uriel.scholarly_plan.v1"},
+    "schema_version": {"const": 1},
+    "created_at_utc": {"type": "string", "minLength": 1, "maxLength": 64},
+    "policy_version": {"const": "uriel.scholarly_acquisition_policy.v1"},
+    "project_binding_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "registry_record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "query_record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "budget_record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "adapter_record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "source_id": {"const": "mock.scholarly-metadata.v1"},
+    "request_descriptor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "scheme", "hostname", "port", "path", "query_parameters"],
+      "properties": {
+        "method": {"const": "GET"},
+        "scheme": {"const": "https"},
+        "hostname": {"const": "mock.invalid"},
+        "port": {"const": 443},
+        "path": {"const": "/v1/works"},
+        "query_parameters": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "value"],
+            "properties": {
+              "name": {"enum": ["max_results", "terms", "year_from", "year_to"]},
+              "value": {"type": "string", "minLength": 1, "maxLength": 2048}
+            }
+          }
+        }
+      }
+    },
+    "request_descriptor_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "consent": {"const": "EXPLICIT_LOCAL_MOCK_ONLY"},
+    "mode": {"const": "DRY_RUN_LOCAL_MOCK"},
+    "network_permitted": {"const": false},
+    "writes_performed": {"const": false},
+    "planned_quarantine_schema": {"const": "uriel.scholarly_quarantine.v1"},
+    "planned_receipt_schema": {"const": "uriel.scholarly_receipt.v1"},
+    "authority": {"const": "NONE"},
+    "record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

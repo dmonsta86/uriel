@@ -60,6 +60,58 @@ def main() -> int:
         source.write_text("id,value\na,1\nb,2\n", encoding="utf-8")
 
         _run(executable, ["init", str(root), "--question", "Can installed Uriel seal exact bytes?"])
+        mock_fixture = root / "sources" / "scholarly-response.bin"
+        mock_fixture.write_bytes(b'{"items":[{"id":"installed-mock"}]}')
+        disabled_mock = _run_refusal(
+            executable,
+            [
+                "--json", "data", "acquire-mock", "--root", str(root),
+                "--fixture", "sources/scholarly-response.bin", "--term", "replication",
+            ],
+        )
+        disabled_value = json.loads(disabled_mock.stdout)
+        if (
+            disabled_mock.returncode != 2
+            or disabled_value.get("error", {}).get("code") != "SCHOLARLY_ACQUISITION_DISABLED"
+        ):
+            raise RuntimeError("installed scholarly mock was not disabled by default")
+        if (root / ".uriel" / "acquisition").exists():
+            raise RuntimeError("disabled scholarly mock created acquisition state")
+
+        acquired_mock = _run(
+            executable,
+            [
+                "--json", "data", "acquire-mock", "--root", str(root),
+                "--fixture", "sources/scholarly-response.bin",
+                "--term", "replication", "--term", "evidence integrity",
+                "--acknowledge-local-mock",
+            ],
+        )
+        acquired_value = json.loads(acquired_mock.stdout).get("result", {})
+        if (
+            acquired_value.get("decision") != "PASS_LOCAL_MOCK"
+            or acquired_value.get("network_calls") != 0
+            or acquired_value.get("parsed") is not False
+            or acquired_value.get("authority_granted") is not False
+        ):
+            raise RuntimeError("installed scholarly local mock crossed its authority boundary")
+        if str(mock_fixture) in acquired_mock.stdout:
+            raise RuntimeError("installed scholarly local mock disclosed its fixture path")
+        verified_mock = _run(
+            executable,
+            [
+                "--json", "data", "verify-acquisition", "--root", str(root),
+                "--receipt", str(acquired_value["receipt_relative_path"]),
+            ],
+        )
+        verified_mock_value = json.loads(verified_mock.stdout).get("result", {})
+        if (
+            verified_mock_value.get("verified") is not True
+            or verified_mock_value.get("transport_invoked") is not False
+            or verified_mock_value.get("authority_granted") is not False
+        ):
+            raise RuntimeError("installed scholarly local-mock verifier did not stay offline")
+
         planned = _run(
             executable,
             ["--json", "data", "plan", "--root", str(root), "--source", str(source), "--label", "smoke-records"],

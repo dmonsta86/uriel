@@ -68,6 +68,27 @@ policy, normalizer, SortSpec, or bound analysis plan invalidates the active
 receipt. Historical receipts remain preserved but cannot become authority
 without being selected by a fresh readiness check.
 
+## Scholarly acquisition firewall limitations
+
+`uriel data acquire-mock` is an experimental local policy exercise, not live
+scholarly acquisition. It is disabled until the operator supplies
+`--acknowledge-local-mock`, reads one regular-file fixture beneath the same
+project's `sources/` directory,
+and ships no DNS, socket, HTTP, browser, proxy, authentication, cookie,
+JavaScript, decompression, subprocess, or background-network implementation.
+The fixed `mock.invalid` registry has test-only provenance and makes no claim
+about external terms, licenses, availability, or completeness.
+
+The mock validates deterministic policy decisions for simulated host/address
+pinning, redirects, headers, media type, content length/encoding, byte and time
+ceilings, retries, concurrency, and storage. Those tests do not establish
+socket isolation, TLS correctness, DNS security, provider fairness, or safety
+of a future live adapter. Raw response bytes are quarantined without parsing,
+decoding, rendering, or following embedded instructions. A PASS_LOCAL_MOCK
+receipt means only that the local fixture passed this bounded policy and
+offline integrity verification. It cannot satisfy Data Readiness, any Gate,
+publication authority, a Blessing, or Earned Wings.
+
 AI-facing generation bursts are local packet builders, not inference clients.
 They require task-specific rows and columns, cap selection at 1,000 rows and
 1 MiB, and can redact values to metadata and hashes. Those ceilings limit
