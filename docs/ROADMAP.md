@@ -26,9 +26,10 @@ Available now includes:
   `main`, with immutable raw intake, structural generations, conflict-preserving
   reconciliation, and independent deep verification. It is not part of the
   historical `v1.0.0-rc2` tag.
-- additive v1 compatibility contracts for a future private Forge run and
-  sanitized portable export. These schemas do not implement the planned Forge
-  engine, CLI, state transitions, exporter, or verifier.
+- an experimental operational Forge run/state/verifier slice: immutable local
+  snapshots, frozen transitions, complete lineage and reference verification,
+  typed soft-gate deferrals, explicit staleness, and zero upstream authority.
+  The sanitized exporter and forward-path packet/scoring layer remain planned.
 - an experimental, disabled-by-default scholarly-acquisition firewall exercised
   only with one confined local fixture. It provides fixed registry/query/budget
   contracts, raw-byte quarantine, receipt-last storage, and offline
@@ -69,15 +70,31 @@ consumer path before network code exists. Simulated SSRF, redirect, header,
 size, timeout, retry, disk, prompt-injection, and tamper checks are not a claim
 that real DNS/TLS/HTTP transport has shipped or been secured.
 
+## Active product lane: deterministic Forge closure
+
+R3.2 now implements the local coordination spine:
+
+```text
+reviewed init request -> immutable DRAFT snapshot -> validated transitions
+-> exact content-addressed lineage -> independent live-reference verification
+-> COMPLETE | COMPLETE_WITH_DEFERRED_SOFT_GATES | explicit terminal state
+```
+
+This lane is `EXPERIMENTAL`. It enforces lifecycle, dependency, hash, path,
+staleness, closure, and authority-neutrality rules. A typed soft-gate deferral
+must name its owner, impact, fallback, next task, and completion condition;
+referenced hard gates cannot be deferred. Forge completion is operational
+workflow closure only—not truth, peer review, publication approval, a
+Blessing, or Earned Wings.
+
 ## Following lanes
 
 1. One official structured-metadata adapter, only after source terms, rate and
    fairness policy, contact identity, license, retention, versioning, bulk
    alternative, socket isolation, and independent threat review are explicit.
    Live canaries must remain opt-in and tiny; CI stays local.
-2. An operational Forge closure layer for bounded milestones, blockers,
-   evidence, independent verification, and resumable next moves. Its additive
-   run/export contracts are frozen; runtime behavior remains planned.
+2. Extend the operational Forge spine with evidence-bound blocker proof, Next
+   Move scoring, resumable continuation packets, and a sanitized exporter.
 3. A restrained optional presentation detail: when Gate 0 and all three gates
    are current green and the exact Blessing verifies, the record may display
    “Blessing issued — this idea has earned its wings.” This is not a fifth gate,

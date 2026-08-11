@@ -12,6 +12,7 @@ from typing import Any, Dict, Iterable, Set
 ROOT = Path(__file__).resolve().parents[1]
 RUN_SCHEMA_NAME = "uriel.forge_run.v1.schema.json"
 EXPORT_SCHEMA_NAME = "uriel.forge_sanitized_export.v1.schema.json"
+DEFERRAL_SCHEMA_NAME = "uriel.forge_deferral.v1.schema.json"
 
 STATES = [
     "DRAFT",
@@ -57,6 +58,7 @@ TRANSITIONS = {
     "COMPLETE": ["STALE", "SUPERSEDED"],
     "COMPLETE_WITH_DEFERRED_SOFT_GATES": ["STALE", "SUPERSEDED"],
     "BLOCKED": [
+        "DRAFT",
         "SCOPED",
         "AUDITED",
         "IMPLEMENTING",
@@ -151,7 +153,7 @@ def _canonical_record_sha256(record: Dict[str, Any]) -> str:
 class ForgeContractTests(unittest.TestCase):
     def test_editor_and_packaged_schemas_are_byte_identical(self) -> None:
         package_root = resources.files("uriel").joinpath("schemas")
-        for name in (RUN_SCHEMA_NAME, EXPORT_SCHEMA_NAME):
+        for name in (RUN_SCHEMA_NAME, EXPORT_SCHEMA_NAME, DEFERRAL_SCHEMA_NAME):
             editor_bytes = (ROOT / "schemas" / name).read_bytes()
             packaged_bytes = package_root.joinpath(name).read_bytes()
             self.assertEqual(editor_bytes, packaged_bytes, name)
@@ -269,6 +271,32 @@ class ForgeContractTests(unittest.TestCase):
         self.assertEqual(1024 * 1024, schema["x-uriel-max-record-bytes"])
         self.assertEqual(16 * 1024 * 1024, schema["properties"]["total_bytes"]["maximum"])
         self.assertEqual("NONE", schema["properties"]["upstream_authority_effect"]["const"])
+
+    def test_soft_gate_deferral_is_closed_complete_and_authority_neutral(self) -> None:
+        schema = _load_editor_schema(DEFERRAL_SCHEMA_NAME)
+        self.assertIs(False, schema["additionalProperties"])
+        self.assertEqual(64 * 1024, schema["x-uriel-max-record-bytes"])
+        self.assertEqual(
+            {
+                "owner",
+                "reason",
+                "impact",
+                "safe_fallback",
+                "next_task",
+                "completion_condition",
+            },
+            {
+                key
+                for key in schema["required"]
+                if key in {"owner", "reason", "impact", "safe_fallback", "next_task", "completion_condition"}
+            },
+        )
+        self.assertEqual("SOFT", schema["properties"]["gate_kind"]["const"])
+        self.assertEqual("FORGE_WORKFLOW_ONLY", schema["properties"]["authority_scope"]["const"])
+        self.assertEqual("NONE", schema["properties"]["upstream_authority_effect"]["const"])
+        for key in ("owner", "reason", "impact", "safe_fallback", "next_task", "completion_condition"):
+            self.assertEqual(r"\S", schema["properties"][key]["pattern"])
+        self.assertFalse(FORBIDDEN_AUTHORITY_FIELDS & _property_names(schema))
 
 
 if __name__ == "__main__":

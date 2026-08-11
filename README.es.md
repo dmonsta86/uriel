@@ -248,8 +248,18 @@ Uriel haya detectado un problema sin un informe ciego posteriormente adjudicado.
 python scripts/check_forge_trial.py
 ```
 
-El método Forge describe el flujo de trabajo público; el motor automático
-general de cierre de hitos sigue planificado.
+El método Forge describe el flujo de trabajo público. Su núcleo experimental
+local de ejecuciones, estados y verificación ya está disponible:
+
+```text
+uriel forge init --root PROJECT --request INIT.json
+uriel forge transition --root PROJECT --snapshot EXACT.json --to-state SCOPED --rationale "Scope reviewed"
+uriel forge verify --root PROJECT --snapshot EXACT.json
+```
+
+Escribe instantáneas privadas e inmutables y no concede autoridad superior. El
+exportador saneado y la capa general de prueba de bloqueos/Próximo Movimiento
+siguen planificados.
 
 Consulta [`docs/FORGE_TRIALS.md`](docs/FORGE_TRIALS.md) y [`benchmarks/forge_trials/synthetic-001/`](benchmarks/forge_trials/synthetic-001/).
 

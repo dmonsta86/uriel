@@ -246,8 +246,17 @@ immutable generations
 python scripts/check_forge_trial.py
 ```
 
-تصف Forge Method سير العمل العام؛ أما محرك الإغلاق التلقائي العام للمراحل
-فلا يزال مخططًا له.
+تصف Forge Method سير العمل العام. وأصبحت نواتها التجريبية المحلية للتشغيل
+والحالات والتحقق متاحة الآن:
+
+```text
+uriel forge init --root PROJECT --request INIT.json
+uriel forge transition --root PROJECT --snapshot EXACT.json --to-state SCOPED --rationale "Scope reviewed"
+uriel forge verify --root PROJECT --snapshot EXACT.json
+```
+
+تكتب لقطات خاصة غير قابلة للتغيير ولا تمنح أي صلاحية للأنظمة الأعلى. ولا يزال
+المُصدِّر المنقّح ومسار إثبات العوائق/الخطوة التالية العام مخططًا لهما.
 
 راجع [`docs/FORGE_TRIALS.md`](docs/FORGE_TRIALS.md) و [`benchmarks/forge_trials/synthetic-001/`](benchmarks/forge_trials/synthetic-001/).
 

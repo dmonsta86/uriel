@@ -248,8 +248,18 @@ problema sem um relatório cego posteriormente adjudicado.
 python scripts/check_forge_trial.py
 ```
 
-O método Forge descreve o fluxo público; o mecanismo geral de fechamento
-automático de marcos permanece planejado.
+O método Forge descreve o fluxo público. Seu núcleo experimental local de
+execuções, estados e verificação já está disponível:
+
+```text
+uriel forge init --root PROJECT --request INIT.json
+uriel forge transition --root PROJECT --snapshot EXACT.json --to-state SCOPED --rationale "Scope reviewed"
+uriel forge verify --root PROJECT --snapshot EXACT.json
+```
+
+Ele grava instantâneos privados e imutáveis e não concede autoridade superior.
+O exportador saneado e a camada geral de prova de bloqueios/Próximo Movimento
+permanecem planejados.
 
 Consulte [`docs/FORGE_TRIALS.md`](docs/FORGE_TRIALS.md) e [`benchmarks/forge_trials/synthetic-001/`](benchmarks/forge_trials/synthetic-001/).
 

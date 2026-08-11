@@ -288,8 +288,18 @@ that Uriel detected an issue unless a blind report is supplied and adjudicated.
 python scripts/check_forge_trial.py
 ```
 
-The public Forge Method describes the workflow. A general automatic
-milestone-closure engine remains planned.
+The public Forge Method describes the workflow. Its experimental local
+run/state/verifier spine is now available:
+
+```text
+uriel forge init --root PROJECT --request INIT.json
+uriel forge transition --root PROJECT --snapshot EXACT.json --to-state SCOPED --rationale "Scope reviewed"
+uriel forge verify --root PROJECT --snapshot EXACT.json
+```
+
+It writes immutable private snapshots and grants no upstream authority. The
+sanitized exporter and generalized blocker-proof/Next-Move layer remain
+planned.
 
 See [`docs/FORGE_TRIALS.md`](docs/FORGE_TRIALS.md) and [`benchmarks/forge_trials/synthetic-001/`](benchmarks/forge_trials/synthetic-001/).
 

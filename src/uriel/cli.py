@@ -83,6 +83,13 @@ from .gap_register import (
     render_gap_register_csv,
     write_gap_register,
 )
+from .forge_engine import (
+    STATES as FORGE_STATES,
+    forge_init,
+    forge_transition,
+    load_forge_request,
+    verify_forge_run,
+)
 from .independent_verify import compute_binding_digest, independent_verify, latest_verifier
 from .intake import intake_idea
 from .lens import lens_names, lens_prompt, write_lens
@@ -326,6 +333,25 @@ def parser() -> argparse.ArgumentParser:
     data_propose.add_argument("--dataset", required=True)
     data_propose.add_argument("--sample", type=int, default=20, help="sample rows used for detection evidence")
 
+    forge = commands.add_parser("forge", help="immutable local Forge runs, transitions, and verification")
+    forge_actions = forge.add_subparsers(dest="forge_action", required=True)
+    forge_init_cmd = forge_actions.add_parser("init", help="create one immutable DRAFT run from a reviewed JSON request")
+    _root_argument(forge_init_cmd)
+    forge_init_cmd.add_argument("--request", required=True, help="project-relative uriel.forge_init_request.v1 JSON")
+    forge_transition_cmd = forge_actions.add_parser("transition", help="request one validated immutable state transition")
+    _root_argument(forge_transition_cmd)
+    forge_transition_cmd.add_argument("--snapshot", required=True, help="exact project-relative content-addressed parent snapshot")
+    forge_transition_cmd.add_argument("--to-state", required=True, choices=FORGE_STATES)
+    forge_transition_cmd.add_argument("--rationale", required=True, help="bounded reason for this exact transition")
+    forge_transition_cmd.add_argument(
+        "--request",
+        default="",
+        help="optional project-relative uriel.forge_transition_request.v1 JSON",
+    )
+    forge_verify_cmd = forge_actions.add_parser("verify", help="independently re-read one exact snapshot, lineage, and live refs")
+    _root_argument(forge_verify_cmd)
+    forge_verify_cmd.add_argument("--snapshot", required=True, help="exact project-relative content-addressed snapshot")
+
     intake = commands.add_parser("intake", help="preserve a rough question and create or update a project")
     intake.add_argument("question")
     _root_argument(intake)
@@ -553,6 +579,19 @@ def _envelope(status: str, command: str, result: Optional[Any] = None, error: Op
 
 
 def _print_human(command: str, result: Any, args: Optional[argparse.Namespace] = None) -> None:
+    if command == "forge" and isinstance(result, Mapping):
+        action = args.forge_action
+        if action == "init":
+            print("Forge run: {0} · DRAFT · immutable local snapshot".format(result.get("status")))
+        elif action == "transition":
+            print("Forge transition: {0} · state {1}".format(result.get("status"), result.get("state")))
+        else:
+            print("Forge verification: PASS · record, lineage, and bindings checked")
+        print("Run: {0} · revision {1}".format(result.get("run_id"), result.get("revision")))
+        print("Snapshot: {0}".format(result.get("snapshot_relative_path")))
+        print("Record SHA-256: {0}".format(result.get("record_sha256")))
+        print("Upstream authority: NONE · network/model/subprocess calls: 0/0/0")
+        return
     if command == "data" and isinstance(result, Mapping):
         if args.data_action == "plan":
             plan = result.get("plan", {})
@@ -1246,6 +1285,25 @@ def dispatch(args: argparse.Namespace) -> Any:
             return verify_data_record_file(args.root, args.record)
         if args.data_action == "propose-sort":
             return propose_sort_spec_plan(args.root, args.dataset, sample=args.sample)
+    if command == "forge":
+        if args.forge_action == "init":
+            request = load_forge_request(args.root, args.request, initial=True)
+            return forge_init(args.root, request)
+        if args.forge_action == "transition":
+            request = (
+                load_forge_request(args.root, args.request, initial=False)
+                if args.request
+                else None
+            )
+            return forge_transition(
+                args.root,
+                args.snapshot,
+                args.to_state,
+                args.rationale,
+                request,
+            )
+        if args.forge_action == "verify":
+            return verify_forge_run(args.root, args.snapshot)
     if command == "validate":
         return validate_project(args.root)
     if command == "add-evidence":

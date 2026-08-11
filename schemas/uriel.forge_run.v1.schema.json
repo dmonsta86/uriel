@@ -74,6 +74,7 @@
       "SUPERSEDED"
     ],
     "BLOCKED": [
+      "DRAFT",
       "SCOPED",
       "AUDITED",
       "IMPLEMENTING",
@@ -342,6 +343,7 @@
           "type": "string",
           "enum": [
             "BASELINE",
+            "RESUME",
             "SCOPE",
             "AUDIT",
             "IMPLEMENTATION",

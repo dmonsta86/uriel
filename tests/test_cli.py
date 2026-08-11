@@ -297,6 +297,101 @@ class CliTests(unittest.TestCase):
             self.assertFalse(verification["transport_invoked"])
             self.assertFalse(verification["authority_granted"])
 
+    def test_forge_cli_seals_transitions_verifies_and_refuses_tamper(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary) / "project"
+            initialized = self._run(
+                "init",
+                str(root),
+                "--question",
+                "Can Forge preserve one exact local lineage?",
+            )
+            self.assertEqual(0, initialized.returncode, initialized.stderr)
+            request = root / "artifacts" / "forge-init.json"
+            request.parent.mkdir(parents=True, exist_ok=True)
+            request.write_text(
+                json.dumps(
+                    {
+                        "schema": "uriel.forge_init_request.v1",
+                        "mission": "Exercise the installed-style Forge CLI.",
+                        "non_goals": ["Do not grant upstream authority."],
+                        "requirements": [
+                            {
+                                "requirement_id": "req-cli",
+                                "statement": "The CLI uses the deterministic facade.",
+                                "acceptance_condition": "The exact child lineage independently verifies.",
+                                "source_kind": "OPERATOR",
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            created = self._run(
+                "--json",
+                "forge",
+                "init",
+                "--root",
+                str(root),
+                "--request",
+                "artifacts/forge-init.json",
+            )
+            self.assertEqual(0, created.returncode, created.stderr)
+            first = json.loads(created.stdout)["result"]
+            self.assertEqual("DRAFT", first["state"])
+            self.assertFalse(first["authority_granted"])
+
+            moved = self._run(
+                "--json",
+                "forge",
+                "transition",
+                "--root",
+                str(root),
+                "--snapshot",
+                first["snapshot_relative_path"],
+                "--to-state",
+                "SCOPED",
+                "--rationale",
+                "The mission and exact boundary were reviewed.",
+            )
+            self.assertEqual(0, moved.returncode, moved.stderr)
+            second = json.loads(moved.stdout)["result"]
+            self.assertEqual("SCOPED", second["state"])
+            self.assertEqual(2, second["lineage_records"])
+
+            checked = self._run(
+                "--json",
+                "forge",
+                "verify",
+                "--root",
+                str(root),
+                "--snapshot",
+                second["snapshot_relative_path"],
+            )
+            self.assertEqual(0, checked.returncode, checked.stderr)
+            verified = json.loads(checked.stdout)["result"]
+            self.assertTrue(verified["verified"])
+            self.assertTrue(verified["bindings_current"])
+            self.assertEqual((0, 0, 0), (verified["network_calls"], verified["ai_calls"], verified["subprocess_calls"]))
+
+            snapshot = root / second["snapshot_relative_path"]
+            record = json.loads(snapshot.read_text(encoding="utf-8"))
+            record["mission"] = "tampered"
+            snapshot.write_text(json.dumps(record), encoding="utf-8")
+            refused = self._run(
+                "--json",
+                "forge",
+                "verify",
+                "--root",
+                str(root),
+                "--snapshot",
+                second["snapshot_relative_path"],
+            )
+            self.assertEqual(2, refused.returncode)
+            error = json.loads(refused.stdout)["error"]
+            self.assertEqual("FORGE_RECORD_DIGEST_MISMATCH", error["code"])
+            self.assertNotIn(str(root), refused.stdout)
+
     def test_data_desk_cli_inspect_diff_reconcile_and_deep_verify(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             base = Path(temporary)

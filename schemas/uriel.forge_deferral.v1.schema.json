@@ -1,0 +1,103 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.forge_deferral.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Uriel Forge soft-gate deferral",
+  "type": "object",
+  "additionalProperties": false,
+  "x-uriel-record-digest": {
+    "algorithm": "sha256",
+    "canonicalization": "uriel.canonical_json.v1",
+    "excluded_fields": [
+      "record_sha256"
+    ]
+  },
+  "x-uriel-max-record-bytes": 65536,
+  "required": [
+    "schema",
+    "schema_version",
+    "deferral_id",
+    "work_package_id",
+    "gate_kind",
+    "owner",
+    "reason",
+    "impact",
+    "safe_fallback",
+    "next_task",
+    "completion_condition",
+    "created_at_utc",
+    "authority_scope",
+    "upstream_authority_effect",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "uriel.forge_deferral.v1"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "deferral_id": {
+      "type": "string",
+      "pattern": "^forge-deferral-[0-9a-f]{16}$"
+    },
+    "work_package_id": {
+      "type": "string",
+      "pattern": "^wp-[0-9a-f]{16}$"
+    },
+    "gate_kind": {
+      "const": "SOFT"
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "\\S"
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "\\S"
+    },
+    "impact": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "\\S"
+    },
+    "safe_fallback": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "\\S"
+    },
+    "next_task": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "\\S"
+    },
+    "completion_condition": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096,
+      "pattern": "\\S"
+    },
+    "created_at_utc": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 64,
+      "format": "date-time"
+    },
+    "authority_scope": {
+      "const": "FORGE_WORKFLOW_ONLY"
+    },
+    "upstream_authority_effect": {
+      "const": "NONE"
+    },
+    "record_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

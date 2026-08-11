@@ -243,7 +243,15 @@ immutable generations
 python scripts/check_forge_trial.py
 ```
 
-公开的 Forge Method 描述工作流程；通用自动里程碑闭环引擎仍在规划中。
+公开的 Forge Method 描述工作流程。其实验性的本地运行、状态与验证主干现已可用：
+
+```text
+uriel forge init --root PROJECT --request INIT.json
+uriel forge transition --root PROJECT --snapshot EXACT.json --to-state SCOPED --rationale "Scope reviewed"
+uriel forge verify --root PROJECT --snapshot EXACT.json
+```
+
+它写入不可变的私有快照，不授予任何上游权限。净化导出器及通用的阻塞证明／下一步层仍在规划中。
 
 请参阅 [`docs/FORGE_TRIALS.md`](docs/FORGE_TRIALS.md) 与 [`benchmarks/forge_trials/synthetic-001/`](benchmarks/forge_trials/synthetic-001/)。
 

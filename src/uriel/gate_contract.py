@@ -380,6 +380,15 @@ def _validated_gate_record(
     return dict(record)
 
 
+def validate_gate_decision(
+    record: Mapping[str, Any],
+    *,
+    path: Optional[Path] = None,
+) -> Dict[str, Any]:
+    """Recompute and validate a gate decision without trusting its PASS label."""
+    return _validated_gate_record(record, path=path)
+
+
 def write_gate_decision(root: Union[str, Path], record: Mapping[str, Any]) -> Path:
     """Immutable content-addressed gate decision under .uriel/gates/."""
     root_path = canonical_root(root)

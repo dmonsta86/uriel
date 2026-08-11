@@ -65,7 +65,16 @@ All notable changes to Uriel are documented here.
 - Additive, closed v1 contracts for immutable private Forge run snapshots and
   bounded sanitized-export manifests, with frozen lifecycle compatibility,
   authority-neutral references, path/privacy exclusions, and contract tests.
-  No operational Forge engine or CLI is claimed.
+- Experimental `uriel forge init`, `transition`, and `verify` commands with
+  immutable content-addressed private revisions, exact transition and BLOCKED
+  resume rules, per-parent fork prevention, complete lineage/component digest
+  checks, confined streamed references, dependency and closure validation,
+  explicit staleness, stable refusals, and no network/model/subprocess or
+  upstream authority path.
+- A closed, 64-KiB `uriel.forge_deferral.v1` contract requiring the owner,
+  reason, impact, safe fallback, next task, and completion condition for one
+  exact deferred soft-gate work package; referenced hard gates remain
+  non-deferrable.
 - Distinct Core-8 README visuals with the English gold reference preserved and
   seven localized explainer posters published at 3840 × 2160 after independent
   100-point visual review. Generated visible text remains explicitly

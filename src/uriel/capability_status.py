@@ -153,12 +153,20 @@ CAPABILITIES: List[Dict[str, Any]] = [
     {
         "id": "CAP-FORGE-001",
         "name": "Operational Forge Method closure engine",
-        "status": "PLANNED",
-        "entry_point": "n/a (planned capability)",
-        "platforms": ["Windows (planned)", "macOS (planned)", "Linux (planned)"],
-        "modules": [],
-        "verification": [],
-        "notes": "The Forge of Uriel is the public identity. Additive v1 run and sanitized-export contracts are frozen and compatibility-tested, but no Forge persistence, transition, verification, export, or automatic milestone-closure engine is implemented.",
+        "status": "EXPERIMENTAL",
+        "entry_point": "uriel forge init / transition / verify",
+        "platforms": ["Windows", "macOS", "Linux"],
+        "modules": [
+            "src/uriel/forge_engine.py",
+            "src/uriel/cli.py",
+        ],
+        "verification": [
+            "tests/test_forge_contract.py",
+            "tests/test_forge_engine.py",
+            "tests/test_cli.py",
+            "scripts/smoke_installed_forge.py",
+        ],
+        "notes": "Local-only immutable run snapshots, frozen transitions, content-addressed lineage, bounded strict JSON, reference and dependency verification, explicit staleness, and zero upstream authority are implemented. The sanitized exporter, forward-path scorer/packets, automatic broad milestone closure, GUI, and AI execution remain unimplemented.",
     },
     {
         "id": "CAP-SCHOLARLY-001",

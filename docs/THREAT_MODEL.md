@@ -37,6 +37,10 @@
 17. **Acquisition boundary confusion:** a hostile host, address, redirect,
     header, compressed body, oversized response, prompt-like payload, or stale
     record is treated as trusted evidence or is allowed to expand authority.
+18. **Forge closure forgery:** a caller skips lifecycle stages, forks one
+    parent, rewrites a snapshot, cycles dependencies, aliases a reference,
+    labels a hard gate as deferred, or treats workflow completion as research
+    authority.
 
 ## Implemented controls
 
@@ -95,6 +99,18 @@
   concurrency, disk, and cumulative-byte checks fail closed. Raw bytes remain
   opaque in content-addressed quarantine, receipt publication is last, and a
   separate offline verifier rehashes all records and bytes.
+- Forge snapshots are private, create-only, and content addressed, with no
+  mutable latest selector. One deterministic facade enforces the frozen state
+  map, exact BLOCKED resume, terminal states, crash-released per-parent
+  operating-system file locking,
+  append-only references, scoped work-package immutability, status movement,
+  dependency acyclicity, canonical component/record hashes, and full parent
+  lineage. Bounded stable-descriptor reads reject duplicate/deep/non-finite
+  JSON, unsafe paths, links/reparse points, file aliases, stale bytes, and
+  project substitution. Referenced hard gates must remain PASS for closure;
+  soft deferral requires a closed hash-bound owner/reason/impact/fallback
+  record for the exact work package. Forge always grants zero upstream
+  authority and imports no network, model, or subprocess facility.
 
 ## Explicit non-controls
 
@@ -116,6 +132,16 @@ not prove a future live fetcher safe. It performs no real DNS or connection,
 does not review provider terms or licenses, does not parse metadata, and cannot
 protect against an unrelated process launched outside this module. No live
 source adapter is shipped.
+
+Forge content addressing is tamper evidence, not a signature, trusted
+timestamp, filesystem snapshot, mandatory OS write protection, or defense
+against an administrator who rewrites every project file and every history
+copy. Its 1 GiB reference-verification budget limits one operation but can
+still be expensive on slow storage. Forge checks declared structure and bytes;
+it cannot establish that a mission, requirement, owner, deferral rationale,
+evidence interpretation, or completion judgment is substantively correct.
+The sanitized exporter, blocker-proof/Next-Move path, and continuation packets
+remain unimplemented.
 
 The optional `uriel assist` command does start an operator-selected external
 process and may therefore cause provider transport. Its temporary working

@@ -245,8 +245,17 @@ immutable generations
 python scripts/check_forge_trial.py
 ```
 
-सार्वजनिक Forge Method कार्यप्रवाह बताता है; सामान्य स्वचालित माइलस्टोन-क्लोज़र
-इंजन अभी नियोजित है।
+सार्वजनिक Forge Method कार्यप्रवाह बताता है। इसका प्रयोगात्मक स्थानीय
+रन/स्टेट/वेरिफ़ायर आधार अब उपलब्ध है:
+
+```text
+uriel forge init --root PROJECT --request INIT.json
+uriel forge transition --root PROJECT --snapshot EXACT.json --to-state SCOPED --rationale "Scope reviewed"
+uriel forge verify --root PROJECT --snapshot EXACT.json
+```
+
+यह अपरिवर्तनीय निजी स्नैपशॉट लिखता है और किसी ऊपरी प्राधिकरण को प्रदान नहीं
+करता। स्वच्छ निर्यातक और सामान्य ब्लॉकर-प्रूफ़/Next-Move परत अभी नियोजित हैं।
 
 देखें [`docs/FORGE_TRIALS.md`](docs/FORGE_TRIALS.md) और [`benchmarks/forge_trials/synthetic-001/`](benchmarks/forge_trials/synthetic-001/)।
 

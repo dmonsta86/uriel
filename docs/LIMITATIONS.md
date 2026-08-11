@@ -89,6 +89,38 @@ receipt means only that the local fixture passed this bounded policy and
 offline integrity verification. It cannot satisfy Data Readiness, any Gate,
 publication authority, a Blessing, or Earned Wings.
 
+## Operational Forge limitations
+
+`uriel forge init`, `transition`, and `verify` are an experimental local
+workflow engine, not a scientific truth or project-management oracle. A Forge
+completion means the exact declared requirements, work-package states,
+references, closure indexes, and lineage satisfy the deterministic Forge
+contract. It does not mean the requirements were wise, the evidence was
+interpreted correctly, an omitted artifact does not exist, the research gates
+passed unless their exact records were referenced, the work is publishable, or
+a Blessing/Earned Wings state is eligible.
+
+Snapshots are strict JSON capped at 4 MiB and a lineage check stops above 4,096
+revisions. Typed JSON references are capped at 16 MiB; one verification refuses
+more than 1 GiB of declared reference bytes. Those are safety ceilings, not
+capacity or speed claims. References are streamed and rehashed from confined
+regular files, so a large allowed set can still consume local disk time. The
+engine makes no network, model, or subprocess call and reports zero upstream
+authority, but it is not an OS sandbox or immutable filesystem.
+
+Changed live bytes invalidate non-stale snapshots. `STALE` and `SUPERSEDED`
+preserve a structurally valid historical lineage while honestly reporting
+non-current bindings; they do not restore the old bytes. Soft-gate completion
+requires a typed digest-bound record with owner, reason, impact, safe fallback,
+next task, and completion condition for the exact work package. Uriel verifies
+that record's structure and bytes, not whether the named owner will act or the
+rationale is justified. Hard referenced research gates cannot be deferred.
+
+There is no sanitized Forge exporter, mutable current-run selector,
+blocker-proof/Next-Move scorer, continuation packet, GUI, or automatic AI
+worker. Raw `.uriel/forge/` snapshots may contain private project references
+and must not be published directly.
+
 AI-facing generation bursts are local packet builders, not inference clients.
 They require task-specific rows and columns, cap selection at 1,000 rows and
 1 MiB, and can redact values to metadata and hashes. Those ceilings limit

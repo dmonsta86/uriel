@@ -249,8 +249,18 @@ détecté un problème sans rapport aveugle ensuite évalué.
 python scripts/check_forge_trial.py
 ```
 
-La méthode Forge décrit le flux public ; le moteur général de clôture
-automatique des jalons reste planifié.
+La méthode Forge décrit le flux public. Son noyau local expérimental de cycles,
+d'états et de vérification est maintenant disponible :
+
+```text
+uriel forge init --root PROJECT --request INIT.json
+uriel forge transition --root PROJECT --snapshot EXACT.json --to-state SCOPED --rationale "Scope reviewed"
+uriel forge verify --root PROJECT --snapshot EXACT.json
+```
+
+Il écrit des instantanés privés immuables et n'accorde aucune autorité en amont.
+L'exporteur assaini et la couche générale de preuve de blocage/prochaine action
+restent planifiés.
 
 Consultez [`docs/FORGE_TRIALS.md`](docs/FORGE_TRIALS.md) et [`benchmarks/forge_trials/synthetic-001/`](benchmarks/forge_trials/synthetic-001/).
 

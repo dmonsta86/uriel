@@ -437,6 +437,15 @@ def execute(args: argparse.Namespace, root: Path, report: Path) -> int:
             checked(
                 [
                     str(python),
+                    "scripts/smoke_installed_forge.py",
+                    "--executable",
+                    str(executable),
+                ],
+                env=clean_environment,
+            )
+            checked(
+                [
+                    str(python),
                     "scripts/smoke_installed_ai_handoff.py",
                     "--executable",
                     str(executable),

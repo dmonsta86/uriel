@@ -109,12 +109,56 @@ evidence/
 SHA256SUMS.txt
 ```
 
+## Experimental local engine
+
+The current `main` line implements the deterministic run/state/verifier spine.
+Create a project-relative initialization request such as:
+
+```json
+{
+  "schema": "uriel.forge_init_request.v1",
+  "mission": "Close one exact bounded milestone.",
+  "non_goals": ["Do not infer research or publication authority."],
+  "requirements": [
+    {
+      "requirement_id": "req-example",
+      "statement": "Every declared output is hash bound.",
+      "acceptance_condition": "The exact snapshot and references independently verify.",
+      "source_kind": "OPERATOR"
+    }
+  ]
+}
+```
+
+Then use only the exact content-addressed path returned by each command:
+
+```text
+uriel forge init --root PROJECT --request artifacts/forge-init.json
+uriel forge transition --root PROJECT --snapshot .uriel/forge/runs/forge-.../000000-....json --to-state SCOPED --rationale "Scope reviewed"
+uriel forge verify --root PROJECT --snapshot .uriel/forge/runs/forge-.../000001-....json
+```
+
+An initialization request may also contain `references` and `work_packages`.
+Reference descriptors declare `ref_id`, `role`, `record_schema`, project-relative
+`path`, `media_type`, `record_id`, and `disclosure`; Uriel opens the file and
+computes size and SHA-256 itself. A transition request uses schema
+`uriel.forge_transition_request.v1` and may append `references`, supply the
+complete `work_packages` projection, identify `closure_ref_ids`, and provide a
+`result_summary`. Objects are closed: unknown fields are refused.
+
+Private snapshots remain under ignored `.uriel/forge/` state. There is no
+mutable latest pointer. Forge imports no network, model, or subprocess facility
+and cannot pass Data Readiness, a research Gate, publication authority, a
+Blessing, or Earned Wings. See [ADR 0014](adr/0014-forge-engine.md) for exact
+transition, resource, staleness, and verifier rules.
+
 ## Relationship to the Blessing
 
 A completed, independently checked Forge bundle records a milestone-closure
-decision for an exact bound version. The current Uriel package documents this
-method and supplies several underlying records, but it does not yet implement a
-general automatic Forge closure engine.
+decision for an exact bound version. The experimental local engine now writes
+and verifies the immutable coordination lineage. It does not yet implement the
+sanitized exporter, generalized blocker-proof/Next-Move scorer, continuation
+packets, or an automatic semantic judge.
 
 The experimental Blessing records that an exact research artifact passed
 Uriel's configured research-integrity predicates. It is not independent

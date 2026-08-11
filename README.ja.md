@@ -248,8 +248,18 @@ immutable generations
 python scripts/check_forge_trial.py
 ```
 
-公開 Forge Method はワークフローを説明します。汎用の自動マイル
-ストーン完了エンジンは、引き続き計画段階です。
+公開 Forge Method はワークフローを説明します。実験的なローカルの
+run／state／verifier 基盤は現在利用できます。
+
+```text
+uriel forge init --root PROJECT --request INIT.json
+uriel forge transition --root PROJECT --snapshot EXACT.json --to-state SCOPED --rationale "Scope reviewed"
+uriel forge verify --root PROJECT --snapshot EXACT.json
+```
+
+不変の非公開スナップショットを書き込み、上流の権限は一切付与しません。
+サニタイズ済みエクスポーターと汎用の blocker-proof／Next-Move 層は
+引き続き計画段階です。
 
 [`docs/FORGE_TRIALS.md`](docs/FORGE_TRIALS.md) および [`benchmarks/forge_trials/synthetic-001/`](benchmarks/forge_trials/synthetic-001/) を参照してください。
 

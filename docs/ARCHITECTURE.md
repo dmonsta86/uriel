@@ -31,6 +31,7 @@ TRUSTED / DETERMINISTIC
   data_ingress.py  immutable managed raw intake and receipt verification
   data_desk.py  bounded parsing, structural profiles, generations, reconciliation
   scholarly_acquisition.py  disabled local-mock policy, quarantine, offline verify
+  forge_engine.py  immutable workflow snapshots, transitions, lineage and ref verification
   schema.py     structural and reference validation
   audit.py      declared-policy evaluation
   blessing.py   content-addressed package and verifier
@@ -94,6 +95,9 @@ project/
       sortspec-<record-sha256>.json
       receipt-<record-sha256>.json
       CURRENT.json
+    forge/
+      runs/<run-id>/
+        <revision>-<record-sha256>.json
     index/files.sqlite
 ```
 
@@ -151,27 +155,35 @@ Readiness, Gate, publication, Blessing, or Earned Wings authority. Moving
 quarantined bytes into Data Desk remains a separate explicit Evidence Ingress
 decision.
 
-## Planned Forge contract boundary
+## Operational Forge boundary
 
 ADR 0012 freezes additive `uriel.forge_run.v1` and
-`uriel.forge_sanitized_export.v1` contracts before any Forge engine exists. A
+`uriel.forge_sanitized_export.v1` contracts. ADR 0014 implements the
+experimental local run/state/verifier slice. A
 private run is one immutable coordination snapshot with nested mission,
 requirements, lineage event, work packages, indexes, and component hashes.
 Existing project, generation, readiness, audit, gate, gap, decision,
 publication, packet, verifier, and Blessing records remain authoritative and
 appear only as typed, hashed references.
 
-A future private layout may use `.uriel/forge/runs/<run-id>/`, which remains
-ignored local state. Raw snapshots are never portable exports. The separate
+Snapshots use `.uriel/forge/runs/<run-id>/<revision>-<record-sha256>.json`,
+which remains ignored local state. There is no mutable latest pointer; each
+command consumes and returns an exact content-addressed path. The verifier
+rechecks strict bounded JSON, canonical record/component hashes, project
+binding, complete lineage and transitions, BLOCKED resume stage, reference
+bytes and paths, work-package graph/status relations, closure indexes, and
+typed soft-gate deferrals. Changed bindings require an explicit `STALE` or
+`SUPERSEDED` terminal record. Raw snapshots are never portable exports. The separate
 sanitized-export manifest permits aliases and bounded file metadata only and
 requires identities, private paths, credentials, private URLs, restricted
 evidence bodies, and unrelated project names to be removed before links and
 hashes are rechecked. Neither contract grants gate, publication, verifier, or
 Blessing authority.
 
-The contracts do not provide a Forge CLI, state writer, persistence engine,
-verifier, exporter, model adapter, or network path. Those remain planned and
-must use the same deterministic core and confinement rules if implemented.
+The shipped `uriel forge init`, `transition`, and `verify` commands provide no
+exporter, blocker-proof/Next-Move engine, continuation packet, model adapter,
+GUI, or network path. Those later surfaces must use the same deterministic core
+and confinement rules if implemented.
 
 ## Determinism and content binding
 
