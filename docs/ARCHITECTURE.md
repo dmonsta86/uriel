@@ -159,7 +159,8 @@ decision.
 
 ADR 0012 freezes additive `uriel.forge_run.v1` and
 `uriel.forge_sanitized_export.v1` contracts. ADR 0014 implements the
-experimental local run/state/verifier slice. A
+experimental local run/state/verifier slice; ADR 0015 adds the bounded
+forward-path and sanitized-projection slice. A
 private run is one immutable coordination snapshot with nested mission,
 requirements, lineage event, work packages, indexes, and component hashes.
 Existing project, generation, readiness, audit, gate, gap, decision,
@@ -173,17 +174,29 @@ rechecks strict bounded JSON, canonical record/component hashes, project
 binding, complete lineage and transitions, BLOCKED resume stage, reference
 bytes and paths, work-package graph/status relations, closure indexes, and
 typed soft-gate deferrals. Changed bindings require an explicit `STALE` or
-`SUPERSEDED` terminal record. Raw snapshots are never portable exports. The separate
-sanitized-export manifest permits aliases and bounded file metadata only and
-requires identities, private paths, credentials, private URLs, restricted
-evidence bodies, and unrelated project names to be removed before links and
-hashes are rechecked. Neither contract grants gate, publication, verifier, or
-Blessing authority.
+`SUPERSEDED` terminal record.
 
-The shipped `uriel forge init`, `transition`, and `verify` commands provide no
-exporter, blocker-proof/Next-Move engine, continuation packet, model adapter,
-GUI, or network path. Those later surfaces must use the same deterministic core
-and confinement rules if implemented.
+`uriel forge continue` loads that exact verified source without transitioning
+it. A closed request binds operator-reported established/refuted/unknown/useful
+statements, seven blocker challenge cells, one to three candidate actions, and
+required inputs. The engine derives only structural blocker status and a
+transparent qualitative ordinal over 12 disclosed dimensions. Continuations
+are create-only content-addressed records beneath
+`.uriel/forge/continuations/`; there is no mutable latest pointer. The
+independent verifier recomputes the request binding, blocker result, score,
+stable ties, next prompt, packet digest, source lineage, and live references.
+
+Raw snapshots and continuations are never portable exports. `uriel forge export`
+creates a fresh two-file directory containing a closed manifest and a
+generated public summary. Only salted aliases and structural metadata for
+non-private references are projected; no source file or evidence body is
+copied. `verify-export` requires the exact source, regenerates the expected
+summary, rechecks hashes and aliases, and rejects links, extra files, and
+membership changes. Neither path grants gate, publication, verifier, Blessing,
+or Earned Wings authority.
+
+The Forge surfaces still provide no model adapter, GUI, network path,
+automatic semantic judge, or automatic broad milestone closure.
 
 ## Determinism and content binding
 

@@ -154,19 +154,21 @@ CAPABILITIES: List[Dict[str, Any]] = [
         "id": "CAP-FORGE-001",
         "name": "Operational Forge Method closure engine",
         "status": "EXPERIMENTAL",
-        "entry_point": "uriel forge init / transition / verify",
+        "entry_point": "uriel forge init / transition / verify / continue / verify-continuation / export / verify-export",
         "platforms": ["Windows", "macOS", "Linux"],
         "modules": [
             "src/uriel/forge_engine.py",
+            "src/uriel/forge_forward.py",
             "src/uriel/cli.py",
         ],
         "verification": [
             "tests/test_forge_contract.py",
             "tests/test_forge_engine.py",
+            "tests/test_forge_forward.py",
             "tests/test_cli.py",
             "scripts/smoke_installed_forge.py",
         ],
-        "notes": "Local-only immutable run snapshots, frozen transitions, content-addressed lineage, bounded strict JSON, reference and dependency verification, explicit staleness, and zero upstream authority are implemented. The sanitized exporter, forward-path scorer/packets, automatic broad milestone closure, GUI, and AI execution remain unimplemented.",
+        "notes": "Local-only immutable run snapshots, frozen transitions, content-addressed lineage, bounded strict JSON, reference and dependency verification, seven-cell blocker proof, transparent 12-dimension ordinal Next Move ranking, immutable continuation packets, exact safe next prompts, metadata-only sanitized exports, explicit staleness, and zero upstream authority are implemented. Automatic broad milestone closure, GUI, and AI execution remain unimplemented.",
     },
     {
         "id": "CAP-SCHOLARLY-001",

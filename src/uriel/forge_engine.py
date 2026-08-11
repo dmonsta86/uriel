@@ -1313,6 +1313,31 @@ def verify_forge_run(
     }
 
 
+def load_verified_forge_snapshot(
+    root: Union[str, Path],
+    snapshot_relative_path: str,
+) -> Dict[str, Any]:
+    """Return a defensive copy of one fully verified exact Forge snapshot.
+
+    This is the application-facing read facade for extensions such as the
+    forward-path engine.  It performs the same structural, lineage, and live
+    reference checks as :func:`verify_forge_run` before exposing record data;
+    callers never need to bypass the Forge verifier or discover a mutable
+    "latest" record.
+    """
+
+    paths = paths_for(root)
+    portable = _safe_relative(snapshot_relative_path)
+    leaf = _load_snapshot(paths.root, portable)
+    _lineage(paths.root, portable, leaf)
+    _verify_references(
+        paths.root,
+        leaf,
+        allow_stale=leaf["state"] in {"STALE", "SUPERSEDED"},
+    )
+    return copy.deepcopy(leaf)
+
+
 def forge_init(
     root: Union[str, Path],
     request: Mapping[str, Any],
@@ -1632,5 +1657,6 @@ __all__ = [
     "forge_init",
     "forge_transition",
     "load_forge_request",
+    "load_verified_forge_snapshot",
     "verify_forge_run",
 ]

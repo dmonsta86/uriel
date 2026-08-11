@@ -6,6 +6,7 @@
 - binding between claims, evidence, execution, and audit results;
 - confidentiality decisions at the optional-AI boundary;
 - credibility of a `URIEL-BLESSING-v1` package;
+- confidentiality and exact resumption of Forge continuations and exports;
 - the author’s ability to revisit and repair refused work.
 
 ## Adversaries and failure modes
@@ -41,6 +42,15 @@
     parent, rewrites a snapshot, cycles dependencies, aliases a reference,
     labels a hard gate as deferred, or treats workflow completion as research
     authority.
+19. **Blocker laundering:** missing local search, alternatives, narrowing,
+    substitute evidence, scaffolding, or challenge work is mislabeled as an
+    external dependency.
+20. **Opaque priority authority:** a hidden score or confident narrative is
+    mistaken for probability, truth, or permission to bypass ethics, law,
+    consent, privacy, resources, or existing authority.
+21. **Sanitized-export leakage:** a projector copies raw evidence, private
+    paths or IDs, human text, credentials, URLs, links, or undeclared files;
+    or a valid export is paired with a substituted source.
 
 ## Implemented controls
 
@@ -111,6 +121,20 @@
   soft deferral requires a closed hash-bound owner/reason/impact/fallback
   record for the exact work package. Forge always grants zero upstream
   authority and imports no network, model, or subprocess facility.
+- Forge continuations require an exact verified incomplete source, all seven
+  blocker cells, bound evidence-reference IDs, and one to three bounded moves.
+  Missing work remains `BLOCKER_NOT_EVIDENCED`; an external blocker requires
+  six evidenced `NO_PATH` challenges and a rank-one external-input action. All
+  12 qualitative ratings, ordinal arithmetic, guardrails, and stable tie rules
+  are stored and independently recomputed. Packets are create-only,
+  content-addressed, have no latest pointer, and embed a fixed prompt that
+  treats packet content as untrusted data and authorizes no automatic tools.
+- Sanitized export is construction-based: a fresh staged directory contains
+  only a generated closed summary and manifest. Private references, every
+  source path and body, project/run/ref/record IDs, and free-form research text
+  are never projected. Salted aliases, closed membership, no-link checks,
+  source regeneration, record/entry hashes, and 512-reference/16 MiB ceilings
+  are independently verified against the exact source snapshot.
 
 ## Explicit non-controls
 
@@ -140,8 +164,12 @@ copy. Its 1 GiB reference-verification budget limits one operation but can
 still be expensive on slow storage. Forge checks declared structure and bytes;
 it cannot establish that a mission, requirement, owner, deferral rationale,
 evidence interpretation, or completion judgment is substantively correct.
-The sanitized exporter, blocker-proof/Next-Move path, and continuation packets
-remain unimplemented.
+The forward-path engine likewise cannot establish that operator prose or
+qualitative ratings are substantively correct. Sanitized output is a metadata
+minimizer, not an automatic declassification oracle: hashes, counts, roles,
+state, and revision can still be sensitive and require human review before
+publication. The exporter does not sanitize an arbitrary user-authored file;
+it emits only its own closed generated records.
 
 The optional `uriel assist` command does start an operator-selected external
 process and may therefore cause provider transport. Its temporary working

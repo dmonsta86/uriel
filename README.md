@@ -63,6 +63,11 @@ Report honestly.
 
 The Forge of Uriel **1.0.0-rc2** is a public release candidate of an open-source, offline-first research development and hardening toolkit.
 
+Canonical `main` also carries an experimental Forge workflow for exact local
+run history, evidence-bound continuation packets, transparent Next Move
+ranking, and metadata-only sanitized exports. These additions are newer than
+the historical `v1.0.0-rc2` tag.
+
 See the [public roadmap](docs/ROADMAP.md) for current capabilities and the
 next evidence-gated product lanes.
 
@@ -129,6 +134,31 @@ A failed check should not end with a vague rejection.
 Uriel records what remains useful, identifies the smallest honest repair,
 selects the strongest next move, prepares what can be prepared safely, and
 states the exact condition for recheck.
+
+### Give an honest verdict somewhere useful to go
+
+Weighing an idea is only half the job. After the evidence has been tested,
+Uriel can preserve what was established, what was refuted, what remains
+unknown, and what is still useful in an immutable continuation packet.
+
+Before calling something externally blocked, it requires a seven-part check:
+confirm the requirement, search the declared boundary, test a safe alternative,
+try a narrower scope, look for substitute evidence, complete any safe scaffold,
+and challenge the claim that no path remains. Missing work stays missing; it
+cannot be promoted into somebody else's blocker.
+
+Uriel then ranks one preferred Next Move and at most two alternatives across
+12 visible dimensions: information gain, rival discrimination, falsification
+value, evidence quality, dependency unlocking, risk, cost, time, user burden,
+reversibility, reproducibility, and the chance of reaching an honest outcome.
+The score is an ordinal planning aid--not a probability, truth score, or hidden
+AI judgment.
+
+The result includes the exact completion condition, any input that only a
+person or outside system can provide, work already completed safely, and a
+bounded next prompt that treats packet text as untrusted data. Uriel does not
+silently call an AI, open the network, launch a subprocess, move the run, or
+grant research authority.
 
 ---
 
@@ -199,6 +229,31 @@ columns. They are capped at 1,000 rows and 1 MiB, support redaction, and carry
 no gate, publication, finding, or Blessing authority. Every packet declares
 advisory read-only operation: network, shell, packet writes, and project writes
 are denied; requested output is capped at 128 KiB and 15 minutes.
+
+---
+
+<!-- URIEL:SECTION:forge-forward:START -->
+## Continue an incomplete Forge run
+
+The experimental Forge commands operate on exact content-addressed paths--never
+on a mutable "latest" run:
+
+```text
+uriel forge continue --root ../my-study --snapshot <EXACT_SNAPSHOT> --request artifacts/forge-forward.json
+uriel forge verify-continuation --root ../my-study --packet <EXACT_CONTINUATION>
+uriel forge export --root ../my-study --snapshot <EXACT_SNAPSHOT> --destination exports/review-copy
+uriel forge verify-export --root ../my-study --manifest exports/review-copy/manifest.json --snapshot <EXACT_SNAPSHOT>
+```
+
+Continuation packets remain private under ignored `.uriel/forge/` state.
+Exports are fresh directories containing generated structural metadata and
+aliases only. They do not copy evidence bodies, project/run IDs, private paths,
+credentials, private URLs, or unrelated names. Every verifier re-reads the
+exact source, recomputes hashes and rankings, rejects extra files or links, and
+reports zero Gate, publication, verifier, Blessing, or Earned Wings authority.
+
+See the [Forge Method](docs/FORGE_METHOD.md) for the closed request shape,
+scoring rule, blocker derivation, and refusal boundaries.
 
 ---
 

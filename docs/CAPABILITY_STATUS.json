@@ -1,7 +1,7 @@
 {
   "schema": "uriel.capability_inventory.v1",
   "source": "src/uriel/capability_status.py",
-  "source_fingerprint": "588f3957345aaadfb10e448a0c74933fa5e1c8a159a1669e7bdec73fb4b44ca0",
+  "source_fingerprint": "b106691c4b3828185cb9ea6221886e881ec97ca5061eb62724ad4acc35fa14db",
   "capabilities": [
     {
       "id": "CAP-CORE-001",
@@ -203,7 +203,7 @@
       "id": "CAP-FORGE-001",
       "name": "Operational Forge Method closure engine",
       "status": "EXPERIMENTAL",
-      "entry_point": "uriel forge init / transition / verify",
+      "entry_point": "uriel forge init / transition / verify / continue / verify-continuation / export / verify-export",
       "platforms": [
         "Windows",
         "macOS",
@@ -211,15 +211,17 @@
       ],
       "modules": [
         "src/uriel/forge_engine.py",
+        "src/uriel/forge_forward.py",
         "src/uriel/cli.py"
       ],
       "verification": [
         "tests/test_forge_contract.py",
         "tests/test_forge_engine.py",
+        "tests/test_forge_forward.py",
         "tests/test_cli.py",
         "scripts/smoke_installed_forge.py"
       ],
-      "notes": "Local-only immutable run snapshots, frozen transitions, content-addressed lineage, bounded strict JSON, reference and dependency verification, explicit staleness, and zero upstream authority are implemented. The sanitized exporter, forward-path scorer/packets, automatic broad milestone closure, GUI, and AI execution remain unimplemented."
+      "notes": "Local-only immutable run snapshots, frozen transitions, content-addressed lineage, bounded strict JSON, reference and dependency verification, seven-cell blocker proof, transparent 12-dimension ordinal Next Move ranking, immutable continuation packets, exact safe next prompts, metadata-only sanitized exports, explicit staleness, and zero upstream authority are implemented. Automatic broad milestone closure, GUI, and AI execution remain unimplemented."
     },
     {
       "id": "CAP-SCHOLARLY-001",

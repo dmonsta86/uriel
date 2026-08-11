@@ -116,6 +116,147 @@ def main() -> int:
         if verification.get("verified") is not True or verification.get("bindings_current") is not True:
             raise RuntimeError("installed Forge independent verification did not pass")
 
+        checks = []
+        for check_id in (
+            "VERIFY_REQUIREMENT",
+            "SEARCH_DECLARED_BOUNDARY",
+            "TEST_SAFE_ALTERNATIVE",
+            "TEST_NARROWER_SCOPE",
+            "TEST_SUBSTITUTE_EVIDENCE",
+            "COMPLETE_SAFE_SCAFFOLD",
+            "NO_PATH_CHALLENGE",
+        ):
+            outcome = (
+                "REQUIREMENT_CONFIRMED"
+                if check_id == "VERIFY_REQUIREMENT"
+                else "PATH_FOUND"
+                if check_id == "SEARCH_DECLARED_BOUNDARY"
+                else "NO_PATH"
+            )
+            checks.append(
+                {
+                    "check_id": check_id,
+                    "outcome": outcome,
+                    "evidence_ref_ids": ["ref-project-manifest"],
+                    "finding": "Installed smoke finding for " + check_id + ".",
+                }
+            )
+        dimensions = (
+            "information_gain",
+            "rival_discrimination",
+            "falsification_value",
+            "evidence_quality",
+            "dependency_unlocking",
+            "risk",
+            "cost",
+            "time",
+            "user_burden",
+            "reversibility",
+            "reproducibility",
+            "honest_outcome_potential",
+        )
+        forward_path = root / "artifacts" / "forge-forward.json"
+        forward_path.write_text(
+            json.dumps(
+                {
+                    "schema": "uriel.forge_forward_request.v1",
+                    "operator_assessment": {
+                        "established": ["The installed exact source verifies."],
+                        "refuted": ["A mutable latest pointer is unnecessary."],
+                        "unknown": ["The research outcome remains unknown."],
+                        "remains_useful": ["The evidence-bound next move remains useful."],
+                    },
+                    "subject_requirement_ids": ["req-installed"],
+                    "blocker_checks": checks,
+                    "candidate_moves": [
+                        {
+                            "move_id": "move-installed",
+                            "kind": "LOCAL_CHECK",
+                            "action": "Exercise the installed continuation facade.",
+                            "completion_condition": "The exact continuation independently verifies.",
+                            "required_input_ids": [],
+                            "addresses_check_ids": ["SEARCH_DECLARED_BOUNDARY"],
+                            "ratings": {
+                                name: "LOW" if name in {"risk", "cost", "time", "user_burden"} else "HIGH"
+                                for name in dimensions
+                            },
+                            "guardrails": {
+                                "ethics_respected": True,
+                                "law_respected": True,
+                                "consent_respected": True,
+                                "privacy_respected": True,
+                                "resource_limits_respected": True,
+                                "authority_not_bypassed": True,
+                            },
+                        }
+                    ],
+                    "safe_work_completed": ["Verified the installed source lineage."],
+                    "required_inputs": [],
+                }
+            ),
+            encoding="utf-8",
+        )
+        continued = _run(
+            executable,
+            [
+                "--json",
+                "forge",
+                "continue",
+                "--root",
+                str(root),
+                "--snapshot",
+                str(child["snapshot_relative_path"]),
+                "--request",
+                "artifacts/forge-forward.json",
+            ],
+        )
+        continuation = json.loads(continued.stdout).get("result", {})
+        if continuation.get("blocker_status") != "PATH_AVAILABLE" or continuation.get("verified") is not True:
+            raise RuntimeError("installed Forge continuation did not derive and verify")
+        _run(
+            executable,
+            [
+                "--json",
+                "forge",
+                "verify-continuation",
+                "--root",
+                str(root),
+                "--packet",
+                str(continuation["continuation_relative_path"]),
+            ],
+        )
+        exported = _run(
+            executable,
+            [
+                "--json",
+                "forge",
+                "export",
+                "--root",
+                str(root),
+                "--snapshot",
+                str(child["snapshot_relative_path"]),
+                "--destination",
+                "artifacts/forge-export",
+            ],
+        )
+        export = json.loads(exported.stdout).get("result", {})
+        if export.get("verified") is not True or export.get("body_exported") is not False:
+            raise RuntimeError("installed Forge sanitized export crossed its body boundary")
+        _run(
+            executable,
+            [
+                "--json",
+                "forge",
+                "verify-export",
+                "--root",
+                str(root),
+                "--manifest",
+                str(export["manifest_relative_path"]),
+                "--snapshot",
+                str(child["snapshot_relative_path"]),
+            ],
+        )
+
         snapshot = root / str(child["snapshot_relative_path"])
         forged = json.loads(snapshot.read_text(encoding="utf-8"))
         forged["mission"] = "tampered"

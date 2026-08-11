@@ -90,6 +90,13 @@ from .forge_engine import (
     load_forge_request,
     verify_forge_run,
 )
+from .forge_forward import (
+    forge_continue,
+    forge_export,
+    load_forward_request,
+    verify_forge_continuation,
+    verify_forge_export,
+)
 from .independent_verify import compute_binding_digest, independent_verify, latest_verifier
 from .intake import intake_idea
 from .lens import lens_names, lens_prompt, write_lens
@@ -351,6 +358,33 @@ def parser() -> argparse.ArgumentParser:
     forge_verify_cmd = forge_actions.add_parser("verify", help="independently re-read one exact snapshot, lineage, and live refs")
     _root_argument(forge_verify_cmd)
     forge_verify_cmd.add_argument("--snapshot", required=True, help="exact project-relative content-addressed snapshot")
+    forge_continue_cmd = forge_actions.add_parser(
+        "continue",
+        help="seal one evidence-bound continuation and transparent Next Move ranking",
+    )
+    _root_argument(forge_continue_cmd)
+    forge_continue_cmd.add_argument("--snapshot", required=True, help="exact incomplete Forge snapshot")
+    forge_continue_cmd.add_argument("--request", required=True, help="project-relative uriel.forge_forward_request.v1 JSON")
+    forge_verify_continuation_cmd = forge_actions.add_parser(
+        "verify-continuation",
+        help="verify one exact continuation and its live source run",
+    )
+    _root_argument(forge_verify_continuation_cmd)
+    forge_verify_continuation_cmd.add_argument("--packet", required=True, help="exact content-addressed continuation packet")
+    forge_export_cmd = forge_actions.add_parser(
+        "export",
+        help="create a fresh generated metadata-only sanitized export",
+    )
+    _root_argument(forge_export_cmd)
+    forge_export_cmd.add_argument("--snapshot", required=True, help="exact Forge snapshot to project")
+    forge_export_cmd.add_argument("--destination", required=True, help="fresh project-relative export directory")
+    forge_verify_export_cmd = forge_actions.add_parser(
+        "verify-export",
+        help="verify closed export membership, hashes, sanitation, and exact source",
+    )
+    _root_argument(forge_verify_export_cmd)
+    forge_verify_export_cmd.add_argument("--manifest", required=True, help="exact project-relative sanitized manifest")
+    forge_verify_export_cmd.add_argument("--snapshot", required=True, help="exact source Forge snapshot")
 
     intake = commands.add_parser("intake", help="preserve a rough question and create or update a project")
     intake.add_argument("question")
@@ -581,6 +615,29 @@ def _envelope(status: str, command: str, result: Optional[Any] = None, error: Op
 def _print_human(command: str, result: Any, args: Optional[argparse.Namespace] = None) -> None:
     if command == "forge" and isinstance(result, Mapping):
         action = args.forge_action
+        if action == "continue":
+            print("Forge continuation: {0} - blocker status {1}".format(result.get("status"), result.get("blocker_status")))
+            print("Preferred Next Move: {0}".format(result.get("preferred_move_id")))
+            print("Packet: {0}".format(result.get("continuation_relative_path")))
+            print("Record SHA-256: {0}".format(result.get("record_sha256")))
+            print("Upstream authority: NONE - network/model/subprocess calls: 0/0/0")
+            return
+        if action == "verify-continuation":
+            print("Forge continuation verification: PASS - packet, derivation, source, and bindings checked")
+            print("Packet: {0}".format(result.get("continuation_relative_path")))
+            print("Record SHA-256: {0}".format(result.get("record_sha256")))
+            print("Upstream authority: NONE - network/model/subprocess calls: 0/0/0")
+            return
+        if action == "export":
+            print("Forge sanitized export: EXPORTED - generated metadata only - evidence bodies 0")
+            print("Manifest: {0}".format(result.get("manifest_relative_path")))
+            print("Upstream authority: NONE - network/model/subprocess calls: 0/0/0")
+            return
+        if action == "verify-export":
+            print("Forge sanitized export verification: PASS - membership, hashes, sanitation, and source checked")
+            print("Manifest: {0}".format(result.get("manifest_relative_path")))
+            print("Upstream authority: NONE - network/model/subprocess calls: 0/0/0")
+            return
         if action == "init":
             print("Forge run: {0} · DRAFT · immutable local snapshot".format(result.get("status")))
         elif action == "transition":
@@ -1304,6 +1361,15 @@ def dispatch(args: argparse.Namespace) -> Any:
             )
         if args.forge_action == "verify":
             return verify_forge_run(args.root, args.snapshot)
+        if args.forge_action == "continue":
+            request = load_forward_request(args.root, args.request)
+            return forge_continue(args.root, args.snapshot, request)
+        if args.forge_action == "verify-continuation":
+            return verify_forge_continuation(args.root, args.packet)
+        if args.forge_action == "export":
+            return forge_export(args.root, args.snapshot, args.destination)
+        if args.forge_action == "verify-export":
+            return verify_forge_export(args.root, args.manifest, args.snapshot)
     if command == "validate":
         return validate_project(args.root)
     if command == "add-evidence":

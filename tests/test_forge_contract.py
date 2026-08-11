@@ -13,6 +13,8 @@ ROOT = Path(__file__).resolve().parents[1]
 RUN_SCHEMA_NAME = "uriel.forge_run.v1.schema.json"
 EXPORT_SCHEMA_NAME = "uriel.forge_sanitized_export.v1.schema.json"
 DEFERRAL_SCHEMA_NAME = "uriel.forge_deferral.v1.schema.json"
+CONTINUATION_SCHEMA_NAME = "uriel.forge_continuation.v1.schema.json"
+PUBLIC_SUMMARY_SCHEMA_NAME = "uriel.forge_public_summary.v1.schema.json"
 
 STATES = [
     "DRAFT",
@@ -153,7 +155,13 @@ def _canonical_record_sha256(record: Dict[str, Any]) -> str:
 class ForgeContractTests(unittest.TestCase):
     def test_editor_and_packaged_schemas_are_byte_identical(self) -> None:
         package_root = resources.files("uriel").joinpath("schemas")
-        for name in (RUN_SCHEMA_NAME, EXPORT_SCHEMA_NAME, DEFERRAL_SCHEMA_NAME):
+        for name in (
+            RUN_SCHEMA_NAME,
+            EXPORT_SCHEMA_NAME,
+            DEFERRAL_SCHEMA_NAME,
+            CONTINUATION_SCHEMA_NAME,
+            PUBLIC_SUMMARY_SCHEMA_NAME,
+        ):
             editor_bytes = (ROOT / "schemas" / name).read_bytes()
             packaged_bytes = package_root.joinpath(name).read_bytes()
             self.assertEqual(editor_bytes, packaged_bytes, name)
@@ -270,6 +278,49 @@ class ForgeContractTests(unittest.TestCase):
         self.assertEqual(512, schema["properties"]["entries"]["maxItems"])
         self.assertEqual(1024 * 1024, schema["x-uriel-max-record-bytes"])
         self.assertEqual(16 * 1024 * 1024, schema["properties"]["total_bytes"]["maximum"])
+        self.assertEqual("NONE", schema["properties"]["upstream_authority_effect"]["const"])
+
+    def test_continuation_contract_freezes_blocker_proof_and_transparent_ranking(self) -> None:
+        schema = _load_editor_schema(CONTINUATION_SCHEMA_NAME)
+        for contract in _object_contracts(schema):
+            self.assertIs(False, contract.get("additionalProperties"), contract)
+        self.assertEqual(1024 * 1024, schema["x-uriel-max-record-bytes"])
+        self.assertEqual(7, schema["properties"]["blocker_proof"]["properties"]["checks"]["minItems"])
+        self.assertEqual(7, schema["properties"]["blocker_proof"]["properties"]["checks"]["maxItems"])
+        ratings = schema["$defs"]["ratings"]
+        self.assertEqual(12, len(ratings["required"]))
+        self.assertEqual(set(ratings["required"]), set(ratings["properties"]))
+        next_moves = schema["properties"]["next_moves"]["properties"]
+        self.assertEqual("TRANSPARENT_QUALITATIVE_ORDINAL_V1", next_moves["method"]["const"])
+        self.assertEqual(
+            "ORDINAL_PRIORITY_ONLY_NOT_PROBABILITY_OR_TRUTH",
+            next_moves["score_interpretation"]["const"],
+        )
+        self.assertEqual(3, next_moves["ranked"]["maxItems"])
+        self.assertEqual("FORGE_CONTINUATION_ONLY", schema["properties"]["authority_scope"]["const"])
+        self.assertEqual("NONE", schema["properties"]["upstream_authority_effect"]["const"])
+        self.assertFalse(FORBIDDEN_AUTHORITY_FIELDS & _property_names(schema))
+
+    def test_public_summary_contract_is_metadata_only_and_excludes_private_disclosure(self) -> None:
+        schema = _load_editor_schema(PUBLIC_SUMMARY_SCHEMA_NAME)
+        for contract in _object_contracts(schema):
+            self.assertIs(False, contract.get("additionalProperties"), contract)
+        self.assertEqual("METADATA_ONLY", schema["x-uriel-body-policy"])
+        self.assertIs(False, schema["properties"]["body_exported"]["const"])
+        reference = schema["properties"]["references"]["items"]["properties"]
+        self.assertEqual(["SANITIZABLE_METADATA", "PUBLIC"], reference["disclosure"]["enum"])
+        self.assertEqual("METADATA_ONLY", reference["body_policy"]["const"])
+        self.assertEqual("boolean", reference["typed_record"]["type"])
+        self.assertEqual(
+            ["JSON", "TEXT", "TABLE", "IMAGE", "AUDIO", "VIDEO", "BINARY", "OTHER"],
+            reference["media_family"]["enum"],
+        )
+        self.assertNotIn("record_schema", reference)
+        self.assertNotIn("media_type", reference)
+        self.assertNotIn("path", reference)
+        self.assertNotIn("ref_id", reference)
+        self.assertNotIn("project_id", schema["properties"])
+        self.assertNotIn("run_id", schema["properties"])
         self.assertEqual("NONE", schema["properties"]["upstream_authority_effect"]["const"])
 
     def test_soft_gate_deferral_is_closed_complete_and_authority_neutral(self) -> None:

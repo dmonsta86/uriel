@@ -91,8 +91,9 @@ publication authority, a Blessing, or Earned Wings.
 
 ## Operational Forge limitations
 
-`uriel forge init`, `transition`, and `verify` are an experimental local
-workflow engine, not a scientific truth or project-management oracle. A Forge
+`uriel forge init`, `transition`, `verify`, `continue`, and the export/verifier
+commands are an experimental local workflow engine, not a scientific truth or
+project-management oracle. A Forge
 completion means the exact declared requirements, work-package states,
 references, closure indexes, and lineage satisfy the deterministic Forge
 contract. It does not mean the requirements were wise, the evidence was
@@ -116,10 +117,26 @@ next task, and completion condition for the exact work package. Uriel verifies
 that record's structure and bytes, not whether the named owner will act or the
 rationale is justified. Hard referenced research gates cannot be deferred.
 
-There is no sanitized Forge exporter, mutable current-run selector,
-blocker-proof/Next-Move scorer, continuation packet, GUI, or automatic AI
-worker. Raw `.uriel/forge/` snapshots may contain private project references
+The forward-path engine verifies closed structure, source bindings, blocker
+derivation, and qualitative ordinal arithmetic. It does not verify that the
+operator's assessment, challenge findings, ratings, or proposed action are
+substantively correct. The ordinal is not probability, calibrated confidence,
+evidence strength, or a truth score. A required true guardrail prevents the
+scorer from trading ethics, law, consent, privacy, resources, or authority for
+priority.
+
+The sanitized exporter is a construction-based metadata minimizer, not an
+arbitrary-file sanitizer or declassification oracle. It omits private
+references and all evidence bodies, paths, IDs, and free-form research text,
+but exported hashes, counts, roles, state, and revision may still be sensitive.
+Review the generated two-file directory before publishing it. Raw
+`.uriel/forge/` snapshots and continuations may contain private text and paths
 and must not be published directly.
+
+There is no mutable current-run selector, automatic semantic judge, automatic
+AI worker, broad automatic milestone closure, or GUI. Continuation and export
+commands invoke no model, network, browser, or subprocess and therefore cannot
+consume provider tokens or trigger external usage by themselves.
 
 AI-facing generation bursts are local packet builders, not inference clients.
 They require task-specific rows and columns, cap selection at 1,000 rows and

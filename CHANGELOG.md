@@ -75,6 +75,19 @@ All notable changes to Uriel are documented here.
   reason, impact, safe fallback, next task, and completion condition for one
   exact deferred soft-gate work package; referenced hard gates remain
   non-deferrable.
+- Experimental `uriel forge continue` and `verify-continuation` commands with
+  exact incomplete-source binding, seven-cell blocker proof, one preferred
+  Next Move plus at most two alternatives, a disclosed 12-dimension
+  qualitative ordinal and stable tie rule, mandatory guardrails, immutable
+  content-addressed packets, and a fixed non-executing next prompt.
+- Operational `uriel forge export` and `verify-export` commands that build a
+  fresh two-file metadata-only projection, replace source identities with
+  salted aliases, omit private references and every evidence body/path/free
+  text field, reject links or extra members, and regenerate all bytes against
+  the exact source under 512-reference and 16-MiB ceilings.
+- Closed mirrored `uriel.forge_continuation.v1` and
+  `uriel.forge_public_summary.v1` contracts, focused adversity tests, CLI
+  integration, and fresh-wheel smoke coverage for the complete R3.3 path.
 - Distinct Core-8 README visuals with the English gold reference preserved and
   seven localized explainer posters published at 3840 × 2160 after independent
   100-point visual review. Generated visible text remains explicitly

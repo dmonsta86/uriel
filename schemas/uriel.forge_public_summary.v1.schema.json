@@ -1,0 +1,206 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.forge_public_summary.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Uriel Forge generated public summary",
+  "type": "object",
+  "additionalProperties": false,
+  "x-uriel-record-digest": {
+    "algorithm": "sha256",
+    "canonicalization": "uriel.canonical_json.v1",
+    "excluded_fields": [
+      "record_sha256"
+    ]
+  },
+  "x-uriel-body-policy": "METADATA_ONLY",
+  "x-uriel-max-record-bytes": 16777216,
+  "$defs": {
+    "hex64": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "SCOPED",
+        "AUDITED",
+        "IMPLEMENTING",
+        "VERIFYING",
+        "READY_FOR_INDEPENDENT_VERIFY",
+        "COMPLETE",
+        "COMPLETE_WITH_DEFERRED_SOFT_GATES",
+        "BLOCKED",
+        "FAILED",
+        "STALE",
+        "SUPERSEDED",
+        "ABORTED"
+      ]
+    }
+  },
+  "required": [
+    "schema",
+    "schema_version",
+    "export_id",
+    "created_at_utc",
+    "source_run_sha256",
+    "project_alias",
+    "run_alias",
+    "source_state",
+    "source_revision",
+    "requirement_count",
+    "work_package_count",
+    "exported_reference_count",
+    "references",
+    "body_exported",
+    "authority_scope",
+    "upstream_authority_effect",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "uriel.forge_public_summary.v1"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "export_id": {
+      "type": "string",
+      "pattern": "^forge-export-[0-9a-f]{16}$"
+    },
+    "created_at_utc": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 64,
+      "format": "date-time"
+    },
+    "source_run_sha256": {
+      "$ref": "#/$defs/hex64"
+    },
+    "project_alias": {
+      "type": "string",
+      "pattern": "^project-[0-9a-f]{16}$"
+    },
+    "run_alias": {
+      "type": "string",
+      "pattern": "^run-[0-9a-f]{16}$"
+    },
+    "source_state": {
+      "$ref": "#/$defs/state"
+    },
+    "source_revision": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9999999
+    },
+    "requirement_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 256
+    },
+    "work_package_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 256
+    },
+    "exported_reference_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 512
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_ref_alias",
+          "role",
+          "typed_record",
+          "media_family",
+          "size_bytes",
+          "content_sha256",
+          "disclosure",
+          "body_policy"
+        ],
+        "properties": {
+          "source_ref_alias": {
+            "type": "string",
+            "pattern": "^source-[0-9a-f]{16}$"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "PROJECT_MANIFEST",
+              "SOURCE_MANIFEST",
+              "WORKBENCH_GENERATION",
+              "DATA_GENERATION",
+              "READINESS_SELECTION",
+              "AUDIT",
+              "GATE_DECISION",
+              "GAP_REGISTER",
+              "TEST_PLAN",
+              "TEST_RECEIPT",
+              "DECISION",
+              "DEFERRAL",
+              "PUBLICATION_AUTHORITY",
+              "PACKET_MANIFEST",
+              "VERIFIER_RECEIPT",
+              "BLESSING",
+              "EVIDENCE",
+              "RESULT",
+              "RESUME_PACKET"
+            ]
+          },
+          "typed_record": {
+            "type": "boolean"
+          },
+          "media_family": {
+            "type": "string",
+            "enum": [
+              "JSON",
+              "TEXT",
+              "TABLE",
+              "IMAGE",
+              "AUDIO",
+              "VIDEO",
+              "BINARY",
+              "OTHER"
+            ]
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1073741824
+          },
+          "content_sha256": {
+            "$ref": "#/$defs/hex64"
+          },
+          "disclosure": {
+            "type": "string",
+            "enum": [
+              "SANITIZABLE_METADATA",
+              "PUBLIC"
+            ]
+          },
+          "body_policy": {
+            "const": "METADATA_ONLY"
+          }
+        }
+      },
+      "maxItems": 512,
+      "uniqueItems": true
+    },
+    "body_exported": {
+      "const": false
+    },
+    "authority_scope": {
+      "const": "PORTABLE_SANITIZED_EXPORT_ONLY"
+    },
+    "upstream_authority_effect": {
+      "const": "NONE"
+    },
+    "record_sha256": {
+      "$ref": "#/$defs/hex64"
+    }
+  }
+}

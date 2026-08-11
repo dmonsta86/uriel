@@ -28,8 +28,9 @@ Available now includes:
   historical `v1.0.0-rc2` tag.
 - an experimental operational Forge run/state/verifier slice: immutable local
   snapshots, frozen transitions, complete lineage and reference verification,
-  typed soft-gate deferrals, explicit staleness, and zero upstream authority.
-  The sanitized exporter and forward-path packet/scoring layer remain planned.
+  typed soft-gate deferrals, explicit staleness, seven-cell blocker proof,
+  transparent Next Move ranking, immutable continuation packets, metadata-only
+  sanitized exports, and zero upstream authority.
 - an experimental, disabled-by-default scholarly-acquisition firewall exercised
   only with one confined local fixture. It provides fixed registry/query/budget
   contracts, raw-byte quarantine, receipt-last storage, and offline
@@ -87,19 +88,33 @@ referenced hard gates cannot be deferred. Forge completion is operational
 workflow closure only—not truth, peer review, publication approval, a
 Blessing, or Earned Wings.
 
+R3.3 now implements the forward path for an incomplete exact run:
+
+```text
+verified source -> seven-cell blocker challenge
+-> transparent 12-dimension ordinal -> one preferred Next Move
+-> immutable continuation + exact safe prompt
+-> optional generated metadata-only export -> independent source recheck
+```
+
+Missing challenge work cannot become an external blocker. Ratings and stable
+ties are recorded rather than hidden, and the ordinal is not a probability or
+truth score. Continuation and export commands invoke no AI, network, browser,
+or subprocess; raw evidence and private references are not copied into the
+export. Metadata may still be sensitive and requires human review before
+publication.
+
 ## Following lanes
 
 1. One official structured-metadata adapter, only after source terms, rate and
    fairness policy, contact identity, license, retention, versioning, bulk
    alternative, socket isolation, and independent threat review are explicit.
    Live canaries must remain opt-in and tiny; CI stays local.
-2. Extend the operational Forge spine with evidence-bound blocker proof, Next
-   Move scoring, resumable continuation packets, and a sanitized exporter.
-3. A restrained optional presentation detail: when Gate 0 and all three gates
+2. A restrained optional presentation detail: when Gate 0 and all three gates
    are current green and the exact Blessing verifies, the record may display
    “Blessing issued — this idea has earned its wings.” This is not a fifth gate,
    truth claim, peer review, or publication approval.
-4. Optional local-model and desktop surfaces only after the CLI workflow proves
+3. Optional local-model and desktop surfaces only after the CLI workflow proves
    useful in real trials. The deterministic core remains authoritative.
 
 ## Evidence-led progress

@@ -3,6 +3,10 @@
 Status: Accepted
 Date: 2026-08-10
 
+Follow-up: [ADR 0015](0015-forge-forward-path.md) implements the R3.3
+continuation, blocker-proof, Next Move, and metadata-only export layer without
+changing this run/state contract.
+
 ## Context
 
 ADR 0012 froze the private `uriel.forge_run.v1` compatibility contract and its
@@ -125,9 +129,11 @@ Blessing-eligible.
 
 - The operational run/state/verifier slice is `EXPERIMENTAL` and exercised
   through source tests and a fresh-wheel CLI smoke.
-- Sanitized export remains contract-only. Raw Forge snapshots must not be
-  copied as public exports.
-- R3.3 still owns blocker proof, Next Move scoring, durable continuation
+- At the R3.2 boundary recorded here, sanitized export remained contract-only
+  and raw Forge snapshots could not be copied as public exports. ADR 0015 now
+  provides a generated metadata-only projector; the raw-snapshot prohibition
+  remains.
+- ADR 0015 now owns blocker proof, Next Move scoring, durable continuation
   packets, and next prompts. R3.4 still owns the restrained Earned Wings
   presentation layer.
 - The engine detects byte and relation inconsistencies; it cannot determine

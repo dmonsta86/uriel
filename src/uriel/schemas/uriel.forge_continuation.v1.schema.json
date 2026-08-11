@@ -1,0 +1,664 @@
+{
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.forge_continuation.v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Uriel Forge immutable continuation",
+  "type": "object",
+  "additionalProperties": false,
+  "x-uriel-record-digest": {
+    "algorithm": "sha256",
+    "canonicalization": "uriel.canonical_json.v1",
+    "excluded_fields": [
+      "record_sha256"
+    ]
+  },
+  "x-uriel-max-record-bytes": 1048576,
+  "$defs": {
+    "hex64": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "boundedText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?![.]{1,2}(?:/|$))(?!.*(?:/)[.]{1,2}(?:/|$))(?!.*\\\\)(?!.*:)[^/\\x00-\\x1f\\x7f]+(?:/[^/\\x00-\\x1f\\x7f]+)*$"
+    },
+    "requirementId": {
+      "type": "string",
+      "pattern": "^req-[A-Za-z0-9._-]{1,80}$"
+    },
+    "refId": {
+      "type": "string",
+      "pattern": "^ref-[A-Za-z0-9._-]{1,80}$"
+    },
+    "moveId": {
+      "type": "string",
+      "pattern": "^move-[A-Za-z0-9._-]{1,80}$"
+    },
+    "inputId": {
+      "type": "string",
+      "pattern": "^input-[A-Za-z0-9._-]{1,80}$"
+    },
+    "checkId": {
+      "type": "string",
+      "enum": [
+        "VERIFY_REQUIREMENT",
+        "SEARCH_DECLARED_BOUNDARY",
+        "TEST_SAFE_ALTERNATIVE",
+        "TEST_NARROWER_SCOPE",
+        "TEST_SUBSTITUTE_EVIDENCE",
+        "COMPLETE_SAFE_SCAFFOLD",
+        "NO_PATH_CHALLENGE"
+      ]
+    },
+    "rating": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "LOW",
+        "MODERATE",
+        "HIGH",
+        "VERY_HIGH"
+      ]
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "DRAFT",
+        "SCOPED",
+        "AUDITED",
+        "IMPLEMENTING",
+        "VERIFYING",
+        "READY_FOR_INDEPENDENT_VERIFY",
+        "BLOCKED"
+      ]
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "established",
+        "refuted",
+        "unknown",
+        "remains_useful"
+      ],
+      "properties": {
+        "established": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/boundedText"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "refuted": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/boundedText"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "unknown": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/boundedText"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "remains_useful": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/boundedText"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        }
+      }
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "check_id",
+        "outcome",
+        "evidence_ref_ids",
+        "finding"
+      ],
+      "properties": {
+        "check_id": {
+          "$ref": "#/$defs/checkId"
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "REQUIREMENT_CONFIRMED",
+            "PATH_FOUND",
+            "NO_PATH",
+            "INCONCLUSIVE",
+            "NOT_RUN",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "evidence_ref_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/refId"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "finding": {
+          "$ref": "#/$defs/boundedText"
+        }
+      }
+    },
+    "ratings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "information_gain",
+        "rival_discrimination",
+        "falsification_value",
+        "evidence_quality",
+        "dependency_unlocking",
+        "risk",
+        "cost",
+        "time",
+        "user_burden",
+        "reversibility",
+        "reproducibility",
+        "honest_outcome_potential"
+      ],
+      "properties": {
+        "information_gain": {
+          "$ref": "#/$defs/rating"
+        },
+        "rival_discrimination": {
+          "$ref": "#/$defs/rating"
+        },
+        "falsification_value": {
+          "$ref": "#/$defs/rating"
+        },
+        "evidence_quality": {
+          "$ref": "#/$defs/rating"
+        },
+        "dependency_unlocking": {
+          "$ref": "#/$defs/rating"
+        },
+        "risk": {
+          "$ref": "#/$defs/rating"
+        },
+        "cost": {
+          "$ref": "#/$defs/rating"
+        },
+        "time": {
+          "$ref": "#/$defs/rating"
+        },
+        "user_burden": {
+          "$ref": "#/$defs/rating"
+        },
+        "reversibility": {
+          "$ref": "#/$defs/rating"
+        },
+        "reproducibility": {
+          "$ref": "#/$defs/rating"
+        },
+        "honest_outcome_potential": {
+          "$ref": "#/$defs/rating"
+        }
+      }
+    },
+    "guardrails": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ethics_respected",
+        "law_respected",
+        "consent_respected",
+        "privacy_respected",
+        "resource_limits_respected",
+        "authority_not_bypassed"
+      ],
+      "properties": {
+        "ethics_respected": {
+          "const": true
+        },
+        "law_respected": {
+          "const": true
+        },
+        "consent_respected": {
+          "const": true
+        },
+        "privacy_respected": {
+          "const": true
+        },
+        "resource_limits_respected": {
+          "const": true
+        },
+        "authority_not_bypassed": {
+          "const": true
+        }
+      }
+    },
+    "rankedMove": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "move_id",
+        "kind",
+        "action",
+        "completion_condition",
+        "required_input_ids",
+        "addresses_check_ids",
+        "ratings",
+        "guardrails",
+        "benefit_ordinal",
+        "burden_ordinal",
+        "net_ordinal",
+        "rank"
+      ],
+      "properties": {
+        "move_id": {
+          "$ref": "#/$defs/moveId"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "LOCAL_CHECK",
+            "SAFE_SCAFFOLD",
+            "REQUEST_INPUT",
+            "EXTERNAL_ACTION",
+            "NARROW_SCOPE",
+            "SUBSTITUTE_EVIDENCE"
+          ]
+        },
+        "action": {
+          "$ref": "#/$defs/boundedText"
+        },
+        "completion_condition": {
+          "$ref": "#/$defs/boundedText"
+        },
+        "required_input_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/inputId"
+          },
+          "maxItems": 64,
+          "uniqueItems": true
+        },
+        "addresses_check_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/checkId"
+          },
+          "maxItems": 7,
+          "uniqueItems": true
+        },
+        "ratings": {
+          "$ref": "#/$defs/ratings"
+        },
+        "guardrails": {
+          "$ref": "#/$defs/guardrails"
+        },
+        "benefit_ordinal": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 32
+        },
+        "burden_ordinal": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16
+        },
+        "net_ordinal": {
+          "type": "integer",
+          "minimum": -16,
+          "maximum": 32
+        },
+        "rank": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        }
+      }
+    },
+    "requiredInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_id",
+        "kind",
+        "description",
+        "acceptance_condition"
+      ],
+      "properties": {
+        "input_id": {
+          "$ref": "#/$defs/inputId"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "USER",
+            "EXTERNAL",
+            "RESOURCE",
+            "AUTHORITY"
+          ]
+        },
+        "description": {
+          "$ref": "#/$defs/boundedText"
+        },
+        "acceptance_condition": {
+          "$ref": "#/$defs/boundedText"
+        }
+      }
+    }
+  },
+  "required": [
+    "schema",
+    "schema_version",
+    "continuation_id",
+    "created_at_utc",
+    "source",
+    "request_sha256",
+    "derivation_scope",
+    "operator_assessment",
+    "subject_requirement_ids",
+    "blocker_proof",
+    "next_moves",
+    "safe_work_completed",
+    "required_inputs",
+    "exact_completion_condition",
+    "next_prompt",
+    "authority_scope",
+    "upstream_authority_effect",
+    "record_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "uriel.forge_continuation.v1"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "continuation_id": {
+      "type": "string",
+      "pattern": "^forge-cont-[0-9a-f]{16}$"
+    },
+    "created_at_utc": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 64,
+      "format": "date-time"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "snapshot_relative_path",
+        "record_sha256",
+        "state",
+        "revision"
+      ],
+      "properties": {
+        "snapshot_relative_path": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "record_sha256": {
+          "$ref": "#/$defs/hex64"
+        },
+        "state": {
+          "$ref": "#/$defs/state"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9999999
+        }
+      }
+    },
+    "request_sha256": {
+      "$ref": "#/$defs/hex64"
+    },
+    "derivation_scope": {
+      "const": "STRUCTURAL_REQUEST_AND_BOUND_REFERENCES_ONLY"
+    },
+    "operator_assessment": {
+      "$ref": "#/$defs/assessment"
+    },
+    "subject_requirement_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/requirementId"
+      },
+      "maxItems": 64,
+      "uniqueItems": true
+    },
+    "blocker_proof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "derivation",
+        "checks",
+        "missing_check_ids",
+        "evidence_ref_ids"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "PATH_AVAILABLE",
+            "EVIDENCED_EXTERNAL_BLOCKER",
+            "BLOCKER_NOT_EVIDENCED",
+            "REQUIREMENT_NOT_APPLICABLE"
+          ]
+        },
+        "derivation": {
+          "const": "STRUCTURAL_SEVEN_CELL_V1"
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/check"
+          },
+          "minItems": 7,
+          "maxItems": 7,
+          "uniqueItems": true
+        },
+        "missing_check_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/checkId"
+          },
+          "maxItems": 7,
+          "uniqueItems": true
+        },
+        "evidence_ref_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/refId"
+          },
+          "maxItems": 448,
+          "uniqueItems": true
+        }
+      }
+    },
+    "next_moves": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "score_interpretation",
+        "rating_scale",
+        "benefit_dimensions",
+        "burden_dimensions",
+        "tie_break_order",
+        "ranked",
+        "preferred_move_id",
+        "alternative_move_ids"
+      ],
+      "properties": {
+        "method": {
+          "const": "TRANSPARENT_QUALITATIVE_ORDINAL_V1"
+        },
+        "score_interpretation": {
+          "const": "ORDINAL_PRIORITY_ONLY_NOT_PROBABILITY_OR_TRUTH"
+        },
+        "rating_scale": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "NONE",
+            "LOW",
+            "MODERATE",
+            "HIGH",
+            "VERY_HIGH"
+          ],
+          "properties": {
+            "NONE": {
+              "const": 0
+            },
+            "LOW": {
+              "const": 1
+            },
+            "MODERATE": {
+              "const": 2
+            },
+            "HIGH": {
+              "const": 3
+            },
+            "VERY_HIGH": {
+              "const": 4
+            }
+          }
+        },
+        "benefit_dimensions": {
+          "const": [
+            "information_gain",
+            "rival_discrimination",
+            "falsification_value",
+            "evidence_quality",
+            "dependency_unlocking",
+            "reversibility",
+            "reproducibility",
+            "honest_outcome_potential"
+          ]
+        },
+        "burden_dimensions": {
+          "const": [
+            "risk",
+            "cost",
+            "time",
+            "user_burden"
+          ]
+        },
+        "tie_break_order": {
+          "const": [
+            "net_ordinal_desc",
+            "falsification_value_desc",
+            "dependency_unlocking_desc",
+            "evidence_quality_desc",
+            "risk_asc",
+            "user_burden_asc",
+            "time_asc",
+            "cost_asc",
+            "move_id_asc"
+          ]
+        },
+        "ranked": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/rankedMove"
+          },
+          "minItems": 1,
+          "maxItems": 3,
+          "uniqueItems": true
+        },
+        "preferred_move_id": {
+          "$ref": "#/$defs/moveId"
+        },
+        "alternative_move_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/moveId"
+          },
+          "maxItems": 2,
+          "uniqueItems": true
+        }
+      }
+    },
+    "safe_work_completed": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/boundedText"
+      },
+      "maxItems": 128,
+      "uniqueItems": true
+    },
+    "required_inputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/requiredInput"
+      },
+      "maxItems": 64,
+      "uniqueItems": true
+    },
+    "exact_completion_condition": {
+      "$ref": "#/$defs/boundedText"
+    },
+    "next_prompt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "packet_treatment",
+        "text",
+        "automatic_execution",
+        "network_allowed",
+        "model_invocation_allowed",
+        "subprocess_allowed"
+      ],
+      "properties": {
+        "mode": {
+          "const": "ADVISORY_ONLY"
+        },
+        "packet_treatment": {
+          "const": "UNTRUSTED_RESEARCH_DATA"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4096
+        },
+        "automatic_execution": {
+          "const": false
+        },
+        "network_allowed": {
+          "const": false
+        },
+        "model_invocation_allowed": {
+          "const": false
+        },
+        "subprocess_allowed": {
+          "const": false
+        }
+      }
+    },
+    "authority_scope": {
+      "const": "FORGE_CONTINUATION_ONLY"
+    },
+    "upstream_authority_effect": {
+      "const": "NONE"
+    },
+    "record_sha256": {
+      "$ref": "#/$defs/hex64"
+    }
+  }
+}
