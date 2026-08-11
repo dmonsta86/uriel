@@ -615,7 +615,7 @@ class ForgeEngineTests(unittest.TestCase):
             outside = Path(temporary) / "outside.txt"
             outside.write_text("private", encoding="utf-8")
             link = root / "artifacts" / "link.txt"
-            link.parent.mkdir(parents=True)
+            link.parent.mkdir(parents=True, exist_ok=True)
             link.symlink_to(outside)
             with self.assertRaises(Refusal) as caught:
                 forge_init(
