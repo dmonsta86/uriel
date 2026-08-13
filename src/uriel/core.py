@@ -42,6 +42,7 @@ DEFAULT_IGNORES = {
     ".mypy_cache",
     ".ruff_cache",
     ".venv",
+    ".release-venv",
     "venv",
     "__pycache__",
     "build",
