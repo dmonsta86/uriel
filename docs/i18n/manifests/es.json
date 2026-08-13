@@ -5,7 +5,7 @@
   "translation_status": "AI_SECOND_PASS_REVIEWED",
   "reviewers": [],
   "readme_path": "README.es.md",
-  "readme_sha256": "f4a59921077c2e95bd464334ba39e64cf03249725e65c99227af0c28189b3825",
+  "readme_sha256": "c1d0138b9897412cfcd32275f372e0bec99d5a1870119b67bcb3813b0e4d22ab",
   "image_status": "LOCALIZED_AI_REVIEWED",
   "image_path": "docs/assets/i18n/es/uriel-forge-hero.png",
   "image_sha256": "6e8f3f5ce3b5ab8cb3c3f51e27fc894c31de3447f2bad285420ed7ed2f4c70c4",
@@ -13,6 +13,6 @@
   "visual_manifest_sha256": "32478292d59fdaf7041111aab520fb27d1b76228fa2d84953231d6f855f8d9cd",
   "visual_source_registry_path": "globalization/visual_sources.json",
   "visual_source_registry_sha256": "712ff7d5099193c419546df573afd46be448539c6f25b222d7f3e9b18194e9dd",
-  "verified_at_utc": "2026-08-13T21:34:20Z",
+  "verified_at_utc": "2026-08-13T21:36:36Z",
   "schema": "uriel.translation_manifest.v2"
 }
