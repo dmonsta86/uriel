@@ -33,22 +33,26 @@
 # The Forge of Uriel
 
 <!-- URIEL:SECTION:mission:START -->
-### Open-source, offline-first research development and hardening
+### Offline-first research assurance for evidence-bound work
 
 > **Is your IDEA strong enough to survive the forge?**
 >
 > A fair hearing for the idea. A hard test for the evidence.
 
-The Forge of Uriel helps turn rough questions and existing projects into
-structured, reproducible, submission-ready research.
+The Forge of Uriel is a zero-runtime-dependency Python toolkit for turning a
+rough question or an existing project into evidence-bound, reproducible work.
+It checks the exact data before analysis, traces important claims to source
+artifacts, preserves counter-evidence and limitations, stress-tests the final
+conclusion, and turns failed checks into explicit repair paths.
 
-It verifies data before analysis, traces important claims back to evidence,
-preserves contradictions and limitations, exposes misleading framing and
-unsupported conclusions, and turns failed checks into concrete repair and
-submission paths.
+Use it when you need to know **what is supported, what is not, and what should
+happen next**. Uriel is not a truth machine, an autonomous researcher, or a
+substitute for domain experts, ethics review, legal review, or scientific
+judgment. It never grants research authority merely because software or AI
+approved something.
 
-It is not designed to make research sound stronger. It is designed to show
-exactly how strong the research is—and what would make it stronger.
+**First time here?** Jump to the [Quick Start](#quick-start), then review the
+[capability status](docs/CAPABILITY_STATUS.md) and [known limitations](docs/LIMITATIONS.md).
 
 ```text
 Interpret generously.
@@ -61,7 +65,8 @@ Report honestly.
 <!-- URIEL:SECTION:status:START -->
 ## Current release boundary
 
-The Forge of Uriel **1.0.0-rc2** is a public release candidate of an open-source, offline-first research development and hardening toolkit.
+The Forge of Uriel **1.0.0-rc2** is the current tagged public release candidate.
+Use that tag for the frozen RC; use `main` for the latest reviewed changes.
 
 Canonical `main` also carries an experimental Forge workflow for exact local
 run history, evidence-bound continuation packets, transparent Next Move
@@ -352,9 +357,11 @@ uriel forge transition --root PROJECT --snapshot EXACT.json --to-state SCOPED --
 uriel forge verify --root PROJECT --snapshot EXACT.json
 ```
 
-It writes immutable private snapshots and grants no upstream authority. The
-sanitized exporter and generalized blocker-proof/Next-Move layer remain
-planned.
+It writes immutable private snapshots and grants no upstream authority.
+Canonical `main` also provides evidence-bound continuation packets,
+blocker-proof checks, transparent Next Move ranking, and metadata-only
+sanitized exports. These paths remain experimental and independently
+verifiable.
 
 See [`docs/FORGE_TRIALS.md`](docs/FORGE_TRIALS.md) and [`benchmarks/forge_trials/synthetic-001/`](benchmarks/forge_trials/synthetic-001/).
 
