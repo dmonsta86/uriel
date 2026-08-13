@@ -166,6 +166,24 @@ Los paquetes de generación destinados a IA requieren un recibo PASS y filas y c
 
 ---
 
+<!-- URIEL:SECTION:forge-forward:START -->
+## Continuar una ejecución incompleta de Forge
+
+Los comandos experimentales de Forge operan en rutas exactas direccionadas por contenido, nunca en una ejecución mutable "latest":
+
+```text
+uriel forge continue --root ../my-study --snapshot <EXACT_SNAPSHOT> --request artifacts/forge-forward.json
+uriel forge verify-continuation --root ../my-study --packet <EXACT_CONTINUATION>
+uriel forge export --root ../my-study --snapshot <EXACT_SNAPSHOT> --destination exports/review-copy
+uriel forge verify-export --root ../my-study --manifest exports/review-copy/manifest.json --snapshot <EXACT_SNAPSHOT>
+```
+
+Los paquetes de continuación permanecen privados bajo el estado ignorado `.uriel/forge/`. Las exportaciones son directorios nuevos que contienen únicamente metadatos estructurales generados y alias. No copian cuerpos de evidencia, IDs de proyecto/ejecución, rutas privadas, credenciales, URLs privadas ni nombres no relacionados. Cada verificador vuelve a leer la fuente exacta, recalcula hashes y clasificaciones, rechaza archivos o enlaces adicionales y notifica cero autoridad de Gate, publicación, verificador, Bendición o Alas Ganadas.
+
+Consulte el [Método Forge](docs/FORGE_METHOD.md) para conocer la forma de solicitud cerrada, la regla de puntuación, la derivación de bloqueadores y los límites de denegación.
+
+---
+
 <!-- URIEL:SECTION:gates:START -->
 ## Las Tres Puertas
 

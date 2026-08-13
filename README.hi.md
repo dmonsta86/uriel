@@ -165,6 +165,24 @@ AI के लिए पीढ़ी पैकेट को PASS रसीद औ
 
 ---
 
+<!-- URIEL:SECTION:forge-forward:START -->
+## एक अधूरी Forge रन जारी रखें
+
+प्रायोगिक Forge कमांड सटीक सामग्री-संबोधित पथों पर काम करते हैं--कभी भी परिवर्तनशील "latest" रन पर नहीं:
+
+```text
+uriel forge continue --root ../my-study --snapshot <EXACT_SNAPSHOT> --request artifacts/forge-forward.json
+uriel forge verify-continuation --root ../my-study --packet <EXACT_CONTINUATION>
+uriel forge export --root ../my-study --snapshot <EXACT_SNAPSHOT> --destination exports/review-copy
+uriel forge verify-export --root ../my-study --manifest exports/review-copy/manifest.json --snapshot <EXACT_SNAPSHOT>
+```
+
+निरंतरता पैकेट उपेक्षित `.uriel/forge/` स्थिति के तहत निजी रहते हैं। निर्यात केवल उत्पन्न संरचनात्मक मेटाडेटा और उपनामों वाले नए निर्देशिकाएं हैं। वे साक्ष्य निकायों, प्रोजेक्ट/रन आईडी, निजी पथ, क्रेडेंशियल, निजी यूआरएल या असंबद्ध नामों की प्रतिलिपि नहीं बनाते हैं। प्रत्येक सत्यापनकर्ता सटीक स्रोत को फिर से पढ़ता है, हैश और रैंकिंग की फिर से गणना करता है, अतिरिक्त फ़ाइलों या लिंक को अस्वीकार करता है, और शून्य Gate, प्रकाशन, सत्यापनकर्ता, ब्लेसिंग या अर्नड विंग्स प्राधिकरण की रिपोर्ट करता है।
+
+बंद अनुरोध आकार, स्कोरिंग नियम, अवरोधक व्युत्पत्ति और अस्वीकृति सीमाओं के लिए [Forge विधि](docs/FORGE_METHOD.md) देखें।
+
+---
+
 <!-- URIEL:SECTION:gates:START -->
 ## तीन द्वार (The Three Gates)
 

@@ -164,6 +164,24 @@ v2 收据会绑定原始数据血缘、解析器和策略版本、稳定列 ID�
 
 ---
 
+<!-- URIEL:SECTION:forge-forward:START -->
+## 继续未完成的 Forge 运行
+
+实验性 Forge 命令基于精确的按内容寻址路径运行，绝不基于可变的 "latest" 运行：
+
+```text
+uriel forge continue --root ../my-study --snapshot <EXACT_SNAPSHOT> --request artifacts/forge-forward.json
+uriel forge verify-continuation --root ../my-study --packet <EXACT_CONTINUATION>
+uriel forge export --root ../my-study --snapshot <EXACT_SNAPSHOT> --destination exports/review-copy
+uriel forge verify-export --root ../my-study --manifest exports/review-copy/manifest.json --snapshot <EXACT_SNAPSHOT>
+```
+
+延续包保留在被忽略的 `.uriel/forge/` 状态下的私有状态。导出是仅包含生成的结构元数据和别名的新目录。它们不会复制证据主体、项目/运行 ID、私有路径、凭据、私有 URL 或无关名称。每个验证器都会重新读取精确源，重新计算哈希和排名，拒绝额外的文件或链接，并报告零 Gate、发布、验证器、Blessing 或 Earned Wings 权限。
+
+有关闭合请求形式、评分规则、阻碍因素推导和拒绝边界，请参见 [Forge 方法](docs/FORGE_METHOD.md)。
+
+---
+
 <!-- URIEL:SECTION:gates:START -->
 ## 三大关卡
 

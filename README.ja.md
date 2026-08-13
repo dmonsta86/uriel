@@ -166,6 +166,24 @@ AI 向け世代パケットには PASS レシートと、タスクに必要な�
 
 ---
 
+<!-- URIEL:SECTION:forge-forward:START -->
+## 未完了の Forge 実行を継続する
+
+実験的な Forge コマンドは、変更可能な "latest" 実行ではなく、正確なコンテンツアドレス指定パスで動作します：
+
+```text
+uriel forge continue --root ../my-study --snapshot <EXACT_SNAPSHOT> --request artifacts/forge-forward.json
+uriel forge verify-continuation --root ../my-study --packet <EXACT_CONTINUATION>
+uriel forge export --root ../my-study --snapshot <EXACT_SNAPSHOT> --destination exports/review-copy
+uriel forge verify-export --root ../my-study --manifest exports/review-copy/manifest.json --snapshot <EXACT_SNAPSHOT>
+```
+
+継続パケットは無視される `.uriel/forge/` 状態の下でプライベートのままになります。エクスポートは、生成された構造メタデータとエイリアスのみを含む新しいディレクトリです。証拠本体、プロジェクト/実行 ID、プライベートパス、資格情報、プライベート URL、または無関係な名前はコピーされません。各検証機能は、正確なソースを再読み込みし、ハッシュとランキングを再計算し、追加のファイルやリンクを拒否し、Gate、発行、検証機能、Blessing、または Earned Wings の権限がゼロであることを報告します。
+
+閉じられたリクエスト形式、スコアリングルール、ブロッカー導出、および拒否境界については、[Forge メソッド](docs/FORGE_METHOD.md)を参照してください。
+
+---
+
 <!-- URIEL:SECTION:gates:START -->
 ## 3つのゲート (The Three Gates)
 

@@ -167,6 +167,24 @@ uriel readiness status --root ../my-study --generation <GENERATION_ID>
 
 ---
 
+<!-- URIEL:SECTION:forge-forward:START -->
+## متابعة تشغيل Forge غير مكتمل
+
+تعلّم أوامر Forge التجريبية على مسارات دقيقة معنونة بالمحتوى، وليس على تشغيل "latest" قابل للتعديل:
+
+```text
+uriel forge continue --root ../my-study --snapshot <EXACT_SNAPSHOT> --request artifacts/forge-forward.json
+uriel forge verify-continuation --root ../my-study --packet <EXACT_CONTINUATION>
+uriel forge export --root ../my-study --snapshot <EXACT_SNAPSHOT> --destination exports/review-copy
+uriel forge verify-export --root ../my-study --manifest exports/review-copy/manifest.json --snapshot <EXACT_SNAPSHOT>
+```
+
+تظل حزم المتابعة خاصة تحت حالة `.uriel/forge/` التي يتم تجاهلها. التصديرات عبارة عن أدلة جديدة تحتوي فقط على البيانات الوصفية الهيكلية المُنظمة والأسماء المستعارة. لا تقم بنسخ أجسام الأدلة أو معرّفات المشاريع/التشغيل أو المسارات الخاصة أو أوراق الاعتماد أو عناوين URL الخاصة أو الأسماء غير المرتبطة. يعيد كل مدقق قراءة المصدر الدقيق، ويعيد حساب التجزئة والتصنيفات، ويرفض الملفات أو الروابط الإضافية، ويسجل صفر سلطة لـ Gate أو النشر أو المدقق أو البركة أو الأجنحة المكتسبة.
+
+راجع [طريقة Forge](docs/FORGE_METHOD.md) للتعرف على شكل الطلب المغلق وقاعدة التسجيل واشتقاق الحاصرات وحدود الرفض.
+
+---
+
 <!-- URIEL:SECTION:gates:START -->
 ## البوابات الثلاث
 
