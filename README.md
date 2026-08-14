@@ -292,6 +292,27 @@ immutable generations
 
 ---
 
+### Keep project-defining wording exact (opt-in)
+
+The Research Verbatim Ledger is OFF for every new user and project. A serious
+research interaction may receive one discreet offer, but no message is captured
+without explicit opt-in. Manual, individually confirmed assisted, and explicit
+project modes keep exact text separate from summaries, isolate it by user and
+project, verify hashes, and provide review, search, drift, export, disable, and
+removal controls.
+
+~~~text
+uriel verbatim status --root ../my-study --user researcher-1
+uriel verbatim consent --root ../my-study --user researcher-1 --mode manual --confirm
+~~~
+
+Drift review is advisory: it links back to exact wording and never proves a
+scientific claim or silently edits later work. See the
+[Research Verbatim Ledger guide](docs/RESEARCH_VERBATIM_LEDGER.md) for consent,
+privacy, modes, exact-entry fields, examples, and limitations.
+
+---
+
 <!-- URIEL:SECTION:trials:START -->
 ## The Forge Trials
 

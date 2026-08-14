@@ -113,6 +113,22 @@ from .onboarding import (
 )
 from .prompts import build_prompt
 from .repair_packet import build_repair_packet, verify_repair_packet
+from .research_verbatim import (
+    capture_entry as capture_verbatim_entry,
+    consent_status as verbatim_consent_status,
+    consider_offer as consider_verbatim_offer,
+    decline_offer as decline_verbatim_offer,
+    disable_capture as disable_verbatim_capture,
+    drift_review as verbatim_drift_review,
+    export_ledger as export_verbatim_ledger,
+    propose_entry as propose_verbatim_entry,
+    remove_entry as remove_verbatim_entry,
+    remove_ledger as remove_verbatim_ledger,
+    review_entries as review_verbatim_entries,
+    search_entries as search_verbatim_entries,
+    set_consent_mode as set_verbatim_consent_mode,
+    verify_ledger as verify_verbatim_ledger,
+)
 from .reviews import REVIEW_TASKS, import_review, list_reviews, review_template
 from .schema import validate_project
 from .scholarly_acquisition import (
@@ -162,6 +178,15 @@ def _root_argument(parser: argparse.ArgumentParser, *, optional: bool = False) -
         "--root",
         default="." if optional else ".",
         help="Uriel project root (default: current directory)",
+    )
+
+
+def _verbatim_scope_arguments(parser: argparse.ArgumentParser) -> None:
+    _root_argument(parser)
+    parser.add_argument(
+        "--user",
+        required=True,
+        help="stable user-scope reference; only its SHA-256 isolation key is stored",
     )
 
 
@@ -506,6 +531,159 @@ def parser() -> argparse.ArgumentParser:
 
     status = commands.add_parser("status", help="show project and current-audit status")
     _root_argument(status)
+
+    verbatim = commands.add_parser("verbatim", help="opt-in exact-wording ledger for one user and research project")
+    verbatim_actions = verbatim.add_subparsers(
+        dest="verbatim_action", required=True
+    )
+
+    verbatim_status = verbatim_actions.add_parser(
+        "status", help="inspect mode, offer preference, and isolated entry count"
+    )
+    _verbatim_scope_arguments(verbatim_status)
+
+    verbatim_offer = verbatim_actions.add_parser(
+        "offer", help="consider one discreet offer; never capture message text"
+    )
+    _verbatim_scope_arguments(verbatim_offer)
+    verbatim_offer.add_argument(
+        "--signal",
+        action="append",
+        default=[],
+        choices=(
+            "high-detail",
+            "accuracy-sensitive",
+            "novel",
+            "long-lived",
+            "project-baseline",
+            "formal-prediction",
+            "consequential-refinement",
+        ),
+        help="advisory qualifying signal; repeat as needed",
+    )
+
+    verbatim_decline = verbatim_actions.add_parser(
+        "decline", help="decline the offer and suppress repeat offers"
+    )
+    _verbatim_scope_arguments(verbatim_decline)
+
+    verbatim_consent = verbatim_actions.add_parser(
+        "consent", help="explicitly select manual, assisted, or project mode"
+    )
+    _verbatim_scope_arguments(verbatim_consent)
+    verbatim_consent.add_argument(
+        "--mode", required=True, choices=("manual", "assisted", "project")
+    )
+    verbatim_consent.add_argument(
+        "--confirm",
+        action="store_true",
+        help="confirm the user's explicit opt-in for this user and project",
+    )
+
+    verbatim_disable = verbatim_actions.add_parser(
+        "disable", help="disable future capture while preserving reviewable entries"
+    )
+    _verbatim_scope_arguments(verbatim_disable)
+
+    verbatim_propose = verbatim_actions.add_parser(
+        "propose", help="make an assisted in-memory proposal; write no content"
+    )
+    _verbatim_scope_arguments(verbatim_propose)
+    propose_input = verbatim_propose.add_mutually_exclusive_group(required=True)
+    propose_input.add_argument("--text", help="exact selected user text")
+    propose_input.add_argument(
+        "--text-file", help="project-relative UTF-8 file containing exact text"
+    )
+    verbatim_propose.add_argument("--source-ref", required=True)
+    verbatim_propose.add_argument("--label", default=None)
+
+    verbatim_capture = verbatim_actions.add_parser(
+        "capture", help="capture one explicitly authorized user research statement"
+    )
+    _verbatim_scope_arguments(verbatim_capture)
+    capture_input = verbatim_capture.add_mutually_exclusive_group(required=True)
+    capture_input.add_argument("--text", help="exact selected user text")
+    capture_input.add_argument(
+        "--text-file", help="project-relative UTF-8 file containing exact text"
+    )
+    verbatim_capture.add_argument("--source-ref", required=True)
+    verbatim_capture.add_argument(
+        "--mode", required=True, choices=("manual", "assisted", "project")
+    )
+    verbatim_capture.add_argument(
+        "--confirm-entry",
+        action="store_true",
+        help="confirm this manual or assisted entry",
+    )
+    verbatim_capture.add_argument(
+        "--project-research",
+        action="store_true",
+        help="confirm the selected text belongs to this research project",
+    )
+    verbatim_capture.add_argument(
+        "--qualifying",
+        action="store_true",
+        help="mark a project-mode statement as a qualifying baseline or refinement",
+    )
+    verbatim_capture.add_argument("--label", default=None)
+    verbatim_capture.add_argument("--summary", default=None)
+    verbatim_capture.add_argument(
+        "--link",
+        action="append",
+        default=[],
+        metavar="RELATION:ENTRY_ID",
+        help="REFINES, CORRECTS, or SUPERSEDES link; repeat as needed",
+    )
+
+    verbatim_review = verbatim_actions.add_parser(
+        "review", help="review all verified entries in this isolated scope"
+    )
+    _verbatim_scope_arguments(verbatim_review)
+
+    verbatim_search = verbatim_actions.add_parser(
+        "search", help="search exact text, labels, and source references"
+    )
+    _verbatim_scope_arguments(verbatim_search)
+    verbatim_search.add_argument("query")
+
+    verbatim_drift = verbatim_actions.add_parser(
+        "drift", help="advisory comparison against linked exact entries"
+    )
+    _verbatim_scope_arguments(verbatim_drift)
+    drift_input = verbatim_drift.add_mutually_exclusive_group(required=True)
+    drift_input.add_argument("--later-text", help="later manuscript, claim, or summary")
+    drift_input.add_argument(
+        "--later-text-file", help="project-relative UTF-8 later-text file"
+    )
+    verbatim_drift.add_argument(
+        "--entry", action="append", required=True, dest="entry_ids"
+    )
+
+    verbatim_export = verbatim_actions.add_parser(
+        "export", help="explicitly export this isolated ledger as JSON"
+    )
+    _verbatim_scope_arguments(verbatim_export)
+    verbatim_export.add_argument(
+        "--destination", required=True, help="fresh project-relative JSON path"
+    )
+
+    verbatim_verify = verbatim_actions.add_parser(
+        "verify", help="verify consent, entries, exact hashes, and ledger hash"
+    )
+    _verbatim_scope_arguments(verbatim_verify)
+
+    verbatim_remove_entry = verbatim_actions.add_parser(
+        "remove-entry", help="remove one selected entry"
+    )
+    _verbatim_scope_arguments(verbatim_remove_entry)
+    verbatim_remove_entry.add_argument("entry_id")
+    verbatim_remove_entry.add_argument("--confirm", action="store_true")
+
+    verbatim_remove_ledger = verbatim_actions.add_parser(
+        "remove-ledger", help="remove consent and entries for this exact scope"
+    )
+    _verbatim_scope_arguments(verbatim_remove_ledger)
+    verbatim_remove_ledger.add_argument("--confirm", action="store_true")
 
     prompt = commands.add_parser("prompt", help="create an optional AI/human review prompt")
     _root_argument(prompt)
@@ -1148,6 +1326,52 @@ def _audit_recheck(
     return {"gates": gates, "eligibility": eligibility}
 
 
+def _read_verbatim_text(
+    root: str,
+    direct_text: Optional[str],
+    text_file: Optional[str],
+) -> str:
+    if direct_text is not None:
+        return direct_text
+    if not text_file:
+        raise Refusal(
+            "Provide exact text or one project-relative UTF-8 text file.",
+            code="VERBATIM_TEXT_REQUIRED",
+        )
+    target = guard_path(root, text_file, must_exist=True)
+    try:
+        return target.read_bytes().decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise Refusal(
+            "Research Verbatim Ledger text files must be valid UTF-8.",
+            code="VERBATIM_TEXT_NOT_UTF8",
+            details={"path": str(target), "error": str(exc)},
+            repairs=[
+                "Save the exact statement as UTF-8 without changing its wording.",
+                "Pass the exact Unicode text directly with the matching CLI option.",
+                "Cancel capture and leave the isolated ledger unchanged.",
+            ],
+        ) from exc
+
+
+def _parse_verbatim_links(values: Sequence[str]) -> List[Dict[str, str]]:
+    links: List[Dict[str, str]] = []
+    for value in values:
+        if ":" not in value:
+            raise Refusal(
+                "Verbatim links use RELATION:ENTRY_ID syntax.",
+                code="VERBATIM_LINK_INVALID",
+                repairs=[
+                    "Use REFINES:ENTRY_ID, CORRECTS:ENTRY_ID, or SUPERSEDES:ENTRY_ID.",
+                    "Review the isolated ledger and copy the exact entry ID.",
+                    "Omit the optional link.",
+                ],
+            )
+        relation, entry_id = value.split(":", 1)
+        links.append({"relation": relation, "entry_id": entry_id})
+    return links
+
+
 def dispatch(args: argparse.Namespace) -> Any:
     command = args.command
     if command == "init":
@@ -1437,6 +1661,78 @@ def dispatch(args: argparse.Namespace) -> Any:
         return verify_project(args.root)
     if command == "status":
         return project_status(args.root)
+    if command == "verbatim":
+        action = args.verbatim_action
+        if action == "status":
+            return verbatim_consent_status(args.root, args.user)
+        if action == "offer":
+            return consider_verbatim_offer(args.root, args.user, args.signal)
+        if action == "decline":
+            return decline_verbatim_offer(args.root, args.user)
+        if action == "consent":
+            return set_verbatim_consent_mode(
+                args.root,
+                args.user,
+                args.mode,
+                explicit_opt_in=args.confirm,
+            )
+        if action == "disable":
+            return disable_verbatim_capture(args.root, args.user)
+        if action == "propose":
+            text = _read_verbatim_text(args.root, args.text, args.text_file)
+            return propose_verbatim_entry(
+                args.root,
+                args.user,
+                text,
+                source_message_ref=args.source_ref,
+                label=args.label,
+            )
+        if action == "capture":
+            text = _read_verbatim_text(args.root, args.text, args.text_file)
+            return capture_verbatim_entry(
+                args.root,
+                args.user,
+                text,
+                source_message_ref=args.source_ref,
+                capture_mode=args.mode,
+                confirmed=args.confirm_entry,
+                project_research_statement=args.project_research,
+                qualifying_research_statement=args.qualifying,
+                label=args.label,
+                summary=args.summary,
+                links=_parse_verbatim_links(args.link),
+            )
+        if action == "review":
+            return review_verbatim_entries(args.root, args.user)
+        if action == "search":
+            return search_verbatim_entries(args.root, args.user, args.query)
+        if action == "drift":
+            later = _read_verbatim_text(
+                args.root, args.later_text, args.later_text_file
+            )
+            return verbatim_drift_review(
+                args.root,
+                args.user,
+                later,
+                entry_ids=args.entry_ids,
+            )
+        if action == "export":
+            return export_verbatim_ledger(
+                args.root, args.user, args.destination
+            )
+        if action == "verify":
+            return verify_verbatim_ledger(args.root, args.user)
+        if action == "remove-entry":
+            return remove_verbatim_entry(
+                args.root,
+                args.user,
+                args.entry_id,
+                confirmed=args.confirm,
+            )
+        if action == "remove-ledger":
+            return remove_verbatim_ledger(
+                args.root, args.user, confirmed=args.confirm
+            )
     if command == "prompt":
         result = build_prompt(
             args.root,

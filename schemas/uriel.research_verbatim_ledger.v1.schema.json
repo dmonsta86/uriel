@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.research_verbatim_ledger.v1.schema.json",
+  "title": "Uriel Research Verbatim Ledger isolated store",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "user_isolation_key",
+    "project_isolation_key",
+    "revision",
+    "entries",
+    "ledger_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "uriel.research_verbatim_ledger.v1"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "user_isolation_key": {
+      "$ref": "#/$defs/isolation_key"
+    },
+    "project_isolation_key": {
+      "$ref": "#/$defs/isolation_key"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "entries": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "$ref": "uriel.research_verbatim_entry.v1.schema.json"
+      }
+    },
+    "ledger_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "isolation_key": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

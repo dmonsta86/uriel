@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.research_verbatim_drift_review.v1.schema.json",
+  "title": "Uriel Research Verbatim Ledger advisory drift review",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "later_text_sha256",
+    "entry_results",
+    "categories",
+    "advisory_only",
+    "scientific_proof",
+    "semantic_fidelity_decided",
+    "source_text_modified",
+    "later_text_modified",
+    "persisted"
+  ],
+  "properties": {
+    "schema": {
+      "const": "uriel.research_verbatim_drift_review.v1"
+    },
+    "later_text_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "entry_results": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/result"
+      }
+    },
+    "categories": {
+      "type": "array",
+      "prefixItems": [
+        {"const": "PRESERVED_MEANING"},
+        {"const": "OMISSION"},
+        {"const": "CONTRADICTION"},
+        {"const": "OVERSTATEMENT"},
+        {"const": "UNRESOLVED_AMBIGUITY"}
+      ],
+      "items": false
+    },
+    "advisory_only": {
+      "const": true
+    },
+    "scientific_proof": {
+      "const": false
+    },
+    "semantic_fidelity_decided": {
+      "const": false
+    },
+    "source_text_modified": {
+      "const": false
+    },
+    "later_text_modified": {
+      "const": false
+    },
+    "persisted": {
+      "const": false
+    }
+  },
+  "$defs": {
+    "category": {
+      "enum": [
+        "PRESERVED_MEANING",
+        "OMISSION",
+        "CONTRADICTION",
+        "OVERSTATEMENT",
+        "UNRESOLVED_AMBIGUITY"
+      ]
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entry_id",
+        "exact_text_sha256",
+        "categories",
+        "lexical_evidence"
+      ],
+      "properties": {
+        "entry_id": {
+          "type": "string",
+          "pattern": "^rvl-[0-9a-f]{24}$"
+        },
+        "exact_text_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "categories": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/category"
+          }
+        },
+        "lexical_evidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "original_term_coverage",
+            "set_overlap",
+            "negation_changed",
+            "new_overstatement_markers"
+          ],
+          "properties": {
+            "original_term_coverage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "set_overlap": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "negation_changed": {
+              "type": "boolean"
+            },
+            "new_overstatement_markers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

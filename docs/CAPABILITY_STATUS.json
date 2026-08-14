@@ -1,7 +1,7 @@
 {
   "schema": "uriel.capability_inventory.v1",
   "source": "src/uriel/capability_status.py",
-  "source_fingerprint": "b106691c4b3828185cb9ea6221886e881ec97ca5061eb62724ad4acc35fa14db",
+  "source_fingerprint": "bed77abbb3dad13911951cd94ab169c563823a3ee50ed4b14fedd455fcf9dd46",
   "capabilities": [
     {
       "id": "CAP-CORE-001",
@@ -48,6 +48,27 @@
         "tests/test_strict_contract_mandatory.py"
       ],
       "notes": "Exact active-generation identity, deterministic v2 SortSpecs and readiness receipts, stale/tamper invalidation, strict Gate 0 interlock, and bounded no-authority AI projections."
+    },
+    {
+      "id": "CAP-VERBATIM-001",
+      "name": "Opt-in Research Verbatim Ledger",
+      "status": "BETA",
+      "entry_point": "uriel verbatim",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "modules": [
+        "src/uriel/research_verbatim.py",
+        "src/uriel/cli.py"
+      ],
+      "verification": [
+        "tests/test_research_verbatim.py",
+        "tests/test_cli.py",
+        "scripts/smoke_installed_verbatim_ledger.py"
+      ],
+      "notes": "Default-off exact user wording with explicit manual, assisted, or per-project consent; hashed user/project isolation; exact-text and aggregate integrity; advisory non-rewriting drift review; and review, search, export, disable, and removal controls."
     },
     {
       "id": "CAP-GATES-001",

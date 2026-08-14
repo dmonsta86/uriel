@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.research_verbatim_entry.v1.schema.json",
+  "title": "Uriel Research Verbatim Ledger exact entry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "entry_id",
+    "user_isolation_key",
+    "project_isolation_key",
+    "source",
+    "captured_at_utc",
+    "normalization",
+    "exact_text",
+    "exact_text_sha256",
+    "capture_mode",
+    "label",
+    "summary",
+    "links",
+    "entry_record_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "uriel.research_verbatim_entry.v1"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "entry_id": {
+      "type": "string",
+      "pattern": "^rvl-[0-9a-f]{24}$"
+    },
+    "user_isolation_key": {
+      "$ref": "#/$defs/isolation_key"
+    },
+    "project_isolation_key": {
+      "$ref": "#/$defs/isolation_key"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "message_ref"],
+      "properties": {
+        "kind": {
+          "const": "USER_MESSAGE"
+        },
+        "message_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        }
+      }
+    },
+    "captured_at_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "normalization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule_id",
+        "encoding",
+        "unicode_normalization",
+        "whitespace_normalization",
+        "line_ending_normalization"
+      ],
+      "properties": {
+        "rule_id": {
+          "const": "EXACT_UTF8_V1"
+        },
+        "encoding": {
+          "const": "UTF-8"
+        },
+        "unicode_normalization": {
+          "const": "NONE"
+        },
+        "whitespace_normalization": {
+          "const": "NONE"
+        },
+        "line_ending_normalization": {
+          "const": "NONE"
+        }
+      }
+    },
+    "exact_text": {
+      "type": "string",
+      "minLength": 1
+    },
+    "exact_text_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "capture_mode": {
+      "enum": ["MANUAL", "ASSISTED", "PROJECT"]
+    },
+    "label": {
+      "type": ["string", "null"],
+      "maxLength": 1024
+    },
+    "summary": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/summary"
+        }
+      ]
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/link"
+      }
+    },
+    "entry_record_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "isolation_key": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "text", "text_sha256"],
+      "properties": {
+        "role": {
+          "const": "ADVISORY_SUMMARY"
+        },
+        "text": {
+          "type": "string"
+        },
+        "text_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "link": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["relation", "entry_id"],
+      "properties": {
+        "relation": {
+          "enum": ["REFINES", "CORRECTS", "SUPERSEDES"]
+        },
+        "entry_id": {
+          "type": "string",
+          "pattern": "^rvl-[0-9a-f]{24}$"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.research_verbatim_export.v1.schema.json",
+  "title": "Uriel Research Verbatim Ledger explicit export",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "created_at_utc",
+    "user_isolation_key",
+    "project_isolation_key",
+    "consent",
+    "ledger_sha256",
+    "entry_count",
+    "entries",
+    "privacy_notice",
+    "authority",
+    "export_record_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "uriel.research_verbatim_export.v1"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "created_at_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "user_isolation_key": {
+      "$ref": "#/$defs/isolation_key"
+    },
+    "project_isolation_key": {
+      "$ref": "#/$defs/isolation_key"
+    },
+    "consent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "offer_state", "revision", "state_sha256"],
+      "properties": {
+        "mode": {
+          "enum": ["OFF", "MANUAL", "ASSISTED", "PROJECT"]
+        },
+        "offer_state": {
+          "enum": ["UNSEEN", "OFFERED", "DECLINED", "ACCEPTED", "DISABLED"]
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "state_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "ledger_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "entry_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10000
+    },
+    "entries": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "$ref": "uriel.research_verbatim_entry.v1.schema.json"
+      }
+    },
+    "privacy_notice": {
+      "type": "string",
+      "minLength": 1
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["advisory_only", "scientific_proof", "publication_authority"],
+      "properties": {
+        "advisory_only": {
+          "const": true
+        },
+        "scientific_proof": {
+          "const": false
+        },
+        "publication_authority": {
+          "const": false
+        }
+      }
+    },
+    "export_record_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "isolation_key": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

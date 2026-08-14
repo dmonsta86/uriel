@@ -172,6 +172,35 @@ Strict source-binding verification refuses more than 10,000 source files,
 source generation above 250,000 records or 128 MiB because the current verified
 projection implementation reparses the complete sealed generation.
 
+## Research Verbatim Ledger limitations
+
+The Research Verbatim Ledger is OFF for every new user and project. It stores
+exact wording only after explicit consent and does not improve answer quality,
+prove authorship, establish novelty, validate a prediction, or turn a user
+statement into scientific evidence. The caller-supplied user reference is
+hashed, but its stability and account mapping remain the caller's
+responsibility.
+
+Exact means the UTF-8 Python string received by the API or the bytes decoded
+from an explicit UTF-8 text file. Uriel performs no Unicode, whitespace, or
+line-ending normalization. It cannot recover wording already changed by a
+chat client, terminal, clipboard, transcription layer, or file editor before
+the API receives it.
+
+Drift review uses intentionally conservative lexical signals. Exact normalized
+equality can report preserved meaning; changed wording remains unresolved even
+when overlap is high. Omission, contradiction, and overstatement indicators
+are review leads, not semantic judgments. Domain experts must inspect the
+linked exact text and later claim. Uriel never edits either one.
+
+The local store is hash-verified but not encrypted, securely erased from
+backups, protected from an administrator, or synchronized across devices.
+Explicit exports contain exact user wording and require a human privacy and
+sharing decision. Credential-pattern checks reduce obvious mistakes but are
+not a secret scanner. Whole-ledger removal removes the current scope files,
+not operating-system remnants, external exports, backups, or copies already
+shared elsewhere.
+
 ## Certificate design
 
 Version 1 uses SHA-256 content addressing, not public-key author signatures. The standalone verifier checks internal package integrity. Live verification additionally checks the local source state and ledger. Public trust should combine Uriel with signed Git tags/releases and an independent archive.

@@ -63,6 +63,19 @@ It cannot:
 - close an authoritative Forge result;
 - issue a Blessing.
 
+## Exact user wording
+
+The optional Research Verbatim Ledger is a separate local consent boundary,
+not a general chat archive. It starts OFF for every user and project. An offer
+stores no message content, and explicit consent is required before an exact
+entry exists. Hidden instructions, provider-session content, credentials, and
+unrelated conversation are outside the permitted source boundary.
+
+Exact wording and advisory summaries remain separate. Drift output is a
+non-persistent review aid and has no evidence, Gate, publication, or Blessing
+authority. An explicit export contains exact wording; inspect its
+classification and destination before moving it outside the project.
+
 ## Local model
 
 A compatible local model may be used on suitable hardware.

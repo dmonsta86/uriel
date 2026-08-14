@@ -420,7 +420,13 @@ def execute(args: argparse.Namespace, root: Path, report: Path) -> int:
                 "p=r.files('uriel.schemas'); "
                 "required={'uriel.audit.v1.schema.json','uriel.blessing.v1.schema.json',"
                 "'uriel.external_review.v1.schema.json','uriel.project.v1.schema.json',"
-                "'uriel.source_manifest.v1.schema.json'} | set(DATA_SCHEMA_FILES.values()); "
+                "'uriel.source_manifest.v1.schema.json',"
+                "'uriel.research_verbatim_consent.v1.schema.json',"
+                "'uriel.research_verbatim_entry.v1.schema.json',"
+                "'uriel.research_verbatim_ledger.v1.schema.json',"
+                "'uriel.research_verbatim_export.v1.schema.json',"
+                "'uriel.research_verbatim_drift_review.v1.schema.json'} "
+                "| set(DATA_SCHEMA_FILES.values()); "
                 "actual={x.name for x in p.iterdir() if x.name.endswith('.json')}; "
                 "assert required <= actual, sorted(required-actual); print('packaged schemas: PASS')"
             )
@@ -447,6 +453,15 @@ def execute(args: argparse.Namespace, root: Path, report: Path) -> int:
                 [
                     str(python),
                     "scripts/smoke_installed_ai_handoff.py",
+                    "--executable",
+                    str(executable),
+                ],
+                env=clean_environment,
+            )
+            checked(
+                [
+                    str(python),
+                    "scripts/smoke_installed_verbatim_ledger.py",
                     "--executable",
                     str(executable),
                 ],

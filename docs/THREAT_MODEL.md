@@ -7,6 +7,7 @@
 - confidentiality decisions at the optional-AI boundary;
 - credibility of a `URIEL-BLESSING-v1` package;
 - confidentiality and exact resumption of Forge continuations and exports;
+- confidentiality, consent, integrity, and scope of exact user wording;
 - the author’s ability to revisit and repair refused work.
 
 ## Adversaries and failure modes
@@ -51,6 +52,10 @@
 21. **Sanitized-export leakage:** a projector copies raw evidence, private
     paths or IDs, human text, credentials, URLs, links, or undeclared files;
     or a valid export is paired with a substituted source.
+22. **Verbatim capture abuse:** exact wording is stored without opt-in, leaks
+    across a user or project boundary, is replaced by a summary, accepts a
+    forged hash, continues after revocation, repeats a declined offer, captures
+    hidden/provider/credential content, or is presented as scientific proof.
 
 ## Implemented controls
 
@@ -102,6 +107,20 @@
   imported-review bytes are capped, and external-agent invocation requires
   explicit acknowledgement plus project policy, an isolated working directory,
   a minimized environment, no shell, exact model identity, and bounded capture.
+- Research Verbatim Ledger state defaults to OFF and is created lazily beneath
+  hashed user/project directories. Offers store no message content; manual and
+  assisted entries require explicit confirmation; project mode requires
+  explicit per-project consent and a qualifying-statement marker. Consent,
+  exact text, each whole entry, and the aggregate ledger are rehashed before
+  content-bearing reads and content-preserving mutations. Disable and closed-
+  membership whole removal deliberately avoid damaged exact-content reads so
+  corruption cannot prevent privacy shutdown or cleanup.
+- Verbatim operations use the existing root/link/reparse confinement boundary,
+  create no shared project-ledger metadata, make no network or provider call,
+  reject non-user and credential-like content, and refuse cross-scope links.
+  Drift is non-persistent and advisory. Export is explicit. Removal is
+  scope-exact, non-recursive, and preflights all closed-membership files before
+  deleting any of them; unknown, linked, or non-file members stop the action.
 - scholarly acquisition is disabled by default and R2.1 ships only a fixed
   local-mock registry and exact injected transport. Structured fields build a
   component request with no free-form URL; simulated host/address pinning,
@@ -150,6 +169,13 @@ do not determine whether selected values are legally or ethically shareable.
 The operator remains responsible for consent, provider retention terms, and
 choosing redaction before any packet leaves the local machine. Uriel does not
 send a generation packet to a provider by itself.
+
+Research Verbatim Ledger hashes are tamper evidence, not encryption, an author
+signature, a trusted timestamp, secure deletion from backups, or protection
+against an administrator who rewrites all copies. The lexical drift reviewer
+cannot decide semantic equivalence or scientific truth. Credential patterns
+are conservative and cannot recognize every secret; callers remain responsible
+for selecting only visible project-relevant user wording.
 
 The scholarly local mock is not an operating-system network firewall and does
 not prove a future live fetcher safe. It performs no real DNS or connection,

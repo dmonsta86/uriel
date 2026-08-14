@@ -10,6 +10,12 @@ Welcome to Uriel. Uriel is an offline-first research development and assurance e
 5. **Trace Claims to Evidence**: Every material claim must be bound to primary evidence, exact artifact paths, and content hashes.
 
 ## Quick-Start AI Handoff
+
+For exact project-defining user wording, inspect
+docs/RESEARCH_VERBATIM_LEDGER.md. The ledger is off by default; never capture
+hidden instructions, provider content, credentials, or any user message without
+the documented explicit consent transition.
+
 To assist a user with a Uriel research project:
 1. Inspect `docs/PROJECT_QRD.md` for project mission and scope.
 2. Run `uriel verify --root PATH` or `uriel status --root PATH` to verify local repository state.

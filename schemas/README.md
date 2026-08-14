@@ -13,3 +13,12 @@ Forge contracts include:
 The forward request is a bounded operation envelope documented in
 [`docs/FORGE_FORWARD.md`](../docs/FORGE_FORWARD.md); its normalized canonical
 digest is embedded in the durable continuation record.
+
+Research Verbatim Ledger contracts include:
+
+- uriel.research_verbatim_consent.v1: explicit mode and offer-preference state;
+- uriel.research_verbatim_entry.v1: exact text, provenance, isolation, links,
+  optional separate summary, and integrity hashes;
+- uriel.research_verbatim_ledger.v1: one aggregate isolated store;
+- uriel.research_verbatim_export.v1: an explicit exact-wording export; and
+- uriel.research_verbatim_drift_review.v1: non-persistent advisory drift output.

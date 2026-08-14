@@ -6,6 +6,13 @@ All notable changes to Uriel are documented here.
 
 ### Added
 
+- An opt-in, default-off Research Verbatim Ledger with manual, individually
+  confirmed assisted, and explicit per-project modes; per-user/per-project
+  isolation; exact-text, record, consent, and ledger hashes; advisory drift
+  review; review/search/export/disable/removal controls; public CLI and Python
+  routes; mirrored schemas; and focused negative tests for silent capture,
+  scope leakage, substitution, tamper, revoked consent, repeated offers, and
+  disabled-state compatibility.
 - Eight closed, content-addressed R2.1 scholarly-acquisition contracts covering
   fixed source registry, source policy, structured query, cumulative budget,
   adapter boundary, plan, raw-byte quarantine, and receipt.

@@ -1,6 +1,6 @@
 # The Forge of Uriel Capability Status
 
-Catalog fingerprint: `b106691c4b3828185cb9ea6221886e881ec97ca5061eb62724ad4acc35fa14db`
+Catalog fingerprint: `bed77abbb3dad13911951cd94ab169c563823a3ee50ed4b14fedd455fcf9dd46`
 
 Status meanings:
 
@@ -13,6 +13,7 @@ Status meanings:
 |---|---|---|---|---|---|
 | Deterministic project core and packaging | `SHIPPED` | `uriel start / uriel verify / uriel doctor` | Windows, macOS, Linux | `src/uriel/core.py`, `src/uriel/cli.py`, `tests/test_core.py`, `tests/test_packaging.py` | Offline-first project confinement, content-addressed records, receipts, and zero runtime dependencies. |
 | Data Readiness and Gate 0 | `BETA` | `uriel readiness init-sort-spec / check / status` | Windows, macOS, Linux | `src/uriel/data_readiness.py`, `src/uriel/generation_readiness.py`, `src/uriel/gate_contract.py`, `src/uriel/independent_verify.py`, `src/uriel/surfaces.py`, `tests/test_data_readiness.py`, `tests/test_generation_readiness.py`, `tests/test_gate_contract.py`, `tests/test_surfaces.py`, `tests/test_strict_contract_mandatory.py` | Exact active-generation identity, deterministic v2 SortSpecs and readiness receipts, stale/tamper invalidation, strict Gate 0 interlock, and bounded no-authority AI projections. |
+| Opt-in Research Verbatim Ledger | `BETA` | `uriel verbatim` | Windows, macOS, Linux | `src/uriel/research_verbatim.py`, `src/uriel/cli.py`, `tests/test_research_verbatim.py`, `tests/test_cli.py`, `scripts/smoke_installed_verbatim_ledger.py` | Default-off exact user wording with explicit manual, assisted, or per-project consent; hashed user/project isolation; exact-text and aggregate integrity; advisory non-rewriting drift review; and review, search, export, disable, and removal controls. |
 | Three Integrity Gates | `BETA` | `uriel audit` | Windows, macOS, Linux | `src/uriel/gate_contract.py`, `src/uriel/audit.py`, `tests/test_gate_contract.py`, `tests/test_audit.py` | Scope and claim language, direct evidence, and adversarial robustness with fail-closed repair guidance. |
 | Strict Blessing and independent verifier | `EXPERIMENTAL` | `uriel blessing / uriel verify-blessing` | Windows, macOS, Linux | `src/uriel/strict_blessing.py`, `src/uriel/independent_verify.py`, `tests/test_strict_blessing.py`, `tests/test_blessing.py` | Content-addressed attestation of recorded gate decisions and exact bound artifacts; not independent scientific validation. |
 | Research lifecycle, workbench, repair, and submission | `BETA` | `uriel intake / uriel workbench / uriel burst / uriel submit` | Windows, macOS, Linux | `src/uriel/workbench.py`, `src/uriel/surfaces.py`, `src/uriel/gap_register.py`, `src/uriel/repair_packet.py`, `tests/test_workbench.py`, `tests/test_lifecycle_packet.py`, `tests/test_lifecycle_submission.py` | Question intake, bounded review packets, gap records, repair packets, decisions, and submission support. |

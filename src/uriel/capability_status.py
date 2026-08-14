@@ -50,6 +50,23 @@ CAPABILITIES: List[Dict[str, Any]] = [
         "notes": "Exact active-generation identity, deterministic v2 SortSpecs and readiness receipts, stale/tamper invalidation, strict Gate 0 interlock, and bounded no-authority AI projections.",
     },
     {
+        "id": "CAP-VERBATIM-001",
+        "name": "Opt-in Research Verbatim Ledger",
+        "status": "BETA",
+        "entry_point": "uriel verbatim",
+        "platforms": ["Windows", "macOS", "Linux"],
+        "modules": [
+            "src/uriel/research_verbatim.py",
+            "src/uriel/cli.py",
+        ],
+        "verification": [
+            "tests/test_research_verbatim.py",
+            "tests/test_cli.py",
+            "scripts/smoke_installed_verbatim_ledger.py",
+        ],
+        "notes": "Default-off exact user wording with explicit manual, assisted, or per-project consent; hashed user/project isolation; exact-text and aggregate integrity; advisory non-rewriting drift review; and review, search, export, disable, and removal controls.",
+    },
+    {
         "id": "CAP-GATES-001",
         "name": "Three Integrity Gates",
         "status": "BETA",

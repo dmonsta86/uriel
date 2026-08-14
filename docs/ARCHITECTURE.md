@@ -27,6 +27,7 @@ A Rust rewrite could eventually reduce startup/runtime variability and produce n
 ```text
 TRUSTED / DETERMINISTIC
   core.py       confinement, hashing, atomic state, ledger, receipts
+  research_verbatim.py  isolated consent, exact entries, drift, user controls
   data_contracts.py  local Evidence Ingress contracts and no-write planning
   data_ingress.py  immutable managed raw intake and receipt verification
   data_desk.py  bounded parsing, structural profiles, generations, reconciliation
@@ -74,6 +75,11 @@ project/
     reviews/
     review-inbox/
     capability-requests/
+    research-verbatim/
+      user-<sha256>/
+        project-<sha256>/
+          consent.json
+          ledger.json
     data/
       plans/<plan-sha256>.json
       raw/sha256/<prefix>/<content-sha256>
@@ -133,6 +139,30 @@ exact measured implementation. It records observations, not a throughput,
 capacity, latency-SLA, hardware, or real-data guarantee.
 
 `.uriel/` is derived, local state and is ignored by default. Publish selected Blessing packages or audit exports deliberately; do not commit secrets or raw restricted data.
+
+## Research Verbatim Ledger boundary
+
+Research Verbatim Ledger state is lazy, local, and isolated by SHA-256 keys
+derived from a caller-supplied user scope and the current project ID. The raw
+user reference is not stored. A missing consent file means OFF; a missing
+ledger file means zero entries. Offers persist only non-content preference
+metadata to prevent repeat prompts and never create an entry.
+
+Consent, each exact entry, and the aggregate ledger carry independently
+recomputed hashes. Content-bearing reads and content-preserving mutations
+verify their selected records first. Revocation never needs to load exact
+entries, and whole-ledger removal validates exact path and closed membership
+so damaged content cannot prevent privacy cleanup. Exact text is UTF-8 with no
+Unicode, whitespace, or line-ending normalization. Advisory summaries remain
+separate and cannot replace exact text. The project-wide provenance event
+chain is not used for entry metadata, because that would expose identifiers
+across user scopes and make complete removal misleading.
+
+The user-facing CLI and Python facade share one implementation. Drift review is
+a non-persistent lexical comparison with conservative ambiguity; it grants no
+Gate, evidence, publication, or Blessing authority and edits no source. Export
+is explicit and project-confined. Whole-ledger removal is non-recursive and
+refuses unknown members before removing consent or exact text.
 
 ## Scholarly acquisition firewall boundary
 
