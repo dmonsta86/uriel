@@ -39,17 +39,17 @@
 >
 > A fair hearing for the idea. A hard test for the evidence.
 
-The Forge of Uriel is a zero-runtime-dependency Python toolkit for turning a
-rough question or an existing project into evidence-bound, reproducible work.
-It checks the exact data before analysis, traces important claims to source
-artifacts, preserves counter-evidence and limitations, stress-tests the final
-conclusion, and turns failed checks into explicit repair paths.
+The Forge of Uriel is an offline-first, zero-runtime-dependency Python CLI for
+researchers, reviewers, and maintainers who need a verifiable local record. It
+binds project state to hashes, traces material claims to source artifacts,
+keeps counter-evidence and limitations visible, and turns failed checks into
+specific repair paths.
 
-Use it when you need to know **what is supported, what is not, and what should
-happen next**. Uriel is not a truth machine, an autonomous researcher, or a
-substitute for domain experts, ethics review, legal review, or scientific
-judgment. It never grants research authority merely because software or AI
-approved something.
+Use it to answer **what is supported, what is not, and what should happen
+next**. Core verification needs no account, cloud service, or AI. Uriel is not
+a truth machine, autonomous researcher, statistics package, or substitute for
+domain expertise, ethics review, legal review, or scientific judgment. Neither
+software nor AI output grants research authority.
 
 **First time here?** Jump to the [Quick Start](#quick-start), then review the
 [capability status](docs/CAPABILITY_STATUS.md) and [known limitations](docs/LIMITATIONS.md).
@@ -65,16 +65,15 @@ Report honestly.
 <!-- URIEL:SECTION:status:START -->
 ## Current release boundary
 
-The Forge of Uriel **1.0.0-rc2** is the current tagged public release candidate.
-Use that tag for the frozen RC; use `main` for the latest reviewed changes.
+The Forge of Uriel **1.0.0-rc2** is the current tagged public release candidate;
+`main` contains the latest reviewed changes. The deterministic project core and
+packaging are shipped. Data Readiness and the Three Gates are beta. Data Desk,
+the operational Forge, AI handoffs, and Blessing packages remain experimental.
 
-Canonical `main` also carries an experimental Forge workflow for exact local
-run history, evidence-bound continuation packets, transparent Next Move
-ranking, and metadata-only sanitized exports. These additions are newer than
-the historical `v1.0.0-rc2` tag.
-
-See the [public roadmap](docs/ROADMAP.md) for current capabilities and the
-next evidence-gated product lanes.
+This is public-beta software, not infrastructure that should be mandated for
+publication. It still needs broader domain trials, usability evidence, and
+independent security review. See the exact [capability status](docs/CAPABILITY_STATUS.md),
+[known limitations](docs/LIMITATIONS.md), and [public roadmap](docs/ROADMAP.md).
 
 ```text
 uriel --version
@@ -86,34 +85,16 @@ uriel --version
 <!-- URIEL:SECTION:difference:START -->
 ## What makes it different
 
-Most research tools handle one layer: literature search, writing, statistics,
-citations, reproducibility, or review.
+Uriel connects work that is usually split across notebooks, prose, data checks,
+and review:
 
-The Forge of Uriel is built to connect the chain.
+1. preserve the original question and state its strongest testable form;
+2. bind the exact project and data generation before analysis;
+3. map each material claim to direct evidence, counter-evidence, and limits;
+4. challenge overreach and leave a reproducible repair or continuation path.
 
-### Give the idea its strongest fair hearing
-
-Poor articulation is not evidence of poor thinking. Uriel preserves the
-original question, clarifies the strongest testable version, records competing
-interpretations, identifies hidden assumptions, and asks what evidence would
-disprove the idea.
-
-### Verify the data before drawing conclusions
-
-Gate 0 prevents a data-dependent result from receiving authority until the
-exact dataset generation has passed identity, sorting, normalization,
-reconciliation, and staleness checks.
-
-Before that, the honest answer is:
-
-> **The result is not yet known.**
-
-### Treat conclusions as claims—not inherited authority
-
-A published conclusion, a prestigious author, a confident model, or a long
-bibliography does not substitute for evidence.
-
-Uriel asks:
+A publication, prestigious author, confident model, or long bibliography does
+not substitute for evidence. Uriel asks:
 
 ```text
 What exactly is being claimed?
@@ -125,60 +106,26 @@ What remains unknown?
 What would change the result?
 ```
 
-### Challenge the finished work
+Gate 0 blocks authority for a data-dependent result until one exact generation
+passes its declared identity, ordering, reconciliation, and staleness checks.
+The Three Gates then test scope, direct evidence, and adversarial integrity.
+Until the relevant checks pass, the honest result remains **unknown**.
 
-The Three Gates test clarity, evidence, and adversarial integrity. Uriel looks
-for omitted counter-evidence, hidden denominators, overgeneralization, causal
-overreach, control mismatches, leakage, fragile assumptions, stale sources, and
-summary language that exceeds the underlying result.
-
-### Repair instead of merely criticizing
-
-A failed check should not end with a vague rejection.
-
-Uriel records what remains useful, identifies the smallest honest repair,
-selects the strongest next move, prepares what can be prepared safely, and
-states the exact condition for recheck.
-
-### Give an honest verdict somewhere useful to go
-
-Weighing an idea is only half the job. After the evidence has been tested,
-Uriel can preserve what was established, what was refuted, what remains
-unknown, and what is still useful in an immutable continuation packet.
-
-Before calling something externally blocked, it requires a seven-part check:
-confirm the requirement, search the declared boundary, test a safe alternative,
-try a narrower scope, look for substitute evidence, complete any safe scaffold,
-and challenge the claim that no path remains. Missing work stays missing; it
-cannot be promoted into somebody else's blocker.
-
-Uriel then ranks one preferred Next Move and at most two alternatives across
-12 visible dimensions: information gain, rival discrimination, falsification
-value, evidence quality, dependency unlocking, risk, cost, time, user burden,
-reversibility, reproducibility, and the chance of reaching an honest outcome.
-The score is an ordinal planning aid--not a probability, truth score, or hidden
-AI judgment.
-
-The result includes the exact completion condition, any input that only a
-person or outside system can provide, work already completed safely, and a
-bounded next prompt that treats packet text as untrusted data. Uriel does not
-silently call an AI, open the network, launch a subprocess, move the run, or
-grant research authority.
+Failures are durable and constructive: they identify what remains useful, the
+smallest honest repair, and the exact recheck condition. The experimental
+continuation and Next Move mechanics live in the [Forge Method](docs/FORGE_METHOD.md)
+and [Forge Forward guide](docs/FORGE_FORWARD.md), including their explicit
+no-authority limits.
 
 ---
 
 <!-- URIEL:SECTION:intellectual-honesty:START -->
 ## Research should not be won by framing
 
-Two failures repeatedly weaken research:
-
-1. counter-evidence, null findings, limitations, or awkward datapoints disappear
-   from the final story; and
-2. the conclusion becomes broader or more certain than the underlying evidence
-   supports.
-
-Uriel makes those points durable. It records what was tested, what failed,
-what was omitted, and what remains uncertain.
+Uriel keeps counter-evidence, null findings, exclusions, limitations, and
+uncertainty attached to the record. It also flags conclusions whose scope or
+certainty exceeds their declared evidence. The checks make those facts easier
+to inspect; they do not decide whether the underlying science is true.
 
 ---
 
@@ -199,21 +146,35 @@ Distribution package: `uriel-research`
 
 Python import and CLI command: `uriel`
 
+What to expect:
+
+- `start` creates a confined local project and lists its onboarding files;
+- `status` reports the project identity, offline mode, ledger state, and open
+  reminders;
+- `verify` re-hashes the declared source, ledger, and receipts and reports
+  `"verified": true` when those exact records are internally consistent.
+
+These commands do not upload the project, call a model, or establish that a
+scientific conclusion is correct. The verified path has been exercised from a
+fresh installed distribution on synthetic temporary projects.
+
 For the no-install single-file route, see
 [`docs/GETTING_STARTED_FREE.md`](docs/GETTING_STARTED_FREE.md).
+
+For deeper use, continue with [Is Uriel right for me?](docs/getting-started/IS_URIEL_RIGHT_FOR_ME.md),
+the [architecture](docs/ARCHITECTURE.md), [threat model](docs/THREAT_MODEL.md),
+[Three Gates](docs/THREE_GATES.md), and [maintainer playbook](docs/MAINTAINER_PLAYBOOK.md).
 
 ---
 
 <!-- URIEL:SECTION:data-readiness:START -->
 ## Data Readiness (Gate 0)
 
-On canonical `main`, the experimental local `uriel data` workflow can plan and
-seal UTF-8 CSV, TSV, JSON, JSONL, text, and Markdown; create immutable
-structural profiles and generations; preview deltas; preserve every input
-record during reconciliation; and independently reparse and verify the raw
-binding. It executes no formulas, guesses no units or semantic types, creates
-no scientific findings, and grants no Gate 0 authority. Gate 0 begins only
-after you explicitly declare record identity for one exact generation.
+The experimental local `uriel data` workflow can seal and structurally inspect
+one explicitly selected UTF-8 CSV, TSV, JSON, JSONL, text, or Markdown file.
+It preserves exact bytes and conflicts, executes no formulas, guesses no units
+or meanings, creates no scientific findings, and grants no Gate 0 authority.
+Gate 0 begins only after you declare record identity for one exact generation.
 
 After `uriel data inspect` returns a generation ID, create and check its
 generation-bound SortSpec:
@@ -224,16 +185,10 @@ uriel readiness check --root ../my-study --generation <GENERATION_ID>
 uriel readiness status --root ../my-study --generation <GENERATION_ID>
 ```
 
-The v2 receipt binds the raw lineage, parser and policy versions, stable column
-IDs, ordering, duplicate/null rules, reconciliation, analysis plan, and exact
-active SortSpec. Missing, stale, tampered, or ambiguous state blocks downstream
-analysis. If more than one SortSpec exists, select its exact path explicitly.
-
-AI-facing generation bursts require a PASS receipt plus task-specific rows and
-columns. They are capped at 1,000 rows and 1 MiB, support redaction, and carry
-no gate, publication, finding, or Blessing authority. Every packet declares
-advisory read-only operation: network, shell, packet writes, and project writes
-are denied; requested output is capped at 128 KiB and 15 minutes.
+The readiness receipt binds raw lineage, parser and policy versions, ordering,
+duplicate/null rules, analysis plan, and exact SortSpec. Missing, stale,
+tampered, or ambiguous state blocks the result. Detailed contracts and limits
+are in [Known Limitations](docs/LIMITATIONS.md).
 
 ---
 
@@ -241,7 +196,7 @@ are denied; requested output is capped at 128 KiB and 15 minutes.
 ## Continue an incomplete Forge run
 
 The experimental Forge commands operate on exact content-addressed paths--never
-on a mutable "latest" run:
+on an ambiguous mutable "latest" run:
 
 ```text
 uriel forge continue --root ../my-study --snapshot <EXACT_SNAPSHOT> --request artifacts/forge-forward.json
@@ -251,14 +206,10 @@ uriel forge verify-export --root ../my-study --manifest exports/review-copy/mani
 ```
 
 Continuation packets remain private under ignored `.uriel/forge/` state.
-Exports are fresh directories containing generated structural metadata and
-aliases only. They do not copy evidence bodies, project/run IDs, private paths,
-credentials, private URLs, or unrelated names. Every verifier re-reads the
-exact source, recomputes hashes and rankings, rejects extra files or links, and
-reports zero Gate, publication, verifier, Blessing, or Earned Wings authority.
-
-See the [Forge Method](docs/FORGE_METHOD.md) for the closed request shape,
-scoring rule, blocker derivation, and refusal boundaries.
+Sanitized exports contain generated structural metadata, not evidence bodies,
+and still require human review before publication. See the
+[Forge Method](docs/FORGE_METHOD.md) for request shape, scoring, blocker proof,
+verification, and refusal boundaries.
 
 ---
 
@@ -324,6 +275,11 @@ issue a Blessing
 <!-- URIEL:SECTION:privacy:START -->
 ## Safety and privacy
 
+Core commands are local and make no telemetry, background upload, provider, or
+account call. Optional external AI use is a separately acknowledged advisory
+path; its output cannot pass a Gate or issue a Blessing. Review the project's
+classification and disclosure boundary before exporting anything.
+
 Uriel is designed around:
 
 ```text
@@ -341,8 +297,8 @@ immutable generations
 
 The bundled synthetic Forge Trial is a reproducible fixture with 24 sealed
 answer-key issues and a 100-point adjudication rubric. Its release check
-recomputes the clean summary and validates fixture integrity; it does not claim
-that Uriel detected an issue unless a blind report is supplied and adjudicated.
+validates fixture integrity; it does not claim that Uriel detected an issue
+unless a blind report is supplied and adjudicated.
 
 ```text
 python scripts/check_forge_trial.py
