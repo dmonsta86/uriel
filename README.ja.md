@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml">
+  <a href="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml" title="リポジトリの最新コミットの CI 状態">
     <img alt="CI" src="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml/badge.svg">
   </a>
   <img alt="Status: public beta" src="https://img.shields.io/badge/status-public%20beta-f59e0b">
@@ -58,12 +58,16 @@ Report honestly.
 <!-- URIEL:SECTION:status:START -->
 ## 現在のリリース境界
 
-The Forge of Uriel **1.0.0-rc2** は、オープンソース・オフラインファーストの研究開発および強化ツールキットの公開リリース候補版です。
+The Forge of Uriel **v1.0.0-rc2** は最新のタグ付き公開リリース候補です。`main` には、そのタグ以後、次のリリース前にレビューされた保守変更が含まれる場合があります。決定論的なプロジェクトコアとパッケージングは提供済みです。Data Readiness と Three Gates はベータ版です。Data Desk、運用 Forge、AI ハンドオフ、Blessing パッケージは引き続き実験的です。
+
+これは公開ベータソフトウェアであり、出版のために必須とすべき基盤ではありません。より広い分野での試用、使いやすさの証拠、独立したセキュリティレビューがまだ必要です。[正確な機能状況](docs/CAPABILITY_STATUS.md)、[既知の制限](docs/LIMITATIONS.md)、[公開ロードマップ](docs/ROADMAP.md)を参照してください。
 
 ```text
 uriel --version
 # uriel 1.0.0rc2
 ```
+
+上記のバージョンはインストール済みパッケージを示します。リリースに関する主張は、テスト対象の正確なタグまたはコミットに紐付けられます。CI バッジはリポジトリの最新ワークフローの状態を示す情報であり、ローカルのリリースチェックに代わるものでも、この正確な checkout が CI に合格したことを証明するものでもありません。
 
 ---
 
@@ -144,6 +148,19 @@ uriel verify --root ../my-study
 
 インストール不要の単一ファイル版は
 [`docs/GETTING_STARTED_FREE.md`](docs/GETTING_STARTED_FREE.md) を参照してください。
+
+任意で同意が必要な正確なテキスト機能を試すには、[研究逐語台帳ガイド](docs/RESEARCH_VERBATIM_LEDGER.md)を参照してください。デフォルトではオフで、バックグラウンドでテキストを取得することはありません。
+
+### インストールをテストする
+
+checkout から、対象テストスイートと同梱の決定論的 Forge fixture を実行します：
+
+```text
+python -m pytest -q
+python scripts/check_forge_trial.py
+```
+
+wheel のインストール後は、インストール済み逐語台帳の smoke test を `python scripts/smoke_installed_verbatim_ledger.py --executable PATH_TO_URIEL` で、インストール済み Forge の smoke test を `python scripts/smoke_installed_forge.py --executable PATH_TO_URIEL` で実行できます。
 
 ---
 

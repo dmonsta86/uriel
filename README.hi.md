@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml">
+  <a href="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml" title="रिपॉज़िटरी के नवीनतम कमिट की CI स्थिति">
     <img alt="CI" src="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml/badge.svg">
   </a>
   <img alt="Status: public beta" src="https://img.shields.io/badge/status-public%20beta-f59e0b">
@@ -58,12 +58,16 @@ Report honestly.
 <!-- URIEL:SECTION:status:START -->
 ## वर्तमान रिलीज़ सीमा
 
-The Forge of Uriel **1.0.0-rc2** एक ओपन-सोर्स, ऑफलाइन-फर्स्ट शोध विकास और सुदृढ़ीकरण टूलकिट का एक सार्वजनिक रिलीज़ उम्मीदवार है।
+The Forge of Uriel **v1.0.0-rc2** नवीनतम टैग किया गया सार्वजनिक रिलीज़ उम्मीदवार है; अगली रिलीज़ से पहले `main` में इस टैग के बाद की समीक्षा की गई रखरखाव सामग्री हो सकती है। नियतात्मक परियोजना कोर और पैकेजिंग जारी हैं। Data Readiness और Three Gates बीटा हैं। Data Desk, परिचालन Forge, AI handoffs और Blessing पैकेज अभी प्रयोगात्मक हैं।
+
+यह सार्वजनिक बीटा सॉफ्टवेयर है, ऐसा बुनियादी ढांचा नहीं जिसे प्रकाशन के लिए अनिवार्य बनाया जाना चाहिए। इसे अभी अधिक क्षेत्रों में परीक्षण, उपयोगिता के प्रमाण और स्वतंत्र सुरक्षा समीक्षा चाहिए। [सटीक क्षमता स्थिति](docs/CAPABILITY_STATUS.md), [ज्ञात सीमाएं](docs/LIMITATIONS.md) और [सार्वजनिक रोडमैप](docs/ROADMAP.md) देखें।
 
 ```text
 uriel --version
 # uriel 1.0.0rc2
 ```
+
+ऊपर का संस्करण इंस्टॉल किए गए पैकेज की पहचान करता है; रिलीज़ संबंधी दावे जांचे जा रहे सटीक टैग या कमिट से बंधे हैं। CI बैज रिपॉज़िटरी के नवीनतम वर्कफ़्लो की स्थिति केवल सूचना के लिए बताता है—यह स्थानीय रिलीज़ जांच का विकल्प नहीं है और यह साबित नहीं करता कि यह सटीक checkout CI में सफल हुआ है।
 
 ---
 
@@ -143,6 +147,19 @@ uriel verify --root ../my-study
 
 बिना इंस्टॉल वाले एकल-फ़ाइल मार्ग के लिए
 [`docs/GETTING_STARTED_FREE.md`](docs/GETTING_STARTED_FREE.md) देखें।
+
+वैकल्पिक, सहमति-आधारित सटीक-पाठ सुविधा आज़माने के लिए [रिसर्च वर्बेटिम लेजर गाइड](docs/RESEARCH_VERBATIM_LEDGER.md) देखें। यह डिफ़ॉल्ट रूप से बंद है और पृष्ठभूमि में कभी पाठ कैप्चर नहीं करती।
+
+### इंस्टॉलेशन का परीक्षण करें
+
+चेकआउट से केंद्रित टेस्ट सूट और शामिल deterministic Forge fixture चलाएं:
+
+```text
+python -m pytest -q
+python scripts/check_forge_trial.py
+```
+
+Wheel इंस्टॉल करने के बाद, इंस्टॉल किए गए वर्बेटिम लेजर smoke test को `python scripts/smoke_installed_verbatim_ledger.py --executable PATH_TO_URIEL` और इंस्टॉल किए गए Forge smoke test को `python scripts/smoke_installed_forge.py --executable PATH_TO_URIEL` से चलाया जा सकता है।
 
 ---
 

@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml">
+  <a href="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml" title="Status da CI para o commit mais recente do repositório">
     <img alt="CI" src="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml/badge.svg">
   </a>
   <img alt="Status: public beta" src="https://img.shields.io/badge/status-public%20beta-f59e0b">
@@ -58,12 +58,16 @@ Report honestly.
 <!-- URIEL:SECTION:status:START -->
 ## Limite de lançamento atual
 
-O The Forge of Uriel **1.0.0-rc2** é uma versão candidata pública de um conjunto de ferramentas de desenvolvimento e blindagem de pesquisa de código aberto e local.
+O The Forge of Uriel **v1.0.0-rc2** é a versão candidata pública mais recente com tag; `main` pode conter manutenção revisada depois dessa tag e antes da próxima versão. O núcleo determinístico do projeto e o empacotamento estão disponíveis. Data Readiness e as Três Portas estão em beta. Data Desk, o Forge operacional, as transferências para IA e os pacotes Blessing continuam experimentais.
+
+Este é um software beta público, não uma infraestrutura que deva ser imposta para publicação. Ainda são necessários testes em mais domínios, evidências de usabilidade e uma revisão de segurança independente. Consulte o [status exato das capacidades](docs/CAPABILITY_STATUS.md), as [limitações conhecidas](docs/LIMITATIONS.md) e o [roteiro público](docs/ROADMAP.md).
 
 ```text
 uriel --version
 # uriel 1.0.0rc2
 ```
+
+A versão acima identifica o pacote instalado; as afirmações de lançamento estão vinculadas à tag ou ao commit exatos que foram testados. O selo de CI informa o status do fluxo de trabalho mais recente do repositório e é apenas informativo: não substitui uma verificação local de lançamento nem prova que este checkout exato passou na CI.
 
 ---
 
@@ -144,6 +148,19 @@ Pacote de distribuição: `uriel-research`. Importação Python e comando CLI:
 
 Para a opção de arquivo único sem instalação, consulte
 [`docs/GETTING_STARTED_FREE.md`](docs/GETTING_STARTED_FREE.md).
+
+Para experimentar o recurso opcional de texto exato, consulte o [guia do Registro Verbatim de Pesquisa](docs/RESEARCH_VERBATIM_LEDGER.md). Ele fica DESATIVADO por padrão e nunca captura texto em segundo plano.
+
+### Testar uma instalação
+
+Em um checkout, execute a suíte focada e o fixture determinístico do Forge incluído:
+
+```text
+python -m pytest -q
+python scripts/check_forge_trial.py
+```
+
+Depois de instalar o wheel, o smoke test instalado do Registro Verbatim pode ser executado com `python scripts/smoke_installed_verbatim_ledger.py --executable PATH_TO_URIEL`, e o smoke test instalado do Forge com `python scripts/smoke_installed_forge.py --executable PATH_TO_URIEL`.
 
 ---
 

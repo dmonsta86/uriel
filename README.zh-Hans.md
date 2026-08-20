@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml">
+  <a href="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml" title="仓库最新提交的 CI 状态">
     <img alt="CI" src="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml/badge.svg">
   </a>
   <img alt="Status: public beta" src="https://img.shields.io/badge/status-public%20beta-f59e0b">
@@ -58,12 +58,16 @@ Report honestly.
 <!-- URIEL:SECTION:status:START -->
 ## 当前发布边界
 
-The Forge of Uriel **1.0.0-rc2** 是开源、离线优先科研开发与强化工具包的公开候选版本。
+The Forge of Uriel **v1.0.0-rc2** 是最新的公开候选标签版本；`main` 可能包含该标签之后、下一版本之前经过审查的维护内容。确定性项目核心和打包已发布。Data Readiness 与三道门处于 beta 阶段。Data Desk、运行中的 Forge、AI 交接和 Blessing 包仍属实验功能。
+
+这是公开 beta 软件，不应被强制作为发表基础设施。它仍需要更广泛的领域试用、可用性证据和独立安全审查。请参阅[准确的能力状态](docs/CAPABILITY_STATUS.md)、[已知限制](docs/LIMITATIONS.md)和[公开路线图](docs/ROADMAP.md)。
 
 ```text
 uriel --version
 # uriel 1.0.0rc2
 ```
+
+上面的版本标识已安装的软件包；发布声明绑定到正在测试的确切标签或提交。CI 徽章仅提供仓库最新工作流的状态信息，不能替代本地发布检查，也不能证明当前这份检出代码已经通过 CI。
 
 ---
 
@@ -142,6 +146,19 @@ uriel verify --root ../my-study
 
 无需安装的单文件用法见
 [`docs/GETTING_STARTED_FREE.md`](docs/GETTING_STARTED_FREE.md)。
+
+要试用可选的、需同意的精确文本功能，请参阅[研究逐字记录账本指南](docs/RESEARCH_VERBATIM_LEDGER.md)。它默认关闭，绝不会在后台捕获文本。
+
+### 测试安装
+
+在仓库检出目录中运行重点测试套件和随附的确定性 Forge fixture：
+
+```text
+python -m pytest -q
+python scripts/check_forge_trial.py
+```
+
+安装 wheel 后，可使用 `python scripts/smoke_installed_verbatim_ledger.py --executable PATH_TO_URIEL` 运行已安装的逐字记录账本 smoke test，并使用 `python scripts/smoke_installed_forge.py --executable PATH_TO_URIEL` 运行已安装的 Forge smoke test。
 
 ---
 

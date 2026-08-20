@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml">
+  <a href="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml" title="حالة CI لآخر التزام في المستودع">
     <img alt="CI" src="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml/badge.svg">
   </a>
   <img alt="Status: public beta" src="https://img.shields.io/badge/status-public%20beta-f59e0b">
@@ -60,12 +60,16 @@ Report honestly.
 <!-- URIEL:SECTION:status:START -->
 ## حدود الإصدار الحالي
 
-إن The Forge of Uriel **1.0.0-rc2** هو إصدار مرشح عام لمجموعة أدوات تطوير وتحصين الأبحاث مفتوحة المصدر والمحلية أولاً.
+إن The Forge of Uriel **v1.0.0-rc2** هو أحدث إصدار مرشح عام موسوم؛ وقد يحتوي `main` على صيانة راجعها الفريق بعد تلك العلامة وقبل الإصدار التالي. نواة المشروع الحتمية وحزمة التوزيع منشورتان. Data Readiness والبوابات الثلاث في مرحلة تجريبية. أما Data Desk وForge التشغيلي وتسليمات الذكاء الاصطناعي وحزم Blessing فما زالت تجريبية.
+
+هذا برنامج تجريبي عام، وليس بنية تحتية ينبغي فرضها للنشر. ما زال يحتاج إلى تجارب أوسع في مجالات مختلفة، وأدلة على سهولة الاستخدام، ومراجعة أمنية مستقلة. راجع [حالة القدرات الدقيقة](docs/CAPABILITY_STATUS.md) و[القيود المعروفة](docs/LIMITATIONS.md) و[خارطة الطريق العامة](docs/ROADMAP.md).
 
 ```text
 uriel --version
 # uriel 1.0.0rc2
 ```
+
+الإصدار أعلاه يعرّف الحزمة المثبتة؛ وترتبط ادعاءات الإصدار بالوسم أو الالتزام المحدد الذي يجري اختباره. تعرض شارة CI حالة أحدث سير عمل في المستودع لأغراض المعلومات فقط؛ ولا تستبدل فحص الإصدار المحلي ولا تثبت أن نسخة checkout هذه اجتازت CI.
 
 ---
 
@@ -145,6 +149,19 @@ uriel verify --root ../my-study
 
 لمسار الملف الواحد بلا تثبيت، راجع
 [`docs/GETTING_STARTED_FREE.md`](docs/GETTING_STARTED_FREE.md).
+
+لتجربة ميزة النص الحرفي الاختيارية التي تتطلب موافقة، راجع [دليل سجل الأبحاث الحرفي](docs/RESEARCH_VERBATIM_LEDGER.md). وهي متوقفة افتراضياً ولا تلتقط النص في الخلفية أبداً.
+
+### اختبار تثبيت
+
+من نسخة checkout، شغّل مجموعة الاختبارات المركزة وfixture Forge الحتمي المضمّن:
+
+```text
+python -m pytest -q
+python scripts/check_forge_trial.py
+```
+
+بعد تثبيت wheel، يمكن تشغيل اختبار الدخان لسجل النص الحرفي المثبت باستخدام `python scripts/smoke_installed_verbatim_ledger.py --executable PATH_TO_URIEL`، واختبار الدخان لـ Forge المثبت باستخدام `python scripts/smoke_installed_forge.py --executable PATH_TO_URIEL`.
 
 ---
 
