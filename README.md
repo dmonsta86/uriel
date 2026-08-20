@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml">
+  <a href="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml" title="CI status for the latest repository commit">
     <img alt="CI" src="https://github.com/dmonsta86/uriel/actions/workflows/ci.yml/badge.svg">
   </a>
   <img alt="Status: public beta" src="https://img.shields.io/badge/status-public%20beta-f59e0b">
@@ -65,8 +65,9 @@ Report honestly.
 <!-- URIEL:SECTION:status:START -->
 ## Current release boundary
 
-The Forge of Uriel **1.0.0-rc2** is the current tagged public release candidate;
-`main` contains the latest reviewed changes. The deterministic project core and
+The Forge of Uriel **v1.0.0-rc2** is the latest tagged public release candidate;
+`main` may contain reviewed maintenance after that tag and before the next
+release. The deterministic project core and
 packaging are shipped. Data Readiness and the Three Gates are beta. Data Desk,
 the operational Forge, AI handoffs, and Blessing packages remain experimental.
 
@@ -79,6 +80,11 @@ independent security review. See the exact [capability status](docs/CAPABILITY_S
 uriel --version
 # uriel 1.0.0rc2
 ```
+
+The version above identifies the installed package; release claims bind to the
+exact tag or commit being tested. The CI badge reports the latest workflow
+status for the repository and is informational—it does not replace a local
+release check or prove that this exact checkout has passed CI.
 
 ---
 
@@ -157,6 +163,25 @@ What to expect:
 These commands do not upload the project, call a model, or establish that a
 scientific conclusion is correct. The verified path has been exercised from a
 fresh installed distribution on synthetic temporary projects.
+
+To exercise the optional, consent-based exact-text feature, see the
+[Research Verbatim Ledger guide](docs/RESEARCH_VERBATIM_LEDGER.md). It is OFF
+by default and never captures text in the background.
+
+### Test an installation
+
+From a checkout, run the focused suite and the bundled deterministic Forge
+fixture:
+
+```text
+python -m pytest -q
+python scripts/check_forge_trial.py
+```
+
+After installing the wheel, the installed verbatim-ledger smoke test can be
+run with `python scripts/smoke_installed_verbatim_ledger.py --executable PATH_TO_URIEL`
+and the installed Forge smoke with
+`python scripts/smoke_installed_forge.py --executable PATH_TO_URIEL`.
 
 For the no-install single-file route, see
 [`docs/GETTING_STARTED_FREE.md`](docs/GETTING_STARTED_FREE.md).
