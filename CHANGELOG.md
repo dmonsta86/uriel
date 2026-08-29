@@ -6,6 +6,11 @@ All notable changes to Uriel are documented here.
 
 ### Added
 
+- A read-only `uriel paper review` surface that automatically compares an
+  explicit candidate against all selected-scope verbatim baselines, reports
+  claim/evidence currency and declared closest-prior-work coverage, binds an
+  exact baseline/candidate review token, and requires explicit user intent for
+  material changes without rewriting or granting scientific authority.
 - An opt-in, default-off Research Verbatim Ledger with manual, individually
   confirmed assisted, and explicit per-project modes; per-user/per-project
   isolation; exact-text, record, consent, and ledger hashes; advisory drift

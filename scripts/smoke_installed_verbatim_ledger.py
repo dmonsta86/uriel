@@ -183,6 +183,63 @@ def main() -> int:
         ):
             raise RuntimeError("installed drift crossed its advisory boundary")
 
+        baseline = project / "artifacts" / "current.md"
+        candidate = project / "artifacts" / "candidate.md"
+        baseline.write_text("# Current\n\n" + exact + "\n", encoding="utf-8")
+        candidate.write_text("# Candidate\n\n" + exact + "\n", encoding="utf-8")
+        paper = _invoke(
+            executable,
+            [
+                "paper",
+                "review",
+                "--root",
+                str(project),
+                "--manuscript",
+                "artifacts/candidate.md",
+                "--baseline",
+                "artifacts/current.md",
+                "--user",
+                "installed-user",
+                "--change-class",
+                "title",
+            ],
+        )["result"]
+        if (
+            paper.get("schema") != "uriel.paper_review.v1"
+            or paper.get("author_fidelity", {}).get("entry_count") != 1
+            or paper.get("change_gate", {}).get("status")
+            != "EXPLICIT_USER_CONFIRMATION_REQUIRED"
+            or paper.get("boundaries", {}).get("writes") != 0
+        ):
+            raise RuntimeError("installed paper review did not preserve its gate")
+        confirmed_paper = _invoke(
+            executable,
+            [
+                "paper",
+                "review",
+                "--root",
+                str(project),
+                "--manuscript",
+                "artifacts/candidate.md",
+                "--baseline",
+                "artifacts/current.md",
+                "--user",
+                "installed-user",
+                "--change-class",
+                "title",
+                "--confirm-change",
+            ],
+        )["result"]
+        if (
+            confirmed_paper.get("change_gate", {}).get("status")
+            != "USER_CONFIRMED_REVIEWED_CANDIDATE"
+            or confirmed_paper.get("change_gate", {}).get(
+                "canonical_mutation_authorized_by_uriel"
+            )
+            is not False
+        ):
+            raise RuntimeError("installed paper confirmation crossed authority")
+
         exported = _invoke(
             executable,
             [

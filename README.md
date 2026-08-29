@@ -332,7 +332,12 @@ uriel verbatim consent --root ../my-study --user researcher-1 --mode manual --co
 ~~~
 
 Drift review is advisory: it links back to exact wording and never proves a
-scientific claim or silently edits later work. See the
+scientific claim or silently edits later work. `paper review` expands that
+check across every captured baseline in the selected user/project scope,
+reports declared claim/evidence and closest-prior-work gaps, and requires an
+explicitly confirmed, hash-bound baseline/candidate comparison before a
+material change can be treated as wanted. It still writes no manuscript,
+performs no literature search, and grants no scientific authority. See the
 [Research Verbatim Ledger guide](docs/RESEARCH_VERBATIM_LEDGER.md) for consent,
 privacy, modes, exact-entry fields, examples, and limitations.
 

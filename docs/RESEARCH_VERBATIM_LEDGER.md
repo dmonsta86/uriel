@@ -98,6 +98,41 @@ retains unresolved ambiguity. The review returns hashes and linked entry IDs,
 persists nothing, edits neither text, and never treats the user's wording as
 scientific proof.
 
+## Paper-level fidelity and change review
+
+For a candidate revision, Uriel can compare one explicit project-local UTF-8
+manuscript against every captured entry in the selected user/project scope:
+
+~~~text
+uriel paper review --root ../my-study \
+  --manuscript artifacts/candidate.md \
+  --baseline artifacts/current.md \
+  --user researcher-1 \
+  --change-class major_revision
+~~~
+
+Omit `--entry` to include every captured baseline; repeat `--entry` to review a
+smaller declared set. The report binds the project, observed source set,
+baseline and candidate hashes. It reports exact-text preservation and
+conservative lexical leads, declared claim/evidence currency, and whether the
+project has documented its closest prior work, differentiators, negative
+searches, and search limits.
+
+The first run never confirms or applies a material change. After inspecting
+the exact ledger entries and the candidate, the user may rerun the same
+baseline/candidate comparison with `--confirm-change`. That records explicit
+intent for those exact reviewed bytes; it still performs no canonical write
+and grants no scientific, publication, or source authority. Any integration
+that can replace a canonical manuscript must remain candidate-first and require
+this explicit confirmation before applying a material title, claim, scope,
+source, structure, conclusion, or major-revision change.
+
+Paper review does not search journals or the web. It detects missing or stale
+declared coverage and keeps four questions separate: what a local analysis
+found, what external literature supports, whether a mechanism is established,
+and what incremental contribution remains. A local `INCONCLUSIVE` result must
+not erase declared external association evidence.
+
 An export contains exact wording and may be sensitive. Uriel writes it only to
 a fresh explicit project-relative path outside private .uriel state. Review
 classification and destination before sharing. Selected-entry removal changes

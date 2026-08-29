@@ -16,6 +16,7 @@ from .core import (
     verify_project,
 )
 from .research_verbatim import ResearchVerbatimLedger
+from .paper_review import review_paper
 
 __all__ = [
     "__version__",
@@ -30,5 +31,6 @@ __all__ = [
     "guard_path",
     "init_project",
     "run_workload",
+    "review_paper",
     "verify_project",
 ]

@@ -111,6 +111,7 @@ from .onboarding import (
     safe_copy,
     start as start_workspace,
 )
+from .paper_review import CHANGE_CLASSES as PAPER_CHANGE_CLASSES, review_paper
 from .prompts import build_prompt
 from .repair_packet import build_repair_packet, verify_repair_packet
 from .research_verbatim import (
@@ -685,6 +686,47 @@ def parser() -> argparse.ArgumentParser:
     _verbatim_scope_arguments(verbatim_remove_ledger)
     verbatim_remove_ledger.add_argument("--confirm", action="store_true")
 
+    paper = commands.add_parser("paper", help="read-only manuscript review")
+    paper_actions = paper.add_subparsers(dest="paper_action", required=True)
+    paper_review = paper_actions.add_parser(
+        "review",
+        help="review one explicit candidate without editing or granting authority",
+    )
+    _root_argument(paper_review)
+    paper_review.add_argument(
+        "--manuscript",
+        required=True,
+        help="project-relative UTF-8 candidate manuscript",
+    )
+    paper_review.add_argument(
+        "--baseline",
+        default=None,
+        help="exact project-relative current manuscript used for change comparison",
+    )
+    paper_review.add_argument(
+        "--user",
+        default=None,
+        help="optional consented verbatim user scope; raw value is not stored",
+    )
+    paper_review.add_argument(
+        "--entry",
+        action="append",
+        default=[],
+        dest="entry_ids",
+        help="specific verbatim entry ID; omit to review every captured baseline in scope",
+    )
+    paper_review.add_argument(
+        "--change-class",
+        choices=PAPER_CHANGE_CLASSES,
+        default="unspecified",
+        help="declared revision class used by the material-change confirmation gate",
+    )
+    paper_review.add_argument(
+        "--confirm-change",
+        action="store_true",
+        help="record explicit user intent for this exact baseline/candidate comparison",
+    )
+
     prompt = commands.add_parser("prompt", help="create an optional AI/human review prompt")
     _root_argument(prompt)
     prompt.add_argument("task", choices=REVIEW_TASKS)
@@ -791,6 +833,16 @@ def _envelope(status: str, command: str, result: Optional[Any] = None, error: Op
 
 
 def _print_human(command: str, result: Any, args: Optional[argparse.Namespace] = None) -> None:
+    if command == "paper" and isinstance(result, Mapping):
+        print("Paper review: {0}".format(result.get("recommended_action")))
+        print("Candidate SHA-256: {0}".format((result.get("manuscript") or {}).get("sha256")))
+        print("Author fidelity: {0}".format((result.get("author_fidelity") or {}).get("status")))
+        print("Claim/evidence coverage: {0}".format((result.get("claim_evidence_coverage") or {}).get("status")))
+        print("Literature coverage: {0}".format((result.get("literature_coverage") or {}).get("status")))
+        print("Change gate: {0}".format((result.get("change_gate") or {}).get("status")))
+        print("Review token: {0}".format(result.get("review_token")))
+        print("No manuscript write, network request, provider call, or scientific authority occurred.")
+        return
     if command == "forge" and isinstance(result, Mapping):
         action = args.forge_action
         if action == "continue":
@@ -1732,6 +1784,17 @@ def dispatch(args: argparse.Namespace) -> Any:
         if action == "remove-ledger":
             return remove_verbatim_ledger(
                 args.root, args.user, confirmed=args.confirm
+            )
+    if command == "paper":
+        if args.paper_action == "review":
+            return review_paper(
+                args.root,
+                args.manuscript,
+                baseline_path=args.baseline,
+                user_reference=args.user,
+                entry_ids=args.entry_ids,
+                change_class=args.change_class,
+                user_confirmed_change=args.confirm_change,
             )
     if command == "prompt":
         result = build_prompt(

@@ -57,14 +57,16 @@ CAPABILITIES: List[Dict[str, Any]] = [
         "platforms": ["Windows", "macOS", "Linux"],
         "modules": [
             "src/uriel/research_verbatim.py",
+            "src/uriel/paper_review.py",
             "src/uriel/cli.py",
         ],
         "verification": [
             "tests/test_research_verbatim.py",
+            "tests/test_paper_review.py",
             "tests/test_cli.py",
             "scripts/smoke_installed_verbatim_ledger.py",
         ],
-        "notes": "Default-off exact user wording with explicit manual, assisted, or per-project consent; hashed user/project isolation; exact-text and aggregate integrity; advisory non-rewriting drift review; and review, search, export, disable, and removal controls.",
+        "notes": "Default-off exact user wording with explicit manual, assisted, or per-project consent; hashed user/project isolation; exact-text and aggregate integrity; advisory non-rewriting drift review; read-only all-baseline paper fidelity, declared evidence/literature coverage, and material-change confirmation; plus review, search, export, disable, and removal controls.",
     },
     {
         "id": "CAP-GATES-001",

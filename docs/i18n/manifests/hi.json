@@ -1,6 +1,6 @@
 {
-  "source_commit": "f4ece1845015564a6eb88adf2eb1a3ba4cd61b60",
-  "source_readme_sha256": "c6e3120748f175ede8ac810d33fe4ab95cd54930528e91a7d7ec98a0d23fa1e8",
+  "source_commit": "ef0969852a71bf0467273309f09830ac1039c142",
+  "source_readme_sha256": "20e6d23d244bd20395a59ed1f7aa4f39629e78ec76a8ee2d7474cd3fd8aa090a",
   "locale": "hi",
   "translation_status": "AI_SECOND_PASS_REVIEWED",
   "reviewers": [],
@@ -13,6 +13,6 @@
   "visual_manifest_sha256": "6ad6262dfeb913711bf8d6cbf2077438d139ab0fb4734e03ed2439618cef6fc5",
   "visual_source_registry_path": "globalization/visual_sources.json",
   "visual_source_registry_sha256": "712ff7d5099193c419546df573afd46be448539c6f25b222d7f3e9b18194e9dd",
-  "verified_at_utc": "2026-08-14T15:36:27Z",
+  "verified_at_utc": "2026-08-29T10:05:53Z",
   "schema": "uriel.translation_manifest.v2"
 }

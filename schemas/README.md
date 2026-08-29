@@ -22,3 +22,7 @@ Research Verbatim Ledger contracts include:
 - uriel.research_verbatim_ledger.v1: one aggregate isolated store;
 - uriel.research_verbatim_export.v1: an explicit exact-wording export; and
 - uriel.research_verbatim_drift_review.v1: non-persistent advisory drift output.
+- uriel.paper_review.v1: a read-only, hash-bound manuscript review that combines
+  consented verbatim fidelity, declared claim/evidence coverage, bounded
+  closest-prior-work coverage, and an explicit material-change confirmation
+  state without rewriting or granting scientific authority.

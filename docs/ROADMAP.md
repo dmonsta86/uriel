@@ -22,6 +22,10 @@ Available now includes:
   verification;
 - assurance-depth APIs, Core-8 localization, and a synthetic Forge Trial
   validator/scorer.
+- an opt-in Research Verbatim Ledger plus read-only paper review for
+  all-baseline author-fidelity leads, declared claim/evidence and literature
+  coverage, and material-change confirmation. It performs no semantic verdict,
+  live literature discovery, or automatic manuscript apply.
 - an experimental local Evidence Ingress/Data Desk candidate on canonical
   `main`, with immutable raw intake, structural generations, conflict-preserving
   reconciliation, and independent deep verification. It is not part of the

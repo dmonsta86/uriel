@@ -121,6 +121,13 @@
   Drift is non-persistent and advisory. Export is explicit. Removal is
   scope-exact, non-recursive, and preflights all closed-membership files before
   deleting any of them; unknown, linked, or non-file members stop the action.
+- Paper review is candidate-first and read-only. It binds baseline, candidate,
+  project, source-observation, ledger-selection, and confirmation state in one
+  review token; automatic all-entry comparison occurs only inside an explicitly
+  selected user/project scope. It outputs no exact ledger text, performs no
+  network/provider call, and grants no canonical-apply authority. Material
+  changes remain confirmation-gated, while lexical and literature-coverage
+  warnings remain advisory human-review leads.
 - scholarly acquisition is disabled by default and R2.1 ships only a fixed
   local-mock registry and exact injected transport. Structured fields build a
   component request with no free-form URL; simulated host/address pinning,

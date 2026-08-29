@@ -1,7 +1,7 @@
 {
   "schema": "uriel.capability_inventory.v1",
   "source": "src/uriel/capability_status.py",
-  "source_fingerprint": "bed77abbb3dad13911951cd94ab169c563823a3ee50ed4b14fedd455fcf9dd46",
+  "source_fingerprint": "6eca0515e1e685f04eda127adb79b43dd29e8fcd3ad25ab8ad62cff6b9309b73",
   "capabilities": [
     {
       "id": "CAP-CORE-001",
@@ -61,14 +61,16 @@
       ],
       "modules": [
         "src/uriel/research_verbatim.py",
+        "src/uriel/paper_review.py",
         "src/uriel/cli.py"
       ],
       "verification": [
         "tests/test_research_verbatim.py",
+        "tests/test_paper_review.py",
         "tests/test_cli.py",
         "scripts/smoke_installed_verbatim_ledger.py"
       ],
-      "notes": "Default-off exact user wording with explicit manual, assisted, or per-project consent; hashed user/project isolation; exact-text and aggregate integrity; advisory non-rewriting drift review; and review, search, export, disable, and removal controls."
+      "notes": "Default-off exact user wording with explicit manual, assisted, or per-project consent; hashed user/project isolation; exact-text and aggregate integrity; advisory non-rewriting drift review; read-only all-baseline paper fidelity, declared evidence/literature coverage, and material-change confirmation; plus review, search, export, disable, and removal controls."
     },
     {
       "id": "CAP-GATES-001",

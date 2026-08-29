@@ -193,6 +193,14 @@ when overlap is high. Omission, contradiction, and overstatement indicators
 are review leads, not semantic judgments. Domain experts must inspect the
 linked exact text and later claim. Uriel never edits either one.
 
+Paper review can detect exact included wording, missing declared evidence,
+stale local artifacts, absent closest-prior-work fields, and large/title-level
+change signals. It cannot decide whether a paraphrase is faithful, whether a
+paper is truly novel, whether a citation supports the intended interpretation,
+or whether a literature search is exhaustive. Its material-change confirmation
+records user intent for exact compared bytes only; it is not filesystem,
+scientific, coauthor, journal, or publication authority.
+
 The local store is hash-verified but not encrypted, securely erased from
 backups, protected from an administrator, or synchronized across devices.
 Explicit exports contain exact user wording and require a human privacy and

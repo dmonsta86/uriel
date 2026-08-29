@@ -164,6 +164,16 @@ Gate, evidence, publication, or Blessing authority and edits no source. Export
 is explicit and project-confined. Whole-ledger removal is non-recursive and
 refuses unknown members before removing consent or exact text.
 
+`uriel paper review` is a read-only composition above this boundary. It reads
+one bounded candidate, an optional exact baseline, current project/source
+identity, declared claims/evidence, novelty-search fields, and—only when a user
+scope is supplied—the isolated ledger. Omitting individual entry IDs selects
+all captured baselines in that scope. Its review token binds those observations
+and the change-confirmation state. It creates no state, includes no exact
+verbatim text in its output, and cannot authorize or perform a canonical
+manuscript mutation. A future applying consumer must rebind the exact report
+and require explicit user confirmation for material changes.
+
 ## Scholarly acquisition firewall boundary
 
 ADR 0013 freezes a separate scholarly-acquisition trust boundary. The shipped
