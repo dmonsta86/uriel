@@ -185,9 +185,11 @@ changed.
 - Markdown is the only output format. DOCX and PDF export are not implemented.
 - A verified datapoint proves which bytes a number came from and that it was
   copied exactly. It does not prove that the analysis was appropriate or correct.
-- Statistical recomputation covers reported t, F, chi-square, r, and z tests in
-  APA-like notation. It cannot see tests written in other notations, and it does
-  not judge whether a test was the right one.
+- Statistical recomputation covers reported t, F, chi-square (including Q and
+  G²), r, and z tests in APA-like notation, after repairing common
+  PDF-extraction damage. `uriel paper lint` works on text extracted from any
+  published PDF. It cannot read results written only in prose or tables, and it
+  does not judge whether a test was the right one.
 - Quote checks prove verbatim presence in the held copy, not that the copy is
   authentic or that the quote is used fairly.
 - Prose rules are fixed patterns. They do not detect authorship and cannot judge

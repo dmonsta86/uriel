@@ -43,6 +43,12 @@ class ProseLintTests(unittest.TestCase):
         self.assertIn(("HYPE_LANGUAGE", "submission"), issues)
         self.assertNotIn(("PROOF_LANGUAGE", "submission"), found("We built a proof-of-concept prototype that proves feasible."))
 
+    def test_proved_to_be_means_turned_out(self) -> None:
+        # Regression: "Both these hypotheses proved to be consistent" (Einstein, Relativity) is not proof language.
+        self.assertNotIn(("PROOF_LANGUAGE", "submission"), found("Both these hypotheses proved to be consistent."))
+        self.assertNotIn(("PROOF_LANGUAGE", "submission"), found("The method proved useful in practice."))
+        self.assertIn(("PROOF_LANGUAGE", "submission"), found("The redshift result proved the theory."))
+
     def test_stock_phrases_and_hedge_stacks(self) -> None:
         issues = found("We delve into the intricate interplay of sleep. The effect may potentially reflect fatigue.")
         self.assertIn(("STOCK_PHRASE", "submission"), issues)

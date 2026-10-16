@@ -28,6 +28,19 @@ All notable changes to Uriel are documented here.
   residue, placeholders, stock filler, unsourced attribution, hype, proof
   language, and causal wording without identification. Builds refuse on
   blockers and write a number-trace supplement and digest-bound receipt.
+- Statistical recomputation reads text extracted from published PDFs: it
+  repairs control bytes, lost chi and minus signs, split decimals, and
+  publisher font substitutions for `=`, `<`, and `>`, and it accepts "ns",
+  inequality-reported statistics, intervening MSE terms, thousands separators,
+  and Q/G² tests. Measured locally against the statcheck project's
+  hand-extracted material (227 results from 8 published papers), extraction
+  coverage rose from 46 to 218 of 225 supported results. All 216 recomputed
+  p-values matched an independent SciPy computation, and all 24 hand-labelled
+  results agreed with their error and decision-error labels. This was a one-off
+  local measurement, not a tracked benchmark.
+- Fewer false positives on non-statistical text: "p = 3.14" (pi) and similar
+  values are checked only in a visibly statistical context, and "proved to be"
+  is no longer read as proof language.
 - Seven mirrored schemas (`uriel.paper.v1`, `uriel.datapoints.v1`,
   `uriel.references.v1`, `uriel.paper_check.v1`, `uriel.paper_build.v1`,
   `uriel.plan_lock.v1`, `uriel.next_step.v1`) and the

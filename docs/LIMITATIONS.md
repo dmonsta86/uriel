@@ -192,9 +192,15 @@ and exempts years, labels, coverage levels, headings, and list numbers. It can
 miss spelled-out numbers and can flag an innocent numeral, which
 `{{lit:...}}` makes explicit.
 
-Statistical recomputation covers t, F, chi-square, r, and z reports in
-APA-like notation, using rounding intervals for the reported statistic and a
-one-tailed allowance when the sentence says so. It does not read tables of test
+Statistical recomputation covers t, F, chi-square (including Q and G²), r, and
+z reports in APA-like notation, using rounding intervals for the reported
+statistic and a one-tailed allowance when the same line says so. Before
+checking, text is repaired for common PDF-extraction damage: control bytes,
+lost chi and minus signs, split decimals, and publisher fonts that map `=`,
+`<`, and `>` to letters. Results reported as "ns", as inequalities
+(`F < 1`), with an intervening MSE, or with thousands separators are read. Results
+written only in prose ("significant at the .05 level"), split across a page
+break, or declared one-tailed only elsewhere in the document are not. It does not read tables of test
 results, other notations, corrected or nonstandard tests, or the
 appropriateness of any test. GRIM applies only to means of integer-valued data
 with a declared sample size.

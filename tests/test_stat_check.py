@@ -7,6 +7,7 @@ from uriel.stat_check import (
     check_reported_tests,
     check_text,
     grim_consistent,
+    normalize_extracted_text,
     p_from_chi2,
     p_from_f,
     p_from_r,
@@ -88,13 +89,20 @@ class ImpossibleValueTests(unittest.TestCase):
             self.assertIn(code, found)
         self.assertTrue(all(row["grave"] for row in check_impossible_values("p = 1.3. SD = -1.2.")))
 
+    def test_p_outside_statistical_context_is_not_a_p_value(self) -> None:
+        # Regression: a transcription of pi as "p = 3.14" in Einstein's Relativity was read as an impossible p-value.
+        self.assertEqual([], check_text("he will not obtain the familiar number p = 3.14 . . ., but a larger number")["issues"])
+        self.assertEqual([], check_text("The particle had momentum p = 0 at rest.")["issues"])
+        self.assertIn("STAT_IMPOSSIBLE_P", codes("The difference was significant, p = 1.3."))
+        self.assertIn("STAT_P_REPORTED_AS_ZERO", codes("M = 3.1, SD = 0.4, p = .000."))
+
     def test_percent_count_mismatch_and_match(self) -> None:
         self.assertIn("STAT_PERCENT_COUNT_MISMATCH", codes("12 of 40 participants (35%) agreed."))
         self.assertNotIn("STAT_PERCENT_COUNT_MISMATCH", codes("12 of 40 participants (30%) agreed."))
         self.assertNotIn("STAT_PERCENT_COUNT_MISMATCH", codes("1/3 (33.3%) agreed."))
 
     def test_zero_p_and_ratio_wording_are_advisory(self) -> None:
-        issues = check_text("p = .000. Output reached 150% of baseline.")["issues"]
+        issues = check_text("The effect was significant, p = .000. Output reached 150% of baseline.")["issues"]
         self.assertEqual({"STAT_P_REPORTED_AS_ZERO", "STAT_PERCENT_OF_EXCEEDS_100"}, {row["code"] for row in issues})
         self.assertFalse(any(row["grave"] for row in issues))
 
@@ -104,6 +112,42 @@ class ImpossibleValueTests(unittest.TestCase):
     def test_line_numbers_are_reported(self) -> None:
         issues = check_text("first line\n\nt(28) = 2.20, p = .36")["issues"]
         self.assertEqual(3, issues[0]["line"])
+
+
+class ExtractionDamageTests(unittest.TestCase):
+    """Regression: strings copied from PDF text of published papers (statcheck's hand-coded
+    test material). Before normalization, 78% of these results were silently skipped."""
+
+    def found(self, text: str):
+        return [row["code"] for row in check_text(text)["issues"]]
+
+    def test_damaged_but_consistent_results_are_parsed_and_pass(self) -> None:
+        for text in (
+            "F(1, 127) p 6.36, p ! .05",                    # publisher font: "=" -> p, "<" -> !
+            "F(2, 726)=7.20, pb.001",                       # "<" -> b
+            "Fs(1, 248)b1.16, psN.28",                      # plural, statistic below bound, ">" -> N
+            "t(191) <bc> 8.22, p < . 001, h2 <bc> .26",     # "=" -> <bc>, split decimal
+            "B \x01= -\x070.36, t(261.38) \x01= -2.27, p \x01= .024",  # control bytes, Welch df
+            "?2(37, N = 310) = 45.13, ns",                  # lost chi, "ns" instead of p
+            "\u03c72(374, N = 488) = 1,224.08, p < .001",  # thousands separator
+            "F(2, 70) = 4.48, MSE = 6.61, p <.02",          # MSE between statistic and p
+            "F(l, 76) = 23.95, p <.001",                    # letter l for digit 1
+            "QWithin(16) = 26.05, p = .053",                # Q is chi-square distributed
+        ):
+            normalized = normalize_extracted_text(text)
+            self.assertEqual(1, check_text(text)["reported_tests_found"], (text, normalized))
+            self.assertEqual([], self.found(text), text)
+
+    def test_damaged_inconsistent_results_are_flagged(self) -> None:
+        self.assertEqual(["STAT_DECISION_INCONSISTENT"], self.found("t(14) = 2.0, p <.03"))
+        self.assertEqual(["STAT_DECISION_INCONSISTENT"], self.found("BF(2,56) = 1.203, p < .001"))
+        self.assertEqual(["STAT_P_INCONSISTENT"], self.found("F(1, 186) <bc> 5.73, p <bc> .01"))
+        self.assertEqual(["STAT_DECISION_INCONSISTENT"], self.found("t(68) = ?2.15, ns"))
+
+    def test_normalization_keeps_line_numbers(self) -> None:
+        text = "a\x01b\nline two\n\nt(14) = 2.0, p <.03"
+        self.assertEqual(text.count("\n"), normalize_extracted_text(text).count("\n"))
+        self.assertEqual(4, check_text(text)["issues"][0]["line"])
 
 
 class GrimTests(unittest.TestCase):

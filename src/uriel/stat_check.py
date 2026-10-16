@@ -31,19 +31,58 @@ ALPHA = 0.05
 
 _NUM = r"[-\u2212]?(?:\d+(?:\.\d+)?|\.\d+)"
 _UNUM = r"(?:\d+(?:\.\d+)?|\.\d+)"
+_VALUE = r"[-\u2212]?(?:\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?|\.\d+)"
 _CMP = r"(?:<=|>=|=|<|>|\u2264|\u2265)"
 
 _TEST_RE = re.compile(
     r"(?<![A-Za-z0-9_])"
-    r"(?P<stat>t|F|r|z|Z|\u03c7\s*\u00b2|\u03c7\s*\^?\s*2|chi\s*\^?\s*2|chi-square|X\s*\^?\s*2)"
-    r"\s*"
+    r"(?P<stat>t|F|r|z|Z|\u03c7\s*\u00b2|\u03c7\s*\^?\s*2|chi\s*\^?\s*2|chi-square|X\s*\^?\s*2|"
+    r"Q(?:b|w|e|t|T|E|B|W|between|within|error|Between|Within|Error|Total|total)?)"
+    r"s?\s*"
     r"(?:\(\s*(?P<df1>\d+(?:\.\d+)?)\s*(?:,\s*(?P<df2>\d+(?:\.\d+)?))?"
     r"(?:\s*[,;]\s*[Nn]\s*=\s*[\d,]+)?\s*\))?"
-    r"\s*=\s*(?P<value>" + _NUM + r")"
+    r"\s*(?P<tcmp>=|<|>)\s*(?P<value>" + _VALUE + r")(?![\d,]*\.\d)"
+    r"(?:\s*[,;]\s*MSE\s*=\s*" + _VALUE + r")?"
     r"\s*[,;]\s*"
-    r"p\s*(?P<cmp>" + _CMP + r")\s*(?P<p>" + _UNUM + r")",
+    r"(?:ps?\s*(?P<cmp>" + _CMP + r")\s*(?P<p>" + _UNUM + r")|(?P<ns>n\.\s?s\.|ns|NS|n\.s)(?![A-Za-z]))",
 )
+
+# Text extracted from PDFs mangles symbols in predictable ways (see the statcheck project's
+# hand-coded test material): control bytes inside numbers, a lost chi, a lost minus sign,
+# and publisher fonts that map "=", "<", ">" to letters.  Each rewrite below only fires in
+# a position where the original symbol is unambiguous.
+_EXTRACTION_FIXES: Tuple[Tuple["re.Pattern[str]", str], ...] = (
+    (re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]"), ""),
+    (re.compile(r"(?<![A-Za-z0-9])B(?=F[ \t]*\([ \t]*\d)"), ""),
+    (re.compile(r"<bc>"), "="),
+    (re.compile(r"(?<=\))[ \t]+p[ \t]+(?=[-\u2212]?\.?\d)"), " = "),
+    (re.compile(r"\b([Nn])[ \t]+p[ \t]+(?=\d)"), r"\1 = "),
+    (re.compile(r"\b(ps?)[ \t]+p[ \t]+(?=\.?\d)"), r"\1 = "),
+    (re.compile(r"\b(ps?)[ \t]*![ \t]*(?=\.?\d)"), r"\1 < "),
+    (re.compile(r"\b(ps?)b[ \t]*(?=\.?\d)"), r"\1 < "),
+    (re.compile(r"\b(ps?)N[ \t]*(?=\.?\d)"), r"\1 > "),
+    (re.compile(r"(?<=\))[ \t]*b[ \t]*(?=\.?\d)"), " < "),
+    (re.compile(r"(?<=\))[ \t]*N[ \t]*(?=\.?\d)"), " > "),
+    (re.compile(r"(?<![A-Za-z0-9])(?:\?{1,2}|x|G)[ \t]*2(?=[ \t]*\()"), "\u03c72"),
+    (re.compile(r"([=<>][ \t]*)\?(?=\.?\d)"), r"\1-"),
+    (re.compile(r"\([ \t]*l(?=[ \t]*[,)])"), "(1"),
+    (re.compile(r"([<>=][ \t]*)\.[ \t]+(?=\d)"), r"\1."),
+)
+
+
+def normalize_extracted_text(text: str) -> str:
+    """Undo common PDF-extraction damage to reported statistics; never adds or removes lines."""
+    for pattern, replacement in _EXTRACTION_FIXES:
+        text = pattern.sub(replacement, text)
+    return text
 _P_RE = re.compile(r"(?<![A-Za-z0-9_])p\s*(?P<cmp>" + _CMP + r")\s*(?P<p>" + _NUM + r")(?!\d)(?!\.\d)")
+# A bare "p = 3.14" is often pi, a momentum, or a probability in prose; only treat it
+# as a reported p-value when the surrounding text is visibly statistical.
+_STAT_CONTEXT = re.compile(
+    r"(?:(?<![A-Za-z])(?:t|F|z|r|df|SD|SE|SEM|CI|M|Mdn|n|N|OR|RR|HR|R2)\s*[(=]|\u03c7|\bchi[- ]?squared?\b|"
+    r"significan|\bp[- ]values?\b|\b(?:one|two)[- ](?:tailed|sided)\b|\balpha\b|\u03b1|\bANOVA\b|"
+    r"\bregression\b|\bcorrelat|\bodds ratio\b|\bconfidence interval\b|\btest statistic\b|\bnull hypothesis\b)"
+)
 _R_RE = re.compile(
     r"(?<![A-Za-z0-9_])r\s*(?:\(\s*\d+\s*\))?\s*=\s*(?P<value>" + _NUM + r")(?=\s*[,;)]\s*(?:p\b|95|9\d\s*%|\d))"
 )
@@ -71,7 +110,7 @@ _ONE_TAILED_RE = re.compile(r"\b(?:one[- ]tailed|one[- ]sided|directional)\b", r
 
 
 def _to_float(token: str) -> float:
-    return float(token.replace("\u2212", "-"))
+    return float(token.replace("\u2212", "-").replace(",", ""))
 
 
 def decimals_of(token: str) -> int:
@@ -324,8 +363,8 @@ def _normalize_stat(raw: str) -> str:
         return raw
     if raw in ("z", "Z"):
         return "z"
-    if compact.startswith(("\u03c7", "chi", "x")):
-        return "chi2"
+    if compact.startswith(("\u03c7", "chi", "x", "q")):
+        return "chi2"  # Q heterogeneity statistics are chi-square distributed
     return raw
 
 
@@ -355,8 +394,12 @@ def check_reported_tests(text: str) -> List[Dict[str, Any]]:
         df1 = float(match.group("df1")) if match.group("df1") else None
         df2 = float(match.group("df2")) if match.group("df2") else None
         value_token = match.group("value")
-        p_token = match.group("p")
-        cmp = match.group("cmp").replace("\u2264", "<=").replace("\u2265", ">=")
+        test_cmp = match.group("tcmp")
+        if match.group("ns"):
+            p_token, cmp = ".05", ">="  # "ns" reports p >= alpha without a value
+        else:
+            p_token = match.group("p")
+            cmp = match.group("cmp").replace("\u2264", "<=").replace("\u2265", ">=")
         reported_p = _to_float(p_token)
         if stat == "F" and df2 is None:
             continue
@@ -373,6 +416,10 @@ def check_reported_tests(text: str) -> List[Dict[str, Any]]:
         if computed is None:
             continue
         lo, hi, point = computed
+        if test_cmp == "<":
+            lo, hi = lo, 1.0  # statistic below the value: p at least p(value)
+        elif test_cmp == ">":
+            lo, hi = 0.0, hi
         candidates = [(lo, hi, False)]
         if _ONE_TAILED_RE.search(_context(text, match.start(), match.end())) and stat in ("t", "z", "r"):
             candidates.append((lo / 2.0, hi / 2.0, True))
@@ -391,7 +438,8 @@ def check_reported_tests(text: str) -> List[Dict[str, Any]]:
             "statistic": stat,
             "value": value_token.replace("\u2212", "-"),
             "df": [value for value in (df1, df2) if value is not None],
-            "reported_p": "{0} {1}".format(cmp, p_token),
+            "reported_p": "ns" if match.group("ns") else "{0} {1}".format(cmp, p_token),
+            "reported_statistic": "{0} {1}".format(test_cmp, value_token),
             "recomputed_p": round(point, 6),
             "recomputed_p_range": [round(lo, 6), round(hi, 6)],
             "alpha": ALPHA,
@@ -420,6 +468,9 @@ def check_impossible_values(text: str) -> List[Dict[str, Any]]:
     for match in _P_RE.finditer(text):
         token = match.group("p")
         value = _to_float(token)
+        window = text[max(0, match.start() - 160): match.end() + 160]
+        if not _STAT_CONTEXT.search(window.replace(match.group(0), " ")):
+            continue
         if value > 1.0 or value < 0.0:
             issues.append(_issue(
                 "STAT_IMPOSSIBLE_P", text, match.start(), match.end(),
@@ -515,7 +566,8 @@ def check_impossible_values(text: str) -> List[Dict[str, Any]]:
 
 
 def check_text(text: str) -> Dict[str, Any]:
-    """Run every text-level statistical consistency check."""
+    """Run every text-level statistical consistency check after repairing extraction damage."""
+    text = normalize_extracted_text(text)
     issues = check_reported_tests(text) + check_impossible_values(text)
     issues.sort(key=lambda row: (row["line"], row["code"], row["excerpt"]))
     return {
@@ -540,6 +592,7 @@ __all__ = [
     "check_text",
     "decimals_of",
     "grim_consistent",
+    "normalize_extracted_text",
     "p_from_chi2",
     "p_from_f",
     "p_from_r",

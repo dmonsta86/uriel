@@ -102,7 +102,8 @@ _HYPE = re.compile(
 )
 
 _OVERCLAIM = re.compile(
-    r"\b(?:prove[sd]?|proven|proving|prove that|conclusively|definitively|undeniabl[ey]|unquestionabl[ey]|"
+    r"\b(?:(?:prove[sd]?|proven|proving)(?!\s+(?:to\s+be|itself|themselves|useful|difficult|impossible|elusive|"
+    r"challenging|fruitful|costly|popular|valuable|unsuccessful|successful)\b)|prove that|conclusively|definitively|undeniabl[ey]|unquestionabl[ey]|"
     r"indisputabl[ey]|incontrovertibl[ey]|irrefutabl[ey]|beyond (?:any |a )?(?:reasonable |all )?doubt|"
     r"settles? the (?:question|debate|matter)|definitive (?:proof|evidence|answer))\b",
     _I,
