@@ -23,7 +23,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple, Union
 
-from . import framing, model_check, paper_builder, plan_lock
+from . import adversarial, framing, model_check, paper_builder, plan_lock
 from .datapoints import _run_provenance
 from .audit import _gate1, _gate2, _gate3
 from .core import (
@@ -41,8 +41,9 @@ from .core import (
 from .schema import validate_manifest
 
 NEXT_SCHEMA = "uriel.next_step.v1"
-TARGETS = ("draft", "submission")
-_GATE_PROFILE = {"draft": "standard", "submission": "submission"}
+TARGETS = ("draft", "submission", "adversarial")
+_GATE_PROFILE = {"draft": "standard", "submission": "submission", "adversarial": "submission"}
+_PAPER_PROFILE = {"draft": "draft", "submission": "submission", "adversarial": "adversarial"}
 
 STAGES: Tuple[Tuple[str, str, str], ...] = (
     ("frame", "Frame the question", "A precise, neutral, falsifiable question with defined terms and decision criteria."),
@@ -116,7 +117,7 @@ def _owner(code: str) -> str:
 
 
 def _command(code: str, project: Mapping[str, Any], target: str, pointer: Optional[str]) -> str:
-    paper_profile = "submission" if target == "submission" else "draft"
+    paper_profile = _PAPER_PROFILE[target]
     methods = project.get("methods") if isinstance(project.get("methods"), Mapping) else {}
     reproduce = str(methods.get("reproducibility_command", "") or "").strip()
     if code == "PLAN_NOT_LOCKED":
@@ -139,8 +140,14 @@ def _command(code: str, project: Mapping[str, Any], target: str, pointer: Option
         return "uriel paper check --root . --profile {0}   (then uriel paper dp-refresh --root . --id ID)".format(paper_profile)
     if code in framing.PROJECT_CODES:
         return "edit uriel.project.json at /alternative_explanations (claim_ids, status, evidence_ids/test_ids, discriminating_observation)"
-    if code in model_check.PROJECT_CODES:
+    if code in model_check.PROJECT_CODES or code == "ADV_MODEL_SINGLE_VERIFICATION":
         return "edit uriel.project.json at /models"
+    if code in ("ADV_CLAIM_NEEDS_TWO_RIVALS", "ADV_CAUSAL_CLAIM_WITHOUT_CONFOUND_RIVAL"):
+        return "edit uriel.project.json at /alternative_explanations (claim_ids set to the claim)"
+    if code in ("ADV_CLAIM_NOT_ATTACKED", "ADV_COUNTEREVIDENCE_UNSEARCHED"):
+        return "edit uriel.project.json at /claims (adversarial_test_ids, counterevidence_ids, reconciliation) and /adversarial_tests"
+    if code == "ADV_ASSUMPTION_UNTESTED":
+        return "edit uriel.project.json at /assumptions (record each test's result)"
     if code == "HUMAN_FINAL_REVIEW":
         return "open paper/build/manuscript.md and paper/build/NUMBER_TRACE.md"
     if pointer and pointer.startswith("/"):
@@ -212,6 +219,10 @@ def _plan_items(root: Path, project: Mapping[str, Any], target: str) -> Tuple[Li
     return items, status
 
 
+def code_escalated(code: str) -> bool:
+    return code in adversarial.ESCALATED_CODES
+
+
 def _record_items(root: Path, project: Mapping[str, Any], target: str) -> Tuple[List[Dict[str, Any]], int]:
     """Framing and model gaps in the project record, placed in the stage that owns them."""
     manifest = build_manifest(root, persist=False)
@@ -219,13 +230,26 @@ def _record_items(root: Path, project: Mapping[str, Any], target: str) -> Tuple[
     issues = framing.project_issues(project) + model_check.project_issues(
         project, tested_pairs=set(_run_provenance(root)), current_digests=digests,
     )
+    if target == "adversarial":
+        issues = issues + adversarial.project_issues(project)
     items: List[Dict[str, Any]] = []
     advisories = 0
     for issue in issues:
-        if not (issue["level"] == "grave" or (issue["level"] == "submission" and target == "submission")):
+        strict = target in ("submission", "adversarial")
+        if not (
+            issue["level"] == "grave"
+            or (issue["level"] == "submission" and strict)
+            or (target == "adversarial" and (issue["level"] == "adversarial" or code_escalated(issue["code"])))
+        ):
             advisories += 1
             continue
         code = issue["code"]
+        if code in adversarial.REPAIRS:
+            stage = "evidence" if code == "ADV_MODEL_SINGLE_VERIFICATION" else "challenge"
+            location = "/models" if code == "ADV_MODEL_SINGLE_VERIFICATION" else None
+            items.append(_item(code, stage, issue["subject"], issue["message"], adversarial.repairs_for(code),
+                               project, target, location=location))
+            continue
         if code in model_check.DESIGN_CODES:
             stage, repairs, location = "design", model_check.repairs_for(code), "/models"
         elif code in model_check.EVIDENCE_CODES:
@@ -239,7 +263,7 @@ def _record_items(root: Path, project: Mapping[str, Any], target: str) -> Tuple[
 
 
 def _paper_items(root: Path, project: Mapping[str, Any], target: str) -> Tuple[List[Dict[str, Any]], int, Dict[str, Any]]:
-    profile = "submission" if target == "submission" else "draft"
+    profile = _PAPER_PROFILE[target]
     if not (root / paper_builder.PAPER_FILE).is_file():
         repairs = [
             "Create the manuscript scaffold with `uriel paper init --root .`.",
@@ -256,7 +280,7 @@ def _paper_items(root: Path, project: Mapping[str, Any], target: str) -> Tuple[L
     advisories = 0
     for finding in report["findings"]:
         if finding["code"].startswith("PLAN_") or finding["code"] in framing.PROJECT_CODES \
-                or finding["code"] in model_check.PROJECT_CODES:
+                or finding["code"] in model_check.PROJECT_CODES or finding["code"] in adversarial.PROJECT_CODES:
             continue  # owned by the design, evidence, or challenge stage
         if finding["severity"] != "blocker":
             advisories += 1
@@ -302,8 +326,8 @@ def _submission_items(root: Path, project: Mapping[str, Any], target: str) -> Li
             project, target,
         ))
     build = paper_builder.verify_build(root)
-    wanted = "submission" if target == "submission" else "draft"
-    if not build.get("current") or (target == "submission" and build.get("profile") != wanted):
+    wanted = _PAPER_PROFILE[target]
+    if not build.get("current") or (target != "draft" and build.get("profile") != wanted):
         items.append(_item(
             "PAPER_BUILD_STALE", "submission", "Built manuscript",
             "The built manuscript is missing, stale, or was built at a weaker profile: {0}.".format(
@@ -324,16 +348,21 @@ def _submission_items(root: Path, project: Mapping[str, Any], target: str) -> Li
     return items
 
 
-def next_step(root: Union[str, Path], *, target: str = "submission") -> Dict[str, Any]:
-    """Compute the protocol state and the single next action; read-only."""
+def next_step(root: Union[str, Path], *, target: Optional[str] = None) -> Dict[str, Any]:
+    """Compute the protocol state and the single next action; read-only.
+
+    Without an explicit target, a project in adversarial mode is judged adversarially.
+    """
+    if target is None:
+        target = "adversarial" if adversarial.mode(load_project(root)) == "adversarial" else "submission"
     if target not in TARGETS:
         raise Refusal(
             "Unknown target.",
             code="NEXT_TARGET_INVALID",
             details={"target": target},
             repairs=[
-                "Use --target submission to plan the whole path to a submittable paper (default).",
-                "Use --target draft for a working draft with lighter manuscript requirements.",
+                "Use --target submission to plan the whole path to a submittable paper (the default outside adversarial mode).",
+                "Use --target adversarial for the hardest standard (the default once `uriel adversarial on` is set).",
                 "Run `uriel next --help` for details.",
             ],
         )
@@ -373,6 +402,7 @@ def next_step(root: Union[str, Path], *, target: str = "submission") -> Dict[str
         "schema": NEXT_SCHEMA,
         "schema_version": 1,
         "target": target,
+        "assurance_mode": adversarial.mode(project),
         "project_id": project.get("project_id"),
         "project_sha256": sha256_file(paths.project),
         "stage": stage_row,

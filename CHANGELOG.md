@@ -28,6 +28,19 @@ All notable changes to Uriel are documented here.
   residue, placeholders, stock filler, unsourced attribution, hype, proof
   language, and causal wording without identification. Builds refuse on
   blockers and write a number-trace supplement and digest-bound receipt.
+- Adversarial mode (`uriel adversarial on|off|status`, `paper check --profile
+  adversarial`, `uriel next --target adversarial`, `paper lint --adversarial`):
+  an opt-in, recorded standard that requires two claim-specific rivals, a
+  completed adversarial test, and a documented counterevidence search for every
+  major claim; a confound-type rival for causal claims; run assumption tests;
+  doubly verified and rival-compared models; open rivals disclosed in
+  Limitations and named or qualified in concluding sentences; exploratory
+  labelling when no plan preceded results; disclosed deviations; and planned
+  one-tailed tests. Submission builds in adversarial mode are checked at the
+  adversarial profile. Turning the mode off requires a ledger-recorded reason.
+  Gates and Blessing are unchanged.
+- "Marginally significant", "a trend toward significance", and similar spin of
+  null results is reported as `NULL_SPUN_AS_EFFECT`.
 - Framing checks: every major claim needs a recorded rival explanation with a
   discriminating observation; `ruled_out` requires linked evidence or a passed
   adversarial test; manuscripts must address each rival (`[alt:ID]`) and may

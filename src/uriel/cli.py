@@ -122,6 +122,7 @@ from .paper_builder import (
     verify_build as verify_paper_build,
 )
 from .paper_review import CHANGE_CLASSES as PAPER_CHANGE_CLASSES, review_paper
+from .adversarial import mode as assurance_mode, set_mode as set_assurance_mode
 from .plan_lock import lock_plan, plan_status
 from .research_protocol import TARGETS as NEXT_TARGETS, next_step, write_prompt as write_next_prompt
 from .prompts import build_prompt
@@ -703,14 +704,24 @@ def parser() -> argparse.ArgumentParser:
     next_cmd.add_argument(
         "--target",
         choices=NEXT_TARGETS,
-        default="submission",
-        help="finish line used to judge readiness (default: submission)",
+        default=None,
+        help="finish line used to judge readiness (default: adversarial in adversarial mode, otherwise submission)",
     )
     next_cmd.add_argument(
         "--prompt",
         default=None,
         help="also write a create-only, project-relative prompt file for the next assistant session",
     )
+
+    adversarial_cmd = commands.add_parser("adversarial", help="turn the hardest claim-scrutiny standard on or off for this project")
+    adversarial_actions = adversarial_cmd.add_subparsers(dest="adversarial_action", required=True)
+    adversarial_on = adversarial_actions.add_parser("on", help="require rivals, attacks, earned confirmatory framing, and model checks")
+    _root_argument(adversarial_on)
+    adversarial_off = adversarial_actions.add_parser("off", help="return to the submission standard (reason recorded in the ledger)")
+    _root_argument(adversarial_off)
+    adversarial_off.add_argument("--reason", default="", help="why the stricter standard no longer applies")
+    adversarial_status = adversarial_actions.add_parser("status", help="show the current assurance mode")
+    _root_argument(adversarial_status)
 
     plan = commands.add_parser("plan", help="lock the hypothesis and analysis plan before results")
     plan_actions = plan.add_subparsers(dest="plan_action", required=True)
@@ -740,6 +751,8 @@ def parser() -> argparse.ArgumentParser:
     paper_lint = paper_actions.add_parser("lint", help="lint one text file for assistant residue, filler, and statistics")
     _root_argument(paper_lint)
     paper_lint.add_argument("--file", required=True, help="project-relative UTF-8 text or Markdown file")
+    paper_lint.add_argument("--adversarial", action="store_true",
+                            help="fail on any submission-level framing or statistics finding, not only grave ones")
     paper_dp_add = paper_actions.add_parser("dp-add", help="register one reported number; Uriel extracts the value")
     _root_argument(paper_dp_add)
     paper_dp_add.add_argument("--id", required=True, dest="datapoint_id")
@@ -932,8 +945,9 @@ def _print_human(command: str, result: Any, args: Optional[argparse.Namespace] =
         stage = result.get("stage") or {}
         action = result.get("next_action") or {}
         done = [row["title"] for row in result.get("progress", []) if row.get("status") == "DONE"]
-        print("Stage {0}/{1} · {2} · target {3}".format(
-            stage.get("index", "-"), len(result.get("progress", [])), stage.get("title", "complete"), result.get("target")))
+        print("Stage {0}/{1} · {2} · target {3}{4}".format(
+            stage.get("index", "-"), len(result.get("progress", [])), stage.get("title", "complete"), result.get("target"),
+            " · ADVERSARIAL MODE" if result.get("assurance_mode") == "adversarial" else ""))
         if done:
             print("Done: " + ", ".join(done))
         if action:
@@ -951,6 +965,12 @@ def _print_human(command: str, result: Any, args: Optional[argparse.Namespace] =
         if result.get("prompt_path"):
             print("Prompt written: {0} (SHA-256 {1})".format(result.get("prompt_path"), result.get("prompt_sha256")))
         print("Read-only. No Gate, publication authority, or Blessing was granted.")
+        return
+    if command == "adversarial" and isinstance(result, Mapping):
+        print("Assurance mode: {0}{1}".format(
+            result.get("mode"), " (changed from {0})".format(result.get("previous")) if result.get("changed") else ""))
+        if result.get("mode") == "adversarial":
+            print("`uriel next` and submission builds now apply the adversarial standard; Gates and Blessing are unchanged.")
         return
     if command == "plan" and isinstance(result, Mapping):
         if args.plan_action == "lock":
@@ -1969,6 +1989,12 @@ def dispatch(args: argparse.Namespace) -> Any:
         if args.prompt:
             result.update(write_next_prompt(args.root, result, args.prompt))
         return result
+    if command == "adversarial":
+        if args.adversarial_action == "on":
+            return set_assurance_mode(args.root, enabled=True)
+        if args.adversarial_action == "off":
+            return set_assurance_mode(args.root, enabled=False, reason=args.reason)
+        return {"mode": assurance_mode(load_project(args.root)), "changed": False}
     if command == "plan":
         if args.plan_action == "lock":
             return lock_plan(args.root, reason=args.reason)
@@ -1983,7 +2009,7 @@ def dispatch(args: argparse.Namespace) -> Any:
         if args.paper_action == "verify-build":
             return verify_paper_build(args.root)
         if args.paper_action == "lint":
-            return lint_file(args.root, args.file)
+            return lint_file(args.root, args.file, adversarial_mode=args.adversarial)
         if args.paper_action == "dp-add":
             locator = locator_from_arguments(
                 csv_column=args.csv_column,

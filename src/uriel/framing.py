@@ -77,6 +77,13 @@ ALTERNATIVE_LANGUAGE = re.compile(
     r"we cannot exclude|is also consistent with|are also consistent with|third variable|reverse causation|selection bias)\b",
     _I,
 )
+NULL_SPUN = re.compile(
+    r"\b(?:marginally (?:statistically )?significant|approach(?:ed|es|ing) (?:statistical |conventional )?significance|"
+    r"trend(?:ed|ing|s)? (?:toward|towards) (?:statistical )?significance|(?:nearly|almost|borderline|near)[- ]significant|"
+    r"fell (?:just )?short of (?:statistical )?significance|(?:a|the) (?:non-?significant )?trend (?:toward|towards|for) (?:an? )?"
+    r"(?:effect|increase|decrease|difference|improvement|reduction)|did not quite reach (?:statistical )?significance)\b",
+    _I,
+)
 CONCLUDING = re.compile(r"\b(?:therefore|thus|hence|consequently|we conclude|in conclusion|this means)\b", _I)
 GENERALIZING = re.compile(
     r"\b(?:always|universally|in general|generally|across all|for everyone|in all (?:contexts|settings|populations|cases)|"
@@ -359,6 +366,12 @@ def text_issues(text: str, *, document_level: bool = True) -> List[Dict[str, Any
                 "'{0}' dismisses a possibility with no data, test, or citation in the same sentence.".format(match.group(0)),
                 line=line, excerpt=_excerpt(sentence),
             ))
+        for match in NULL_SPUN.finditer(sentence):
+            issues.append(_issue(
+                "NULL_SPUN_AS_EFFECT", "submission", "Framing",
+                "'{0}' presents a result that did not meet the declared criterion as if it partly did.".format(match.group(0)),
+                line=line, excerpt=_excerpt(sentence),
+            ))
         if SETTLED.search(sentence) or INTERPRETIVE.search(sentence) or CONCLUDING.search(sentence):
             concluding += 1
     if document_level and concluding >= 3 and not ALTERNATIVE_LANGUAGE.search(text):
@@ -441,6 +454,11 @@ REPAIRS: Dict[str, List[str]] = {
         "Add the data, test, or citation that supports the dismissal in the same sentence.",
         "Soften to what the evidence shows ('we found no sign of X in Y').",
         "Move the possibility to Limitations as untested.",
+    ],
+    "NULL_SPUN_AS_EFFECT": [
+        "Report the result as not meeting the declared criterion, with its estimate and interval.",
+        "Interpret the interval: say which effect sizes the data are and are not compatible with.",
+        "If a smaller threshold was of interest, that is a new, exploratory analysis; label it so.",
     ],
     "NO_ALTERNATIVES_CONSIDERED": [
         "Add a paragraph on the strongest alternative explanations and what the data say about each.",

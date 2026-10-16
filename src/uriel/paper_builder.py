@@ -40,6 +40,7 @@ import unicodedata
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set, Tuple, Union
 
+from . import adversarial
 from . import datapoints as dp
 from . import framing
 from . import model_check
@@ -75,7 +76,7 @@ BUILD_DIR = "paper/build"
 MANUSCRIPT_OUTPUT = "paper/build/manuscript.md"
 TRACE_OUTPUT = "paper/build/NUMBER_TRACE.md"
 RECEIPT_OUTPUT = "paper/build/BUILD_RECEIPT.json"
-CHECK_PROFILES = ("draft", "submission")
+CHECK_PROFILES = ("draft", "submission", "adversarial")
 SECTION_KINDS = (
     "abstract",
     "introduction",
@@ -664,6 +665,8 @@ def _repairs(code: str) -> List[str]:
         return framing.repairs_for(code)
     if code in model_check.REPAIRS:
         return model_check.repairs_for(code)
+    if code in adversarial.REPAIRS:
+        return adversarial.repairs_for(code)
     if code.startswith("STAT_"):
         return list(_STAT_REPAIRS)
     if code.startswith("DATAPOINT_"):
@@ -687,7 +690,12 @@ def _finding(
     excerpt: str = "",
     detail: Optional[Mapping[str, Any]] = None,
 ) -> Dict[str, Any]:
-    if level == "grave" or (level == "submission" and profile == "submission"):
+    strict = profile in ("submission", "adversarial")
+    if (
+        level == "grave"
+        or (level == "submission" and strict)
+        or (profile == "adversarial" and (level == "adversarial" or code in adversarial.ESCALATED_CODES))
+    ):
         severity, status = "blocker", "FAIL"
     else:
         severity, status = "warning", "WARN"
@@ -1315,6 +1323,13 @@ def check_paper(root: Union[str, Path], *, profile: str = "draft") -> Dict[str, 
                                  detail=detail))
 
     plan = plan_lock.plan_status(paths.root, project=project)
+    if profile == "adversarial":
+        for issue in adversarial.project_issues(project) + adversarial.manuscript_issues(project, framing_sections, plan):
+            detail = dict(issue.get("detail") or {})
+            file_label = detail.pop("file", None)
+            findings.append(_finding(issue["code"], issue["level"], profile, issue["subject"], issue["message"],
+                                     file=file_label, line=issue.get("line"), excerpt=issue.get("excerpt", ""),
+                                     detail=detail))
     combined = "\n".join(combined_rendered)
     for issue in plan_lock.plan_issues(plan, project, combined):
         findings.append(_finding(issue["code"], issue["level"], profile, issue["subject"], issue["message"],
@@ -1334,6 +1349,7 @@ def check_paper(root: Union[str, Path], *, profile: str = "draft") -> Dict[str, 
         "schema": PAPER_CHECK_SCHEMA,
         "schema_version": 1,
         "profile": profile,
+        "assurance_mode": adversarial.mode(project),
         "status": "PASS" if not blockers else "FAIL",
         "created_at_utc": utc_now(),
         "project_id": project.get("project_id"),
@@ -1492,8 +1508,14 @@ def _build_dir(root: Path) -> Path:
 
 
 def build_paper(root: Union[str, Path], *, profile: str = "draft") -> Dict[str, Any]:
-    """Build the manuscript only when the check passes for ``profile``."""
+    """Build the manuscript only when the check passes for ``profile``.
+
+    In adversarial mode a requested submission build is checked at the adversarial profile.
+    """
     paths = paths_for(root)
+    requested = profile
+    if profile == "submission" and adversarial.mode(load_project(paths.root)) == "adversarial":
+        profile = "adversarial"
     report = check_paper(paths.root, profile=profile)
     if report["status"] != "PASS":
         blockers = [row for row in report["findings"] if row["severity"] == "blocker"]
@@ -1521,6 +1543,8 @@ def build_paper(root: Union[str, Path], *, profile: str = "draft") -> Dict[str, 
         "schema": PAPER_BUILD_SCHEMA,
         "schema_version": 1,
         "profile": profile,
+        "requested_profile": requested,
+        "assurance_mode": report["assurance_mode"],
         "created_at_utc": utc_now(),
         "project_id": report["project_id"],
         "project_sha256": report["project_sha256"],
@@ -1549,6 +1573,7 @@ def build_paper(root: Union[str, Path], *, profile: str = "draft") -> Dict[str, 
     return {
         "status": "BUILT",
         "profile": profile,
+        "requested_profile": requested,
         "manuscript": MANUSCRIPT_OUTPUT,
         "number_trace": TRACE_OUTPUT,
         "receipt": RECEIPT_OUTPUT,
@@ -1606,13 +1631,18 @@ def verify_build(root: Union[str, Path]) -> Dict[str, Any]:
         "status": "CURRENT" if not reasons else "STALE",
         "current": not reasons,
         "profile": receipt.get("profile"),
+        "assurance_mode": receipt.get("assurance_mode"),
         "reasons": reasons,
         "receipt": RECEIPT_OUTPUT,
     }
 
 
-def lint_file(root: Union[str, Path], relative: str) -> Dict[str, Any]:
-    """Prose and statistics lint for one project-local UTF-8 text file; read-only."""
+def lint_file(root: Union[str, Path], relative: str, *, adversarial_mode: bool = False) -> Dict[str, Any]:
+    """Prose, framing, and statistics lint for one project-local UTF-8 text file; read-only.
+
+    ``adversarial_mode`` fails the file on any submission-level framing or statistics finding,
+    not only on grave ones.
+    """
     paths = paths_for(root)
     safe = safe_relative_path(relative)
     target = guard_path(paths.root, paths.root / safe, must_exist=True)
@@ -1655,7 +1685,12 @@ def lint_file(root: Union[str, Path], relative: str) -> Dict[str, Any]:
         "filler_per_1000_words": prose["filler_per_1000_words"],
         "reported_tests_found": stats["reported_tests_found"],
         "counts": {level: sum(1 for row in findings if row["level"] == level) for level in prose_lint.LEVELS},
-        "status": "FAIL" if any(row["level"] == "grave" for row in findings) else "PASS",
+        "status": "FAIL" if any(
+            row["level"] == "grave"
+            or (adversarial_mode and row["level"] == "submission" and row.get("category") in ("framing", "statistics"))
+            for row in findings
+        ) else "PASS",
+        "adversarial": bool(adversarial_mode),
         "findings": findings,
         "boundaries": {"writes": 0, "authorship_detected": False, "scientific_truth_decided": False},
     }

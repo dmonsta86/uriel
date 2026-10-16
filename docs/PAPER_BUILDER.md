@@ -10,10 +10,10 @@ end-to-end workflow, start with the [research protocol](RESEARCH_PROTOCOL.md).
 
 ```text
 uriel paper init        --root . [--article-type empirical|replication|negative_result|methods|resource|review] [--title ...]
-uriel paper check       --root . [--profile draft|submission]      # read-only; exit 2 on blockers
-uriel paper build       --root . [--profile draft|submission]      # refuses unless the check passes
+uriel paper check       --root . [--profile draft|submission|adversarial]  # read-only; exit 2 on blockers
+uriel paper build       --root . [--profile draft|submission|adversarial]  # refuses unless the check passes
 uriel paper verify-build --root .                                  # read-only; exit 2 when stale
-uriel paper lint        --root . --file PATH                       # prose + statistics lint of any text file
+uriel paper lint        --root . --file PATH [--adversarial]       # prose, framing, and statistics lint of any text file
 uriel paper dp-add      --root . --id ID --artifact PATH --description TEXT LOCATOR [options]
 uriel paper dp-refresh  --root . --id ID [--confirm-change]
 uriel paper review      ...                                        # the existing read-only fidelity review
@@ -163,9 +163,10 @@ Levels: **grave** findings block every profile, **submission** findings warn in
 | Statistics | `STAT_DECISION_INCONSISTENT`, `STAT_IMPOSSIBLE_P`, `STAT_IMPOSSIBLE_CORRELATION`, `STAT_NEGATIVE_DISPERSION`, `STAT_CI_BOUNDS_REVERSED`, `STAT_ESTIMATE_OUTSIDE_CI`, `STAT_COUNT_EXCEEDS_TOTAL` | `STAT_P_INCONSISTENT`, `STAT_PERCENT_COUNT_MISMATCH`, `STAT_P_REPORTED_AS_ZERO`, `STAT_PERCENT_OF_EXCEEDS_100` | |
 | Sources | `CITATION_KEY_UNKNOWN`, `CITATION_SYNTAX_INVALID`, `REFERENCES_INVALID`, `REFERENCE_KEY_DUPLICATE`, `REFERENCE_YEAR_IMPLAUSIBLE`, `REFERENCE_SOURCE_MISSING`, `REFERENCE_SOURCE_STALE`, `QUOTE_NOT_IN_SOURCE` | `REFERENCE_UNVERIFIED`, `REFERENCE_INCOMPLETE`, `REFERENCE_DOI_INVALID`, `REFERENCE_DOI_DUPLICATE`, `QUOTE_UNVERIFIABLE`, `QUOTE_UNATTRIBUTED` | `REFERENCE_UNUSED` |
 | Claims | `CLAIM_ANCHOR_UNKNOWN` | `CLAIM_ANCHOR_UNSUPPORTED`, `CLAIM_NOT_REPORTED`, `COUNTEREVIDENCE_NOT_DISCUSSED`, `CAUSAL_LANGUAGE_WITHOUT_IDENTIFICATION` | |
-| Framing | `ALTERNATIVE_ANCHOR_UNKNOWN`, `ALTERNATIVE_UNKNOWN_CLAIM` | `CLAIM_WITHOUT_ALTERNATIVE`, `ALTERNATIVE_RULED_OUT_WITHOUT_EVIDENCE`, `ALTERNATIVE_NO_DISCRIMINATING_OBSERVATION`, `ALTERNATIVE_NOT_ADDRESSED`, `ALTERNATIVE_DISMISSED_WITHOUT_EVIDENCE`, `CONCLUSION_IGNORES_OPEN_ALTERNATIVE`, `INTERPRETATION_WITHOUT_ALTERNATIVE`, `CONCLUSION_EXCEEDS_SCOPE`, `SINGLE_EXPLANATION_ASSERTED`, `DISMISSAL_WITHOUT_SUPPORT`, `ALTERNATIVE_STATUS_INVALID` | `INTERPRETATION_IN_RESULTS` |
+| Framing | `ALTERNATIVE_ANCHOR_UNKNOWN`, `ALTERNATIVE_UNKNOWN_CLAIM` | `CLAIM_WITHOUT_ALTERNATIVE`, `ALTERNATIVE_RULED_OUT_WITHOUT_EVIDENCE`, `ALTERNATIVE_NO_DISCRIMINATING_OBSERVATION`, `ALTERNATIVE_NOT_ADDRESSED`, `ALTERNATIVE_DISMISSED_WITHOUT_EVIDENCE`, `CONCLUSION_IGNORES_OPEN_ALTERNATIVE`, `INTERPRETATION_WITHOUT_ALTERNATIVE`, `CONCLUSION_EXCEEDS_SCOPE`, `SINGLE_EXPLANATION_ASSERTED`, `DISMISSAL_WITHOUT_SUPPORT`, `NULL_SPUN_AS_EFFECT`, `ALTERNATIVE_STATUS_INVALID` | `INTERPRETATION_IN_RESULTS` |
 | Models | `MODEL_RECORD_INVALID`, `MODEL_DIMENSIONS_INCONSISTENT`, `MODEL_ANCHOR_UNKNOWN` | `MODEL_EQUATION_MISSING`, `MODEL_EQUATION_UNPARSEABLE`, `MODEL_SYMBOL_UNDEFINED`, `MODEL_UNIT_MISSING`, `MODEL_UNIT_UNKNOWN`, `MODEL_ROLE_UNDECLARED`, `MODEL_ASSUMPTIONS_MISSING`, `MODEL_DOMAIN_MISSING`, `MODEL_SOURCE_UNDECLARED`, `MODEL_UNVERIFIED`, `MODEL_IMPLEMENTATION_UNTESTED`, `MODEL_NOT_VALIDATED`, `MODEL_NO_RIVAL` (predictive/mechanistic), `MODEL_REALISM_OVERCLAIM`, `MODEL_STATED_AS_SETTLED`, `MODEL_UNDECLARED_EQUATION`, `MODEL_NOT_IN_MANUSCRIPT` | `MODEL_SYMBOL_UNUSED`, `MODEL_UNDERDETERMINED`, `MODEL_NO_RIVAL` (descriptive fit) |
 | Prose | `ASSISTANT_RESIDUE` | `PLACEHOLDER_TEXT`, `STOCK_PHRASE`, `HYPE_LANGUAGE`, `PROOF_LANGUAGE`, `UNSOURCED_ATTRIBUTION`, `REASONING_PATTERN`, `EMOJI`, `FILLER_DENSITY` (when dense) | `FILLER_WORD`, `HEDGE_STACK`, `REPETITIVE_OPENER`, `TRANSITION_CHAIN`, `EM_DASH_DENSITY`, `LIST_IN_PROSE_SECTION`, `INLINE_BOLD_LABEL` |
+| Adversarial profile only | | `ADV_*` findings (see the research protocol); `INTERPRETATION_IN_RESULTS`, `MODEL_NO_RIVAL`, and `PLAN_NOT_LOCKED` become blockers | |
 | Plan | `PLAN_LOCK_DAMAGED`, `PREREGISTRATION_CLAIM_UNSUPPORTED` | `PLAN_CHANGED_SINCE_LOCK`, `PLAN_NOT_LOCKED` (once passing runs exist) | `PLAN_REVISED_AFTER_RESULTS` |
 
 Every finding carries its file and line where one exists, an excerpt, and

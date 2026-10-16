@@ -26,7 +26,8 @@
     "target": {
       "enum": [
         "draft",
-        "submission"
+        "submission",
+        "adversarial"
       ]
     },
     "project_sha256": {
@@ -75,6 +76,12 @@
           "const": 0
         }
       }
+    },
+    "assurance_mode": {
+      "enum": [
+        "standard",
+        "adversarial"
+      ]
     }
   },
   "$defs": {

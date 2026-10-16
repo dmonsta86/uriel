@@ -307,6 +307,48 @@ challenge. A checker can establish dimensional consistency exactly. It cannot
 decide whether the model is the right one; it can only make the paper say what
 kind of claim the model makes and show the evidence that claim needs.
 
+## Adversarial mode
+
+Submission checks ask whether the record is complete and the paper is faithful
+to it. Adversarial mode assumes the conclusion is wrong and asks whether the
+paper has done the work to show otherwise. It is opt-in per project:
+
+```text
+uriel adversarial on --root .
+uriel adversarial status --root .
+uriel adversarial off --root . --reason "..."     # reason is required and recorded in the ledger
+```
+
+While it is on, `uriel next` judges the project against the `adversarial`
+target, and a requested `paper build --profile submission` is checked at the
+`adversarial` profile; the build receipt records the mode. You can also run
+`uriel paper check --profile adversarial` or `uriel next --target adversarial`
+at any time without switching the mode. Gates, Data Readiness, and the Blessing
+are unchanged.
+
+On top of every submission blocker, adversarial mode requires:
+
+| Requirement | Finding |
+|---|---|
+| At least two rival explanations recorded specifically for each major claim | `ADV_CLAIM_NEEDS_TWO_RIVALS` |
+| A completed adversarial test targeting each major claim | `ADV_CLAIM_NOT_ATTACKED` |
+| Linked counterevidence or a documented counterevidence search | `ADV_COUNTEREVIDENCE_UNSEARCHED` |
+| A confound-type rival (common cause, selection, reverse direction, expectation, regression to the mean, attrition ...) and an identification strategy for every causal claim | `ADV_CAUSAL_CLAIM_WITHOUT_CONFOUND_RIVAL` |
+| A recorded result for every assumption's test | `ADV_ASSUMPTION_UNTESTED` |
+| Two independent verifications of every model equation, and a rival comparison for every model | `ADV_MODEL_SINGLE_VERIFICATION`, `MODEL_NO_RIVAL` |
+| Every unresolved rival disclosed in Limitations with `[alt:ID]` | `ADV_RIVAL_NOT_IN_LIMITATIONS` |
+| Every abstract or conclusion sentence about an open claim names a rival or qualifies itself | `ADV_CONCLUSION_SILENT_ON_OPEN_RIVAL` |
+| Analyses not locked before the first passing run are labelled exploratory | `ADV_CONFIRMATORY_FRAMING_NOT_EARNED` |
+| Plan revisions made after results are disclosed in Methods | `ADV_DEVIATION_UNDISCLOSED` |
+| One-tailed or directional tests appear in the current locked plan | `ADV_ONE_TAILED_NOT_PLANNED` |
+| Any rival model the data cannot distinguish is named in the paper | `ADV_UNDERDETERMINED_UNDISCLOSED` |
+| A locked plan, and interpretation kept out of Results | `PLAN_NOT_LOCKED`, `INTERPRETATION_IN_RESULTS` (escalated) |
+
+`uriel paper lint --adversarial` applies the same attitude to any text: every
+submission-level framing or statistics finding fails the file. In every mode,
+"marginally significant", "a trend toward significance", and similar phrasing
+is reported as `NULL_SPUN_AS_EFFECT`.
+
 ## Prose: what is checked automatically
 
 - **Assistant residue** ("Certainly!", "As an AI", "I hope this helps", insertion slots) always blocks.

@@ -218,6 +218,13 @@ wording is hedged enough. Sentence-level patterns for settled, interpretive,
 dismissive, and generalizing language will miss paraphrases and can flag
 acceptable sentences.
 
+Adversarial mode raises the bar on what the record must contain; it cannot
+make the record honest. Two recorded rivals can both be weak, an adversarial
+test can be designed to pass, and an assumption's "result" is whatever the
+author writes. The mode makes those gaps explicit and reviewable, and turning
+it off is recorded, but its findings remain checks of declared structure and
+wording.
+
 Model checks establish exact dimensional consistency for equations written in
 the supported syntax: one `=`, the operators `+ - * / ^`, parentheses, implicit
 products, and the functions `exp`, `log`, `ln`, `sqrt`, trigonometric and

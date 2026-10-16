@@ -25,7 +25,8 @@
     "profile": {
       "enum": [
         "draft",
-        "submission"
+        "submission",
+        "adversarial"
       ]
     },
     "created_at_utc": {
@@ -69,6 +70,19 @@
     },
     "receipt_sha256": {
       "$ref": "#/$defs/sha256"
+    },
+    "requested_profile": {
+      "enum": [
+        "draft",
+        "submission",
+        "adversarial"
+      ]
+    },
+    "assurance_mode": {
+      "enum": [
+        "standard",
+        "adversarial"
+      ]
     }
   },
   "$defs": {
