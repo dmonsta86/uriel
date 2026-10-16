@@ -52,6 +52,23 @@ Declare design, population, sampling, sample size, analysis plan, effect-size me
 
 Then record assumptions, alternatives, contradictions, adversarial tests, reviewer objections, limitations, ethics, funding/conflicts, known counterevidence, omitted data, and negative results.
 
+### Alternative explanations
+
+Each entry has an `id` and `statement`, and may add `claim_ids` (the claims it
+competes with; omitted means every claim), `status` (`open`,
+`partially_addressed`, `not_distinguishable`, `ruled_out`), the `evidence_ids`
+and `test_ids` that support that status, and a `discriminating_observation`.
+`ruled_out` only counts when it links registered evidence or a passed
+adversarial test.
+
+### Models
+
+The optional `models` array records each equation the work relies on: `id`,
+`equation`, `symbols` (each with `meaning` and `unit`), `role`
+(`descriptive_fit`, `predictive`, `mechanistic`), `assumptions`, `domain`,
+`source`, `verification`, `implementation`, `validation`, `rivals`, and
+`claim_ids`. See [RESEARCH_PROTOCOL.md](RESEARCH_PROTOCOL.md) for the checks.
+
 ## Submission
 
 Venue suggestions are not endorsements. Verify current official scope, article type, fees/waivers, reporting checklist, ethics, data/code policy, license, portal, and deadline immediately before submission.

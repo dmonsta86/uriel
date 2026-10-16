@@ -210,6 +210,24 @@ that the quoted words appear in the held copy, not that the copy is authentic or
 that the quote is used fairly. `metadata_checked` is a human attestation that
 Uriel records but cannot confirm.
 
+Framing checks compare manuscript wording with the declared record. They can
+see that a rival explanation is recorded, linked, addressed, and supported as
+ruled out. They cannot judge whether the recorded rivals are the important
+ones, whether the discriminating observation is decisive, or whether hedged
+wording is hedged enough. Sentence-level patterns for settled, interpretive,
+dismissive, and generalizing language will miss paraphrases and can flag
+acceptable sentences.
+
+Model checks establish exact dimensional consistency for equations written in
+the supported syntax: one `=`, the operators `+ - * / ^`, parentheses, implicit
+products, and the functions `exp`, `log`, `ln`, `sqrt`, trigonometric and
+logistic functions, `abs`, `min`, and `max`. Derivatives, integrals, sums,
+matrices, and piecewise definitions must be recorded as named symbols or
+described in words. A consistent equation can still be the wrong equation.
+Whether a model describes reality is a scientific judgment; Uriel only requires
+the paper to declare which kind of claim it makes and to show the validation and
+rival comparison that a predictive or mechanistic claim needs.
+
 The prose lint is a fixed list of patterns. It does not detect authorship, will
 miss problems, and will sometimes flag acceptable wording; the filler-density
 thresholds are heuristics. Output is Markdown only; DOCX and PDF export are not

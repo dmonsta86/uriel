@@ -68,6 +68,13 @@
     filler, hype, or proof language from a drafting assistant survives into the
     manuscript.
 
+27. **Framing capture:** data are read one way only, a rival explanation is
+    dismissed without evidence, or a conclusion is stated as settled while a
+    recorded alternative remains open.
+28. **Model reification:** an equation that only fits the data is presented as
+    a mechanism or law, or an equation with undefined symbols or inconsistent
+    dimensions is used to support a claim.
+
 ## Implemented controls
 
 - exact-root confinement and link/reparse refusal;
@@ -190,6 +197,15 @@
 - Assistant residue always blocks a manuscript check. Placeholders, stock
   filler, hype, proof language, and unsourced attribution block the submission
   profile.
+
+- Every major claim needs a recorded rival explanation with a discriminating
+  observation. "Ruled out" requires linked evidence or a passed adversarial
+  test. Manuscript sentences that ignore, dismiss, or out-claim open rivals are
+  reported, as are single-explanation and unsupported dismissal wording.
+- Recorded models are parsed and dimensionally checked. They must declare their
+  role, domain, assumptions, source, and verification. Predictive and
+  mechanistic models need validation and a rival comparison, and descriptive
+  fits may not be called mechanisms.
 
 ## Explicit non-controls
 

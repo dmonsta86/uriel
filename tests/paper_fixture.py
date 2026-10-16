@@ -8,7 +8,7 @@ from typing import Dict
 
 from uriel import datapoints as dpm
 from uriel import paper_builder
-from uriel.core import run_workload, sha256_file
+from uriel.core import load_project, run_workload, save_project, sha256_file
 from uriel.demo import make_passing_project
 from uriel.plan_lock import lock_plan
 
@@ -42,7 +42,8 @@ SECTIONS: Dict[str, str] = {
     "04_discussion.md": (
         "The verifier behaved as specified within this fixture [claim:C1]. Because the fixture is deliberately "
         "small, it says nothing about performance with many files or about concurrent writes. A hard-coded answer "
-        "could also pass, which the source inspection and control fixture rule out for this version.\n"
+        "could also pass the positive fixture [alt:X1]; the negative control, which must return an empty list, is the "
+        "observation that tells the two apart.\n"
     ),
     "05_limitations.md": (
         "The result is a bounded software fixture. It does not establish performance with many files or race-free "
@@ -72,6 +73,13 @@ SUMMARY_SCRIPT = (
 def make_paper_project(root: Path, *, write_sections: bool = True) -> Path:
     """Create a project whose manuscript passes the submission-profile paper check."""
     make_passing_project(root)
+    project = load_project(root)
+    project["alternative_explanations"][0].update({
+        "status": "partially_addressed",
+        "discriminating_observation": "A hard-coded answer would also return [b] for the negative control; "
+                                      "an empty result there distinguishes real set comparison.",
+    })
+    save_project(root, project, event="fixture.alternatives", details={"fixture": "paper"})
     (root / "analysis_summary.py").write_text(SUMMARY_SCRIPT, encoding="utf-8")
     lock_plan(root)
     receipt = run_workload(root, [sys.executable, "analysis_summary.py"], timeout=60, workload_id="summary")

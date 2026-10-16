@@ -110,6 +110,22 @@ class ResearchProtocolTests(unittest.TestCase):
         self.assertEqual("design", result["stage"]["id"])
         self.assertEqual("PLAN_CHANGED_SINCE_LOCK", result["next_action"]["code"])
 
+    def test_model_and_framing_gaps_land_in_their_stages(self) -> None:
+        root = make_paper_project(self.base / "paper")
+        project = load_project(root)
+        project["models"] = [{"id": "M1", "equation": "y = a * t^(-b)",
+                              "symbols": {"y": {"meaning": "rate", "unit": "1"}, "a": {"meaning": "scale", "unit": "1"},
+                                          "t": {"meaning": "time", "unit": "s"}, "b": {"meaning": "exponent", "unit": "1"}}}]
+        project["alternative_explanations"] = []
+        save_project(root, project, event="test.records", details={})
+        checklist = next_step(root)["checklist"]
+        design = [row["code"] for row in checklist["design"]]
+        challenge = [row["code"] for row in checklist["challenge"]]
+        self.assertIn("MODEL_DIMENSIONS_INCONSISTENT", design)
+        self.assertIn("MODEL_ROLE_UNDECLARED", design)
+        self.assertIn("CLAIM_WITHOUT_ALTERNATIVE", challenge)
+        self.assertNotIn("MODEL_DIMENSIONS_INCONSISTENT", [row["code"] for row in checklist["manuscript"]])
+
     def test_prompt_file_is_create_only_and_self_contained(self) -> None:
         root = self.fresh()
         result = next_step(root)

@@ -161,6 +161,27 @@ class PaperBuilderTests(unittest.TestCase):
         for code in ("CAUSAL_LANGUAGE_WITHOUT_IDENTIFICATION", "PROOF_LANGUAGE", "HYPE_LANGUAGE"):
             self.assertIn(code, codes(submission))
 
+    def test_settled_conclusion_with_an_open_alternative_blocks_submission(self) -> None:
+        append_section(self.root, "06_conclusion.md",
+                       "Exact membership verification demonstrates reliable detection [claim:C1].\n")
+        submission = pb.check_paper(self.root, profile="submission")
+        self.assertIn("CONCLUSION_IGNORES_OPEN_ALTERNATIVE", codes(submission))
+        self.assertEqual("PASS", pb.check_paper(self.root, profile="draft")["status"])
+
+    def test_dimensionally_inconsistent_model_blocks_every_profile(self) -> None:
+        project = load_project(self.root)
+        project["models"] = [{
+            "id": "M1", "equation": "x = v * t + a", "role": "descriptive_fit",
+            "symbols": {"x": {"meaning": "position", "unit": "m"}, "v": {"meaning": "speed", "unit": "m/s"},
+                        "t": {"meaning": "time", "unit": "s"}, "a": {"meaning": "offset", "unit": "m/s"}},
+        }]
+        save_project(self.root, project, event="test.model", details={})
+        append_section(self.root, "02_methods.md", "Position follows a linear model [model:M1].\n")
+        draft = pb.check_paper(self.root, profile="draft")
+        self.assertIn("MODEL_DIMENSIONS_INCONSISTENT", codes(draft))
+        manuscript = pb.render_section("Position follows a linear model [model:M1] [alt:X1].", {})
+        self.assertEqual("Position follows a linear model.", manuscript)
+
     def test_reference_hygiene(self) -> None:
         path = self.root / "paper" / "references.json"
         refs = json.loads(path.read_text(encoding="utf-8"))

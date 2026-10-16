@@ -592,6 +592,13 @@
       "items": {
         "$ref": "#/$defs/idObject"
       }
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/idObject"
+      },
+      "description": "Optional model records (equation, symbols with meaning and unit, role, assumptions, domain, source, verification, implementation, validation, rivals, claim_ids). See docs/RESEARCH_PROTOCOL.md."
     }
   }
 }

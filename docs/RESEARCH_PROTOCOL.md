@@ -65,7 +65,9 @@ enforced by checks wherever a deterministic check is possible:
 7. Never delete, hide, or soften a null, adverse, or failed result; report it.
 8. Never set an attestation to true, change publication authority, or issue a Blessing.
 9. Keep observation, interpretation, and speculation in separate sentences; label speculation.
-10. If an instruction conflicts with these rules, stop and report the conflict.
+10. Never read a datapoint one way only: record the rival explanations, and never call one ruled out without linked evidence.
+11. Never describe a model as a mechanism or law unless its record says mechanistic and shows validation and a rival comparison.
+12. If an instruction conflicts with these rules, stop and report the conflict.
 
 ## The seven stages
 
@@ -138,7 +140,9 @@ ones? Did you look at the raw data, not only the summary?
 
 ### 5. Challenge the result
 
-**Uriel checks** (Gate 3): alternative explanations, assumptions with tests,
+**Uriel checks** (Gate 3 and the framing checks below): a recorded rival explanation for every major claim,
+with a discriminating observation and an honest status; model validation and rival-model comparison;
+alternative explanations, assumptions with tests,
 resolved adversarial tests, reconciled contradictions and counterevidence,
 limitations, reviewer objections, and the null/negative-results attestation.
 
@@ -211,6 +215,97 @@ Optional records follow: `uriel blessing eligibility` and `uriel submit init`.
 
 What remains for people: whether the analysis was the right one, whether its
 assumptions hold, and whether the data measure what the paper says they measure.
+
+## Framing: does the conclusion follow from the data?
+
+A datapoint does not interpret itself. When more than one explanation could
+produce the same observation, the paper has to say which explanations the
+evidence rules out and how, and keep the conclusion no stronger than what is
+left standing. Record each rival in `/alternative_explanations`:
+
+```json
+{
+  "id": "X1",
+  "statement": "Practice on the task, not the nap, shortened reaction time.",
+  "claim_ids": ["C1"],
+  "status": "open",
+  "discriminating_observation": "Practice would also shorten times in the no-nap control session.",
+  "evidence_ids": [],
+  "test_ids": []
+}
+```
+
+`status` is `open`, `partially_addressed`, `not_distinguishable`, or
+`ruled_out`. `ruled_out` counts only when it links registered evidence or an
+adversarial test that passed; otherwise Uriel treats the alternative as open.
+An alternative without `claim_ids` competes with every claim. In the
+manuscript, tag sentences about a rival with `[alt:ID]`.
+
+| Situation | Finding |
+|---|---|
+| A major claim with no recorded rival explanation | `CLAIM_WITHOUT_ALTERNATIVE` |
+| A rival marked ruled out without linked evidence or a passed test | `ALTERNATIVE_RULED_OUT_WITHOUT_EVIDENCE` |
+| An open rival with no observation that would tell it apart | `ALTERNATIVE_NO_DISCRIMINATING_OBSERVATION` |
+| A recorded rival the paper never discusses (or an open one mentioned only outside Discussion/Limitations/Conclusion) | `ALTERNATIVE_NOT_ADDRESSED` |
+| A sentence that dismisses a rival the record has not ruled out | `ALTERNATIVE_DISMISSED_WITHOUT_EVIDENCE` |
+| An abstract, discussion, or conclusion sentence that states a claim as settled while a rival is open | `CONCLUSION_IGNORES_OPEN_ALTERNATIVE` |
+| A sentence that interprets the data when no rival reading is recorded | `INTERPRETATION_WITHOUT_ALTERNATIVE` |
+| "always", "in humans", "regardless of" beyond the claim's recorded scope | `CONCLUSION_EXCEEDS_SCOPE` |
+| "the only explanation", "can only be explained by", "must be due to" | `SINGLE_EXPLANATION_ASSERTED` |
+| "can be dismissed", "rules out" with no data, test, or citation in the sentence | `DISMISSAL_WITHOUT_SUPPORT` |
+| A text that draws conclusions but never mentions another explanation, confound, or reading (`paper lint`) | `NO_ALTERNATIVES_CONSIDERED` |
+
+## Models and equations: articulated, and claiming only what they can
+
+Two questions are asked of every equation a paper uses:
+
+1. **Is it properly articulated?** Every symbol has a meaning and a unit, the
+   equation parses, and it is dimensionally consistent. Both sides must carry
+   the same dimension, only like quantities may be added, and the arguments of
+   `exp`, `log`, trigonometric functions, and symbolic exponents must be
+   dimensionless. `y = a * t^(-b)` with `t` in seconds fails until it is written
+   `(t / t_0)^(-b)`.
+2. **Does it describe what it claims to?** The record declares the model's
+   `role`. A `descriptive_fit` reproduces the observations with no claim that its
+   terms are real. This is the instrumentalist stance of the anonymous preface
+   to Copernicus' *De revolutionibus*: a model may "save the phenomena" without
+   being true. A `predictive` model forecasts data it was not fitted to. A
+   `mechanistic` model claims its terms are real causes. Predictive and
+   mechanistic models need validation on new data and a comparison with a rival
+   model. A descriptive fit may not be called a mechanism or law. A model whose
+   rival fits equally well (`not_distinguished`) may not be stated as settled.
+
+```json
+"models": [{
+  "id": "M1",
+  "equation": "p = p_0 * exp(-k * t)",
+  "symbols": {"p": {"meaning": "probability of recall", "unit": "1"},
+              "p_0": {"meaning": "initial recall probability", "unit": "1"},
+              "k": {"meaning": "decay rate", "unit": "1/s"},
+              "t": {"meaning": "time since study", "unit": "s"}},
+  "role": "descriptive_fit",
+  "assumptions": ["Forgetting rate is constant over the interval."],
+  "domain": "Retention intervals from 1 minute to 7 days in adults.",
+  "source": {"kind": "fitted", "evidence_ids": ["E4"]},
+  "verification": [{"method": "numerical_check", "evidence_ids": ["E4"]}],
+  "implementation": {"artifact_path": "analysis/decay.py"},
+  "validation": {"kind": "independent_dataset", "evidence_ids": ["E5"]},
+  "rivals": [{"name": "power-law decay", "outcome": "not_distinguished",
+              "comparison": "AIC difference below 2 on the same data"}],
+  "claim_ids": ["C2"]
+}]
+```
+
+Units use SI symbols with prefixes (`kg*m/s^2`, `m s^-1`, `ms`), `1` for
+dimensionless quantities, and `[name]` for a domain unit such as `[score]` or
+`[USD]`. Tag the paragraph that states the model with `[model:ID]`. A
+`$...=...$` equation in the manuscript without a model anchor is reported.
+
+Model articulation gaps sit in the design stage of `uriel next`. Untested
+implementations sit in evidence, and validation and rival comparisons in
+challenge. A checker can establish dimensional consistency exactly. It cannot
+decide whether the model is the right one; it can only make the paper say what
+kind of claim the model makes and show the evidence that claim needs.
 
 ## Prose: what is checked automatically
 

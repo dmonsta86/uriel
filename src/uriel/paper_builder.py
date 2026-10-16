@@ -41,6 +41,8 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set, Tuple, Union
 
 from . import datapoints as dp
+from . import framing
+from . import model_check
 from . import plan_lock
 from . import prose_lint
 from . import stat_check
@@ -113,6 +115,8 @@ _OPEN_BRACES = re.compile(r"\{\{|\}\}")
 _CITATION = re.compile(r"\[@([^\]\n]+)\]")
 _CITE_PART = re.compile(r"^@([A-Za-z0-9][A-Za-z0-9_:.\-]{0,63})(?:\s*,\s*(.{1,40}))?$")
 _CLAIM_ANCHOR = re.compile(r"\[claim:([A-Za-z0-9][A-Za-z0-9._-]{0,63})\]")
+_ANY_ANCHOR = re.compile(r"[ \t]?\[(?:claim|alt|model):[^\]\n]*\]")
+_ALT_OR_MODEL_ANCHOR = re.compile(r"\[(?:alt|model):[A-Za-z0-9][A-Za-z0-9._-]{0,63}\]")
 _QUOTE = re.compile(
     r"(?:(?<=^)|(?<=[\s(\[\u2014:]))[\"\u201c]"
     r"([^\s\"\u201c\u201d][^\"\u201c\u201d\n]{10,798}[^\s\"\u201c\u201d])"
@@ -169,6 +173,7 @@ _SECTION_GUIDE: Dict[str, List[str]] = {
         "Design, population, sampling rule, and sample-size justification (see /methods).",
         "Measures with their operational definitions (see /hypothesis/operational_definitions).",
         "The analysis plan as locked; list every deviation from the lock with its reason.",
+        "Every model or equation, tagged [model:ID], with its role (descriptive fit, predictive, or mechanistic), domain, and assumptions.",
         "Exclusions and missing data, with counts as {{dp:ID}}.",
         "Software, versions, and the reproduction command (see /methods/reproducibility_command).",
         "Ethics approval or the reason none was needed.",
@@ -183,7 +188,9 @@ _SECTION_GUIDE: Dict[str, List[str]] = {
     "discussion": [
         "Restate the principal finding at exactly the strength the Results support.",
         "Compare with prior work, citing each comparison with [@key].",
-        "Discuss each alternative explanation and each piece of counterevidence recorded in the project ([claim:ID] where relevant).",
+        "Weigh each recorded alternative explanation and tag it [alt:ID]: what the data can and cannot tell apart.",
+        "Discuss each piece of counterevidence recorded in the project ([claim:ID] where relevant).",
+        "Do not call an alternative ruled out unless the project links the evidence or passed test that rules it out.",
         "Say what the result does not show; keep implications inside the sample and design.",
         "Keep speculation in sentences explicitly labelled as speculation.",
     ],
@@ -277,8 +284,16 @@ def _project_context(project: Mapping[str, Any], kind: str) -> List[str]:
         for claim in project.get("claims", []) if isinstance(project.get("claims"), list) else []:
             if isinstance(claim, Mapping) and text(claim.get("statement")):
                 lines.append("Claim [claim:{0}]: {1}".format(text(claim.get("id")), text(claim.get("statement"))))
-    if kind == "discussion":
-        lines.extend("Alternative explanation " + item for item in rows("alternative_explanations"))
+    if kind in ("discussion", "limitations"):
+        for row in project.get("alternative_explanations", []) if isinstance(project.get("alternative_explanations"), list) else []:
+            if isinstance(row, Mapping) and text(row.get("statement")):
+                lines.append("Alternative [alt:{0}] ({1}): {2}".format(
+                    text(row.get("id")), text(row.get("status")) or "open", text(row.get("statement"))))
+    if kind == "methods":
+        for row in project.get("models", []) if isinstance(project.get("models"), list) else []:
+            if isinstance(row, Mapping) and row.get("id"):
+                lines.append("Model [model:{0}] ({1}): {2}".format(
+                    text(row.get("id")), text(row.get("role")) or "role undeclared", text(row.get("equation"))))
     if kind == "limitations":
         lines.extend("Recorded limitation " + item for item in rows("limitations"))
     return [line.replace("--", "- -")[:400] for line in lines]
@@ -645,6 +660,10 @@ def _repairs(code: str) -> List[str]:
         return prose_lint.repairs_for(code)
     if code in plan_lock.REPAIRS:
         return plan_lock.repairs_for(code)
+    if code in framing.REPAIRS:
+        return framing.repairs_for(code)
+    if code in model_check.REPAIRS:
+        return model_check.repairs_for(code)
     if code.startswith("STAT_"):
         return list(_STAT_REPAIRS)
     if code.startswith("DATAPOINT_"):
@@ -965,7 +984,7 @@ def render_section(
         return "[" + joiner.join(labels) + "]"
 
     rendered = _CITATION.sub(citation, rendered)
-    rendered = re.sub(r"[ \t]?\[claim:[^\]\n]*\]", "", rendered)
+    rendered = _ANY_ANCHOR.sub("", rendered)
     if not keep_lines:
         rendered = re.sub(r"[ \t]+\n", "\n", rendered)
         rendered = re.sub(r"\n{3,}", "\n\n", rendered).strip()
@@ -978,7 +997,7 @@ def render_section(
 
 def _scrub_markup(text: str) -> str:
     scrubbed = prose_lint.mask_non_prose(text)
-    for pattern in (_DP_MARKER, _LIT_MARKER, _CITATION, _CLAIM_ANCHOR, _NUMERIC_CITATION):
+    for pattern in (_DP_MARKER, _LIT_MARKER, _CITATION, _CLAIM_ANCHOR, _ALT_OR_MODEL_ANCHOR, _NUMERIC_CITATION):
         scrubbed = pattern.sub(_blank, scrubbed)
     return scrubbed
 
@@ -1089,6 +1108,7 @@ def check_paper(root: Union[str, Path], *, profile: str = "draft") -> Dict[str, 
 
     stat_tests = 0
     flagged_unverified: Set[str] = set()
+    framing_sections: List[Tuple[Mapping[str, Any], str]] = []
     for section in sections:
         file_label = "{0}/{1}".format(PAPER_DIR, section["file"])
         try:
@@ -1101,6 +1121,12 @@ def check_paper(root: Union[str, Path], *, profile: str = "draft") -> Dict[str, 
         masked = prose_lint.mask_non_prose(raw)
         words = prose_lint.word_count(raw)
         section_rows.append({**section, "sha256": digest, "words": words, "status": "PRESENT"})
+        framing_sections.append(({**section, "file_label": file_label}, masked))
+        if section["kind"] not in ("methods", "statements"):
+            for issue in framing.text_issues(masked, document_level=False):
+                findings.append(_finding(issue["code"], issue["level"], profile, "Section {0}".format(section["id"]),
+                                         issue["message"], file=file_label, line=issue["line"],
+                                         excerpt=issue["excerpt"], detail=issue.get("detail")))
 
         for match in _ANY_BRACES.finditer(masked):
             if not (_DP_MARKER.fullmatch(match.group(0)) or _LIT_MARKER.fullmatch(match.group(0))):
@@ -1266,6 +1292,27 @@ def check_paper(root: Union[str, Path], *, profile: str = "draft") -> Dict[str, 
             findings.append(_finding("COUNTEREVIDENCE_NOT_DISCUSSED", "submission", profile, "Claim {0}".format(claim_id),
                                      "Recorded counterevidence for this claim is not tied to the Discussion or Limitations.",
                                      detail={"counterevidence_ids": [str(item) for item in counter]}))
+
+    datapoint_claims = {
+        str(row.get("id")): [str(item) for item in row.get("claim_ids", []) if isinstance(item, str)]
+        for row in registry.get("datapoints", []) if isinstance(row, Mapping) and isinstance(row.get("claim_ids"), list)
+    } if isinstance(registry.get("datapoints"), list) else {}
+    record_issues = (
+        framing.project_issues(project)
+        + framing.manuscript_issues(project, framing_sections, datapoint_claims)
+        + model_check.project_issues(
+            project,
+            tested_pairs=set(dp._run_provenance(paths.root)),
+            current_digests=manifest_paths,
+        )
+        + model_check.manuscript_issues(project, framing_sections)
+    )
+    for issue in record_issues:
+        detail = dict(issue.get("detail") or {})
+        file_label = detail.pop("file", None)
+        findings.append(_finding(issue["code"], issue["level"], profile, issue["subject"], issue["message"],
+                                 file=file_label, line=issue.get("line"), excerpt=issue.get("excerpt", ""),
+                                 detail=detail))
 
     plan = plan_lock.plan_status(paths.root, project=project)
     combined = "\n".join(combined_rendered)
@@ -1588,6 +1635,12 @@ def lint_file(root: Union[str, Path], relative: str) -> Dict[str, Any]:
     findings = []
     for issue in prose["issues"]:
         findings.append({**issue, "repairs": _repairs(issue["code"])})
+    for issue in framing.text_issues(prose_lint.mask_non_prose(text), document_level=prose["word_count"] >= 600):
+        findings.append({
+            "code": issue["code"], "category": "framing", "level": issue["level"], "line": issue["line"] or 1,
+            "excerpt": issue["excerpt"], "message": issue["message"], "detail": issue["detail"],
+            "repairs": _repairs(issue["code"]),
+        })
     for issue in stats["issues"]:
         findings.append({
             "code": issue["code"], "category": "statistics", "level": "grave" if issue["grave"] else "submission",

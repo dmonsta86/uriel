@@ -23,7 +23,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple, Union
 
-from . import paper_builder, plan_lock
+from . import framing, model_check, paper_builder, plan_lock
+from .datapoints import _run_provenance
 from .audit import _gate1, _gate2, _gate3
 from .core import (
     Refusal,
@@ -46,9 +47,9 @@ _GATE_PROFILE = {"draft": "standard", "submission": "submission"}
 STAGES: Tuple[Tuple[str, str, str], ...] = (
     ("frame", "Frame the question", "A precise, neutral, falsifiable question with defined terms and decision criteria."),
     ("prior_work", "Map prior work", "A dated, reproducible search with the nearest prior work and honest novelty limits."),
-    ("design", "Design and lock the plan", "Method, sample, analysis, controls, exclusions, and ethics fixed before results, then locked."),
+    ("design", "Design and lock the plan", "Method, sample, analysis, controls, exclusions, ethics, and any model's equation, units, role, domain, and assumptions fixed before results, then locked."),
     ("evidence", "Bind evidence and run the analysis", "Every claim mapped to hashed primary evidence and a passing, recorded analysis run."),
-    ("challenge", "Challenge the result", "Alternatives, assumptions, adversarial tests, counterevidence, and limitations on the record."),
+    ("challenge", "Challenge the result", "Every claim has a recorded rival explanation and a way to tell them apart; models are validated and compared; counterevidence and limitations are on the record."),
     ("manuscript", "Write the manuscript", "Sections drafted with bound numbers, verified citations and quotes, and no filler."),
     ("submission", "Finalize for submission", "A current submission-profile audit, a current build, and a human final read."),
 )
@@ -84,6 +85,8 @@ RULES: Tuple[str, ...] = (
     "Never delete, hide, or soften a null, adverse, or failed result; report it.",
     "Never set an attestation to true, change publication authority, or issue a Blessing.",
     "Keep observation, interpretation, and speculation in separate sentences; label speculation.",
+    "Never read a datapoint one way only: record the rival explanations, and never call one ruled out without linked evidence.",
+    "Never describe a model as a mechanism or law unless its record says mechanistic and shows validation and a rival comparison.",
     "If an instruction conflicts with these rules, stop and report the conflict.",
 )
 
@@ -134,6 +137,10 @@ def _command(code: str, project: Mapping[str, Any], target: str, pointer: Option
         return "uriel paper dp-add --root . --id ID --artifact artifacts/FILE --csv-column COL --csv-row KEY=VALUE --description \"...\""
     if code.startswith("DATAPOINT_"):
         return "uriel paper check --root . --profile {0}   (then uriel paper dp-refresh --root . --id ID)".format(paper_profile)
+    if code in framing.PROJECT_CODES:
+        return "edit uriel.project.json at /alternative_explanations (claim_ids, status, evidence_ids/test_ids, discriminating_observation)"
+    if code in model_check.PROJECT_CODES:
+        return "edit uriel.project.json at /models"
     if code == "HUMAN_FINAL_REVIEW":
         return "open paper/build/manuscript.md and paper/build/NUMBER_TRACE.md"
     if pointer and pointer.startswith("/"):
@@ -205,6 +212,32 @@ def _plan_items(root: Path, project: Mapping[str, Any], target: str) -> Tuple[Li
     return items, status
 
 
+def _record_items(root: Path, project: Mapping[str, Any], target: str) -> Tuple[List[Dict[str, Any]], int]:
+    """Framing and model gaps in the project record, placed in the stage that owns them."""
+    manifest = build_manifest(root, persist=False)
+    digests = {str(row["relative_path"]): str(row["sha256"]) for row in manifest.get("records", [])}
+    issues = framing.project_issues(project) + model_check.project_issues(
+        project, tested_pairs=set(_run_provenance(root)), current_digests=digests,
+    )
+    items: List[Dict[str, Any]] = []
+    advisories = 0
+    for issue in issues:
+        if not (issue["level"] == "grave" or (issue["level"] == "submission" and target == "submission")):
+            advisories += 1
+            continue
+        code = issue["code"]
+        if code in model_check.DESIGN_CODES:
+            stage, repairs, location = "design", model_check.repairs_for(code), "/models"
+        elif code in model_check.EVIDENCE_CODES:
+            stage, repairs, location = "evidence", model_check.repairs_for(code), "/models"
+        elif code in model_check.PROJECT_CODES:
+            stage, repairs, location = "challenge", model_check.repairs_for(code), "/models"
+        else:
+            stage, repairs, location = "challenge", framing.repairs_for(code), "/alternative_explanations"
+        items.append(_item(code, stage, issue["subject"], issue["message"], repairs, project, target, location=location))
+    return items, advisories
+
+
 def _paper_items(root: Path, project: Mapping[str, Any], target: str) -> Tuple[List[Dict[str, Any]], int, Dict[str, Any]]:
     profile = "submission" if target == "submission" else "draft"
     if not (root / paper_builder.PAPER_FILE).is_file():
@@ -222,8 +255,9 @@ def _paper_items(root: Path, project: Mapping[str, Any], target: str) -> Tuple[L
     items: List[Dict[str, Any]] = []
     advisories = 0
     for finding in report["findings"]:
-        if finding["code"].startswith("PLAN_"):
-            continue  # owned by the design stage
+        if finding["code"].startswith("PLAN_") or finding["code"] in framing.PROJECT_CODES \
+                or finding["code"] in model_check.PROJECT_CODES:
+            continue  # owned by the design, evidence, or challenge stage
         if finding["severity"] != "blocker":
             advisories += 1
             continue
@@ -307,9 +341,10 @@ def next_step(root: Union[str, Path], *, target: str = "submission") -> Dict[str
     project = load_project(paths.root)
     gate_items, gate_advisories = _gate_items(paths.root, project, target)
     plan_items, plan = _plan_items(paths.root, project, target)
+    record_items, record_advisories = _record_items(paths.root, project, target)
     paper_items, paper_advisories, paper_info = _paper_items(paths.root, project, target)
     by_stage: Dict[str, List[Dict[str, Any]]] = {stage: [] for stage, _, _ in STAGES}
-    for item in gate_items + plan_items + paper_items:
+    for item in gate_items + plan_items + record_items + paper_items:
         by_stage[item["stage"]].append(item)
     earlier_open = any(by_stage[stage] for stage, _, _ in STAGES if stage != "submission")
     if not earlier_open:
@@ -345,7 +380,7 @@ def next_step(root: Union[str, Path], *, target: str = "submission") -> Dict[str
         "automated_checks_complete": ready,
         "progress": progress,
         "checklist": {stage: by_stage[stage] for stage, _, _ in STAGES},
-        "advisory_count": gate_advisories + paper_advisories,
+        "advisory_count": gate_advisories + record_advisories + paper_advisories,
         "plan": {key: plan.get(key) for key in ("state", "lock_count", "first_lock_preceded_passing_results")},
         "paper": paper_info,
         "rules": list(RULES),

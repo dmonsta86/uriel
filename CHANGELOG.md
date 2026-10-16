@@ -12,7 +12,7 @@ All notable changes to Uriel are documented here.
   evidence, challenge, manuscript, submission), and names exactly one next action
   with its reason, command, completion condition, and human/agent owner.
   `--prompt` writes a create-only, self-contained instruction for the next
-  assistant session with ten non-negotiable rules.
+  assistant session with twelve non-negotiable rules.
 - `uriel plan lock` / `plan status`: content-addressed, ledger-ordered locks of
   the hypothesis and analysis plan; plan drift, reasoned re-locks, post-results
   revisions, and unsupported preregistration wording are reported.
@@ -28,6 +28,21 @@ All notable changes to Uriel are documented here.
   residue, placeholders, stock filler, unsourced attribution, hype, proof
   language, and causal wording without identification. Builds refuse on
   blockers and write a number-trace supplement and digest-bound receipt.
+- Framing checks: every major claim needs a recorded rival explanation with a
+  discriminating observation; `ruled_out` requires linked evidence or a passed
+  adversarial test; manuscripts must address each rival (`[alt:ID]`) and may
+  not dismiss an open one, state a claim as settled while a rival is open,
+  interpret data with no recorded rival reading, or generalize beyond the
+  claim's scope. `paper lint` also flags single-explanation wording,
+  unsupported dismissals, and texts that never consider another explanation.
+- Model checks: an optional `models` record (additive to `uriel.project.v1`)
+  with exact dimensional analysis of each equation (units with SI prefixes and
+  custom `[dimensions]`), required symbol meanings and units, a declared role
+  (`descriptive_fit`, `predictive`, `mechanistic`), domain, assumptions,
+  source, and verification; validation and a rival comparison for predictive
+  or mechanistic models; tested implementations; and manuscript checks against
+  calling a descriptive fit a mechanism, stating an underdetermined model as
+  settled, or using undeclared equations (`[model:ID]`).
 - Statistical recomputation reads text extracted from published PDFs: it
   repairs control bytes, lost chi and minus signs, split decimals, and
   publisher font substitutions for `=`, `<`, and `>`, and it accepts "ns",
