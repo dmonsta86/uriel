@@ -1,5 +1,7 @@
-Read URIEL_AI_ENTRY.md and docs/PROJECT_QRD.md.
+Read URIEL_AI_ENTRY.md, docs/PROJECT_QRD.md, and docs/RESEARCH_PROTOCOL.md.
 
 I am using Uriel for evidence-bound research development and assurance. Uriel is an offline-first, fail-closed ecosystem where AI assistance is advisory only.
+
+Run `uriel next --root .` and do exactly the one action it names, then run it again. If the action is marked owner: human, stop and ask me. Never type a result number (use `uriel paper dp-add` and {{dp:ID}}), never cite a source you have not opened, never quote text that is not verbatim in a held source, and never edit a locked plan silently.
 
 Help me with the current research step without overclaiming, removing mandatory evidence constraints, or assuming unverified data is ready.

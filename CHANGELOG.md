@@ -6,6 +6,33 @@ All notable changes to Uriel are documented here.
 
 ### Added
 
+- `uriel next`: a read-only research protocol driver that evaluates the Three
+  Gates, the plan lock, the manuscript check, the recorded audit, and the build,
+  sorts open items into seven ordered stages (frame, prior work, design and lock,
+  evidence, challenge, manuscript, submission), and names exactly one next action
+  with its reason, command, completion condition, and human/agent owner.
+  `--prompt` writes a create-only, self-contained instruction for the next
+  assistant session with ten non-negotiable rules.
+- `uriel plan lock` / `plan status`: content-addressed, ledger-ordered locks of
+  the hypothesis and analysis plan; plan drift, reasoned re-locks, post-results
+  revisions, and unsupported preregistration wording are reported.
+- The experimental Paper Builder (`uriel paper init|check|build|verify-build|lint`):
+  a canonical Markdown manuscript directory with section checklists pre-filled
+  from the project record; `{{dp:ID}}` datapoints re-extracted from hashed CSV,
+  JSON, or text artifacts with kind bounds, GRIM, cross-datapoint relations, run
+  provenance, and confirmation-gated refresh (`dp-add`, `dp-refresh`); citation
+  resolution against a verification-status reference registry; verbatim quote
+  checks against held sources; claim anchors tied to the project record; a
+  per-section number policy; recomputation of reported t/F/chi-square/r/z
+  p-values, intervals, and percentages; and a deterministic lint for assistant
+  residue, placeholders, stock filler, unsourced attribution, hype, proof
+  language, and causal wording without identification. Builds refuse on
+  blockers and write a number-trace supplement and digest-bound receipt.
+- Seven mirrored schemas (`uriel.paper.v1`, `uriel.datapoints.v1`,
+  `uriel.references.v1`, `uriel.paper_check.v1`, `uriel.paper_build.v1`,
+  `uriel.plan_lock.v1`, `uriel.next_step.v1`) and the
+  [research protocol](docs/RESEARCH_PROTOCOL.md) and
+  [Paper Builder](docs/PAPER_BUILDER.md) guides.
 - A read-only `uriel paper review` surface that automatically compares an
   explicit candidate against all selected-scope verbatim baselines, reports
   claim/evidence currency and declared closest-prior-work coverage, binds an

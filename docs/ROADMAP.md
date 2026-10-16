@@ -108,6 +108,23 @@ or subprocess; raw evidence and private references are not copied into the
 export. Metadata may still be sensitive and requires human review before
 publication.
 
+## Active product lane: idea-to-paper protocol
+
+The experimental protocol and Paper Builder now provide one guided route:
+
+```text
+uriel next -> frame -> prior work -> design + plan lock -> evidence + recorded run
+-> challenge -> paper/ with bound datapoints, verified citations and quotes
+-> paper check -> submission audit -> paper build -> human final read
+```
+
+This lane is `EXPERIMENTAL`. It makes number binding, citation and quotation
+verification, statistical recomputation, plan-drift disclosure, and filler or
+assistant-residue removal routine. It does not judge whether an analysis is
+appropriate or a conclusion is true, and it exports Markdown only. Usability
+trials with real manuscripts and measured false-positive rates for the prose and
+number policies must come before any maturity promotion.
+
 ## Following lanes
 
 1. One official structured-metadata adapter, only after source terms, rate and

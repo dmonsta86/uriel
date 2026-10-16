@@ -111,7 +111,19 @@ from .onboarding import (
     safe_copy,
     start as start_workspace,
 )
+from .datapoints import KINDS as DATAPOINT_KINDS, add_datapoint, locator_from_arguments, refresh_datapoint
+from .paper_builder import (
+    ARTICLE_TYPES as PAPER_ARTICLE_TYPES,
+    CHECK_PROFILES as PAPER_CHECK_PROFILES,
+    build_paper,
+    check_paper,
+    init_paper,
+    lint_file,
+    verify_build as verify_paper_build,
+)
 from .paper_review import CHANGE_CLASSES as PAPER_CHANGE_CLASSES, review_paper
+from .plan_lock import lock_plan, plan_status
+from .research_protocol import TARGETS as NEXT_TARGETS, next_step, write_prompt as write_next_prompt
 from .prompts import build_prompt
 from .repair_packet import build_repair_packet, verify_repair_packet
 from .research_verbatim import (
@@ -686,8 +698,72 @@ def parser() -> argparse.ArgumentParser:
     _verbatim_scope_arguments(verbatim_remove_ledger)
     verbatim_remove_ledger.add_argument("--confirm", action="store_true")
 
-    paper = commands.add_parser("paper", help="read-only manuscript review")
+    next_cmd = commands.add_parser("next", help="show the single next research step from idea to submission (read-only)")
+    _root_argument(next_cmd)
+    next_cmd.add_argument(
+        "--target",
+        choices=NEXT_TARGETS,
+        default="submission",
+        help="finish line used to judge readiness (default: submission)",
+    )
+    next_cmd.add_argument(
+        "--prompt",
+        default=None,
+        help="also write a create-only, project-relative prompt file for the next assistant session",
+    )
+
+    plan = commands.add_parser("plan", help="lock the hypothesis and analysis plan before results")
+    plan_actions = plan.add_subparsers(dest="plan_action", required=True)
+    plan_lock_cmd = plan_actions.add_parser("lock", help="freeze the current plan fields into an immutable lock record")
+    _root_argument(plan_lock_cmd)
+    plan_lock_cmd.add_argument("--reason", default="", help="required when re-locking a changed plan; shown as a deviation")
+    plan_status_cmd = plan_actions.add_parser("status", help="compare the current plan with the lock history (read-only)")
+    _root_argument(plan_status_cmd)
+
+    paper = commands.add_parser("paper", help="build, check, and review an evidence-bound manuscript")
     paper_actions = paper.add_subparsers(dest="paper_action", required=True)
+    paper_init = paper_actions.add_parser("init", help="create the paper/ manuscript scaffold (never overwrites)")
+    _root_argument(paper_init)
+    paper_init.add_argument("--article-type", choices=PAPER_ARTICLE_TYPES, default="empirical")
+    paper_init.add_argument("--title", default="", help="manuscript title (default: project title)")
+    paper_check = paper_actions.add_parser(
+        "check",
+        help="verify datapoints, citations, quotes, claims, numbers, statistics, and prose (read-only)",
+    )
+    _root_argument(paper_check)
+    paper_check.add_argument("--profile", choices=PAPER_CHECK_PROFILES, default="draft")
+    paper_build = paper_actions.add_parser("build", help="render the manuscript after a passing check")
+    _root_argument(paper_build)
+    paper_build.add_argument("--profile", choices=PAPER_CHECK_PROFILES, default="draft")
+    paper_verify_build = paper_actions.add_parser("verify-build", help="check that the built manuscript matches its sources")
+    _root_argument(paper_verify_build)
+    paper_lint = paper_actions.add_parser("lint", help="lint one text file for assistant residue, filler, and statistics")
+    _root_argument(paper_lint)
+    paper_lint.add_argument("--file", required=True, help="project-relative UTF-8 text or Markdown file")
+    paper_dp_add = paper_actions.add_parser("dp-add", help="register one reported number; Uriel extracts the value")
+    _root_argument(paper_dp_add)
+    paper_dp_add.add_argument("--id", required=True, dest="datapoint_id")
+    paper_dp_add.add_argument("--artifact", required=True, help="project-relative artifact holding the value")
+    paper_dp_add.add_argument("--description", required=True, help="what the value measures, in words")
+    paper_dp_add.add_argument("--csv-column", default=None)
+    paper_dp_add.add_argument("--csv-row", action="append", default=[], help="KEY=VALUE row selector; repeatable")
+    paper_dp_add.add_argument("--csv-row-index", type=int, default=None, help="0-based data row index")
+    paper_dp_add.add_argument("--json-pointer", default=None, help="RFC 6901 pointer such as /results/mean")
+    paper_dp_add.add_argument("--text-regex", default=None, help="regular expression with exactly one capture group")
+    paper_dp_add.add_argument("--text-line", type=int, default=None, help="1-based line to search with --text-regex")
+    paper_dp_add.add_argument("--kind", choices=DATAPOINT_KINDS, default="other")
+    paper_dp_add.add_argument("--format", default=None, dest="fmt", help="raw, d, ,d, .Nf, ,.Nf, .N%%, trailing ~, or apa_p")
+    paper_dp_add.add_argument("--unit", default="")
+    paper_dp_add.add_argument("--claim", action="append", default=[], dest="claim_ids")
+    paper_dp_add.add_argument("--evidence", default="", dest="evidence_id")
+    paper_dp_add.add_argument("--tolerance", type=float, default=None)
+    paper_dp_add.add_argument("--grim-n", default=None, help="sample size (or dp:ID) for the GRIM check of a mean")
+    paper_dp_add.add_argument("--grim-items", type=int, default=1)
+    paper_dp_add.add_argument("--provenance", default="", help="'external: REASON' when the artifact was not produced by `uriel run`")
+    paper_dp_refresh = paper_actions.add_parser("dp-refresh", help="re-bind one datapoint to the current artifact bytes")
+    _root_argument(paper_dp_refresh)
+    paper_dp_refresh.add_argument("--id", required=True, dest="datapoint_id")
+    paper_dp_refresh.add_argument("--confirm-change", action="store_true", help="accept a changed reported value")
     paper_review = paper_actions.add_parser(
         "review",
         help="review one explicit candidate without editing or granting authority",
@@ -832,7 +908,110 @@ def _envelope(status: str, command: str, result: Optional[Any] = None, error: Op
     return value
 
 
+def _print_findings(findings: Sequence[Mapping[str, Any]], limit: int = 40) -> None:
+    for finding in list(findings)[:limit]:
+        location = finding.get("location") or {}
+        where = location.get("file") or ""
+        if location.get("line"):
+            where = "{0}:{1}".format(where, location["line"])
+        print("{0} {1} · {2}{3}".format(
+            "BLOCK" if finding.get("severity") == "blocker" else "warn ",
+            finding.get("code"), finding.get("subject"), " · " + where if where else ""))
+        print("    " + str(finding.get("message", "")))
+        if finding.get("excerpt"):
+            print("    > " + str(finding["excerpt"]))
+        repairs = finding.get("repairs") or []
+        if repairs and finding.get("severity") == "blocker":
+            print("    Repair: " + str(repairs[0]))
+    if len(findings) > limit:
+        print("... {0} more (use --json for the full list)".format(len(findings) - limit))
+
+
 def _print_human(command: str, result: Any, args: Optional[argparse.Namespace] = None) -> None:
+    if command == "next" and isinstance(result, Mapping):
+        stage = result.get("stage") or {}
+        action = result.get("next_action") or {}
+        done = [row["title"] for row in result.get("progress", []) if row.get("status") == "DONE"]
+        print("Stage {0}/{1} · {2} · target {3}".format(
+            stage.get("index", "-"), len(result.get("progress", [])), stage.get("title", "complete"), result.get("target")))
+        if done:
+            print("Done: " + ", ".join(done))
+        if action:
+            print("Next ({0}): {1} · {2}".format(action.get("owner"), action.get("code"), action.get("subject")))
+            print("  Why: " + str(action.get("why")))
+            print("  Do: " + str(action.get("do")))
+            if action.get("location"):
+                print("  Where: " + str(action.get("location")))
+            print("  Command: " + str(action.get("command")))
+            print("  Done when: " + str(action.get("done_when")))
+            if action.get("owner") == "human":
+                print("  This step needs a human decision; an assistant must stop and ask.")
+        open_here = len((result.get("checklist") or {}).get(stage.get("id"), [])) if stage else 0
+        print("Open items in this stage: {0} · advisories elsewhere: {1}".format(open_here, result.get("advisory_count")))
+        if result.get("prompt_path"):
+            print("Prompt written: {0} (SHA-256 {1})".format(result.get("prompt_path"), result.get("prompt_sha256")))
+        print("Read-only. No Gate, publication authority, or Blessing was granted.")
+        return
+    if command == "plan" and isinstance(result, Mapping):
+        if args.plan_action == "lock":
+            lock = result.get("lock") or {}
+            print("Plan lock: {0} · {1} lock(s) · plan SHA-256 {2}".format(
+                result.get("status"), result.get("lock_count"), lock.get("plan_sha256")))
+            if lock.get("passing_results_existed") and result.get("status") != "UNCHANGED":
+                print("Passing results already existed: disclose this lock as a deviation in Methods.")
+            return
+        print("Plan state: {0} · locks: {1} · first lock preceded passing results: {2}".format(
+            result.get("state"), result.get("lock_count"), result.get("first_lock_preceded_passing_results")))
+        if result.get("changed_fields"):
+            print("Changed since lock: " + ", ".join(result["changed_fields"]))
+        for row in result.get("deviations", []):
+            print("Deviation {0}: {1} ({2})".format(str(row.get("lock_id"))[:12], row.get("reason"), ", ".join(row.get("changed_fields", []))))
+        return
+    if command == "paper" and isinstance(result, Mapping) and args is not None and args.paper_action != "review":
+        action = args.paper_action
+        if action == "init":
+            print("Manuscript scaffold: {0} · {1}".format(result.get("status"), result.get("article_type")))
+            for name in result.get("files_written", []):
+                print("  " + name)
+            for line in result.get("next", []):
+                print("Next: " + line)
+            return
+        if action == "check":
+            print("Paper check ({0}): {1} · {2} blocker(s) · {3} warning(s)".format(
+                result.get("profile"), result.get("status"), result.get("blocker_count"), result.get("warning_count")))
+            datapoints = result.get("datapoints") or {}
+            print("Datapoints verified {0}/{1} · references cited {2}/{3} · reported tests {4} · plan {5}".format(
+                datapoints.get("verified"), datapoints.get("registered"),
+                len((result.get("references") or {}).get("cited", [])), (result.get("references") or {}).get("registered"),
+                (result.get("statistics") or {}).get("reported_tests_found"), (result.get("plan") or {}).get("state")))
+            _print_findings(result.get("findings", []))
+            return
+        if action == "build":
+            print("Paper build: {0} · profile {1} · {2} datapoints · {3} citations".format(
+                result.get("status"), result.get("profile"), result.get("datapoints_rendered"), result.get("citations_rendered")))
+            print("Manuscript: {0} (SHA-256 {1})".format(result.get("manuscript"), result.get("manuscript_sha256")))
+            print("Number trace: {0} · receipt: {1}".format(result.get("number_trace"), result.get("receipt")))
+            return
+        if action == "verify-build":
+            print("Paper build: {0}".format(result.get("status")))
+            for reason in result.get("reasons", []):
+                print("  - " + reason)
+            return
+        if action == "lint":
+            print("Lint {0}: {1} · {2} words · filler {3}/1000 words · counts {4}".format(
+                result.get("file"), result.get("status"), result.get("word_count"),
+                result.get("filler_per_1000_words"), result.get("counts")))
+            for finding in result.get("findings", [])[:60]:
+                print("{0}:{1} [{2}] {3} > {4}".format(
+                    result.get("file"), finding.get("line"), finding.get("level"), finding.get("code"), finding.get("excerpt")))
+            return
+        if action in ("dp-add", "dp-refresh"):
+            datapoint = result.get("datapoint") or {}
+            print("Datapoint {0}: {1} = {2} from {3} (SHA-256 {4})".format(
+                "registered" if action == "dp-add" else ("refreshed, value changed" if result.get("value_changed") else "refreshed"),
+                datapoint.get("id"), datapoint.get("source_token"), datapoint.get("artifact_path"), datapoint.get("sha256")))
+            print("Use {{{{dp:{0}}}}} in the manuscript; never type the number.".format(datapoint.get("id")))
+            return
     if command == "paper" and isinstance(result, Mapping):
         print("Paper review: {0}".format(result.get("recommended_action")))
         print("Candidate SHA-256: {0}".format((result.get("manuscript") or {}).get("sha256")))
@@ -1785,6 +1964,53 @@ def dispatch(args: argparse.Namespace) -> Any:
             return remove_verbatim_ledger(
                 args.root, args.user, confirmed=args.confirm
             )
+    if command == "next":
+        result = next_step(args.root, target=args.target)
+        if args.prompt:
+            result.update(write_next_prompt(args.root, result, args.prompt))
+        return result
+    if command == "plan":
+        if args.plan_action == "lock":
+            return lock_plan(args.root, reason=args.reason)
+        return plan_status(args.root)
+    if command == "paper" and args.paper_action != "review":
+        if args.paper_action == "init":
+            return init_paper(args.root, article_type=args.article_type, title=args.title)
+        if args.paper_action == "check":
+            return check_paper(args.root, profile=args.profile)
+        if args.paper_action == "build":
+            return build_paper(args.root, profile=args.profile)
+        if args.paper_action == "verify-build":
+            return verify_paper_build(args.root)
+        if args.paper_action == "lint":
+            return lint_file(args.root, args.file)
+        if args.paper_action == "dp-add":
+            locator = locator_from_arguments(
+                csv_column=args.csv_column,
+                csv_row=args.csv_row,
+                csv_row_index=args.csv_row_index,
+                json_pointer=args.json_pointer,
+                text_regex=args.text_regex,
+                text_line=args.text_line,
+            )
+            return add_datapoint(
+                args.root,
+                datapoint_id=args.datapoint_id,
+                artifact_path=args.artifact,
+                locator=locator,
+                description=args.description,
+                kind=args.kind,
+                fmt=args.fmt,
+                unit=args.unit,
+                claim_ids=args.claim_ids,
+                evidence_id=args.evidence_id,
+                tolerance=args.tolerance,
+                grim_n=args.grim_n,
+                grim_items=args.grim_items,
+                provenance=args.provenance,
+            )
+        if args.paper_action == "dp-refresh":
+            return refresh_datapoint(args.root, args.datapoint_id, confirm_change=args.confirm_change)
     if command == "paper":
         if args.paper_action == "review":
             return review_paper(
@@ -1915,6 +2141,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 return 2
         if command == "verify" and isinstance(result, Mapping) and not result.get("verified"):
             return 2
+        if command == "paper" and isinstance(result, Mapping):
+            if args.paper_action in ("check", "lint") and result.get("status") != "PASS":
+                return 2
+            if args.paper_action == "verify-build" and not result.get("current"):
+                return 2
         if command == "verify-blessing" and isinstance(result, Mapping) and not result.get("verified"):
             return 2
         return 0

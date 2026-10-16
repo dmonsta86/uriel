@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.next_step.v1.schema.json",
+  "title": "Uriel Next Research Step",
+  "type": "object",
+  "required": [
+    "schema",
+    "schema_version",
+    "target",
+    "project_sha256",
+    "stage",
+    "next_action",
+    "automated_checks_complete",
+    "progress",
+    "checklist",
+    "rules",
+    "boundaries"
+  ],
+  "properties": {
+    "schema": {
+      "const": "uriel.next_step.v1"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "target": {
+      "enum": [
+        "draft",
+        "submission"
+      ]
+    },
+    "project_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "next_action": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/item"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "automated_checks_complete": {
+      "type": "boolean"
+    },
+    "progress": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7
+    },
+    "checklist": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "$ref": "#/$defs/item"
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "boundaries": {
+      "type": "object",
+      "properties": {
+        "authority_granted": {
+          "const": false
+        },
+        "writes": {
+          "const": 0
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "item": {
+      "type": "object",
+      "required": [
+        "code",
+        "stage",
+        "owner",
+        "subject",
+        "why",
+        "do",
+        "alternatives",
+        "command",
+        "done_when"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "stage": {
+          "type": "string"
+        },
+        "owner": {
+          "enum": [
+            "agent",
+            "human"
+          ]
+        },
+        "subject": {
+          "type": "string"
+        },
+        "why": {
+          "type": "string"
+        },
+        "do": {
+          "type": "string"
+        },
+        "alternatives": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "string"
+          }
+        },
+        "location": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "command": {
+          "type": "string"
+        },
+        "done_when": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

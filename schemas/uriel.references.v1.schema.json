@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.references.v1.schema.json",
+  "title": "Uriel Reference Registry",
+  "type": "object",
+  "required": [
+    "schema",
+    "references"
+  ],
+  "properties": {
+    "schema": {
+      "const": "uriel.references.v1"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "references": {
+      "type": "array",
+      "maxItems": 2000,
+      "items": {
+        "type": "object",
+        "required": [
+          "key",
+          "authors",
+          "year",
+          "title"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_:.\\-]{0,63}$"
+          },
+          "authors": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "year": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 4
+          },
+          "venue": {
+            "type": "string"
+          },
+          "volume": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "issue": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "pages": {
+            "type": "string"
+          },
+          "doi": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "artifact_path": {
+            "type": "string"
+          },
+          "sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "source_type": {
+            "type": "string"
+          },
+          "verification": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "enum": [
+                  "held",
+                  "metadata_checked",
+                  "unverified"
+                ]
+              },
+              "checked_on": {
+                "type": "string",
+                "format": "date"
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

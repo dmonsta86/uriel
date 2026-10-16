@@ -4,8 +4,9 @@ This document records the research-lifecycle layer on top of the existing
 deterministic core. The intake, bounded AI-surface, workbench, checkpoint,
 decision, repair, and submission portions are current beta surfaces. Evidence
 Ingress and the deterministic local Data Desk now have experimental runtime
-paths on `main`, including an exact generation-bound Gate 0 bridge. Paper
-Builder and advanced export work remain planned.
+paths on `main`, including an exact generation-bound Gate 0 bridge. The Paper
+Builder core and the `uriel next` protocol driver are experimental on `main`;
+DOCX/PDF export remains planned.
 The checklist at the bottom is the authoritative boundary for this document.
 
 The core promise is unchanged: Uriel certifies only that one exact recorded
@@ -119,11 +120,25 @@ the v2 check matrix, and activate only a hash-bound PASS receipt; strict audit,
 independent verification, and Blessing issuance fail closed on stale or
 mismatched state.
 
-### Paper Builder (planned)
+### Research protocol driver (experimental on `main`)
 
-The planned Paper Builder will maintain a canonical, transparent manuscript directory
-(sections, tables, figures, supplements, statements, style, manifest) instead of
-treating DOCX or PDF as the source of truth. The standard-library core always emits Markdown,
+`uriel next` reads the whole lifecycle state and names one next action across
+seven ordered stages: frame, prior work, design and lock, evidence, challenge,
+manuscript, and submission. Each action has a reason, a command or file
+location, a completion condition, and an owner (`agent` or `human`).
+`uriel plan lock` freezes the hypothesis and analysis plan before results so
+later changes surface as disclosed deviations. See
+[RESEARCH_PROTOCOL.md](RESEARCH_PROTOCOL.md).
+
+### Paper Builder (core experimental on `main`; exports planned)
+
+The Paper Builder keeps a canonical, transparent manuscript directory
+(`paper/`: manifest, sections, datapoint and reference registries) instead of
+treating DOCX or PDF as the source of truth. Result numbers render only from
+datapoints re-extracted from hashed artifacts; citations, quotations, claim
+anchors, reported statistics, and prose are checked before a deterministic
+Markdown build with a number-trace supplement and receipt. See
+[PAPER_BUILDER.md](PAPER_BUILDER.md). The remaining plan below covers exports. The standard-library core always emits Markdown,
 UTF-8 text, HTML, JSON/JSONL, CSV/TSV, SQLite, checksum manifests, and ZIP
 packets. A conservative deterministic `docx-lite` writer is provided only if
 it can be validated as Office Open XML; PDF support is always print-ready HTML
@@ -331,5 +346,7 @@ works without any AI provider.
 - [x] Phase 4 — bounded minimum-prompt and free-AI workflow
 - [x] Phase 5 — workbench, decisions, and publication authority
 - [x] Phase 6 — experimental Data Desk and generation-bound Gate 0 bridge
-- [ ] Phase 7 — Paper Builder and exports
+- [ ] Phase 7 — Paper Builder and exports (core manuscript directory, checks,
+  Markdown build, and `uriel next` are experimental on `main`; DOCX/PDF exports
+  remain planned)
 - [x] Phase 8 — release, portability, and security baseline (broader independent review remains)

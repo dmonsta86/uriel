@@ -172,6 +172,43 @@ Strict source-binding verification refuses more than 10,000 source files,
 source generation above 250,000 records or 128 MiB because the current verified
 projection implementation reparses the complete sealed generation.
 
+## Research protocol, plan lock, and Paper Builder limitations
+
+`uriel next` orders deterministic checks and names one action. It cannot know
+whether the question is worthwhile, the design adequate, or the human-owned
+items (attestations, ethics, reference checks, the final read) were done
+honestly. Its stage order is a workflow convention, not a scientific rule.
+
+A plan lock is local tamper evidence ordered by the hash-chained ledger. It is
+not a public preregistration or a trusted timestamp, and it cannot see analyses
+run outside Uriel. A lock that "preceded the first passing run" says nothing
+about analyses performed elsewhere.
+
+A verified datapoint proves which bytes a number came from and that it was
+copied exactly. It does not prove the analysis that produced those bytes was
+appropriate, correct, or complete. Locators read strict UTF-8 CSV/TSV, JSON,
+or text artifacts up to 64 MiB. The number policy recognizes common numerals
+and exempts years, labels, coverage levels, headings, and list numbers. It can
+miss spelled-out numbers and can flag an innocent numeral, which
+`{{lit:...}}` makes explicit.
+
+Statistical recomputation covers t, F, chi-square, r, and z reports in
+APA-like notation, using rounding intervals for the reported statistic and a
+one-tailed allowance when the sentence says so. It does not read tables of test
+results, other notations, corrected or nonstandard tests, or the
+appropriateness of any test. GRIM applies only to means of integer-valued data
+with a declared sample size.
+
+Citation checks resolve keys and verify held source bytes. Quote checks prove
+that the quoted words appear in the held copy, not that the copy is authentic or
+that the quote is used fairly. `metadata_checked` is a human attestation that
+Uriel records but cannot confirm.
+
+The prose lint is a fixed list of patterns. It does not detect authorship, will
+miss problems, and will sometimes flag acceptable wording; the filler-density
+thresholds are heuristics. Output is Markdown only; DOCX and PDF export are not
+implemented.
+
 ## Research Verbatim Ledger limitations
 
 The Research Verbatim Ledger is OFF for every new user and project. It stores

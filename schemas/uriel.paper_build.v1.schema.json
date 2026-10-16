@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.paper_build.v1.schema.json",
+  "title": "Uriel Paper Build Receipt",
+  "type": "object",
+  "required": [
+    "schema",
+    "schema_version",
+    "profile",
+    "created_at_utc",
+    "project_sha256",
+    "check_report_sha256",
+    "binding",
+    "outputs",
+    "boundaries",
+    "receipt_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "uriel.paper_build.v1"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "profile": {
+      "enum": [
+        "draft",
+        "submission"
+      ]
+    },
+    "created_at_utc": {
+      "type": "string"
+    },
+    "project_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "check_report_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "binding": {
+      "type": "object",
+      "required": [
+        "inputs",
+        "artifacts",
+        "reference_sources",
+        "citation_order",
+        "datapoints_rendered"
+      ]
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/$defs/sha256"
+      }
+    },
+    "boundaries": {
+      "type": "object",
+      "properties": {
+        "scientific_truth_decided": {
+          "const": false
+        },
+        "publication_authority": {
+          "const": false
+        },
+        "blessing": {
+          "const": false
+        }
+      }
+    },
+    "receipt_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

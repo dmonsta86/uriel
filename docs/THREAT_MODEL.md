@@ -57,6 +57,17 @@
     forged hash, continues after revocation, repeats a declined offer, captures
     hidden/provider/credential content, or is presented as scientific proof.
 
+23. **Number fabrication or drift:** a manuscript number is typed from memory,
+    invented, rounded inconsistently, or left unchanged after the data change.
+24. **Citation and quotation fabrication:** a reference that does not exist, a
+    malformed or placeholder DOI, or a quotation the cited source never contains.
+25. **Goalpost moving:** the hypothesis, exclusions, or analysis plan are edited
+    after results to fit them, or the study is called preregistered when it was
+    not.
+26. **Assistant residue and filler:** conversational text, placeholders, stock
+    filler, hype, or proof language from a drafting assistant survives into the
+    manuscript.
+
 ## Implemented controls
 
 - exact-root confinement and link/reparse refusal;
@@ -161,6 +172,24 @@
   are never projected. Salted aliases, closed membership, no-link checks,
   source regeneration, record/entry hashes, and 512-reference/16 MiB ceilings
   are independently verified against the exact source snapshot.
+
+- Manuscript numbers in bound sections must come from datapoints that are
+  re-extracted from hashed, inventoried artifacts before rendering. Stale bytes,
+  mismatched values, impossible kind values, GRIM failures, and violated
+  relations block. Value changes require explicit confirmation and are recorded
+  in the ledger.
+- Reported t/F/chi-square/r/z results are recomputed, and a flipped significance
+  decision always blocks. Impossible p-values, correlations, dispersions,
+  intervals, and counts block.
+- Citation keys must resolve. Held sources are re-hashed, verbatim quotations
+  are matched against held text, and unverified, implausible, or placeholder
+  references block submission.
+- Plan locks are content-addressed and ledger-ordered. Drift, post-results
+  revisions, and preregistration wording without a prior lock or external
+  registration are reported.
+- Assistant residue always blocks a manuscript check. Placeholders, stock
+  filler, hype, proof language, and unsourced attribution block the submission
+  profile.
 
 ## Explicit non-controls
 

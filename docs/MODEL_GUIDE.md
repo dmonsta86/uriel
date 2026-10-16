@@ -10,6 +10,19 @@ Uriel is model-optional. The preferred workflow is **deterministic first, semant
 | Find contradictions/control mismatches | Several narrow free-model passes | Strong authorized model on a compact adversarial packet | Final adjudication without the underlying data |
 | Final submission challenge | Human checklist + deterministic audit | Strong authorized model followed by an independent domain reviewer | Ethics approval, truth, authorship responsibility |
 
+## Drive any model with `uriel next`
+
+`uriel next --root . --prompt NEXT_STEP.md` writes one self-contained task with
+its reason, location, completion condition, and the protocol rules. A small or
+free model handles one task per session, and you rerun `uriel next` between
+sessions. A stronger model may read `uriel --json next` and finish several
+agent-owned items in the current stage, rechecking after each. No model performs
+an item marked `owner: human`. See [RESEARCH_PROTOCOL.md](RESEARCH_PROTOCOL.md).
+
+When a model drafts manuscript text, run `uriel paper lint --file DRAFT.md`
+before pasting it into a section. It reports assistant residue, placeholders,
+filler, unsourced attribution, and inconsistent statistics with exact lines.
+
 ## Recommended escalation ladder
 
 1. `uriel audit --profile exploratory`

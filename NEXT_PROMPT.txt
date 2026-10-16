@@ -1,1 +1,1 @@
-Read URIEL_AI_ENTRY.md and review the latest output from `uriel audit` or `uriel workbench`. Complete the next safe research or repair step without changing authoritative state boundaries.
+Read URIEL_AI_ENTRY.md, run `uriel next --root .`, and complete the one action it names without changing authoritative state boundaries. Stop and ask the human if the action is marked owner: human.
