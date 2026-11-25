@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 def digest(p):
-    return hashlib.sha256(p.read_bytes()).hexdigest()
+    return hashlib.sha256(p.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 def main():
     data = json.loads((ROOT / "docs/i18n/locale_map.json").read_text(encoding="utf-8"))
     canonical = digest(ROOT / "README.md")

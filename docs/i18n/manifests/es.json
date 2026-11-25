@@ -2,7 +2,7 @@
   "schema": "uriel.readme_pointer.v1",
   "locale": "es",
   "readme_path": "README.es.md",
-  "readme_sha256": "84baf62a0f630153bf96866c1042ef07269de33289dbf6e079028f610b452a77",
-  "canonical_sha256": "c037819dfbe7944fbd3f5c9b2837ca184e18e3f6c3954ddeb7a768a35e6eb5e1",
+  "readme_sha256": "3783103f0992ed3efa7e2c49106deaeb9ec7f5bce0ada133f4b89410851fdd53",
+  "canonical_sha256": "4cedecdddf073783d23928884395ba4db3aa7ab9a584b98a04aef4461cf82d46",
   "status": "pointer"
 }
