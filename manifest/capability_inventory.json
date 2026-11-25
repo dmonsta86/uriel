@@ -1,8 +1,27 @@
 {
   "schema": "uriel.capability_inventory.v1",
   "source": "src/uriel/capability_status.py",
-  "source_fingerprint": "e794e8ae77c5b4f6764e77d334b0fdceababa119671c184256093c8ebd1da696",
+  "source_fingerprint": "45f64aaee06d2d85a0568445e570b841db53da652d1145143a2f9a081d948716",
   "capabilities": [
+    {
+      "id": "CAP-PAPER-PREFLIGHT-001",
+      "name": "Offline manuscript production preflight",
+      "status": "EXPERIMENTAL",
+      "entry_point": "uriel paper preflight",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "modules": [
+        "src/uriel/paper_preflight.py",
+        "src/uriel/cli.py"
+      ],
+      "verification": [
+        "tests/test_paper_preflight.py"
+      ],
+      "notes": "Read-only bounded text checks for process residue, placeholders, repetition and selected explicit reference consistency. Line-localized advisory findings; no authorship detection, semantic source validation, network, model calls, manuscript writes or upstream authority."
+    },
     {
       "id": "CAP-CORE-001",
       "name": "Deterministic project core and packaging",

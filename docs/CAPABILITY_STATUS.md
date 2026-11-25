@@ -1,6 +1,6 @@
 # The Forge of Uriel Capability Status
 
-Catalog fingerprint: `e794e8ae77c5b4f6764e77d334b0fdceababa119671c184256093c8ebd1da696`
+Catalog fingerprint: `45f64aaee06d2d85a0568445e570b841db53da652d1145143a2f9a081d948716`
 
 Status meanings:
 
@@ -11,6 +11,7 @@ Status meanings:
 
 | Capability | Status | Verified entry point | Platforms | Evidence | Notes |
 |---|---|---|---|---|---|
+| Offline manuscript production preflight | `EXPERIMENTAL` | `uriel paper preflight` | Windows, macOS, Linux | `src/uriel/paper_preflight.py`, `src/uriel/cli.py`, `tests/test_paper_preflight.py` | Read-only bounded text checks for process residue, placeholders, repetition and selected explicit reference consistency. Line-localized advisory findings; no authorship detection, semantic source validation, network, model calls, manuscript writes or upstream authority. |
 | Deterministic project core and packaging | `SHIPPED` | `uriel start / uriel verify / uriel doctor` | Windows, macOS, Linux | `src/uriel/core.py`, `src/uriel/cli.py`, `tests/test_core.py`, `tests/test_packaging.py` | Offline-first project confinement, content-addressed records, receipts, and zero runtime dependencies. |
 | Data Readiness and Gate 0 | `BETA` | `uriel readiness init-sort-spec / check / status` | Windows, macOS, Linux | `src/uriel/data_readiness.py`, `src/uriel/generation_readiness.py`, `src/uriel/gate_contract.py`, `src/uriel/independent_verify.py`, `src/uriel/surfaces.py`, `tests/test_data_readiness.py`, `tests/test_generation_readiness.py`, `tests/test_gate_contract.py`, `tests/test_surfaces.py`, `tests/test_strict_contract_mandatory.py` | Exact active-generation identity, deterministic v2 SortSpecs and readiness receipts, stale/tamper invalidation, strict Gate 0 interlock, and bounded no-authority AI projections. |
 | Opt-in Research Verbatim Ledger | `BETA` | `uriel verbatim` | Windows, macOS, Linux | `src/uriel/research_verbatim.py`, `src/uriel/paper_review.py`, `src/uriel/cli.py`, `tests/test_research_verbatim.py`, `tests/test_paper_review.py`, `tests/test_cli.py`, `scripts/smoke_installed_verbatim_ledger.py` | Default-off exact user wording with explicit manual, assisted, or per-project consent; hashed user/project isolation; exact-text and aggregate integrity; advisory non-rewriting drift review; read-only all-baseline paper fidelity, declared evidence/literature coverage, and material-change confirmation; plus review, search, export, disable, and removal controls. |

@@ -18,6 +18,16 @@ CAPABILITY_STATUSES = ("SHIPPED", "BETA", "EXPERIMENTAL", "PLANNED", "DEFERRED")
 
 CAPABILITIES: List[Dict[str, Any]] = [
     {
+        "id": "CAP-PAPER-PREFLIGHT-001",
+        "name": "Offline manuscript production preflight",
+        "status": "EXPERIMENTAL",
+        "entry_point": "uriel paper preflight",
+        "platforms": ["Windows", "macOS", "Linux"],
+        "modules": ["src/uriel/paper_preflight.py", "src/uriel/cli.py"],
+        "verification": ["tests/test_paper_preflight.py"],
+        "notes": "Read-only bounded text checks for process residue, placeholders, repetition and selected explicit reference consistency. Line-localized advisory findings; no authorship detection, semantic source validation, network, model calls, manuscript writes or upstream authority.",
+    },
+    {
         "id": "CAP-CORE-001",
         "name": "Deterministic project core and packaging",
         "status": "SHIPPED",

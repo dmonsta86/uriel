@@ -22,6 +22,13 @@ A Gate pass means the declared project state satisfied the implemented policy ch
 
 ## Detector limitations
 
+The experimental manuscript preflight recognizes defined lexical and
+cross-reference patterns only. It is not an AI detector or a guarantee against
+hallucinations, plagiarism, missing references or unnatural prose. A clean
+result still needs whole-paper source interpretation, natural-language and
+visual review. Its findings may include legitimate quotations or methods
+examples. No human-authorship or journal-readiness score is issued.
+
 The fallacy/framing detector uses conservative text patterns plus declared structure. It can miss sophisticated defects and can flag innocent wording. Findings therefore explain the triggering text and offer repair paths rather than asserting bad faith.
 
 The novelty gate verifies that a search record exists and is bounded; it cannot prove universal absence of prior work. A domain expert and current primary-source search remain necessary.

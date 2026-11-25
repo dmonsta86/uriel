@@ -125,6 +125,7 @@ from .paper_review import CHANGE_CLASSES as PAPER_CHANGE_CLASSES, review_paper
 from .adversarial import mode as assurance_mode, set_mode as set_assurance_mode
 from .plan_lock import lock_plan, plan_status
 from .research_protocol import TARGETS as NEXT_TARGETS, next_step, write_prompt as write_next_prompt
+from .paper_preflight import preflight_paper
 from .prompts import build_prompt
 from .repair_packet import build_repair_packet, verify_repair_packet
 from .research_verbatim import (
@@ -777,6 +778,11 @@ def parser() -> argparse.ArgumentParser:
     _root_argument(paper_dp_refresh)
     paper_dp_refresh.add_argument("--id", required=True, dest="datapoint_id")
     paper_dp_refresh.add_argument("--confirm-change", action="store_true", help="accept a changed reported value")
+    paper_preflight = paper_actions.add_parser(
+        "preflight", help="check manuscript residue and production consistency offline"
+    )
+    _root_argument(paper_preflight)
+    paper_preflight.add_argument("--manuscript", required=True, help="project-relative UTF-8 manuscript")
     paper_review = paper_actions.add_parser(
         "review",
         help="review one explicit candidate without editing or granting authority",
@@ -1032,6 +1038,13 @@ def _print_human(command: str, result: Any, args: Optional[argparse.Namespace] =
                 datapoint.get("id"), datapoint.get("source_token"), datapoint.get("artifact_path"), datapoint.get("sha256")))
             print("Use {{{{dp:{0}}}}} in the manuscript; never type the number.".format(datapoint.get("id")))
             return
+    if command == "paper" and getattr(args, "paper_action", None) == "preflight":
+        print("Manuscript preflight: {0}".format(result.get("status", "UNKNOWN")))
+        for finding in result.get("findings", []):
+            print("{severity} | line {line} | {check_id}: {message}".format(**finding))
+        print("Source interpretation, natural prose and visual review remain required.")
+        print("No manuscript edits, network calls, authorship inference or gate authority.")
+        return
     if command == "paper" and isinstance(result, Mapping):
         print("Paper review: {0}".format(result.get("recommended_action")))
         print("Candidate SHA-256: {0}".format((result.get("manuscript") or {}).get("sha256")))
@@ -2038,6 +2051,8 @@ def dispatch(args: argparse.Namespace) -> Any:
         if args.paper_action == "dp-refresh":
             return refresh_datapoint(args.root, args.datapoint_id, confirm_change=args.confirm_change)
     if command == "paper":
+        if args.paper_action == "preflight":
+            return preflight_paper(args.root, args.manuscript)
         if args.paper_action == "review":
             return review_paper(
                 args.root,
