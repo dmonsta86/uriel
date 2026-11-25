@@ -6,6 +6,11 @@ All notable changes to Uriel are documented here.
 
 ### Added
 
+- An experimental offline `uriel paper preflight` command and pure bounded
+  analyzer for concrete manuscript contamination, unfinished text, repetition,
+  certainty-review leads and selected reference consistency. Reports retain
+  exact input bindings and line locations; no edits, source validation,
+  authorship inference or new gate authority is implied.
 - A read-only `uriel paper review` surface that automatically compares an
   explicit candidate against all selected-scope verbatim baselines, reports
   claim/evidence currency and declared closest-prior-work coverage, binds an

@@ -273,6 +273,13 @@ Expected integrity failures raise `Refusal` with a stable code and exactly three
 
 ## Extension strategy
 
+`paper_preflight.py` is an additive read-only manuscript production surface.
+Its pure analyzer consumes bounded extracted text; its CLI wrapper adds exact
+project confinement and manuscript hashes. It never fetches literature, edits
+manuscripts, infers authorship or grants existing gate/publication authority.
+Optional document renderers and live metadata tools remain outside this core.
+See [Manuscript preflight](PAPER_PREFLIGHT.md).
+
 Discipline-specific logic should be implemented as:
 
 - additional schema profiles;

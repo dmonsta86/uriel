@@ -112,6 +112,7 @@ from .onboarding import (
     start as start_workspace,
 )
 from .paper_review import CHANGE_CLASSES as PAPER_CHANGE_CLASSES, review_paper
+from .paper_preflight import preflight_paper
 from .prompts import build_prompt
 from .repair_packet import build_repair_packet, verify_repair_packet
 from .research_verbatim import (
@@ -688,6 +689,11 @@ def parser() -> argparse.ArgumentParser:
 
     paper = commands.add_parser("paper", help="read-only manuscript review")
     paper_actions = paper.add_subparsers(dest="paper_action", required=True)
+    paper_preflight = paper_actions.add_parser(
+        "preflight", help="check manuscript residue and production consistency offline"
+    )
+    _root_argument(paper_preflight)
+    paper_preflight.add_argument("--manuscript", required=True, help="project-relative UTF-8 manuscript")
     paper_review = paper_actions.add_parser(
         "review",
         help="review one explicit candidate without editing or granting authority",
@@ -833,6 +839,13 @@ def _envelope(status: str, command: str, result: Optional[Any] = None, error: Op
 
 
 def _print_human(command: str, result: Any, args: Optional[argparse.Namespace] = None) -> None:
+    if command == "paper" and getattr(args, "paper_action", None) == "preflight":
+        print("Manuscript preflight: {0}".format(result.get("status", "UNKNOWN")))
+        for finding in result.get("findings", []):
+            print("{severity} | line {line} | {check_id}: {message}".format(**finding))
+        print("Source interpretation, natural prose and visual review remain required.")
+        print("No manuscript edits, network calls, authorship inference or gate authority.")
+        return
     if command == "paper" and isinstance(result, Mapping):
         print("Paper review: {0}".format(result.get("recommended_action")))
         print("Candidate SHA-256: {0}".format((result.get("manuscript") or {}).get("sha256")))
@@ -1786,6 +1799,8 @@ def dispatch(args: argparse.Namespace) -> Any:
                 args.root, args.user, confirmed=args.confirm
             )
     if command == "paper":
+        if args.paper_action == "preflight":
+            return preflight_paper(args.root, args.manuscript)
         if args.paper_action == "review":
             return review_paper(
                 args.root,
