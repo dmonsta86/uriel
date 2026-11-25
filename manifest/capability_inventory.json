@@ -1,8 +1,48 @@
 {
   "schema": "uriel.capability_inventory.v1",
   "source": "src/uriel/capability_status.py",
-  "source_fingerprint": "45f64aaee06d2d85a0568445e570b841db53da652d1145143a2f9a081d948716",
+  "source_fingerprint": "08a078dd281e9f487e1ec11f90b1e857002a797adae0f68fc6f4e8a124421a94",
   "capabilities": [
+    {
+      "id": "CAP-RECORD-001",
+      "name": "Markdown research record and checklists",
+      "status": "BETA",
+      "entry_point": "uriel record / checklist / check-before-push / summary",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "modules": [
+        "src/uriel/record_store.py",
+        "src/uriel/research_record.py",
+        "src/uriel/record_transfer.py",
+        "src/uriel/record_cli.py"
+      ],
+      "verification": [
+        "tests/test_research_record.py"
+      ],
+      "notes": "Verbatim question, revision checks, source hashes, frozen predictions, recorded negative-result audits, exclusive initial task assignment, and checklist receipts. Human evidence assertions require independent review."
+    },
+    {
+      "id": "CAP-TRILIUM-001",
+      "name": "Trilium ETAPI research record",
+      "status": "EXPERIMENTAL",
+      "entry_point": "uriel trilium",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "modules": [
+        "src/uriel/record_store.py",
+        "src/uriel/record_cli.py"
+      ],
+      "verification": [
+        "tests/test_research_record.py"
+      ],
+      "notes": "Mock-tested API client, stable labels and IDs, import, conflict preservation and drift checks. Live compatibility and atomic human-edit concurrency remain unverified."
+    },
     {
       "id": "CAP-PAPER-PREFLIGHT-001",
       "name": "Offline manuscript production preflight",

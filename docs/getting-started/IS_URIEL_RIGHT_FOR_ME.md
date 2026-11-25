@@ -1,6 +1,6 @@
-# Is The Forge of Uriel Right for Your Project?
+# Is Uriel Right for Your Project?
 
-**The Forge of Uriel** is an offline-first research development and hardening toolkit. It is designed to evaluate evidence, trace claims, verify data readiness, and strengthen research papers before submission.
+**Uriel** is an offline-first research development and hardening toolkit. It is designed to evaluate evidence, trace claims, verify data readiness, and strengthen research papers before submission.
 
 It is **not** a general AI chatbot, a writing polish tool, or an automatic approval system. It judges work by evidence and deterministic checks.
 
@@ -13,7 +13,7 @@ You can ask your current AI assistant (online or local models) to evaluate wheth
 Copy the starter prompt below and paste it into your AI:
 
 ```text
-I am considering using The Forge of Uriel, an offline-first research development and hardening toolkit.
+I am considering using Uriel, an offline-first research development and hardening toolkit.
 
 Do not endorse it automatically. Assess whether it is a useful fit for my actual project.
 

@@ -1,4 +1,4 @@
-I am considering using **The Forge of Uriel**, an offline-first research
+I am considering using **Uriel**, an offline-first research
 development and hardening toolkit.
 
 Do not endorse it automatically. Assess whether it is a useful fit for my actual

@@ -62,13 +62,11 @@ class ProviderNeutralityTests(unittest.TestCase):
 
         self.assertEqual(len(matches), 0, "Public brand scrub found disallowed provider strings:\n" + "\n".join(matches))
 
-    # 2. Allowlisted GPT-5.6 Sol Recommendation Test
-    def test_gpt56_sol_recommendation_allowlist(self) -> None:
-        readme_path = self.repo_root / "README.md"
-        readme_text = readme_path.read_text(encoding="utf-8")
-        self.assertIn("GPT-5.6 Sol", readme_text)
-        self.assertIn("ultra", readme_text)
-        self.assertTrue("recommends" in readme_text or "recommendation" in readme_text)
+    # 2. No named maintainer recommendation
+    def test_provider_neutral_readme(self) -> None:
+        readme_text = (self.repo_root / "README.md").read_text(encoding="utf-8")
+        self.assertNotIn("GPT-5.6 Sol", readme_text)
+        self.assertNotIn("Maintainer note", readme_text)
         self.assertNotIn("pricing", readme_text.lower())
         self.assertNotIn("free tier", readme_text.lower())
 

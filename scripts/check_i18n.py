@@ -61,8 +61,8 @@ def main() -> int:
             errors.append(f"{locale}: README is not NFC-normalized")
         if any(char in text for char in FORBIDDEN_BIDI):
             errors.append(f"{locale}: hidden bidi controls present")
-        if locale != "en" and fenced_blocks(text) != english_blocks:
-            errors.append(f"{locale}: code blocks differ from English")
+        if locale != "en" and ("(README.md)" not in text or fenced_blocks(text)):
+            errors.append(f"{locale}: translated README must point to canonical English instructions without stale commands")
         for link in re.findall(r"\]\((?!https?://|mailto:|#)([^)]+)\)", text):
             target = (ROOT / link.split("#", 1)[0]).resolve()
             try:

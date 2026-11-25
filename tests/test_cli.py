@@ -25,7 +25,8 @@ class CliTests(unittest.TestCase):
     def test_version_and_json_status(self) -> None:
         version = self._run("--version")
         self.assertEqual(version.returncode, 0)
-        self.assertIn("1.0.0", version.stdout)
+        from uriel.version import __version__
+        self.assertEqual(version.stdout.strip(), "uriel " + __version__)
         with tempfile.TemporaryDirectory() as temporary:
             initialized = self._run("--json", "init", temporary, "--title", "CLI", "--question", "Does it run?")
             self.assertEqual(initialized.returncode, 0, initialized.stderr)

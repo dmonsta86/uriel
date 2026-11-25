@@ -1,5 +1,10 @@
 # Known limitations and honest claim ceiling
 
+## Research-record limitations
+
+The folder workflow is beta and Trilium is experimental (mock-tested, no live-server validation). ETAPI has no atomic compare-and-swap; live rewrites default to proposals. An explicitly exclusive edit window is needed for guarded direct writes. Records and checklists cannot independently establish scientific validity, timing of data access, evidentiary truth, manuscript completeness or genuine human approval. Lexical duplicate search has false positives and misses synonyms without aliases. See [Research records](RESEARCH_RECORD.md).
+
+
 Uriel can make a research record harder to overstate and easier to verify. It cannot mechanize scientific truth.
 
 ## What a pass means

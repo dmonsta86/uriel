@@ -1,6 +1,6 @@
-# The Forge of Uriel Capability Status
+# Uriel Capability Status
 
-Catalog fingerprint: `45f64aaee06d2d85a0568445e570b841db53da652d1145143a2f9a081d948716`
+Catalog fingerprint: `08a078dd281e9f487e1ec11f90b1e857002a797adae0f68fc6f4e8a124421a94`
 
 Status meanings:
 
@@ -11,6 +11,8 @@ Status meanings:
 
 | Capability | Status | Verified entry point | Platforms | Evidence | Notes |
 |---|---|---|---|---|---|
+| Markdown research record and checklists | `BETA` | `uriel record / checklist / check-before-push / summary` | Windows, macOS, Linux | `src/uriel/record_store.py`, `src/uriel/research_record.py`, `src/uriel/record_transfer.py`, `src/uriel/record_cli.py`, `tests/test_research_record.py` | Verbatim question, revision checks, source hashes, frozen predictions, recorded negative-result audits, exclusive initial task assignment, and checklist receipts. Human evidence assertions require independent review. |
+| Trilium ETAPI research record | `EXPERIMENTAL` | `uriel trilium` | Windows, macOS, Linux | `src/uriel/record_store.py`, `src/uriel/record_cli.py`, `tests/test_research_record.py` | Mock-tested API client, stable labels and IDs, import, conflict preservation and drift checks. Live compatibility and atomic human-edit concurrency remain unverified. |
 | Offline manuscript production preflight | `EXPERIMENTAL` | `uriel paper preflight` | Windows, macOS, Linux | `src/uriel/paper_preflight.py`, `src/uriel/cli.py`, `tests/test_paper_preflight.py` | Read-only bounded text checks for process residue, placeholders, repetition and selected explicit reference consistency. Line-localized advisory findings; no authorship detection, semantic source validation, network, model calls, manuscript writes or upstream authority. |
 | Deterministic project core and packaging | `SHIPPED` | `uriel start / uriel verify / uriel doctor` | Windows, macOS, Linux | `src/uriel/core.py`, `src/uriel/cli.py`, `tests/test_core.py`, `tests/test_packaging.py` | Offline-first project confinement, content-addressed records, receipts, and zero runtime dependencies. |
 | Data Readiness and Gate 0 | `BETA` | `uriel readiness init-sort-spec / check / status` | Windows, macOS, Linux | `src/uriel/data_readiness.py`, `src/uriel/generation_readiness.py`, `src/uriel/gate_contract.py`, `src/uriel/independent_verify.py`, `src/uriel/surfaces.py`, `tests/test_data_readiness.py`, `tests/test_generation_readiness.py`, `tests/test_gate_contract.py`, `tests/test_surfaces.py`, `tests/test_strict_contract_mandatory.py` | Exact active-generation identity, deterministic v2 SortSpecs and readiness receipts, stale/tamper invalidation, strict Gate 0 interlock, and bounded no-authority AI projections. |

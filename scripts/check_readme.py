@@ -54,7 +54,8 @@ def main() -> int:
             errors.append(f"README has a missing local HTML reference: {value}")
 
     cli_text = (ROOT / "src" / "uriel" / "cli.py").read_text(encoding="utf-8")
-    cli_commands = set(re.findall(r'commands\.add_parser\("([a-z0-9-]+)"', cli_text))
+    cli_text += (ROOT / "src" / "uriel" / "record_cli.py").read_text(encoding="utf-8")
+    cli_commands = {"record", "trilium"} | set(re.findall(r'commands\.add_parser\("([a-z0-9-]+)"', cli_text))
     for command in re.findall(r"^\s*uriel\s+([^\s#]+)", text, re.MULTILINE):
         if command.startswith("-"):
             continue
@@ -65,9 +66,10 @@ def main() -> int:
         "Distribution package: `uriel-research`",
         "Python import and CLI command: `uriel`",
         "python -m pip install --no-deps --no-build-isolation .",
-        "uriel start --root",
-        "uriel status --root",
-        "uriel verify --root",
+        "uriel record init",
+        "uriel trilium connect",
+        "uriel checklist pre-submission",
+        "uriel check-before-push",
         "content-addressed attestation",
         "not independent scientific validation",
     )

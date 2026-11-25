@@ -1,3 +1,9 @@
+# 1.1.0rc1 (unreleased)
+
+- Introduce the Markdown and experimental Trilium research record, imports, conflict preservation, predictions, negative-result audits, tasks, successor summaries and checklists.
+- Integrate plan lock, Paper Builder, published-statistics checks, rival framing, adversarial checks and manuscript preflight.
+- Retire decorative assets and vendor-specific recommendations; retain advanced commands.
+
 # Changelog
 
 All notable changes to Uriel are documented here.

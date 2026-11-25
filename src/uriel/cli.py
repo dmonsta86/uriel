@@ -206,10 +206,12 @@ def _verbatim_scope_arguments(parser: argparse.ArgumentParser) -> None:
 
 
 def parser() -> argparse.ArgumentParser:
-    top = _Parser(prog="uriel", description="Offline-first research integrity harness and provenance ledger")
+    top = _Parser(prog="uriel", description="Uriel: research records, evidence tracking and checklists")
     top.add_argument("--json", action="store_true", dest="json_output", help="emit one machine-readable JSON object")
     top.add_argument("--version", action="version", version="%(prog)s {0}".format(__version__))
     commands = top.add_subparsers(dest="command", required=True)
+    from .record_cli import register
+    register(commands)
 
     init = commands.add_parser("init", help="initialize a confined Uriel project")
     init.add_argument("path", nargs="?", default=".")
@@ -947,6 +949,9 @@ def _print_findings(findings: Sequence[Mapping[str, Any]], limit: int = 40) -> N
 
 
 def _print_human(command: str, result: Any, args: Optional[argparse.Namespace] = None) -> None:
+    if command in ("record", "trilium", "check-before-push", "summary", "checklist"):
+        print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+        return
     if command == "next" and isinstance(result, Mapping):
         stage = result.get("stage") or {}
         action = result.get("next_action") or {}
@@ -1638,6 +1643,9 @@ def _parse_verbatim_links(values: Sequence[str]) -> List[Dict[str, str]]:
 
 def dispatch(args: argparse.Namespace) -> Any:
     command = args.command
+    if command in ("record", "trilium", "check-before-push", "summary", "checklist"):
+        from .record_cli import run
+        return run(args)
     if command == "init":
         return initialize_project(args.path, title=args.title, question=args.question, privacy=args.privacy, force=args.force)
     if command == "intake":
@@ -2173,6 +2181,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             print(json.dumps(envelope, ensure_ascii=False, sort_keys=True, separators=(",", ":")))
         else:
             _print_human(command, result, args)
+        if command in ("record", "trilium") and isinstance(result, Mapping) and (result.get("verified") is False or result.get("status") == "conflict"):
+            return 2
+        if command == "checklist" and not result.get("complete"):
+            return 2
         if command == "audit" and isinstance(result, Mapping) and args.audit_action is None and result.get("status") != "PASS":
             return 2
         if command == "blessing" and isinstance(result, Mapping):

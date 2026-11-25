@@ -1,5 +1,10 @@
 # Architecture
 
+## Research record architecture
+
+The shared record API separates the Markdown folder and Trilium ETAPI transport from deterministic workflow operations. The authoritative record is a tree of notes; no second database or model service is required. The CLI uses create-only typed records, revision expectations, stable labels and conflict notes. See [Research records](RESEARCH_RECORD.md) for the protocol and ETAPI concurrency boundary. Legacy integrity and publication tools remain optional.
+
+
 ## Recommendation: one repository, two distributions
 
 Uriel should not be split into an “offline project” and an “AI project.” That creates policy drift, duplicate bugs, and confusing certificates. The best structure is one repository with one trust core and two distributions:

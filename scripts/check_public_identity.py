@@ -41,7 +41,7 @@ DISALLOWED_PATTERNS = {
 }
 
 NAMED_RECOMMENDATION_PATTERN = re.compile(
-    r"\b(?:GPT-5\.6\s+Sol|Sol\s+(?:Pro|Medium|High|Extra\s+High)|Sol\s+5\.6)\b",
+    r"\b(?:GPT(?:[- ]\d+(?:\.\d+)?)?|ChatGPT|OpenAI|Anthropic|Copilot|Llama|Mistral|Sol\s+(?:Pro|Medium|High|Extra\s+High)|Sol\s+5\.6)\b",
     re.IGNORECASE,
 )
 PRIVATE_PUBLIC_PATTERNS = {
@@ -57,12 +57,7 @@ OBSOLETE_ASSETS = (
 FORBIDDEN_TRACKED_NAMES = {".DS_Store", "Thumbs.db", "desktop.ini"}
 FORBIDDEN_TRACKED_SUFFIXES = {".bak", ".bundle", ".log", ".orig", ".pyc", ".pyo", ".rej", ".swp", ".tmp"}
 
-REQUIRED_README_PHRASES = (
-    "The Forge of Uriel",
-    "Forge Method",
-    "The Blessing of Uriel",
-    "The Three Gates",
-)
+REQUIRED_README_PHRASES = ("# Uriel", "research record", "uriel checklist", "uriel trilium")
 
 FORBIDDEN_PLACEHOLDERS = (
     "GENERATE_FROM_LIVE_REPO",
@@ -92,9 +87,7 @@ def is_public(path: Path) -> bool:
 
 
 def recommendation_allowed(relative: str) -> bool:
-    return relative == "docs/AI_USAGE_AND_PRIVACY.md" or bool(
-        re.fullmatch(r"README(?:\.[A-Za-z0-9-]+)?\.md", relative)
-    )
+    return False
 
 
 def main() -> int:
@@ -140,8 +133,8 @@ def main() -> int:
                 errors.append(f"README.md: required public phrase missing: {phrase}")
 
         # Fail-closed regression check against active URIEL FORGE title branding or obsolete hero references
-        if re.search(r"^#+\s*Uriel Forge\b", readme_text, re.MULTILINE):
-            errors.append("README.md: active heading still uses 'Uriel Forge' instead of 'The Forge of Uriel'")
+        if re.search(r"^#+\s*(?:The Forge of Uriel|Uriel Forge)\b", readme_text, re.MULTILINE):
+            errors.append("README.md: active heading still uses 'Uriel Forge' instead of 'Uriel'")
         if "uriel-forge-banner.png" in readme_text or "01_uriel_forge" in readme_text:
             errors.append("README.md: active hero image reference points to obsolete 'uriel-forge-banner.png'")
 
@@ -162,8 +155,6 @@ def main() -> int:
     else:
         asset_text = asset_manifest.read_text(encoding="utf-8")
         declared = re.findall(r"`((?:docs/assets|docs/design/visual-prompts)/[^`]+)`", asset_text)
-        if not declared:
-            errors.append("docs/design/ASSET_MANIFEST.md: no repository-relative assets declared")
         for relative in declared:
             if not (ROOT / relative).is_file():
                 errors.append(f"docs/design/ASSET_MANIFEST.md: missing declared path {relative}")

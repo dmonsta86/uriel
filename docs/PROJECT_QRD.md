@@ -1,7 +1,7 @@
-# The Forge of Uriel — Project QRD
+# Uriel — Project QRD
 
 **Document type:** Quality Requirements Document
-**Public product:** The Forge of Uriel
+**Public product:** Uriel
 **Python distribution:** `uriel-research`
 **Python import and CLI:** `uriel`
 **Category:** Evidence-bound research development and assurance
@@ -11,7 +11,7 @@ commands.
 
 ## Mission
 
-The Forge of Uriel exists to improve every controllable stage of research without
+Uriel exists to improve every controllable stage of research without
 claiming certainty beyond the evidence.
 
 It must:
@@ -148,7 +148,7 @@ See docs/AI_USAGE_AND_PRIVACY.md for the maintainer-tested recommendation
 
 ## Non-goals
 
-The Forge of Uriel is not:
+Uriel is not:
 
 - a truth oracle;
 - a guaranteed-publication system;

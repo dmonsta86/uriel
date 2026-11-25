@@ -18,6 +18,26 @@ CAPABILITY_STATUSES = ("SHIPPED", "BETA", "EXPERIMENTAL", "PLANNED", "DEFERRED")
 
 CAPABILITIES: List[Dict[str, Any]] = [
     {
+        "id": "CAP-RECORD-001",
+        "name": "Markdown research record and checklists",
+        "status": "BETA",
+        "entry_point": "uriel record / checklist / check-before-push / summary",
+        "platforms": ["Windows", "macOS", "Linux"],
+        "modules": ["src/uriel/record_store.py", "src/uriel/research_record.py", "src/uriel/record_transfer.py", "src/uriel/record_cli.py"],
+        "verification": ["tests/test_research_record.py"],
+        "notes": "Verbatim question, revision checks, source hashes, frozen predictions, recorded negative-result audits, exclusive initial task assignment, and checklist receipts. Human evidence assertions require independent review.",
+    },
+    {
+        "id": "CAP-TRILIUM-001",
+        "name": "Trilium ETAPI research record",
+        "status": "EXPERIMENTAL",
+        "entry_point": "uriel trilium",
+        "platforms": ["Windows", "macOS", "Linux"],
+        "modules": ["src/uriel/record_store.py", "src/uriel/record_cli.py"],
+        "verification": ["tests/test_research_record.py"],
+        "notes": "Mock-tested API client, stable labels and IDs, import, conflict preservation and drift checks. Live compatibility and atomic human-edit concurrency remain unverified.",
+    },
+    {
         "id": "CAP-PAPER-PREFLIGHT-001",
         "name": "Offline manuscript production preflight",
         "status": "EXPERIMENTAL",
@@ -347,7 +367,7 @@ def render_capability_markdown(inventory: Mapping[str, Any]) -> str:
     """Render the human-readable capability boundary."""
 
     lines = [
-        "# The Forge of Uriel Capability Status",
+        "# Uriel Capability Status",
         "",
         f"Catalog fingerprint: `{inventory['source_fingerprint']}`",
         "",

@@ -1,5 +1,10 @@
 # Privacy and model choice
 
+## Research records and credentials
+
+ETAPI credentials are read from the environment and are not persisted by Uriel. Use loopback HTTP or authenticated HTTPS; review exports and assistant handoffs for private data. Do not expose tokens or private record contents to assistants or public repositories.
+
+
 **Uriel offers model suggestions but endorses no model, provider, hosting company, or data policy.** Capability, price, access, retention, and terms change. The project owner is responsible for deciding whether a tool is authorized for the material being processed.
 
 ## Decision order

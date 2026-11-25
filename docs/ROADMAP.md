@@ -1,4 +1,9 @@
-# The Forge of Uriel — public roadmap
+# Uriel — public roadmap
+
+## Research-record priorities
+
+Validate ETAPI compatibility on a live server, strengthen revision/concurrent-editor safeguards, support task reassignment and explicit status transitions, improve record-schema validation and evidence-bound reproducibility. The advanced legacy scoring and attestation tools are optional.
+
 
 This is the public product roadmap. It describes direction and current
 boundaries; it does not turn planned work into a feature claim.

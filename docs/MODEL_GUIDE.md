@@ -1,5 +1,10 @@
 # Model guide: spend intelligence where it changes the result
 
+## Research-record workflow
+
+Use any compatible assistant. Read the authoritative record first, respect the research mode and frozen predictions, and never substitute assistant confidence for linked evidence. Follow [Research records](RESEARCH_RECORD.md).
+
+
 Uriel is model-optional. The preferred workflow is **deterministic first, semantic help second, direct verification last**.
 
 | Task | Lowest-cost useful route | Stronger route | Never delegate |

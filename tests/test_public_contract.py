@@ -9,39 +9,25 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class PublicContractTests(unittest.TestCase):
-    def test_readme_explains_name_blessing_and_three_gates(self) -> None:
+    def test_readme_explains_record_workflow(self) -> None:
         text = (ROOT / "README.md").read_text(encoding="utf-8")
-        required = (
-            "# The Forge of Uriel",
-            "## Current release boundary",
-            "## The Blessing of Uriel",
-            "## The Three Gates",
-            "Gate 1",
-            "Gate 2",
-            "Gate 3",
-        )
-        for phrase in required:
-            self.assertIn(phrase, text, phrase)
+        for phrase in ("# Uriel", "uriel record init", "uriel trilium connect",
+                       "uriel check-before-push", "uriel checklist pre-submission",
+                       "uriel summary --for-successors"):
+            self.assertIn(phrase, text)
+        self.assertNotIn("![" , text)
 
-    def test_readme_describes_lifecycle_flow(self) -> None:
+    def test_advanced_features_demoted_and_bounded(self) -> None:
         text = (ROOT / "README.md").read_text(encoding="utf-8")
-        for token in (
-            "Gate 0",
-            "Gate 1",
-            "Gate 2",
-            "Gate 3",
-        ):
-            self.assertIn(token, text, token)
+        opening, advanced = text.split("## Advanced and experimental tools")
+        self.assertNotIn("Blessing", opening)
+        self.assertIn("Blessing", advanced)
+        self.assertIn("Gate 0", advanced)
+        self.assertIn("not independent scientific validation", text)
 
-    def test_readme_lens_is_advisory_and_cannot_bless(self) -> None:
+    def test_readme_vendor_neutral(self) -> None:
         text = (ROOT / "README.md").read_text(encoding="utf-8")
-        self.assertIn("The Blessing of Uriel", text)
-        self.assertTrue("Strict Blessing" in text or "Blessing" in text)
-
-    def test_readme_packet_and_budget_sections(self) -> None:
-        text = (ROOT / "README.md").read_text(encoding="utf-8")
-        self.assertTrue("AI" in text or "Maintainer note" in text)
-        self.assertIn("Maintainer note", text)
+        self.assertNotIn("Maintainer note", text)
 
     def test_lifecycle_doc_covers_all_planned_surfaces(self) -> None:
         text = (ROOT / "docs" / "LIFECYCLE.md").read_text(encoding="utf-8")
