@@ -28,6 +28,13 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-15-intel]
         python: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+        # Python 3.9 builds are unavailable on Ubuntu 26.04 (ubuntu-latest).
+        exclude:
+          - os: ubuntu-latest
+            python: "3.9"
+        include:
+          - os: ubuntu-24.04
+            python: "3.9"
 
     steps:
       - name: Check out the exact commit

@@ -29,3 +29,7 @@ release-check.txt
 *_FINAL_REPORT.md
 *_SUMMARY.md
 
+
+# Private research-record data and exported snapshots
+research-record/
+.uriel-write-lock/

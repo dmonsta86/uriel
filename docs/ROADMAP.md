@@ -1,4 +1,9 @@
-# The Forge of Uriel — public roadmap
+# Uriel — public roadmap
+
+## Research-record priorities
+
+Validate ETAPI compatibility on a live server, strengthen revision/concurrent-editor safeguards, support task reassignment and explicit status transitions, improve record-schema validation and evidence-bound reproducibility. The advanced legacy scoring and attestation tools are optional.
+
 
 This is the public product roadmap. It describes direction and current
 boundaries; it does not turn planned work into a feature claim.
@@ -107,6 +112,23 @@ truth score. Continuation and export commands invoke no AI, network, browser,
 or subprocess; raw evidence and private references are not copied into the
 export. Metadata may still be sensitive and requires human review before
 publication.
+
+## Active product lane: idea-to-paper protocol
+
+The experimental protocol and Paper Builder now provide one guided route:
+
+```text
+uriel next -> frame -> prior work -> design + plan lock -> evidence + recorded run
+-> challenge -> paper/ with bound datapoints, verified citations and quotes
+-> paper check -> submission audit -> paper build -> human final read
+```
+
+This lane is `EXPERIMENTAL`. It makes number binding, citation and quotation
+verification, statistical recomputation, plan-drift disclosure, and filler or
+assistant-residue removal routine. It does not judge whether an analysis is
+appropriate or a conclusion is true, and it exports Markdown only. Usability
+trials with real manuscripts and measured false-positive rates for the prose and
+number policies must come before any maturity promotion.
 
 ## Following lanes
 

@@ -50,7 +50,7 @@ review prompt; model output remains advisory and cannot pass a Gate.
 
 ## Route D — provider-neutral agent with an offline local model
 
-Local OpenAI-compatible inference tools (such as Ollama, LM Studio, llama.cpp, and similar tools) may be used offline. The exact hardware-appropriate model is deliberately not hard-coded in Uriel.
+Compatible local inference tools may be used offline. The exact hardware-appropriate model is deliberately not hard-coded in Uriel.
 
 Keep the server bound to loopback (`127.0.0.1`), disable sharing, inspect logs/plugins, and confirm the application does not upload prompts or telemetry.
 

@@ -1,5 +1,10 @@
 # Known limitations and honest claim ceiling
 
+## Research-record limitations
+
+The folder workflow is beta and Trilium is experimental (mock-tested, no live-server validation). ETAPI has no atomic compare-and-swap; live rewrites default to proposals. An explicitly exclusive edit window is needed for guarded direct writes. Records and checklists cannot independently establish scientific validity, timing of data access, evidentiary truth, manuscript completeness or genuine human approval. Lexical duplicate search has false positives and misses synonyms without aliases. See [Research records](RESEARCH_RECORD.md).
+
+
 Uriel can make a research record harder to overstate and easier to verify. It cannot mechanize scientific truth.
 
 ## What a pass means
@@ -21,6 +26,13 @@ A Gate pass means the declared project state satisfied the implemented policy ch
 - an author or reviewer identity was cryptographically verified.
 
 ## Detector limitations
+
+The experimental manuscript preflight recognizes defined lexical and
+cross-reference patterns only. It is not an AI detector or a guarantee against
+hallucinations, plagiarism, missing references or unnatural prose. A clean
+result still needs whole-paper source interpretation, natural-language and
+visual review. Its findings may include legitimate quotations or methods
+examples. No human-authorship or journal-readiness score is issued.
 
 The fallacy/framing detector uses conservative text patterns plus declared structure. It can miss sophisticated defects and can flag innocent wording. Findings therefore explain the triggering text and offer repair paths rather than asserting bad faith.
 
@@ -171,6 +183,74 @@ Strict source-binding verification refuses more than 10,000 source files,
 512 MiB total, or 256 MiB for one file. AI projections additionally refuse a
 source generation above 250,000 records or 128 MiB because the current verified
 projection implementation reparses the complete sealed generation.
+
+## Research protocol, plan lock, and Paper Builder limitations
+
+`uriel next` orders deterministic checks and names one action. It cannot know
+whether the question is worthwhile, the design adequate, or the human-owned
+items (attestations, ethics, reference checks, the final read) were done
+honestly. Its stage order is a workflow convention, not a scientific rule.
+
+A plan lock is local tamper evidence ordered by the hash-chained ledger. It is
+not a public preregistration or a trusted timestamp, and it cannot see analyses
+run outside Uriel. A lock that "preceded the first passing run" says nothing
+about analyses performed elsewhere.
+
+A verified datapoint proves which bytes a number came from and that it was
+copied exactly. It does not prove the analysis that produced those bytes was
+appropriate, correct, or complete. Locators read strict UTF-8 CSV/TSV, JSON,
+or text artifacts up to 64 MiB. The number policy recognizes common numerals
+and exempts years, labels, coverage levels, headings, and list numbers. It can
+miss spelled-out numbers and can flag an innocent numeral, which
+`{{lit:...}}` makes explicit.
+
+Statistical recomputation covers t, F, chi-square (including Q and G²), r, and
+z reports in APA-like notation, using rounding intervals for the reported
+statistic and a one-tailed allowance when the same line says so. Before
+checking, text is repaired for common PDF-extraction damage: control bytes,
+lost chi and minus signs, split decimals, and publisher fonts that map `=`,
+`<`, and `>` to letters. Results reported as "ns", as inequalities
+(`F < 1`), with an intervening MSE, or with thousands separators are read. Results
+written only in prose ("significant at the .05 level"), split across a page
+break, or declared one-tailed only elsewhere in the document are not. It does not read tables of test
+results, other notations, corrected or nonstandard tests, or the
+appropriateness of any test. GRIM applies only to means of integer-valued data
+with a declared sample size.
+
+Citation checks resolve keys and verify held source bytes. Quote checks prove
+that the quoted words appear in the held copy, not that the copy is authentic or
+that the quote is used fairly. `metadata_checked` is a human attestation that
+Uriel records but cannot confirm.
+
+Framing checks compare manuscript wording with the declared record. They can
+see that a rival explanation is recorded, linked, addressed, and supported as
+ruled out. They cannot judge whether the recorded rivals are the important
+ones, whether the discriminating observation is decisive, or whether hedged
+wording is hedged enough. Sentence-level patterns for settled, interpretive,
+dismissive, and generalizing language will miss paraphrases and can flag
+acceptable sentences.
+
+Adversarial mode raises the bar on what the record must contain; it cannot
+make the record honest. Two recorded rivals can both be weak, an adversarial
+test can be designed to pass, and an assumption's "result" is whatever the
+author writes. The mode makes those gaps explicit and reviewable, and turning
+it off is recorded, but its findings remain checks of declared structure and
+wording.
+
+Model checks establish exact dimensional consistency for equations written in
+the supported syntax: one `=`, the operators `+ - * / ^`, parentheses, implicit
+products, and the functions `exp`, `log`, `ln`, `sqrt`, trigonometric and
+logistic functions, `abs`, `min`, and `max`. Derivatives, integrals, sums,
+matrices, and piecewise definitions must be recorded as named symbols or
+described in words. A consistent equation can still be the wrong equation.
+Whether a model describes reality is a scientific judgment; Uriel only requires
+the paper to declare which kind of claim it makes and to show the validation and
+rival comparison that a predictive or mechanistic claim needs.
+
+The prose lint is a fixed list of patterns. It does not detect authorship, will
+miss problems, and will sometimes flag acceptable wording; the filler-density
+thresholds are heuristics. Output is Markdown only; DOCX and PDF export are not
+implemented.
 
 ## Research Verbatim Ledger limitations
 

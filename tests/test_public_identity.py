@@ -18,10 +18,10 @@ class PublicIdentityTests(unittest.TestCase):
         exit_code = check_public_identity_main()
         self.assertEqual(exit_code, 0, "Public identity check failed.")
 
-    def test_named_recommendation_is_limited_to_core_readmes_and_one_policy_doc(self) -> None:
+    def test_named_recommendation_is_never_allowed(self) -> None:
         self.assertTrue(NAMED_RECOMMENDATION_PATTERN.search("GPT-5.6 Sol with ultra mode"))
-        self.assertTrue(recommendation_allowed("README.fr.md"))
-        self.assertTrue(recommendation_allowed("docs/AI_USAGE_AND_PRIVACY.md"))
+        self.assertFalse(recommendation_allowed("README.fr.md"))
+        self.assertFalse(recommendation_allowed("docs/AI_USAGE_AND_PRIVACY.md"))
         self.assertFalse(recommendation_allowed("docs/FREE_AI_QUICKSTART.md"))
 
     def test_private_research_identity_patterns_are_fail_closed(self) -> None:

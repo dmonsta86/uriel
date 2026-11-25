@@ -592,6 +592,20 @@
       "items": {
         "$ref": "#/$defs/idObject"
       }
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/idObject"
+      },
+      "description": "Optional model records (equation, symbols with meaning and unit, role, assumptions, domain, source, verification, implementation, validation, rivals, claim_ids). See docs/RESEARCH_PROTOCOL.md."
+    },
+    "assurance_mode": {
+      "enum": [
+        "standard",
+        "adversarial"
+      ],
+      "description": "Optional. adversarial applies the stricter claim-scrutiny standard in paper check and uriel next; it does not change Gates or Blessing."
     }
   }
 }

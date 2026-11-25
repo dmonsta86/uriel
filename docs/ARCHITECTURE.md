@@ -1,5 +1,10 @@
 # Architecture
 
+## Research record architecture
+
+The shared record API separates the Markdown folder and Trilium ETAPI transport from deterministic workflow operations. The authoritative record is a tree of notes; no second database or model service is required. The CLI uses create-only typed records, revision expectations, stable labels and conflict notes. See [Research records](RESEARCH_RECORD.md) for the protocol and ETAPI concurrency boundary. Legacy integrity and publication tools remain optional.
+
+
 ## Recommendation: one repository, two distributions
 
 Uriel should not be split into an “offline project” and an “AI project.” That creates policy drift, duplicate bugs, and confusing certificates. The best structure is one repository with one trust core and two distributions:
@@ -33,6 +38,12 @@ TRUSTED / DETERMINISTIC
   data_desk.py  bounded parsing, structural profiles, generations, reconciliation
   scholarly_acquisition.py  disabled local-mock policy, quarantine, offline verify
   forge_engine.py  immutable workflow snapshots, transitions, lineage and ref verification
+  datapoints.py   exact datapoint extraction from hashed artifacts, sanity and relations
+  stat_check.py   deterministic recomputation of reported statistics
+  prose_lint.py   fixed-pattern manuscript lint (assistant residue, filler, overreach)
+  plan_lock.py    content-addressed, ledger-ordered analysis-plan locks
+  paper_builder.py  manuscript directory checks, deterministic build and receipt
+  research_protocol.py  read-only seven-stage next-action driver (`uriel next`)
   schema.py     structural and reference validation
   audit.py      declared-policy evaluation
   blessing.py   content-addressed package and verifier
@@ -63,7 +74,14 @@ project/
   uriel.project.json
   sources/
   artifacts/
+  paper/
+    paper.json
+    sections/*.md
+    datapoints.json
+    references.json
+    build/            generated; excluded from the source inventory
   .uriel/
+    plan-locks/<lock-sha256>.json
     config.json
     ledger.jsonl
     REMINDERS.md
@@ -238,6 +256,27 @@ or Earned Wings authority.
 The Forge surfaces still provide no model adapter, GUI, network path,
 automatic semantic judge, or automatic broad milestone closure.
 
+## Research protocol and Paper Builder boundary
+
+`uriel next` composes existing deterministic checks read-only: the Gate 1-3
+functions over an in-memory source manifest, plan-lock status from the verified
+ledger, the Paper Builder check, the recorded audit pointer, and the build
+receipt. It writes nothing unless `--prompt` names a create-only file.
+
+The manuscript lives in `paper/`, inside the source inventory, so audits and
+receipts bind the exact manuscript bytes. `paper/build/` matches the existing
+`build` ignore rule and is derived output. A datapoint binds artifact path,
+SHA-256, locator, declared value, and exact source token. Verification re-reads
+the bytes, rejects artifacts outside the source inventory or inside `paper/`,
+and re-extracts the token before any value is rendered. Builds refuse on
+blockers, and the receipt binds every section, registry, artifact, held cited
+source, and output digest. `paper verify-build` re-renders and compares.
+
+Plan locks are create-only records under `.uriel/plan-locks/`, each named by its
+own content hash and referenced by a `plan.locked` ledger event that carries the
+record's file digest. Ledger sequence, not wall-clock time, decides whether a
+lock preceded the first passing run.
+
 ## Determinism and content binding
 
 - Canonical JSON sorts keys and uses stable separators.
@@ -272,6 +311,13 @@ automatic semantic judge, or automatic broad milestone closure.
 Expected integrity failures raise `Refusal` with a stable code and exactly three repair options. Unexpected failures return CLI status `3`. Audit blockers return status `2`; a pass returns `0`.
 
 ## Extension strategy
+
+`paper_preflight.py` is an additive read-only manuscript production surface.
+Its pure analyzer consumes bounded extracted text; its CLI wrapper adds exact
+project confinement and manuscript hashes. It never fetches literature, edits
+manuscripts, infers authorship or grants existing gate/publication authority.
+Optional document renderers and live metadata tools remain outside this core.
+See [Manuscript preflight](PAPER_PREFLIGHT.md).
 
 Discipline-specific logic should be implemented as:
 

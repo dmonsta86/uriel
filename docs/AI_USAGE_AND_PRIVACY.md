@@ -96,26 +96,9 @@ Before uploading unpublished or sensitive work:
 - inspect `00_INSTRUCTION.md`, `STATE.json`, and `AI_SURFACE.json` before upload;
 - prefer `--redact` when values are not necessary for the declared task.
 
-## Maintainer-tested configuration
+## Assistant choice
 
-For the deepest Strict Forge, assurance, and adversarial passes, the maintainer
-recommends:
-
-```text
-GPT-5.6 Sol with ultra mode
-```
-
-This is an optional maintainer recommendation.
-
-It is not:
-
-- a dependency;
-- an exclusive integration;
-- a guarantee;
-- a privacy or retention endorsement;
-- required for ordinary Uriel use.
-
-Other compatible AIs can be used.
+Use any compatible assistant; verify its output independently. No model or provider is required.
 
 ## Static documentation
 

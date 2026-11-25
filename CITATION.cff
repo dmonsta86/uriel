@@ -1,20 +1,15 @@
 cff-version: 1.2.0
-message: "If you use The Forge of Uriel in research, software assurance, or scholarly workflow development, please cite this software."
-title: "The Forge of Uriel"
-abstract: >-
-  The Forge of Uriel is an offline-first, evidence-bound research development and
-  assurance toolkit for project provenance, data readiness, claim-evidence
-  tracing, integrity audits, submission preparation, and verifiable milestone
-  closure.
+message: "If you use Uriel in research, please cite this software."
+title: "Uriel"
+abstract: "Offline-first research records, evidence tracking, and checklists."
 type: software
-version: 1.0.0rc2
-date-released: 2026-08-06
+authors:
+  - name: "Uriel contributors"
+version: 1.1.0rc1
 url: "https://github.com/dmonsta86/uriel"
 repository-code: "https://github.com/dmonsta86/uriel"
 license: MIT
 keywords:
   - reproducible research
   - provenance
-  - scientific integrity
-  - schema validation
-  - open science
+  - research records

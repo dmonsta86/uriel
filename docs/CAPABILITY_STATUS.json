@@ -1,8 +1,67 @@
 {
   "schema": "uriel.capability_inventory.v1",
   "source": "src/uriel/capability_status.py",
-  "source_fingerprint": "6eca0515e1e685f04eda127adb79b43dd29e8fcd3ad25ab8ad62cff6b9309b73",
+  "source_fingerprint": "08a078dd281e9f487e1ec11f90b1e857002a797adae0f68fc6f4e8a124421a94",
   "capabilities": [
+    {
+      "id": "CAP-RECORD-001",
+      "name": "Markdown research record and checklists",
+      "status": "BETA",
+      "entry_point": "uriel record / checklist / check-before-push / summary",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "modules": [
+        "src/uriel/record_store.py",
+        "src/uriel/research_record.py",
+        "src/uriel/record_transfer.py",
+        "src/uriel/record_cli.py"
+      ],
+      "verification": [
+        "tests/test_research_record.py"
+      ],
+      "notes": "Verbatim question, revision checks, source hashes, frozen predictions, recorded negative-result audits, exclusive initial task assignment, and checklist receipts. Human evidence assertions require independent review."
+    },
+    {
+      "id": "CAP-TRILIUM-001",
+      "name": "Trilium ETAPI research record",
+      "status": "EXPERIMENTAL",
+      "entry_point": "uriel trilium",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "modules": [
+        "src/uriel/record_store.py",
+        "src/uriel/record_cli.py"
+      ],
+      "verification": [
+        "tests/test_research_record.py"
+      ],
+      "notes": "Mock-tested API client, stable labels and IDs, import, conflict preservation and drift checks. Live compatibility and atomic human-edit concurrency remain unverified."
+    },
+    {
+      "id": "CAP-PAPER-PREFLIGHT-001",
+      "name": "Offline manuscript production preflight",
+      "status": "EXPERIMENTAL",
+      "entry_point": "uriel paper preflight",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "modules": [
+        "src/uriel/paper_preflight.py",
+        "src/uriel/cli.py"
+      ],
+      "verification": [
+        "tests/test_paper_preflight.py"
+      ],
+      "notes": "Read-only bounded text checks for process residue, placeholders, repetition and selected explicit reference consistency. Line-localized advisory findings; no authorship detection, semantic source validation, network, model calls, manuscript writes or upstream authority."
+    },
     {
       "id": "CAP-CORE-001",
       "name": "Deterministic project core and packaging",
@@ -134,6 +193,58 @@
         "tests/test_lifecycle_submission.py"
       ],
       "notes": "Question intake, bounded review packets, gap records, repair packets, decisions, and submission support."
+    },
+    {
+      "id": "CAP-PROTOCOL-001",
+      "name": "Research protocol driver and analysis-plan lock",
+      "status": "EXPERIMENTAL",
+      "entry_point": "uriel next / uriel plan lock / uriel plan status",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "modules": [
+        "src/uriel/research_protocol.py",
+        "src/uriel/plan_lock.py",
+        "src/uriel/cli.py"
+      ],
+      "verification": [
+        "tests/test_research_protocol.py",
+        "tests/test_plan_lock.py"
+      ],
+      "notes": "Read-only seven-stage path from question to submission that names exactly one next action with its reason, command, completion condition, and human/agent owner, plus an optional create-only assistant prompt. Plan locks are content-addressed, ledger-ordered, and make drift, post-results revisions, and unsupported preregistration wording visible. No authority is granted and a lock is not a public preregistration."
+    },
+    {
+      "id": "CAP-PAPER-001",
+      "name": "Paper Builder with bound datapoints, citation and quote checks, and manuscript lint",
+      "status": "EXPERIMENTAL",
+      "entry_point": "uriel paper init / check / build / verify-build / lint / dp-add / dp-refresh / uriel adversarial",
+      "platforms": [
+        "Windows",
+        "macOS",
+        "Linux"
+      ],
+      "modules": [
+        "src/uriel/paper_builder.py",
+        "src/uriel/datapoints.py",
+        "src/uriel/stat_check.py",
+        "src/uriel/prose_lint.py",
+        "src/uriel/framing.py",
+        "src/uriel/model_check.py",
+        "src/uriel/adversarial.py",
+        "src/uriel/cli.py"
+      ],
+      "verification": [
+        "tests/test_paper_builder.py",
+        "tests/test_framing.py",
+        "tests/test_model_check.py",
+        "tests/test_adversarial.py",
+        "tests/test_datapoints.py",
+        "tests/test_stat_check.py",
+        "tests/test_prose_lint.py"
+      ],
+      "notes": "Canonical Markdown manuscript directory in which result numbers are rendered only from datapoints re-extracted from hashed artifacts; citations resolve to a verified reference registry; quotations are checked verbatim against held source text; claim anchors tie sentences to the project record; reported test statistics, intervals, percentages, and GRIM means are recomputed; conclusions are checked against recorded rival explanations; recorded models are dimensionally checked and must declare whether they are descriptive fits, predictive, or mechanistic, with the validation and rival comparison each requires; an opt-in adversarial mode demands claim-specific rivals, completed attacks, counterevidence searches, earned confirmatory framing, and doubly verified models; assistant residue, filler, unsourced attribution, and overclaiming are linted. Build refuses on blockers and writes a number-trace supplement and digest-bound receipt. DOCX/PDF export is not implemented, and no check decides scientific truth."
     },
     {
       "id": "CAP-ASSURANCE-001",

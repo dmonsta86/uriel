@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dmonsta86/uriel/schemas/uriel.plan_lock.v1.schema.json",
+  "title": "Uriel Analysis Plan Lock",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "schema_version",
+    "project_id",
+    "created_at_utc",
+    "plan",
+    "plan_sha256",
+    "parent_lock_id",
+    "reason",
+    "passing_results_existed",
+    "changed_fields",
+    "lock_id"
+  ],
+  "properties": {
+    "schema": {
+      "const": "uriel.plan_lock.v1"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "created_at_utc": {
+      "type": "string"
+    },
+    "plan": {
+      "type": "object"
+    },
+    "plan_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "parent_lock_id": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/sha256"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "reason": {
+      "type": "string"
+    },
+    "passing_results_existed": {
+      "type": "boolean"
+    },
+    "changed_fields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "lock_id": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

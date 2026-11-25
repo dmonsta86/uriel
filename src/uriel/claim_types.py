@@ -153,3 +153,26 @@ def evaluate_claim_evidence_floor(
         "narrowed": not met and narrowed_class != claim_class,
         "narrowing_reason": narrowing_reason,
     }
+
+# Epistemic status is independent of the legacy causal/associational claim class.
+# A claim may have a legacy class, but exactly one research-record evidence label.
+EVIDENCE_LABELS = {
+    "direct observation": ("instrument", "uncertainty"),
+    "derived statement": ("theorem", "premises"),
+    "empirically tested law": ("tested_range",),
+    "chosen model or approximation": ("assumptions",),
+    "hypothesis or analogy": ("hypothesis",),
+    "unknown": ("reason",),
+}
+
+
+def validate_evidence_label(row):
+    label = row.get("label")
+    if "labels" in row or not isinstance(label, str) or label not in EVIDENCE_LABELS:
+        raise ValueError("Every material claim requires exactly one recognized evidence label.")
+    if not isinstance(row.get("statement"), str) or not row["statement"].strip():
+        raise ValueError("Claim statement required.")
+    for field in EVIDENCE_LABELS[label]:
+        if row.get(field) in (None, "", [], {}):
+            raise ValueError("Evidence label requires " + field)
+    return label

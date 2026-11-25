@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import re
 import sys
 from pathlib import Path
@@ -21,8 +22,10 @@ from uriel.capability_status import (  # noqa: E402
 
 def main() -> int:
     errors = validate_capability_catalog(ROOT)
-    cli_text = (ROOT / "src" / "uriel" / "cli.py").read_text(encoding="utf-8")
-    cli_commands = set(re.findall(r'commands\.add_parser\("([a-z0-9-]+)"', cli_text))
+    from uriel.cli import parser
+    cli_commands = {name for action in parser()._actions
+                    if isinstance(action, argparse._SubParsersAction)
+                    for name in action.choices}
 
     for capability in CAPABILITIES:
         identifier = capability["id"]

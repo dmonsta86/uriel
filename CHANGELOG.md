@@ -1,3 +1,9 @@
+# 1.1.0rc1 (unreleased)
+
+- Introduce the Markdown and experimental Trilium research record, imports, conflict preservation, predictions, negative-result audits, tasks, successor summaries and checklists.
+- Integrate plan lock, Paper Builder, published-statistics checks, rival framing, adversarial checks and manuscript preflight.
+- Retire decorative assets and vendor-specific recommendations; retain advanced commands.
+
 # Changelog
 
 All notable changes to Uriel are documented here.
@@ -6,6 +12,74 @@ All notable changes to Uriel are documented here.
 
 ### Added
 
+- `uriel next`: a read-only research protocol driver that evaluates the Three
+  Gates, the plan lock, the manuscript check, the recorded audit, and the build,
+  sorts open items into seven ordered stages (frame, prior work, design and lock,
+  evidence, challenge, manuscript, submission), and names exactly one next action
+  with its reason, command, completion condition, and human/agent owner.
+  `--prompt` writes a create-only, self-contained instruction for the next
+  assistant session with twelve non-negotiable rules.
+- `uriel plan lock` / `plan status`: content-addressed, ledger-ordered locks of
+  the hypothesis and analysis plan; plan drift, reasoned re-locks, post-results
+  revisions, and unsupported preregistration wording are reported.
+- The experimental Paper Builder (`uriel paper init|check|build|verify-build|lint`):
+  a canonical Markdown manuscript directory with section checklists pre-filled
+  from the project record; `{{dp:ID}}` datapoints re-extracted from hashed CSV,
+  JSON, or text artifacts with kind bounds, GRIM, cross-datapoint relations, run
+  provenance, and confirmation-gated refresh (`dp-add`, `dp-refresh`); citation
+  resolution against a verification-status reference registry; verbatim quote
+  checks against held sources; claim anchors tied to the project record; a
+  per-section number policy; recomputation of reported t/F/chi-square/r/z
+  p-values, intervals, and percentages; and a deterministic lint for assistant
+  residue, placeholders, stock filler, unsourced attribution, hype, proof
+  language, and causal wording without identification. Builds refuse on
+  blockers and write a number-trace supplement and digest-bound receipt.
+- Adversarial mode (`uriel adversarial on|off|status`, `paper check --profile
+  adversarial`, `uriel next --target adversarial`, `paper lint --adversarial`):
+  an opt-in, recorded standard that requires two claim-specific rivals, a
+  completed adversarial test, and a documented counterevidence search for every
+  major claim; a confound-type rival for causal claims; run assumption tests;
+  doubly verified and rival-compared models; open rivals disclosed in
+  Limitations and named or qualified in concluding sentences; exploratory
+  labelling when no plan preceded results; disclosed deviations; and planned
+  one-tailed tests. Submission builds in adversarial mode are checked at the
+  adversarial profile. Turning the mode off requires a ledger-recorded reason.
+  Gates and Blessing are unchanged.
+- "Marginally significant", "a trend toward significance", and similar spin of
+  null results is reported as `NULL_SPUN_AS_EFFECT`.
+- Framing checks: every major claim needs a recorded rival explanation with a
+  discriminating observation; `ruled_out` requires linked evidence or a passed
+  adversarial test; manuscripts must address each rival (`[alt:ID]`) and may
+  not dismiss an open one, state a claim as settled while a rival is open,
+  interpret data with no recorded rival reading, or generalize beyond the
+  claim's scope. `paper lint` also flags single-explanation wording,
+  unsupported dismissals, and texts that never consider another explanation.
+- Model checks: an optional `models` record (additive to `uriel.project.v1`)
+  with exact dimensional analysis of each equation (units with SI prefixes and
+  custom `[dimensions]`), required symbol meanings and units, a declared role
+  (`descriptive_fit`, `predictive`, `mechanistic`), domain, assumptions,
+  source, and verification; validation and a rival comparison for predictive
+  or mechanistic models; tested implementations; and manuscript checks against
+  calling a descriptive fit a mechanism, stating an underdetermined model as
+  settled, or using undeclared equations (`[model:ID]`).
+- Statistical recomputation reads text extracted from published PDFs: it
+  repairs control bytes, lost chi and minus signs, split decimals, and
+  publisher font substitutions for `=`, `<`, and `>`, and it accepts "ns",
+  inequality-reported statistics, intervening MSE terms, thousands separators,
+  and Q/G² tests. Measured locally against the statcheck project's
+  hand-extracted material (227 results from 8 published papers), extraction
+  coverage rose from 46 to 218 of 225 supported results. All 216 recomputed
+  p-values matched an independent SciPy computation, and all 24 hand-labelled
+  results agreed with their error and decision-error labels. This was a one-off
+  local measurement, not a tracked benchmark.
+- Fewer false positives on non-statistical text: "p = 3.14" (pi) and similar
+  values are checked only in a visibly statistical context, and "proved to be"
+  is no longer read as proof language.
+- Seven mirrored schemas (`uriel.paper.v1`, `uriel.datapoints.v1`,
+  `uriel.references.v1`, `uriel.paper_check.v1`, `uriel.paper_build.v1`,
+  `uriel.plan_lock.v1`, `uriel.next_step.v1`) and the
+  [research protocol](docs/RESEARCH_PROTOCOL.md) and
+  [Paper Builder](docs/PAPER_BUILDER.md) guides.
 - A read-only `uriel paper review` surface that automatically compares an
   explicit candidate against all selected-scope verbatim baselines, reports
   claim/evidence currency and declared closest-prior-work coverage, binds an

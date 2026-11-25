@@ -426,7 +426,10 @@ def execute(args: argparse.Namespace, root: Path, report: Path) -> int:
                 "'uriel.research_verbatim_ledger.v1.schema.json',"
                 "'uriel.research_verbatim_export.v1.schema.json',"
                 "'uriel.research_verbatim_drift_review.v1.schema.json',"
-                "'uriel.paper_review.v1.schema.json'} "
+                "'uriel.paper_review.v1.schema.json','uriel.paper.v1.schema.json',"
+                "'uriel.datapoints.v1.schema.json','uriel.references.v1.schema.json',"
+                "'uriel.paper_check.v1.schema.json','uriel.paper_build.v1.schema.json',"
+                "'uriel.plan_lock.v1.schema.json','uriel.next_step.v1.schema.json'} "
                 "| set(DATA_SCHEMA_FILES.values()); "
                 "actual={x.name for x in p.iterdir() if x.name.endswith('.json')}; "
                 "assert required <= actual, sorted(required-actual); print('packaged schemas: PASS')"
@@ -463,6 +466,15 @@ def execute(args: argparse.Namespace, root: Path, report: Path) -> int:
                 [
                     str(python),
                     "scripts/smoke_installed_verbatim_ledger.py",
+                    "--executable",
+                    str(executable),
+                ],
+                env=clean_environment,
+            )
+            checked(
+                [
+                    str(python),
+                    "scripts/smoke_installed_paper.py",
                     "--executable",
                     str(executable),
                 ],

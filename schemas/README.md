@@ -26,3 +26,19 @@ Research Verbatim Ledger contracts include:
   consented verbatim fidelity, declared claim/evidence coverage, bounded
   closest-prior-work coverage, and an explicit material-change confirmation
   state without rewriting or granting scientific authority.
+
+Research protocol and Paper Builder contracts include:
+
+- `uriel.paper.v1`: the manuscript manifest (title, article type, ordered
+  sections with kinds and number policies, word limits);
+- `uriel.datapoints.v1`: reported numbers bound to artifact digests, exact
+  locators, declared values, sanity kinds, GRIM inputs, and relations;
+- `uriel.references.v1`: cited works with verification status and optional
+  held, hash-bound source copies;
+- `uriel.paper_check.v1`: a read-only check report with levelled, located
+  findings and exactly three repairs each;
+- `uriel.paper_build.v1`: a build receipt binding every input, artifact, held
+  source, and output digest;
+- `uriel.plan_lock.v1`: a content-addressed analysis-plan lock; and
+- `uriel.next_step.v1`: the read-only seven-stage protocol state with one next
+  action.

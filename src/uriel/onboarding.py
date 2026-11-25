@@ -452,6 +452,15 @@ You may not:
 8. Remain inside the allowed root. Do not access external directories,
    secrets, credentials, links, or network resources unless the consent
    record explicitly allows the specific action.
+
+## Research protocol
+
+Run `uriel next --root .` to see the current stage and the one next action,
+with its reason, command, and completion condition. Do that action, then run
+`uriel next` again. If the action is marked `owner: human`, ask and stop.
+Never type a result number into a manuscript: register it with
+`uriel paper dp-add` and write `{{{{dp:ID}}}}`. Never cite a source you have not
+opened, and never quote text that is not verbatim in a held source.
 """.format(
         workspace_id=onboarding.get("workspace_id", ""),
         entry_kind=onboarding.get("entry_kind", ""),
@@ -580,7 +589,9 @@ def start(
         "first. Report any file you cannot access.\n\n"
         "Follow the recorded safety mode and consent. Do not read secrets, touch "
         "external directories, use the network, or edit source unless explicitly "
-        "authorized. Complete every nonblocked task. {handoff}\n\n"
+        "authorized. Run `uriel next --root .` for the one next research step and "
+        "stop to ask whenever it is marked owner: human. Complete every nonblocked "
+        "task. {handoff}\n\n"
         "Do not offer a data-dependent prediction or conclusion until the exact "
         "data generation has a valid Data Readiness Receipt. You may propose "
         "repairs and drafts. You may not mark data ready, change publication "
@@ -598,11 +609,13 @@ def start(
         "- block data interpretation until Data Readiness passes;\n"
         "- distinguish observed facts, inferences, unknowns, and proposals;\n"
         "- never change publication authority or Blessing state;\n"
-        "- preserve exact next-step instructions.\n"
+        "- preserve exact next-step instructions;\n"
+        "- follow `uriel next` one action at a time and never perform an item marked owner: human;\n"
+        "- never type result numbers, invent citations, or quote text absent from a held source.\n"
     )
     next_prompt_text = (
-        "Read URIEL_AI_ENTRY.md and review the latest output from `uriel audit` or `uriel workbench`. "
-        "Complete the next safe research or repair step without changing authoritative state boundaries.\n"
+        "Read URIEL_AI_ENTRY.md and run `uriel next --root .`. Complete the one action it names "
+        "without changing authoritative state boundaries; stop and ask if it is marked owner: human.\n"
     )
     written = {
         "URIEL_START_HERE.md": start_here,

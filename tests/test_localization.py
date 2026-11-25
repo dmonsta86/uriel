@@ -96,19 +96,13 @@ class LocalizationIntegrityTests(unittest.TestCase):
         integrity.validate_score("es", mutated, reference, errors, hard_minima=True)
         self.assertTrue(any("research_story" in error for error in errors))
 
-    def test_every_localized_manifest_preserves_review_boundary(self) -> None:
+    def test_every_localized_manifest_is_a_pointer_not_a_translation_claim(self) -> None:
         for locale in integrity.CORE_LOCALES[1:]:
             with self.subTest(locale=locale):
-                visual = integrity.load_strict(
-                    ROOT / "docs" / "i18n" / "visual_manifests" / f"{locale}.json"
-                )
-                self.assertEqual(visual["image_status"], "LOCALIZED_AI_REVIEWED")
-                self.assertEqual(
-                    visual["visible_text_status"],
-                    "AI_ASSISTED_REQUIRES_NATIVE_REVIEW",
-                )
-                self.assertEqual(visual["native_language_reviewers"], [])
-                self.assertFalse(visual["deterministic_typography"])
+                row = integrity.load_strict(ROOT / "docs" / "i18n" / "manifests" / (locale + ".json"))
+                self.assertEqual(row["status"], "pointer")
+                self.assertEqual(row["canonical_sha256"], integrity.sha256(ROOT / "README.md"))
+                self.assertEqual(row["readme_sha256"], integrity.sha256(ROOT / row["readme_path"]))
 
 
 class LocalizedRendererTests(unittest.TestCase):
